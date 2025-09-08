@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+polars = "==1.1.0"
+plotnine = "*"
+beautifulsoup4 = "*"
+pandas = "*"
+lxml = "*"
+pyarrow = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12.1"
