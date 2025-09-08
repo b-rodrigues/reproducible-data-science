@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 set -e
-if [[ ! -d "/home/b-rodrigues/Documents/github_repos/raps_with_py" ]]; then
+if [[ ! -d "/home/brodrigues/Documents/repos/raps_with_nix" ]]; then
   echo "Cannot find source directory; Did you move it?"
-  echo "(Looking for "/home/b-rodrigues/Documents/github_repos/raps_with_py")"
+  echo "(Looking for "/home/brodrigues/Documents/repos/raps_with_nix")"
   echo 'Cannot force reload with this script - use "direnv reload" manually and then try again'
   exit 1
 fi
 
 # rebuild the cache forcefully
-_nix_direnv_force_reload=1 direnv exec "/home/b-rodrigues/Documents/github_repos/raps_with_py" true
+_nix_direnv_force_reload=1 direnv exec "/home/brodrigues/Documents/repos/raps_with_nix" true
 
 # Update the mtime for .envrc.
 # This will cause direnv to reload again - but without re-building.
-touch "/home/b-rodrigues/Documents/github_repos/raps_with_py/.envrc"
+touch "/home/brodrigues/Documents/repos/raps_with_nix/.envrc"
 
 # Also update the timestamp of whatever profile_rc we have.
 # This makes sure that we know we are up to date.
-touch -r "/home/b-rodrigues/Documents/github_repos/raps_with_py/.envrc" "/home/b-rodrigues/Documents/github_repos/raps_with_py/.direnv"/*.rc
+touch -r "/home/brodrigues/Documents/repos/raps_with_nix/.envrc" "/home/brodrigues/Documents/repos/raps_with_nix/.direnv"/*.rc
