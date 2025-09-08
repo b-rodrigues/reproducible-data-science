@@ -4,14 +4,14 @@ project:
 engine: jupyter
 
 book:
-  title: "Building reproducible analytical pipelines with Python"
+  title: "Reproducible Polyglot Data Science"
   author: "Bruno Rodrigues"
-  date: "2024-08-12"
+  date: "2025-12-31"
   search: true
-  repo-url: "https://github.com/b-rodrigues/raps_with_py"
+  repo-url: "https://github.com/b-rodrigues/reproducible-data-science"
   repo-actions: [edit, issue]
   repo-branch: "master"
-  issue-url: "https://github.com/b-rodrigues/raps_with_py/issues"
+  issue-url: "https://github.com/b-rodrigues/reproducible-data-science/issues"
   sharing: [twitter, facebook]
   downloads: [pdf, epub]
   chapters:
@@ -32,7 +32,7 @@ format:
     lang:
       en-GB
     date:
-      "2024-01-13"
+      "2025-12-31"
     css:
       epub.css
   html:
@@ -59,6 +59,6 @@ format:
            showtabs = false,
            breaksymbolleft={},
            breaklines
-           % Note: setting commandchars=\\\{\} here will cause an error 
-        }  
+           % Note: setting commandchars=\\\{\} here will cause an error
+        }
     fig-pos: 'H'
