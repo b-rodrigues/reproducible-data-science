@@ -1,9 +1,10 @@
 # Welcome! {.unnumbered}
-## How using a few ideas from software engineering can help data scientists, analysts and researchers write reliable code
+## A modern, unified, and language-agnostic workflow for data science using Nix.
 
-*This is the Python edition of the book "Building reproducible analytical
-pipelines", and it's a work-in-progress. If you're looking for the R version,
-visit [this link](https://www.raps-with-r.dev).*
+*This book is a complete reimagining of my previous work, "Building Reproducible
+Analytical Pipelines." If you're looking for the R-specific version of that
+book, you can find it [here](https://www.raps-with-r.dev). But if you're ready
+for the next step, you're in the right place.*
 
 ::: {.content-hidden when-format="pdf"}
 <figure>
@@ -47,34 +48,51 @@ you, you will actually work towards improving the quality of your work,
 naturally.
 
 The book can be read for free on
-[https://b-rodrigues.github.io/raps_with_py/](https://b-rodrigues.github.io/raps_with_py/)
+[https://b-rodrigues.github.io/reproducible-data-science/](https://b-rodrigues.github.io/reproducible-data-science/)
 and you'll be able buy a DRM-free Epub or PDF on
 [Leanpub](https://leanpub.com/)^[https://leanpub.com/] once there's more
 content.
 
-This is the *Python edition* of my book titled [Building reproducible analytical
-pipelines with R](https://raps-with-r.dev)^[https://raps-with-r.dev]. This means
-that a lot of text is copied over, but the all of the code and concepts are
-completely adapted to the Python programming language. This book is also
-shorter than the R version. Here's the topics that I will cover:
+This book is the culmination of my previous works. I started by writing a book
+focused on R, and then began working on a Python edition. During that process, I
+had a realization: tackling reproducibility one language at a time was solving
+the symptoms, not the root cause. The real solution needed to be universal,
+powerful, and capable of handling any language or tool we might need.
 
-- Dependency management with `pipenv`;
-- Some thoughts on functional programming with Python;
-- Unit and assertive testing;
-- Build automation with `ploomber`;
-- Literate programming with Quarto;
-- Reproducible environments with Docker;
-- Continuous integration and delivery.
+**That universal solution is Nix.**
 
-While this is not a book for beginners (you really should be familiar with
-Python before reading this), I will not assume that you have any knowledge of
-the tools discussed. But be warned, this book will require you to take the time
-to read it, and then type on your computer. Type *a lot*.
+This book moves beyond language-specific tooling. It presents a holistic
+workflow where R, Python, and Julia are not competitors, but collaborators in a
+single, cohesive, and perfectly reproducible environment. We will cover:
+
+-   The Nix Philosophy: Why Nix is the ultimate tool for solving the "it
+    works on my machine" problem, once and for all.
+-   Declarative Environments with `{rix}`: How to use a simple R interface
+    to define exact, bit-for-bit reproducible software environments that include
+    specific versions of R, Python, Julia, their packages, and any system-level
+    dependencies.
+-   Polyglot Pipelines with `{rixpress}`: How to orchestrate complex
+    analytical pipelines that seamlessly pass data between different languages,
+    all managed by the Nix build system.
+-   Unit Testing and Functional Programming: Core principles for writing
+    robust, testable, and maintainable code, no matter the language.
+-   Distribution and Automation: How to package your entire reproducible
+    pipeline into a Docker container for easy sharing and automate your workflow
+    with GitHub Actions.
+
+While this is not a book for beginners (you should be familiar with at least one
+data-centric programming language before reading this), I will not assume that
+you have any knowledge of the tools discussed. But be warned, this book will
+require you to take the time to read it, and then type on your computer. Type *a
+lot*.
 
 I hope that you will enjoy reading this book and applying the ideas in your
 day-to-day, ideas which hopefully should improve the reliability, traceability
-and reproducibility of your code. You can read this book for free on
-TO UPDATE
+and reproducibility of your code.
+
+If you find this book useful, don’t hesitate to let me know! You can submit
+issues, suggest improvements, and ask questions on the book’s [Github
+repository](https://github.com/b-rodrigues/reproducible-data-science).
 
 ::: {.content-hidden when-format="pdf"}
 You can also buy a physical copy of the book on [Amazon](https://www.amazon.com/dp/B0C87H6MGF/).
@@ -91,5 +109,3 @@ If you find this book useful, don’t hesitate to let me know or leave a rating 
 Amazon!
 :::
 
-You can submit issues, PRs and ask questions on the book’s
-[Github repository](https://github.com/b-rodrigues/raps_with_py)^[https://github.com/b-rodrigues/raps_with_py].

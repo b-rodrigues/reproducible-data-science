@@ -1,79 +1,80 @@
 # Preface {.unnumbered}
 
-I don't like Python. Or rather, don't like using it to analyze data. I believe
-that certain design choices were made that make Python a subpar language for
-analyzing data. That being said, Python is currently the most popular general
-purpose programming language, and also the most popular language to analyze
-data, especially in machine learning and AI. As such, it is a good idea to at
-least know your way around it even if, like me, you prefer using the R
-programming language.
+Three years ago, I wrote a book with a straightforward premise: by borrowing a
+few key ideas from software engineering, people who analyse data could save
+themselves a great deal of frustration. The response to that book was more
+positive than I could have ever hoped for, and it confirmed a suspicion I had:
+we, as a community, are hungry for better ways to work.
 
-I state that I don't like Python because I want to make something very clear,
-right from the start. I am not an expert in Python. I know enough to get things
-done, but it is not a language that I know well. I consider myself an expert in
-R, but definitely not in Python. So why write a book on Python in that case?
-Well, in truth, this is not a book about Python.
+That book, however, focused exclusively on the R ecosystem. A recurring question
+I received was, "This is great, but what about Python?" It was a fair question.
+The world of data science is not a monologue; it’s a conversation between
+languages. So, I began what felt like the logical next step: writing a Python
+edition.
 
-This book is about building reproducible pipelines. And in order to build
-reproducible pipelines, you need to apply certain general ideas. This book will
-discuss these ideas, and illustrate them using the Python programming language.
-I wrote such a book already: you can read it
-[here](https://www.raps-with-r.dev)^[https://www.raps-with-r.dev]. The book was well received:
-lots of people contacted me to thank me for having written it, I was invited to
-give talks several times on the book already, give some workshops and some
-people are already asking me for a second edition. I thought it would be an
-interesting challenge to write a Python edition. It would be a good excuse to
-dive back into Python after having barely touched it since my Phd days, more
-than 10 years ago, where I used it alongside R for a project. It is also a
-good opportunity to see what is currently available in the Python programming
-language, and if it would be possible to reproduce the way I work with R.
+I mapped out the chapters and identified the equivalent tools, `pipenv` for
+dependency management, `ploomber` for pipelines, and started writing. But as I
+went deeper, a nagging feeling grew. I was solving the same problems all over
+again, just with a different set of tools. This feeling was compounded by the
+rapid churn within the Python ecosystem itself. How many package managers have
+been created to solve virtual environment management? As of writing, `uv` is all
+the rage, and while it may be here to stay, history suggests a new contender is
+always just around the corner.
 
-There are currently some interesting packages available for Python that are
-quite close to some available for R. But R and Python have some very fundamental
-differences in their design that make using Python feel awkward if you're used
-to R, especially if take full advantage of R's functional programming features.
-But it's not just these design choices that differentiate both languages, there
-are also differences in culture, in how people use them. For example, notebooks
-are very popular in the Python world, but it's quite rare to see someone share R
-code through a notebook. In general, R users tend to write code as plain-text
-scripts or in Markdown using Rmarkdown or Quarto. Throughout this book, I will
-be writing Python with a heavy R accent, mainly for two reasons: first, because
-I'm fluent in R, but not in Python, as I've stated above. Second, because I also
-think that some of R's idioms actually make it more readable than equivalent
-Python code, and thus we can make Python more readable if we make it look more
-like R.
+This pointed to a larger issue. I am convinced that the future of data science
+is polyglot. An R user and a Python user, both following my original advice,
+would end up with reproducible projects, but their workflows would be
+fundamentally incompatible. They couldn't easily share an environment or build a
+single pipeline that leverages the strengths of both languages. While companies
+like Posit have made excellent progress in making it easier to call Python from
+R, setting up a truly integrated development environment remains a challenge.
+And what if you wish to bring Julia, the other language of data analysis, into
+the fold? It is not as popular as Python or R, but it has its own distinct
+appeal and advantages.
 
-If the previous sentence didn't scare you into continuing and you are actually
-curious to see what I mean, then read on, you're in the perfect state of mind to
-approach this book!
+I realised I was treating the symptoms, not the disease. The root problem wasn't
+"How do I make R reproducible?" or "How do I make Python reproducible?". The
+real challenge was the lack of a universal foundation that could handle *any*
+language, *any* tool, and *any* system dependency with absolute, bit-for-bit
+precision.
 
-Let me finish this section by talking a little bit about the history of these
-books (the original R edition and this one). It all started when a former
-colleague of mine contacted me in the summer of 2022 to ask me if I was
-interested in teaching a course for the Data Science Master degree at the
-University of Luxembourg. Long story short, I've decide to teach students how to
-set up data science projects in a way that they're reproducible. I wrote my
-course notes into a [freely available bookdown](https://rap4mads.eu/)^[https://rap4mads.eu/] that I
-used for teaching. When I started compiling my notes, I discovered the concept of
-*Reproducible Analytical Pipelines* as developed by the [Office for National
-Statistics](https://analysisfunction.civilservice.gov.uk/support/reproducible-analytical-pipelines/)^[https://analysisfunction.civilservice.gov.uk/support/reproducible-analytical-pipelines/]
-(henceforth ONS). I found the name "Reproducible Analytical Pipeline"
-(henceforth RAP) really perfect for what I was aiming at. The ONS team
-responsible for evangelising RAPs also published a free
-[ebook](https://ukgovdatascience.github.io/rap_companion/)^[https://ukgovdatascience.github.io/rap_companion/]
-in 2019 already. Another big source of inspiration is [Software
-Carpentry](https://software-carpentry.org/)^[https://software-carpentry.org/] to
-which I was exposed during my PhD years, around 2014-ish if memory serves. While
-working on a project with some German colleagues from the University of Bonn,
-the principal investigator made us work using these concepts to manage the
-project. I was really impressed by it, and these ideas and techniques stayed
-with me since then. This was also the project where I've used Python.
+That’s when I stopped writing the Python book.
 
-The bottom line is: the ideas I’m presenting here are nothing new. It’s just
-that I took some time to compile them and make them accessible and interesting
-(at least I hope so) to users of the Python programming language, even if I'm
-not one.
+The solution wasn't to create another language-specific guide but to find a tool
+that operated at a more fundamental level. That tool, I am now convinced, is
+**Nix**.
 
-If you have feedback, drop me an email at bruno [at] brodrigues [dot] co.
+Nix is not just another package manager; it is a powerful, declarative system
+for building and managing software environments. It allows us to define the
+*entire* computational environment—from the operating system libraries up to the
+specific versions of our R and Python packages—in a single, simple text file.
+When you use Nix, the phrase "it works on my machine" becomes obsolete. It is
+replaced by the guarantee: "it builds identically, everywhere, every time"—with
+a few caveats that we will explore, of course.
 
-Enjoy!
+This book is the result of that realisation. It is a complete reimagining of the
+original. We are moving away from language-specific patchworks and toward a
+unified, polyglot workflow. We will use Nix as our bedrock, with the `{rix}` and
+`{rixpress}` R packages serving as our friendly interface to its power. You will
+learn to build pipelines where R, Python, and Julia aren't just neighbours; they
+are collaborators, working together in a single, perfectly reproducible
+environment.
+
+A note for Python-first users: do not be deterred by the fact that `{rix}` and
+`{rixpress}` are R packages. You will be able to use them to define your
+environments (even integrating tools like `uv`) and orchestrate your pipelines,
+while doing all of your analytical work exclusively in Python. In this workflow,
+R simply becomes a convenient configuration language.
+
+The core message from three years ago remains unchanged. You, as someone who
+writes code to analyse data, are a developer. Your work is important, and it
+deserves to be reliable. This book aims to give you the tools and the mindset to
+achieve that. The journey is more ambitious this time, but the payoff is far
+greater.
+
+I hope you’ll join me.
+
+You can read this book for free online at **[YOUR BOOK'S URL HERE]**.
+
+You can submit issues, suggest improvements, and ask questions on the book’s
+[Github repository](https://github.com/b-rodrigues/reproducible-data-science).
