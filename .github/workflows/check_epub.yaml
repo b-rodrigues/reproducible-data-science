@@ -13,7 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        with: gh-pages
+        with: 
+          ref: gh-pages
 
       - name: Install epubcheck
         run: sudo apt-get install epubcheck
