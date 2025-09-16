@@ -18,4 +18,4 @@ jobs:
         run: sudo apt-get install epubcheck
     
       - name: Check the epub
-        run: epubcheck _book/Building-reproducible-analytical-pipelines-with-Python.epub
+        run: epubcheck _book/Reproducible-Polyglot-Data-Science.epub
