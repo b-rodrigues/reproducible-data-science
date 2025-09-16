@@ -1,0 +1,204 @@
+# The Nix Package Manager
+
+## Introduction
+
+Nix is a package manager that can be installed on your computer, regardless of
+the operating system. If you are familiar with the Ubuntu Linux distribution,
+you have likely used `apt-get` to install software. On macOS, you may have used
+`homebrew` for similar purposes. Nix functions in a comparable way but has many
+advantages over classic package managers, as it focuses on reproducible builds
+and downloads packages from `nixpkgs`, [currently the largest software
+repository](https://repology.org/repositories/graphs)^[https://repology.org/repositories/graphs].
+
+What makes Nix particularly useful for reproducible projects? Why not use
+another package manager? Wouldn't we achieve the same thing?
+
+To answer that, let's start from the beginning. To ensure a project is
+reproducible, you need to deal with at least four challenges:
+
+-   Ensure the required version of your programming language (R, Python, etc.)
+    is installed.
+-   Ensure the required versions of all packages are installed.
+-   Ensure all necessary system dependencies are installed (for example, a
+    working Java installation for the `{rJava}` R package on Linux).
+-   Ensure you can install all of this on the hardware you have on hand.
+
+The current consensus for tackling the first three points is often a mixture of
+tools: Docker for system dependencies, `{renv}` or `uv` for package management,
+and tools like the R installation manager (`rig`) for language versions. As for
+the last point, hardware architecture, the only way out is to be able to compile
+the software for the target platform. This involves a lot of moving parts and
+requires significant knowledge to get right.
+
+With Nix, we can handle all of these challenges with a single tool.
+
+The first advantage of Nix is that its repository, `nixpkgs`, is humongous. As
+of this writing, it contains over 120,000 pieces of software, including the
+*entirety of CRAN and Bioconductor*. This means you can use Nix to handle
+everything: R, Python, Julia, their respective packages, and any other software
+available through `nixpkgs`, making it particularly useful for polyglot
+pipelines.
+
+The second, and most crucial, advantage is that Nix allows you to install
+software in (relatively) isolated environments. When you start a new project,
+you can use Nix to install a project-specific version of R and all its packages.
+These dependencies are used only for that project. If you switch to another
+project, you switch to a different, independent environment.
+
+This is similar to `{renv}`, but the difference is profound: you get not only a
+project-specific library of R packages but also a project-specific R version and
+all the necessary system dependencies. For example, if you need `{xlsx}`, Nix
+automatically figures out that Java is required and installs and configures it
+for you, without any intervention.
+
+What's more, you can *pin* your project to a specific revision of the `nixpkgs`
+repository. This ensures that every package Nix installs will always be at the
+exact same version, regardless of when or where the project is built. The
+environment is defined in a simple plain-text file, and anyone using that file
+will get a byte-for-byte identical environment, even on a different operating
+system.
+
+## Important Concepts
+
+Before we start using Nix, it is important to spend some time learning about
+some Nix-centric concepts, starting with the *derivation*.
+
+In `Nix` terminology, a derivation is *a specification for running an executable on precisely defined input files to repeatably produce output files at uniquely determined file system paths.*
+
+In simpler terms, a derivation is a recipe with precisely defined inputs, steps,
+and a fixed output. This means that given identical inputs and build steps, the
+exact same output will always be produced. To achieve this level of
+reproducibility, several important measures must be taken:
+
+-   All inputs to a derivation must be explicitly declared.
+-   Inputs include not just data files but also software dependencies,
+    configuration flags, and environment variables—essentially, anything
+    necessary for the build process.
+-   The build process takes place in a *hermetic* sandbox to ensure the exact
+    same output is always produced.
+
+The next sections explain these three points in more detail.
+
+### Derivations
+
+Here is an example of a simple `Nix` expression:
+
+```nix
+let
+  pkgs = import (fetchTarball "https://github.com/rstats-on-nix/nixpkgs/archive/2025-04-11.tar.gz") {};
+in
+pkgs.stdenv.mkDerivation {
+  name = "filtered_mtcars";
+  buildInputs = [ pkgs.gawk ];
+  dontUnpack = true;
+  src = ./mtcars.csv;
+  installPhase = ''
+    mkdir -p $out
+    awk -F',' 'NR==1 || $9=="1" { print }' $src > $out/filtered.csv
+  '';
+}
+```
+
+Without going into too much detail, this code uses `awk`, a common Unix data
+processing tool, to filter the `mtcars.csv` file. As you can see, a significant
+amount of boilerplate is required for this simple operation. However, this
+approach is completely reproducible: the dependencies are declared and pinned to
+a specific version of the `nixpkgs` repository. The only thing that could make
+this small pipeline fail is if the `mtcars.csv` file is not provided to it.
+
+`Nix` builds the `filtered.csv` in two steps: it first generates a *derivation*
+from this expression, and only then does it build the output. For clarity, I
+will refer to code like the example above as a *derivation* rather than an
+expression, to avoid confusion with the concept of an *expression* in R.
+
+The goal of the tools we will use in this book, `{rix}` and `{rixpress}` (or
+`ryxpress` if you prefer using Python), is to help you create pipelines from
+such derivations without needing to learn the Nix language itself, while still
+benefiting from its powerful reproducibility features.
+
+### Dependencies of derivations
+
+Nix requires that the dependencies of any derivation be explicitly listed and
+managed by Nix itself. If you are building an output that requires Quarto, then
+Quarto must be explicitly listed as an input, even if you already have it
+installed on your system. The same applies to Quarto's dependencies, and their
+dependencies, all the way down. To run a linear regression with R, you
+essentially need Nix to build the entire universe of software that R depends on
+first.
+
+In Nix terms, this complete set of packages is what its author, Eelco Dolstra,
+refers to as a *component closure*:
+
+> The idea is to always deploy component closures: if we deploy a component,
+> then we must also deploy its dependencies, their dependencies, and so on. That
+> is, we must always deploy a set of components that is closed under the
+> 'depends on' relation.
+
+(*Nix: A Safe and Policy-Free System for Software Deployment*, Dolstra et al., 2004).
+
+<figure>
+<img src="https://raw.githubusercontent.com/b-rodrigues/rixpress/refs/heads/main/vignettes/figure_4.png" alt="Figure 4 of Dolstra et al. (2004)" />
+<figcaption aria-hidden="true">
+Figure 4 of Dolstra et al. (2004)
+</figcaption>
+</figure>
+
+In the figure, `subversion` depends on `openssl`, which itself depends on
+`glibc`. Similarly, if you write a derivation to filter `mtcars`, it requires an
+input file, R, `{dplyr}`, and all of their respective dependencies. All of these
+must be managed by Nix. If any dependency exists "outside" this closure, the
+pipeline will only *work on your machine*—defeating the purpose of
+reproducibility.
+
+### The Nix store and hermetic builds
+
+When building derivations, their outputs are saved into the **Nix store**.
+Typically located at `/nix/store/`, this folder contains all the software and
+build artefacts produced by Nix.
+
+For example, the output of a derivation might be stored at a path like
+`/nix/store/81k4s9q652jlka0c36khpscnmr8wk7jb-mtcars_tail`. The long
+cryptographic hash uniquely identifies the build output and is computed based on
+the content of the derivation and all its inputs. This ensures that the build is
+fully reproducible.
+
+As a result, building the same derivation on two different machines will yield
+the same cryptographic hash. You can substitute the built artefact with the
+derivation that generates it one-to-one, just as in mathematics, where writing
+$f(2)$ is the same as writing $4$ for the function $f(x) := x^2$.
+
+To guarantee that derivations always produce identical outputs, builds must
+occur in an isolated environment known as a **hermetic sandbox**. This process
+ensures that the build is unaffected by external factors, such as the state of
+the host system. This isolation extends to environment variables and even
+network access. If you need to download data from an API, for example, it will
+not work from within the build sandbox.
+
+This may seem restrictive, but it makes perfect sense for reproducibility. An
+API's output can change over time. For a truly reproducible result, you should
+obtain the data once, version it, and use that archived data as an input to your
+analysis.
+
+## In summary
+
+Nix generates a derivation from a Nix expression through a process called
+instantiation. During this process, Nix resolves all inputs and computes a
+unique cryptographic hash from the contents of the derivation and its entire
+dependency graph. This ensures that even the smallest change results in a
+distinct derivation.
+
+Once instantiated, the derivation is built in a hermetic environment where only
+explicitly declared dependencies are available. This makes the build entirely
+deterministic. After a successful build, Nix stores the output in the Nix store
+under a unique path determined by its hash. This process is extremely precise:
+even changing a comma to a pipe as a separator in a CSV file will result in a
+different hash, because one of the inputs changed.
+
+The key takeaway is that Nix is a complex tool because it solves a complex
+problem: ensuring complete reproducibility across different environments and
+over time. Throughout this book, we will use the `{rix}` and `{rixpress}`
+packages to make Nix more accessible, allowing you to benefit from its power
+without having to master all its complexities.
+
+In the next chapter, we will learn how to install Nix, and use `{rix}` to set up
+our first reproducible development environments!

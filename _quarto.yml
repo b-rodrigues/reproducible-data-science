@@ -18,6 +18,8 @@ book:
     - index.qmd
     - preface.qmd
     - intro.qmd
+    - 02-nix.qmd
+    - 03-rix.qmd
     - references.qmd
   page-navigation: true
 

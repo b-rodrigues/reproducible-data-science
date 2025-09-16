@@ -71,9 +71,9 @@ single, cohesive, and perfectly reproducible environment. We will cover:
     to define exact, bit-for-bit reproducible software environments that include
     specific versions of R, Python, Julia, their packages, and any system-level
     dependencies.
--   Polyglot Pipelines with `{rixpress}`: How to orchestrate complex
-    analytical pipelines that seamlessly pass data between different languages,
-    all managed by the Nix build system.
+-   Polyglot Pipelines with `{rixpress}` (R) or `ryxpress` (Python): How to
+    orchestrate complex analytical pipelines that seamlessly pass data between
+    different languages, all managed by the Nix build system.
 -   Unit Testing and Functional Programming: Core principles for writing
     robust, testable, and maintainable code, no matter the language.
 -   Distribution and Automation: How to package your entire reproducible

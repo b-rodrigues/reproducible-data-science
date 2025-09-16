@@ -55,16 +55,18 @@ a few caveats that we will explore, of course.
 This book is the result of that realisation. It is a complete reimagining of the
 original. We are moving away from language-specific patchworks and toward a
 unified, polyglot workflow. We will use Nix as our bedrock, with the `{rix}` and
-`{rixpress}` R packages serving as our friendly interface to its power. You will
-learn to build pipelines where R, Python, and Julia aren't just neighbours; they
-are collaborators, working together in a single, perfectly reproducible
-environment.
+`{rixpress}` R packages (or `ryxpress` for Python) serving as our friendly
+interface to its power. You will learn to build pipelines where R, Python, and
+Julia aren't just neighbours; they are collaborators, working together in a
+single, perfectly reproducible environment.
 
 A note for Python-first users: do not be deterred by the fact that `{rix}` and
-`{rixpress}` are R packages. You will be able to use them to define your
-environments (even integrating tools like `uv`) and orchestrate your pipelines,
-while doing all of your analytical work exclusively in Python. In this workflow,
-R simply becomes a convenient configuration language.
+`{rixpress}` are R packages: there is a Python version called `ryxpress` that
+will allow you to run your pipelines from an interactive Python session. You
+will be able to use them to define your environments (even integrating tools
+like `uv`) and orchestrate your pipelines, while doing all of your analytical
+work exclusively in Python. In this workflow, R simply becomes a convenient
+configuration language.
 
 The core message from three years ago remains unchanged. You, as someone who
 writes code to analyse data, are a developer. Your work is important, and it
@@ -74,7 +76,8 @@ greater.
 
 I hope you’ll join me.
 
-You can read this book for free online at **[YOUR BOOK'S URL HERE]**.
+You can read this book for free online at
+[https://b-rodrigues.github.io/reproducible-data-science/](https://b-rodrigues.github.io/reproducible-data-science/).
 
 You can submit issues, suggest improvements, and ask questions on the book’s
 [Github repository](https://github.com/b-rodrigues/reproducible-data-science).
