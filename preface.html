@@ -336,6 +336,18 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./02-nix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Nix Package Manager</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-rix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Reproducible Development Environments with rix</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -379,11 +391,11 @@ ul.task-list li input[type="checkbox"] {
 <p>That’s when I stopped writing the Python book.</p>
 <p>The solution wasn’t to create another language-specific guide but to find a tool that operated at a more fundamental level. That tool, I am now convinced, is <strong>Nix</strong>.</p>
 <p>Nix is not just another package manager; it is a powerful, declarative system for building and managing software environments. It allows us to define the <em>entire</em> computational environment—from the operating system libraries up to the specific versions of our R and Python packages—in a single, simple text file. When you use Nix, the phrase “it works on my machine” becomes obsolete. It is replaced by the guarantee: “it builds identically, everywhere, every time”—with a few caveats that we will explore, of course.</p>
-<p>This book is the result of that realisation. It is a complete reimagining of the original. We are moving away from language-specific patchworks and toward a unified, polyglot workflow. We will use Nix as our bedrock, with the <code>{rix}</code> and <code>{rixpress}</code> R packages serving as our friendly interface to its power. You will learn to build pipelines where R, Python, and Julia aren’t just neighbours; they are collaborators, working together in a single, perfectly reproducible environment.</p>
-<p>A note for Python-first users: do not be deterred by the fact that <code>{rix}</code> and <code>{rixpress}</code> are R packages. You will be able to use them to define your environments (even integrating tools like <code>uv</code>) and orchestrate your pipelines, while doing all of your analytical work exclusively in Python. In this workflow, R simply becomes a convenient configuration language.</p>
+<p>This book is the result of that realisation. It is a complete reimagining of the original. We are moving away from language-specific patchworks and toward a unified, polyglot workflow. We will use Nix as our bedrock, with the <code>{rix}</code> and <code>{rixpress}</code> R packages (or <code>ryxpress</code> for Python) serving as our friendly interface to its power. You will learn to build pipelines where R, Python, and Julia aren’t just neighbours; they are collaborators, working together in a single, perfectly reproducible environment.</p>
+<p>A note for Python-first users: do not be deterred by the fact that <code>{rix}</code> and <code>{rixpress}</code> are R packages: there is a Python version called <code>ryxpress</code> that will allow you to run your pipelines from an interactive Python session. You will be able to use them to define your environments (even integrating tools like <code>uv</code>) and orchestrate your pipelines, while doing all of your analytical work exclusively in Python. In this workflow, R simply becomes a convenient configuration language.</p>
 <p>The core message from three years ago remains unchanged. You, as someone who writes code to analyse data, are a developer. Your work is important, and it deserves to be reliable. This book aims to give you the tools and the mindset to achieve that. The journey is more ambitious this time, but the payoff is far greater.</p>
 <p>I hope you’ll join me.</p>
-<p>You can read this book for free online at <strong>[YOUR BOOK’S URL HERE]</strong>.</p>
+<p>You can read this book for free online at <a href="https://b-rodrigues.github.io/reproducible-data-science/">https://b-rodrigues.github.io/reproducible-data-science/</a>.</p>
 <p>You can submit issues, suggest improvements, and ask questions on the book’s <a href="https://github.com/b-rodrigues/reproducible-data-science">Github repository</a>.</p>
 
 
