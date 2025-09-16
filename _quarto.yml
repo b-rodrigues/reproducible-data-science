@@ -18,8 +18,6 @@ book:
     - index.qmd
     - preface.qmd
     - intro.qmd
-    - setting_up.qmd
-    - project_start.qmd
     - references.qmd
   page-navigation: true
 
