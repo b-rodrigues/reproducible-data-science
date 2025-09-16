@@ -10,7 +10,7 @@ jobs:
     steps:
 
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
@@ -19,10 +19,7 @@ jobs:
           log-directives: nix_installer=trace
           backtrace: full
 
-      - name: Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
-      - uses: cachix/cachix-action@v15
+      - uses: cachix/cachix-action@v16
         with:
           name: rstats-on-nix
           # If you chose signing key for write access
