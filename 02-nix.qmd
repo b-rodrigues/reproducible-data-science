@@ -246,3 +246,36 @@ to benefit from its power without having to master all its complexities.
 
 In the next chapter, we will learn how to install Nix, and use `{rix}` to set up
 our first reproducible development environments!
+
+## Caveats
+
+While Nix is powerful, there are some limitations and practical hurdles to be aware of:
+
+- Hardware acceleration: On non-NixOS systems, it can be difficult to set up GPU acceleration 
+  (CUDA, ROCm, OpenCL). Drivers are tightly coupled to the host kernel and libraries, while Nix 
+  builds aim for strict isolation. On NixOS this integration is smoother, but on macOS or Windows 
+  you may encounter limitations or extra manual steps.
+
+- macOS-specific issues: Reproducibility is harder to achieve on macOS (both Intel and Apple Silicon) than on Linux. 
+  Nix packages often rely on Apple system frameworks (e.g., CoreFoundation, Security) that live outside the 
+  Nix store and compromise hermetic builds^[https://github.com/NixOS/nixpkgs/issues/67166]. 
+  The macOS sandbox is also weaker than Linux’s and sometimes leaks system tools like Xcode or Rosetta into 
+  builds^[https://discourse.nixos.org/t/nix-macos-sandbox-issues-in-nix-2-4-and-later/17475]. 
+  Hydra cache coverage is thinner for Darwin platforms, especially Apple Silicon, so cache misses and local 
+  builds are much more common^[https://www.reddit.com/r/NixOS/comments/17uxj6q/how_does_nix_package_manager_work_on_apple_silicon/]. 
+  Finally, pinned environments can break after macOS or Xcode updates because of changes in system libraries or compiler 
+  flags^[https://github.com/NixOS/nix/issues/11679].  
+
+  That said, in practice most packages build fine on macOS, and the ecosystem continues to improve. 
+  When reproducibility problems do appear, the simplest fix is often just to use another nearby `nixpkgs` 
+  revision for pinning that is known to work. This makes the situation less fragile than it might first appear.
+
+- Steep learning curve: The Nix language and ecosystem (flakes, overlays, derivations) can be conceptually 
+  difficult if you come from traditional package managers. Even basic customizations require some ramp-up time.
+
+- Disk space and builds: Because Nix never mutates software in place, the store can accumulate large amounts of data. 
+  Cache misses sometimes force local builds, which can be slow and resource-intensive.
+
+These caveats don’t diminish Nix’s strengths but highlight that its guarantees are strongest on Linux (and thus WSL), 
+and especially on NixOS. On macOS, reproducibility is possible but sometimes requires extra work, a bit of flexibility, 
+and occasionally picking a different `nixpkgs` snapshot.  
