@@ -282,12 +282,6 @@ even changing from the comma to the pipe as the separator in a CSV file will res
 different hash for that file, and thus for all the build artifacts that
 depend on it directly or indirectly.
 
-The key takeaway is that Nix is a complex tool because it solves a complex
-problem: ensuring complete reproducibility across different environments and
-over time. Throughout this book, we will use the `{rix}` and `{rixpress}`
-(or `ryxpress` for Python) packages to make Nix more accessible, allowing you 
-to benefit from its power without having to master all its complexities.
-
 There are however some caveats, such as hardware acceleration being not necesseraly
 straightforward to configure, or builds that are unfortunately not as reproducible
 as they could be on macOS. But for each of these issues, there are mitigations.
@@ -295,7 +289,10 @@ as they could be on macOS. But for each of these issues, there are mitigations.
 In the next chapter, we will learn how to install Nix, and use `{rix}` to set up
 our first reproducible development environments!
 
-Nix is a demanding mistress, and adding it to your toolbox is not trivial. 
+The key takeaway is that Nix is a complex tool because it solves a complex
+problem: ensuring complete reproducibility across different environments and
+over time. Nix is a demanding mistress, and adding it to your toolbox is not trivial. 
 But the long-term benefits far outweigh the costs. 
 And with my packages `{rix}` and `{rixpress}` (or `ryxpress` for Python), 
-the entry ticket has never been cheaper.
+the entry ticket has never been cheaper. You will be in a position
+to quickly benefit from its power without having to master all its complexities.
