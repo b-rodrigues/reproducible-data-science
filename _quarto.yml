@@ -19,7 +19,8 @@ book:
     - preface.qmd
     - intro.qmd
     - 02-nix.qmd
-    - 03-rix.qmd
+    - 03-setup.qmd
+    - 04-rix.qmd
     - references.qmd
   page-navigation: true
 

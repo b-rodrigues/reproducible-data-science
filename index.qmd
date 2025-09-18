@@ -2,14 +2,14 @@
 ## A modern, unified, and language-agnostic workflow for data science using Nix.
 
 *This book is a complete reimagining of my previous work, "Building Reproducible
-Analytical Pipelines." If you're looking for the R-specific version of that
-book, you can find it [here](https://www.raps-with-r.dev). But if you're ready
-for the next step, you're in the right place.*
+Analytical Pipelines with R." If you're looking for that book, you can find it
+[here](https://www.raps-with-r.dev). But if you're ready for the next step,
+you're in the right place.*
 
 ::: {.content-hidden when-format="pdf"}
 <figure>
-  <a href = "https://leanpub.com/raps-with-python">  
-    <img style="float: right; clear: right" height="200" src="https://d2sofvawe08yqg.cloudfront.net/raps-with-r/s_hero2x?1676902653" alt="You can buy a copy on Leanpub."></img>
+  <a href = "https://leanpub.com/raps-with-python">
+    <img style="float: right; clear: right" height="200" src="images/cover.png" alt="The Wizard of Nix tames the Serpent of dependency Hell"></img>
 </a>
 </figure>
 :::

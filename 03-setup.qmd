@@ -1,0 +1,242 @@
+# Setting up Nix and Positron
+
+## Introduction
+
+When it comes to Nix, there are really only two supported operating systems:
+macOS and Linux distributions. Windows is "supported" because it is actually
+running Linux thanks to WSL2. In practice this means that Linux distributions
+and Windows can be considered one system, and macOS another, separate, system.
+Because Windows is really running Linux under the hood thanks to WSL2, this
+means that WSL2 needs to be running on your Windows system before you attempt to
+install Nix.
+
+## Windows pre-requisites
+
+If you are on Windows, you need the Windows Subsystem for Linux 2 (WSL2) to run
+Nix. If you are on a recent version of Windows 10 or 11, you can simply run this
+as an administrator in PowerShell:
+
+```bash
+wsl --install
+```
+
+You can find further installation notes at [this official Microsoft
+documentation](https://learn.microsoft.com/en-us/windows/wsl/install).
+
+We recommend to activate systemd in Ubuntu WSL2, mainly because this supports
+other users than `root` running Nix. To set this up, please do as outlined
+in [the official Microsoft WSL documentation](https://learn.microsoft.com/en-us/windows/wsl/systemd#how-to-enable-systemd):
+
+```sh
+# in WSL2 Ubuntu shell
+
+sudo -i
+nano /etc/wsl.conf
+```
+
+This will open the `/etc/wsl.conf` in a nano, a command
+line text editor. Add the following line:
+
+```
+[boot]
+systemd=true
+```
+
+Save the file with CTRL-O and then quit nano with CTRL-X.
+Then, type the following line in powershell:
+
+```bash
+wsl --shutdown
+```
+
+and then relaunch WSL (Ubuntu) from the start menu.
+
+Then, you can follow the instructions for Linux.
+
+## Determinate Nix
+
+Installing (and uninstalling) Nix is quite simple, thanks to the installer from
+[Determinate Systems](https://determinate.systems/posts/determinate-nix-installer),
+a company that provides services and tools built on Nix.
+
+Do not use your operating system’s package manager to install Nix. Instead,
+simply open a terminal and run the following line (on Windows, if you cannot or
+have decided not to activate systemd, then you have to append `--init none` to
+the command. You can find more details about this on [The Determinate Nix
+Installer page](https://github.com/DeterminateSystems/nix-installer)):
+
+```sh
+curl --proto '=https' --tlsv1.2 -sSf \
+    -L https://install.determinate.systems/nix | \
+     sh -s -- install
+```
+
+This will install Nix in a matter of seconds! Restart the terminal (WSL or native
+on Linux) and let's try our installation of Nix using so-called temporary shells.
+
+## Temporary shells
+
+You now have Nix installed; before continuing, it let’s see if everything works
+(close all your terminals and reopen them) by dropping into a temporary shell
+with a tool you likely have not installed on your machine.
+
+Open a terminal and run:
+
+```bash
+which sl
+```
+
+you will likely see something like this:
+
+```bash
+which: no sl in ....
+```
+
+now run this:
+
+```bash
+nix-shell -p sl
+```
+
+and then wait for Nix to do its magic. Then, run again:
+
+```bash
+which sl
+```
+
+this time you should see something like:
+
+```bash
+/nix/store/cndqpx74312xkrrgp842ifinkd4cg89g-sl-5.05/bin/sl
+```
+
+This is the path to the `sl` binary installed through Nix. The path starts with
+`/nix/store`: the *Nix store* is where all the software installed through Nix is
+stored.
+
+Now type `sl` and see what happens!
+
+You can find the list of available packages
+[here](https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=).
+
+## The rstats-on-nix Cache
+
+Next, we install the `cachix` client and configure our `rstats-on-nix` cache:
+this will install binary versions of many R packages which will speed up the
+building process of environments:
+
+```bash
+nix-env -iA cachix -f https://cachix.org/api/v1/install
+```
+
+then use the cache:
+
+```bash
+cachix use rstats-on-nix
+```
+
+You only need to do this once per machine you want to use `{rix}` on. Many thanks
+to [Cachix](https://www.cachix.org/) for sponsoring the `rstats-on-nix` cache!
+
+`{rix}` also includes a function called `setup_cachix()` which will configure
+the cache but it is recommended to use the `cachix` client instead. This is
+because `setup_cachix()` will not edit the files that require admin/root
+privileges and only edit the user-level files. This may not be enough depending
+on how you installed Nix. Using the `cachix` client takes care of everything.
+Use `setup_cachix()` when building a Docker image or if you somehow mess up the
+configuration file (which should be located in `~/.config/nix.conf`).
+
+On Linux, once Nix is installed, all the software that will be installed through
+Nix will be saved to the `/nix` directory on the root partition. It is common
+for Linux users to have a separate partition for `/`, which may be small.
+Complete development environments built with Nix can take up much space, so if
+the available space on your root partition is limited, we advise you to mount
+the `/nix` folder on another partition with more space (for example, a secondary
+hard drive). For this, edit `/etc/fstab` and add the following line at the end:
+
+```
+/home/path_to/nix /nix none bind 0 0
+```
+
+This will map `/nix` to `/home/path_to/nix` which can be on a larger partition.
+If you have enough space on your root partition, you can ignore the above
+instructions.
+
+## direnv
+
+`direnv` will automatically load Nix shells when you open a project managed by
+Nix. This makes using Nix, especially with an editor (which we will configure in
+the next section), much more seamless and easy. If you're using Windows, install
+`direnv` in WSL, just like Nix and `cachix` before. To install `direnv` run this
+command:
+
+```bash
+nix-env -f '<nixpkgs>' -iA direnv
+```
+
+Then, we highly recommend to install the `nix-direnv` extension:
+
+```bash
+nix-env -f '<nixpkgs>' -iA nix-direnv
+```
+
+It is not mandatory to use `nix-direnv` if you already have `direnv`, but it'll
+make loading environments much faster and seamless.
+
+Finally, if you haven't used `direnv` before, don't forget [this last
+step](https://direnv.net/docs/hook.html) to make your terminal detected and load
+`direnv` automatically. On WSL, need to add `eval "$(direnv hook bash)"` to a
+file called `.bashrc`, which you can find in your *home/* directory (this is the
+directory that contains your user's folder like *Downloads* and so on). This
+file starts with a `.`, which means it is hidden. You need top open it in an
+editor and add the line right at the bottom. If you're comfortable with the terminal,
+you can do it right from WSL, if not, you can navigate to your WSL home directory
+from a Windows file explorer by typing `\\wsl$` in the address bar, and then entering
+the `ubuntu` directory. Inside, you'll see the `home/` directory, and inside a directory
+named after your username. This is where `.bashrc` resides, and you can open it using
+Notepad.
+
+On macOS, you need to add `eval "$(direnv hook zsh)` inside of `.zshrc` instead.
+
+## Installing and configuring an editor
+
+### Positron and VS Code
+
+For polyglot data science projects, the recommended editor is Positron.
+Positron is a fork of VS Code tailored for data scientists, with first-class
+support for both R and Python. It makes it straightforward to select the correct
+interpreter for each project, whether managed by Nix or another solution. Being
+cross-platform, the same setup works on macOS, Windows, and Linux. Since it is
+based on VS Code, switching from VS Code to Positron is seamless.
+
+Personally, I use Emacs, but Positron is more accessible for most users. If you
+prefer, you can also configure **VS Code** directly; instructions are provided
+below.
+
+**Installing Positron:**
+
+- Download and install the installer for your operating system.
+- On Windows, even if Nix is installed under WSL, install the **Windows version**
+  of Positron. It can interact with Nix on WSL via a plugin.
+- In Positron, install the
+  [direnv extension](https://github.com/direnv/direnv-vscode)^[https://github.com/direnv/direnv-vscode].
+- On Windows, also install the
+  [Open Remote extension](https://open-vsx.org/extension/kv9898/open-remote-wsl)^[https://open-vsx.org/extension/kv9898/open-remote-wsl].
+
+**Using VS Code instead of Positron:**
+
+- Add the
+  [REditorSupport extension](https://marketplace.visualstudio.com/items?itemName=REditorSupport.r)^[https://marketplace.visualstudio.com/items?itemName=REditorSupport.r].
+- Install the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python)^[https://marketplace.visualstudio.com/items?itemName=ms-python.python].
+- Add the `{languageserver}` R package to your projects as well (we'll see how in the next chapter).
+
+### Emacs
+
+For Emacs, configuration is minimal:
+
+- Install the `direnv` package.
+- Add `python` and `ess` for R support.
+
+With this setup, opening a Nix-managed project automatically ensures Emacs uses
+the correct interpreter for that project.
+
