@@ -213,43 +213,18 @@ about before we move on:
 - Flakes: The newer way to define and pin Nix projects. Flakes make it easier to 
   share and reuse Nix setups across machines and repositories.
 
-Together, these features explain why Nix isn’t “just another package manager.” 
+Together, these features explain why Nix isn’t *just another package manager*. 
 It’s more like a framework for reproducible environments that can scale from a 
-single project to an entire operating system (called NixOS).
+single project to an entire operating system 
+(called [NixOS](https://nixos.org/)^[https://nixos.org/]).
 
 With these extra concepts in mind, we can now wrap up how Nix ties 
 everything together before moving on to installing it.
 
-## In summary
-
-Nix generates a derivation from a Nix expression through a process called
-instantiation. During this process, Nix resolves all inputs and computes a
-unique cryptographic hash from the contents of the derivation and its entire
-dependency graph. This ensures that even the smallest change results in a
-distinct derivation.
-
-Once instantiated, the derivation is built in a hermetic environment where only
-explicitly declared dependencies are available. If a pre-built binary is available
-through the official Nix cache (or through another cache you might have
-added), it gets fetched instead, since building it locally would have resulted
-in **exactly** the same binary anyways. This makes the build entirely
-deterministic. After a successful build, Nix stores the output in the Nix store
-under a unique path determined by its hash. This process is extremely precise:
-even changing a comma to a pipe as a separator in a CSV file will result in a
-different hash, because one of the inputs changed.
-
-The key takeaway is that Nix is a complex tool because it solves a complex
-problem: ensuring complete reproducibility across different environments and
-over time. Throughout this book, we will use the `{rix}` and `{rixpress}`
-(or `ryxpress` for Python) packages to make Nix more accessible, allowing you 
-to benefit from its power without having to master all its complexities.
-
-In the next chapter, we will learn how to install Nix, and use `{rix}` to set up
-our first reproducible development environments!
-
 ## Caveats
 
-While Nix is powerful, there are some limitations and practical hurdles to be aware of:
+While Nix is powerful, there are some limitations and practical hurdles to be aware of if 
+you plan to use it for actual work:
 
 - Hardware acceleration: On non-NixOS systems, it can be difficult to set up GPU acceleration 
   (CUDA, ROCm, OpenCL). Drivers are tightly coupled to the host kernel and libraries, while Nix 
@@ -269,13 +244,58 @@ While Nix is powerful, there are some limitations and practical hurdles to be aw
   That said, in practice most packages build fine on macOS, and the ecosystem continues to improve. 
   When reproducibility problems do appear, the simplest fix is often just to use another nearby `nixpkgs` 
   revision for pinning that is known to work. This makes the situation less fragile than it might first appear.
+  Another solution would be to use Docker to deploy the Nix environment and use that as a dev container. All
+  of this will be discussed in detail in this book.
 
 - Steep learning curve: The Nix language and ecosystem (flakes, overlays, derivations) can be conceptually 
   difficult if you come from traditional package managers. Even basic customizations require some ramp-up time.
 
 - Disk space and builds: Because Nix never mutates software in place, the store can accumulate large amounts of data. 
-  Cache misses sometimes force local builds, which can be slow and resource-intensive.
+  Cache misses sometimes force local builds, which can be slow and resource-intensive. However, it is of course
+  possible to empty the Nix store to recover disk space, and it is also possible to set up your own project 
+  cache if you wish so. Setting up your own cache will also be something that we will explore in this book.
 
 These caveats don’t diminish Nix’s strengths but highlight that its guarantees are strongest on Linux (and thus WSL), 
 and especially on NixOS. On macOS, reproducibility is possible but sometimes requires extra work, a bit of flexibility, 
-and occasionally picking a different `nixpkgs` snapshot.  
+and occasionally picking a different `nixpkgs` snapshot.
+
+## In summary
+
+Nix makes it possible to *actually* build software reproducibly. 
+To achieve this, it introduces several core concepts that are quite specific,
+and definitely worth taking the time to understand.
+
+Nix generates a derivation from a Nix expression through a process called
+instantiation. During this process, Nix resolves all inputs and computes a
+unique cryptographic hash from the contents of the derivation and its entire
+dependency graph. This ensures that even the smallest change results in a
+distinct derivation.
+
+Once instantiated, the derivation is built in a hermetic environment where only
+explicitly declared dependencies are available. If a pre-built binary is available
+through the official Nix cache (or through another cache you might have
+added), it gets fetched instead, since building it locally would have resulted
+in **exactly** the same binary anyways. This makes the build entirely
+deterministic. After a successful build, Nix stores the output in the Nix store
+under a unique path determined by its hash. This process is extremely precise:
+even changing from the comma to the pipe as the separator in a CSV file will result in a
+different hash for that file, and thus for all the build artifacts that
+depend on it directly or indirectly.
+
+The key takeaway is that Nix is a complex tool because it solves a complex
+problem: ensuring complete reproducibility across different environments and
+over time. Throughout this book, we will use the `{rix}` and `{rixpress}`
+(or `ryxpress` for Python) packages to make Nix more accessible, allowing you 
+to benefit from its power without having to master all its complexities.
+
+There are however some caveats, such as hardware acceleration being not necesseraly
+straightforward to configure, or builds that are unfortunately not as reproducible
+as they could be on macOS. But for each of these issues, there are mitigations.
+
+In the next chapter, we will learn how to install Nix, and use `{rix}` to set up
+our first reproducible development environments!
+
+Nix is a demanding mistress, and adding it to your toolbox is not trivial. 
+But the long-term benefits far outweigh the costs. 
+And with my packages `{rix}` and `{rixpress}` (or `ryxpress` for Python), 
+the entry ticket has never been cheaper.
