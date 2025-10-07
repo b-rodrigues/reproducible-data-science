@@ -37,7 +37,7 @@ nano /etc/wsl.conf
 This will open the `/etc/wsl.conf` in a nano, a command
 line text editor. Add the following line:
 
-```
+```ini
 [boot]
 systemd=true
 ```
@@ -154,7 +154,7 @@ the available space on your root partition is limited, we advise you to mount
 the `/nix` folder on another partition with more space (for example, a secondary
 hard drive). For this, edit `/etc/fstab` and add the following line at the end:
 
-```
+```ini
 /home/path_to/nix /nix none bind 0 0
 ```
 
@@ -237,6 +237,6 @@ For Emacs, configuration is minimal:
 - Install the `direnv` package.
 - Add `python` and `ess` for R support.
 
-With this setup, opening a Nix-managed project automatically ensures Emacs uses
-the correct interpreter for that project.
+With this setup, opening a Nix-managed project automatically ensures Emacs uses the correct interpreter for that project
+(assuming we add an `.envrc` file to the project; more on this later).
 
