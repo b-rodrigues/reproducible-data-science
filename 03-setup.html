@@ -78,9 +78,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-eaec1411600aaa3d517a4c2d9683cbbb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-a82fafecdf541ab89c78077a0d003809.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-eaec1411600aaa3d517a4c2d9683cbbb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5cbd71c709c3387e4e7dab47f7b6899c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-2b28e90a16fd505ae23957488f4baea6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-5cbd71c709c3387e4e7dab47f7b6899c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -455,8 +455,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> <span class="at">-i</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> /etc/wsl.conf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This will open the <code>/etc/wsl.conf</code> in a nano, a command line text editor. Add the following line:</p>
-<pre><code>[boot]
-systemd=true</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[boot]</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">systemd</span><span class="ot">=</span><span class="kw">true</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Save the file with CTRL-O and then quit nano with CTRL-X. Then, type the following line in powershell:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wsl</span> <span class="at">--shutdown</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>and then relaunch WSL (Ubuntu) from the start menu.</p>
@@ -497,7 +497,7 @@ systemd=true</code></pre>
 <p>You only need to do this once per machine you want to use <code>{rix}</code> on. Many thanks to <a href="https://www.cachix.org/">Cachix</a> for sponsoring the <code>rstats-on-nix</code> cache!</p>
 <p><code>{rix}</code> also includes a function called <code>setup_cachix()</code> which will configure the cache but it is recommended to use the <code>cachix</code> client instead. This is because <code>setup_cachix()</code> will not edit the files that require admin/root privileges and only edit the user-level files. This may not be enough depending on how you installed Nix. Using the <code>cachix</code> client takes care of everything. Use <code>setup_cachix()</code> when building a Docker image or if you somehow mess up the configuration file (which should be located in <code>~/.config/nix.conf</code>).</p>
 <p>On Linux, once Nix is installed, all the software that will be installed through Nix will be saved to the <code>/nix</code> directory on the root partition. It is common for Linux users to have a separate partition for <code>/</code>, which may be small. Complete development environments built with Nix can take up much space, so if the available space on your root partition is limited, we advise you to mount the <code>/nix</code> folder on another partition with more space (for example, a secondary hard drive). For this, edit <code>/etc/fstab</code> and add the following line at the end:</p>
-<pre><code>/home/path_to/nix /nix none bind 0 0</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">/home/path_to/nix /nix none bind 0 0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This will map <code>/nix</code> to <code>/home/path_to/nix</code> which can be on a larger partition. If you have enough space on your root partition, you can ignore the above instructions.</p>
 </section>
 <section id="direnv" class="level2" data-number="3.6">
@@ -537,7 +537,7 @@ systemd=true</code></pre>
 <li>Install the <code>direnv</code> package.</li>
 <li>Add <code>python</code> and <code>ess</code> for R support.</li>
 </ul>
-<p>With this setup, opening a Nix-managed project automatically ensures Emacs uses the correct interpreter for that project.</p>
+<p>With this setup, opening a Nix-managed project automatically ensures Emacs uses the correct interpreter for that project (assuming we add an <code>.envrc</code> file to the project; more on this later).</p>
 
 
 </section>
