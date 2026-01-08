@@ -407,7 +407,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">—</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting Up Your Environment</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -457,15 +457,21 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">2.1</span> Introduction</a></li>
-  <li><a href="#important-concepts" id="toc-important-concepts" class="nav-link" data-scroll-target="#important-concepts"><span class="header-section-number">2.2</span> Important Concepts</a>
+  <li><a href="#why-reproducibility-why-nix" id="toc-why-reproducibility-why-nix" class="nav-link" data-scroll-target="#why-reproducibility-why-nix"><span class="header-section-number">2.2</span> Why Reproducibility? Why Nix?</a>
   <ul class="collapse">
-  <li><a href="#derivations" id="toc-derivations" class="nav-link" data-scroll-target="#derivations"><span class="header-section-number">2.2.1</span> Derivations</a></li>
-  <li><a href="#dependencies-of-derivations" id="toc-dependencies-of-derivations" class="nav-link" data-scroll-target="#dependencies-of-derivations"><span class="header-section-number">2.2.2</span> Dependencies of derivations</a></li>
-  <li><a href="#the-nix-store-and-hermetic-builds" id="toc-the-nix-store-and-hermetic-builds" class="nav-link" data-scroll-target="#the-nix-store-and-hermetic-builds"><span class="header-section-number">2.2.3</span> The Nix store and hermetic builds</a></li>
-  <li><a href="#other-key-nix-concepts" id="toc-other-key-nix-concepts" class="nav-link" data-scroll-target="#other-key-nix-concepts"><span class="header-section-number">2.2.4</span> Other key Nix concepts</a></li>
+  <li><a href="#motivation-reproducibility-in-scientific-and-data-workflows" id="toc-motivation-reproducibility-in-scientific-and-data-workflows" class="nav-link" data-scroll-target="#motivation-reproducibility-in-scientific-and-data-workflows"><span class="header-section-number">2.2.1</span> Motivation: Reproducibility in Scientific and Data Workflows</a></li>
+  <li><a href="#problems-with-ad-hoc-tools" id="toc-problems-with-ad-hoc-tools" class="nav-link" data-scroll-target="#problems-with-ad-hoc-tools"><span class="header-section-number">2.2.2</span> Problems with Ad-Hoc Tools</a></li>
+  <li><a href="#nix-a-declarative-solution" id="toc-nix-a-declarative-solution" class="nav-link" data-scroll-target="#nix-a-declarative-solution"><span class="header-section-number">2.2.3</span> Nix: A Declarative Solution</a></li>
   </ul></li>
-  <li><a href="#caveats" id="toc-caveats" class="nav-link" data-scroll-target="#caveats"><span class="header-section-number">2.3</span> Caveats</a></li>
-  <li><a href="#in-summary" id="toc-in-summary" class="nav-link" data-scroll-target="#in-summary"><span class="header-section-number">2.4</span> In summary</a></li>
+  <li><a href="#important-concepts" id="toc-important-concepts" class="nav-link" data-scroll-target="#important-concepts"><span class="header-section-number">2.3</span> Important Concepts</a>
+  <ul class="collapse">
+  <li><a href="#derivations" id="toc-derivations" class="nav-link" data-scroll-target="#derivations"><span class="header-section-number">2.3.1</span> Derivations</a></li>
+  <li><a href="#dependencies-of-derivations" id="toc-dependencies-of-derivations" class="nav-link" data-scroll-target="#dependencies-of-derivations"><span class="header-section-number">2.3.2</span> Dependencies of derivations</a></li>
+  <li><a href="#the-nix-store-and-hermetic-builds" id="toc-the-nix-store-and-hermetic-builds" class="nav-link" data-scroll-target="#the-nix-store-and-hermetic-builds"><span class="header-section-number">2.3.3</span> The Nix store and hermetic builds</a></li>
+  <li><a href="#other-key-nix-concepts" id="toc-other-key-nix-concepts" class="nav-link" data-scroll-target="#other-key-nix-concepts"><span class="header-section-number">2.3.4</span> Other key Nix concepts</a></li>
+  </ul></li>
+  <li><a href="#caveats" id="toc-caveats" class="nav-link" data-scroll-target="#caveats"><span class="header-section-number">2.4</span> Caveats</a></li>
+  <li><a href="#in-summary" id="toc-in-summary" class="nav-link" data-scroll-target="#in-summary"><span class="header-section-number">2.5</span> In summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/02-nix.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -495,25 +501,40 @@ window.Quarto = {
 <section id="introduction" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2.1</span> Introduction</h2>
 <p>Nix is a package manager that can be installed on your computer, regardless of the operating system. If you are familiar with the Ubuntu Linux distribution, you have likely used <code>apt-get</code> to install software. On macOS, you may have used <code>homebrew</code> for similar purposes. Nix functions in a comparable way but has many advantages over classic package managers, as it focuses on reproducible builds and downloads packages from <code>nixpkgs</code>, <a href="https://repology.org/repositories/graphs">currently the largest software repository</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
-<p>What makes Nix particularly useful for reproducible projects? Why not use another package manager? Wouldn’t we achieve the same thing?</p>
-<p>To answer that, let’s start from the beginning. To ensure a project is reproducible, you need to deal with at least four challenges:</p>
+<p>In this chapter, we will explore the critical need for environment reproducibility in modern workflows. We will see why ad-hoc tools often fail, and how Nix’s declarative approach and “component closures” provide a robust solution. We will also cover the core concepts of Nix—derivations, the store, and hermetic builds—that make this possible.</p>
+</section>
+<section id="why-reproducibility-why-nix" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="why-reproducibility-why-nix"><span class="header-section-number">2.2</span> Why Reproducibility? Why Nix?</h2>
+<section id="motivation-reproducibility-in-scientific-and-data-workflows" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="motivation-reproducibility-in-scientific-and-data-workflows"><span class="header-section-number">2.2.1</span> Motivation: Reproducibility in Scientific and Data Workflows</h3>
+<p>To ensure that a project is reproducible you need to deal with at least four things:</p>
 <ul>
 <li>Ensure the required version of your programming language (R, Python, etc.) is installed.</li>
 <li>Ensure the required versions of all packages are installed.</li>
 <li>Ensure all necessary system dependencies are installed (for example, a working Java installation for the <code>{rJava}</code> R package on Linux).</li>
 <li>Ensure you can install all of this on the hardware you have on hand.</li>
 </ul>
+<p>But in practice, one or most of these bullet points are missing from projects. The goal of this course is to learn how to fullfill all the requirements to build reproducible projects.</p>
 <p>The current consensus for tackling the first three points is often a mixture of tools: Docker for system dependencies, <code>{renv}</code> or <code>uv</code> for package management, and tools like the R installation manager (<code>rig</code>) for language versions. As for the last point, hardware architecture, the only way out is to be able to compile the software for the target platform. This involves a lot of moving parts and requires significant knowledge to get right.</p>
+</section>
+<section id="problems-with-ad-hoc-tools" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="problems-with-ad-hoc-tools"><span class="header-section-number">2.2.2</span> Problems with Ad-Hoc Tools</h3>
+<p>Tools like Python’s <code>venv</code> or R’s <code>renv</code> only deal with some pieces of the reproducibility puzzle. Often, they assume an underlying OS, do not capture system-level dependencies (like <code>libxml2</code>, <code>pandoc</code>, or <code>curl</code>), and require users to “rebuild” their environments from partial metadata. Docker helps but introduces overhead, security challenges, and complexity, and just adding it to your project doesn’t make it reproducible if you don’t explicitely take some precautionary steps.</p>
+<p>Traditional approaches fail to capture the entire dependency graph of a project in a deterministic way. This leads to “it works on my machine” syndromes, onboarding delays, and subtle bugs.</p>
+</section>
+<section id="nix-a-declarative-solution" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="nix-a-declarative-solution"><span class="header-section-number">2.2.3</span> Nix: A Declarative Solution</h3>
 <p>With Nix, we can handle all of these challenges with a single tool.</p>
 <p>The first advantage of Nix is that its repository, <code>nixpkgs</code>, is humongous. As of this writing, it contains over 120,000 pieces of software, including the <em>entirety of CRAN and Bioconductor</em>. This means you can use Nix to handle everything: R, Python, Julia, their respective packages, and any other software available through <code>nixpkgs</code>, making it particularly useful for polyglot pipelines.</p>
 <p>The second, and most crucial, advantage is that Nix allows you to install software in (relatively) isolated environments. When you start a new project, you can use Nix to install a project-specific version of R and all its packages. These dependencies are used only for that project. If you switch to another project, you switch to a different, independent environment. But this also means that all the dependencies of R and R packages, plus all of their dependencies and so on get installed as well. Your project’s development environment will not depend on anything outside of it.</p>
 <p>This is similar to <code>{renv}</code>, but the difference is profound: you get not only a project-specific library of R packages but also a project-specific R version and all the necessary system dependencies. For example, if you need <code>{xlsx}</code>, Nix automatically figures out that Java is required and installs and configures it for you, without any intervention.</p>
 <p>What’s more, you can <em>pin</em> your project to a specific revision of the <code>nixpkgs</code> repository. This ensures that every package Nix installs will always be at the exact same version, regardless of when or where the project is built. The environment is defined in a simple plain-text file, and anyone using that file will get a byte-for-byte identical environment, even on a different operating system.</p>
 </section>
-<section id="important-concepts" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="important-concepts"><span class="header-section-number">2.2</span> Important Concepts</h2>
+</section>
+<section id="important-concepts" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="important-concepts"><span class="header-section-number">2.3</span> Important Concepts</h2>
 <p>Before we start using Nix, it is important to spend some time learning about some Nix-centric concepts, starting with the <em>derivation</em>.</p>
-<p>In <code>Nix</code> terminology, a derivation is <em>a specification for running an executable on precisely defined input files to repeatably produce output files at uniquely determined file system paths.</em></p>
+<p>In <code>Nix</code> terminology, a derivation is <em>a specification for running an executable on precisely defined input files to repeatably produce output files at uniquely determined file system paths.</em> (<a href="https://nix.dev/manual/nix/2.25/language/derivations">source</a>)</p>
 <p>In simpler terms, a derivation is a recipe with precisely defined inputs, steps, and a fixed output. This means that given identical inputs and build steps, the exact same output will always be produced. To achieve this level of reproducibility, several important measures must be taken:</p>
 <ul>
 <li>All inputs to a derivation must be explicitly declared.</li>
@@ -521,8 +542,8 @@ window.Quarto = {
 <li>The build process takes place in a <em>hermetic</em> sandbox to ensure the exact same output is always produced.</li>
 </ul>
 <p>The next sections explain these three points in more detail.</p>
-<section id="derivations" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="derivations"><span class="header-section-number">2.2.1</span> Derivations</h3>
+<section id="derivations" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="derivations"><span class="header-section-number">2.3.1</span> Derivations</h3>
 <p>Here is an example of a simple <code>Nix</code> expression:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">pkgs</span> <span class="op">=</span> <span class="bu">import</span> <span class="op">(</span><span class="bu">fetchTarball</span> <span class="st">"https://github.com/rstats-on-nix/nixpkgs/archive/2025-04-11.tar.gz"</span><span class="op">)</span> <span class="op">{};</span></span>
@@ -541,8 +562,8 @@ window.Quarto = {
 <p><code>Nix</code> builds the <code>filtered.csv</code> in two steps: it first generates a <em>derivation</em> from this expression, and only then does it build the output. For clarity, I will refer to code like the example above as a <em>derivation</em> rather than an expression, to avoid confusion with the concept of an <em>expression</em> in R.</p>
 <p>The goal of the tools we will use in this book, <code>{rix}</code> and <code>{rixpress}</code> (or <code>ryxpress</code> if you prefer using Python), is to help you create pipelines from such derivations without needing to learn the Nix language itself, while still benefiting from its powerful reproducibility features.</p>
 </section>
-<section id="dependencies-of-derivations" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="dependencies-of-derivations"><span class="header-section-number">2.2.2</span> Dependencies of derivations</h3>
+<section id="dependencies-of-derivations" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="dependencies-of-derivations"><span class="header-section-number">2.3.2</span> Dependencies of derivations</h3>
 <p>Nix requires that the dependencies of any derivation be explicitly listed and managed by Nix itself. If you are building an output that requires Quarto, then Quarto must be explicitly listed as an input, even if you already have it installed on your system. The same applies to Quarto’s dependencies, and their dependencies, all the way down. To run a linear regression with R, you essentially need Nix to build the entire universe of software that R depends on first.</p>
 <p>In Nix terms, this complete set of packages is what its author, Eelco Dolstra, refers to as a <em>component closure</em>:</p>
 <blockquote class="blockquote">
@@ -557,49 +578,44 @@ Figure 4 of Dolstra et al.&nbsp;(2004)
 </figure>
 <p>In the figure, <code>subversion</code> depends on <code>openssl</code>, which itself depends on <code>glibc</code>. Similarly, if you write a derivation to filter <code>mtcars</code>, it requires an input file, R, <code>{dplyr}</code>, and all of their respective dependencies. All of these must be managed by Nix. If any dependency exists “outside” this closure, the pipeline will only <em>work on your machine</em>—defeating the purpose of reproducibility.</p>
 </section>
-<section id="the-nix-store-and-hermetic-builds" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="the-nix-store-and-hermetic-builds"><span class="header-section-number">2.2.3</span> The Nix store and hermetic builds</h3>
+<section id="the-nix-store-and-hermetic-builds" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="the-nix-store-and-hermetic-builds"><span class="header-section-number">2.3.3</span> The Nix store and hermetic builds</h3>
 <p>When building derivations, their outputs are saved into the <strong>Nix store</strong>. Typically located at <code>/nix/store/</code>, this folder contains all the software and build artefacts produced by Nix.</p>
 <p>For example, the output of a derivation might be stored at a path like <code>/nix/store/81k4s9q652jlka0c36khpscnmr8wk7jb-mtcars_tail</code>. The long cryptographic hash uniquely identifies the build output and is computed based on the content of the derivation and all its inputs. This ensures that the build is fully reproducible.</p>
 <p>As a result, building the same derivation on two different machines will yield the same cryptographic hash. You can substitute the built artefact with the derivation that generates it one-to-one, just as in mathematics, where writing <span class="math inline">\(f(2)\)</span> is the same as writing <span class="math inline">\(4\)</span> for the function <span class="math inline">\(f(x) := x^2\)</span>.</p>
 <p>To guarantee that derivations always produce identical outputs, builds must occur in an isolated environment known as a <strong>hermetic sandbox</strong>. This process ensures that the build is unaffected by external factors, such as the state of the host system. This isolation extends to environment variables and even network access. If you need to download data from an API, for example, it will not work from within the build sandbox.</p>
 <p>This may seem restrictive, but it makes perfect sense for reproducibility. An API’s output can change over time. For a truly reproducible result, you should obtain the data once, version it, and use that archived data as an input to your analysis.</p>
 </section>
-<section id="other-key-nix-concepts" class="level3" data-number="2.2.4">
-<h3 data-number="2.2.4" class="anchored" data-anchor-id="other-key-nix-concepts"><span class="header-section-number">2.2.4</span> Other key Nix concepts</h3>
+<section id="other-key-nix-concepts" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="other-key-nix-concepts"><span class="header-section-number">2.3.4</span> Other key Nix concepts</h3>
 <p>We’ve covered derivations, dependencies, closures, the Nix store, and hermetic builds. That’s the core of what makes Nix tick. But there are a few more concepts worth knowing about before we move on:</p>
 <ul>
-<li><p>Purity: Nix tries very hard to keep builds “pure”: the output only depends on what you explicitly list as inputs. If a build script tries to reach out to the internet or read some random file on your machine, Nix will block it. That can feel restrictive at first, but it’s what guarantees reproducibility.</p></li>
-<li><p>Binary caches: You don’t always need to build everything yourself. Think back to the math analogy: if you already know that <span class="math inline">\(f(2) = 4\)</span>, there’s no need to compute it again—you can just reuse the result. Nix does the same with binary caches: every build is identified by a unique cryptographic hash of its inputs. That means a prebuilt package fetched from <code>cache.nixos.org</code> (or your own cache) is bit-for-bit identical to what you would have built locally. This is why Nix is both reproducible and fast.</p></li>
-<li><p>Garbage collection: Since Nix never overwrites anything in the store, old packages can pile up.<br>
+<li><p><strong>Purity</strong>: Nix tries very hard to keep builds “pure”: the output only depends on what you explicitly list as inputs. If a build script tries to reach out to the internet or read some random file on your machine, Nix will block it. That can feel restrictive at first, but it’s what guarantees reproducibility.</p></li>
+<li><p><strong>Binary caches</strong>: You don’t always need to build everything yourself. Think back to the math analogy: if you already know that <span class="math inline">\(f(2) = 4\)</span>, there’s no need to compute it again—you can just reuse the result. Nix does the same with binary caches: every build is identified by a unique cryptographic hash of its inputs. That means a prebuilt package fetched from <code>cache.nixos.org</code> (or your own cache) is bit-for-bit identical to what you would have built locally. This is why Nix is both reproducible and fast.</p></li>
+<li><p><strong>Garbage collection</strong>: Since Nix never overwrites anything in the store, old packages can pile up.<br>
 Running <code>nix-store --gc</code> will run the garbage collector to free up space.</p></li>
-<li><p>Overlays: If you want to tweak a package or add your own without forking all of <code>nixpkgs</code>, you can use overlays. They let you extend or override existing definitions in a clean, composable way.</p></li>
-<li><p>Flakes: The newer way to define and pin Nix projects. Flakes make it easier to share and reuse Nix setups across machines and repositories.</p></li>
+<li><p><strong>Overlays</strong>: If you want to tweak a package or add your own without forking all of <code>nixpkgs</code>, you can use overlays. They let you extend or override existing definitions in a clean, composable way.</p></li>
+<li><p><strong>Flakes</strong>: The newer way to define and pin Nix projects. Flakes make it easier to share and reuse Nix setups across machines and repositories.</p></li>
 </ul>
 <p>Together, these features explain why Nix isn’t <em>just another package manager</em>. It’s more like a framework for reproducible environments that can scale from a single project to an entire operating system (called <a href="https://nixos.org/">NixOS</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>).</p>
-<p>With these extra concepts in mind, we can now wrap up how Nix ties everything together before moving on to installing it.</p>
 </section>
 </section>
-<section id="caveats" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="caveats"><span class="header-section-number">2.3</span> Caveats</h2>
+<section id="caveats" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="caveats"><span class="header-section-number">2.4</span> Caveats</h2>
 <p>While Nix is powerful, there are some limitations and practical hurdles to be aware of if you plan to use it for actual work:</p>
 <ul>
-<li><p>Hardware acceleration: On non-NixOS systems, it can be difficult to set up GPU acceleration (CUDA, ROCm, OpenCL). Drivers are tightly coupled to the host kernel and libraries, while Nix builds aim for strict isolation. On NixOS this integration is smoother, but on macOS or Windows you may encounter limitations or extra manual steps.</p></li>
-<li><p>macOS-specific issues: Reproducibility is harder to achieve on macOS (both Intel and Apple Silicon) than on Linux. Nix packages often rely on Apple system frameworks (e.g., CoreFoundation, Security) that live outside the Nix store and compromise hermetic builds<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. The macOS sandbox is also weaker than Linux’s and sometimes leaks system tools like Xcode or Rosetta into builds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Hydra cache coverage is thinner for Darwin platforms, especially Apple Silicon, so cache misses and local builds are much more common<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Finally, pinned environments can break after macOS or Xcode updates because of changes in system libraries or compiler flags<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
+<li><p><strong>Hardware acceleration</strong>: On non-NixOS systems, it can be difficult to set up GPU acceleration (CUDA, ROCm, OpenCL). Drivers are tightly coupled to the host kernel and libraries, while Nix builds aim for strict isolation. On NixOS this integration is smoother, but on macOS or Windows you may encounter limitations or extra manual steps.</p></li>
+<li><p><strong>macOS-specific issues</strong>: Reproducibility is harder to achieve on macOS (both Intel and Apple Silicon) than on Linux. Nix packages often rely on Apple system frameworks (e.g., CoreFoundation, Security) that live outside the Nix store and compromise hermetic builds<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. The macOS sandbox is also weaker than Linux’s and sometimes leaks system tools like Xcode or Rosetta into builds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Hydra cache coverage is thinner for Darwin platforms, especially Apple Silicon, so cache misses and local builds are much more common<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Finally, pinned environments can break after macOS or Xcode updates because of changes in system libraries or compiler flags<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
 <p>That said, in practice most packages build fine on macOS, and the ecosystem continues to improve. When reproducibility problems do appear, the simplest fix is often just to use another nearby <code>nixpkgs</code> revision for pinning that is known to work. This makes the situation less fragile than it might first appear. Another solution would be to use Docker to deploy the Nix environment and use that as a dev container. All of this will be discussed in detail in this book.</p></li>
-<li><p>Steep learning curve: The Nix language and ecosystem (flakes, overlays, derivations) can be conceptually difficult if you come from traditional package managers. Even basic customizations require some ramp-up time.</p></li>
-<li><p>Disk space and builds: Because Nix never mutates software in place, the store can accumulate large amounts of data. Cache misses sometimes force local builds, which can be slow and resource-intensive. However, it is of course possible to empty the Nix store to recover disk space, and it is also possible to set up your own project cache if you wish so. Setting up your own cache will also be something that we will explore in this book.</p></li>
+<li><p><strong>Steep learning curve</strong>: The Nix language and ecosystem (flakes, overlays, derivations) can be conceptually difficult if you come from traditional package managers. Even basic customizations require some ramp-up time.</p></li>
+<li><p><strong>Disk space and builds</strong>: Because Nix never mutates software in place, the store can accumulate large amounts of data. Cache misses sometimes force local builds, which can be slow and resource-intensive. However, it is of course possible to empty the Nix store to recover disk space, and it is also possible to set up your own project cache if you wish so. Setting up your own cache will also be something that we will explore in this book.</p></li>
 </ul>
 <p>These caveats don’t diminish Nix’s strengths but highlight that its guarantees are strongest on Linux (and thus WSL), and especially on NixOS. On macOS, reproducibility is possible but sometimes requires extra work, a bit of flexibility, and occasionally picking a different <code>nixpkgs</code> snapshot.</p>
 </section>
-<section id="in-summary" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="in-summary"><span class="header-section-number">2.4</span> In summary</h2>
+<section id="in-summary" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="in-summary"><span class="header-section-number">2.5</span> In summary</h2>
 <p>Nix makes it possible to <em>actually</em> build software reproducibly. To achieve this, it introduces several core concepts that are quite specific, and definitely worth taking the time to understand.</p>
-<p>Nix generates a derivation from a Nix expression through a process called instantiation. During this process, Nix resolves all inputs and computes a unique cryptographic hash from the contents of the derivation and its entire dependency graph. This ensures that even the smallest change results in a distinct derivation.</p>
-<p>Once instantiated, the derivation is built in a hermetic environment where only explicitly declared dependencies are available. If a pre-built binary is available through the official Nix cache (or through another cache you might have added), it gets fetched instead, since building it locally would have resulted in <strong>exactly</strong> the same binary anyways. This makes the build entirely deterministic. After a successful build, Nix stores the output in the Nix store under a unique path determined by its hash. This process is extremely precise: even changing from the comma to the pipe as the separator in a CSV file will result in a different hash for that file, and thus for all the build artifacts that depend on it directly or indirectly.</p>
-<p>There are however some caveats, such as hardware acceleration being not necesseraly straightforward to configure, or builds that are unfortunately not as reproducible as they could be on macOS. But for each of these issues, there are mitigations.</p>
-<p>In the next chapter, we will learn how to install Nix, and use <code>{rix}</code> to set up our first reproducible development environments!</p>
-<p>The key takeaway is that Nix is a complex tool because it solves a complex problem: ensuring complete reproducibility across different environments and over time. Nix is a demanding mistress, and adding it to your toolbox is not trivial. But the long-term benefits far outweigh the costs. And with my packages <code>{rix}</code> and <code>{rixpress}</code> (or <code>ryxpress</code> for Python), the entry ticket has never been cheaper. You will be in a position to quickly benefit from its power without having to master all its complexities.</p>
+<p>In the next chapter, we will learn how to install Nix, configure <code>cachix</code>, and set up Positron for a seamless development experience.</p>
 
 
 </section>
@@ -1035,8 +1051,8 @@ Running <code>nix-store --gc</code> will run the garbage collector to free up sp
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./03-setup.html" class="pagination-link" aria-label="---">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">—</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./03-setup.html" class="pagination-link" aria-label="Setting Up Your Environment">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting Up Your Environment</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
