@@ -21,6 +21,10 @@ book:
     - 02-nix.qmd
     - 03-setup.qmd
     - 04-rix.qmd
+    - 05-fp.qmd
+    - 06-rixpress.qmd
+    - 07-docker.qmd
+    - 08-monads.qmd
     - references.qmd
   page-navigation: true
 
