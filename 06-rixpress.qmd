@@ -1,0 +1,788 @@
+# Building Reproducible Pipelines with rixpress
+
+## Introduction: From Scripts and Notebooks to Pipelines
+
+So far, we have learned about reproducible development environments with Nix and 
+`{rix}`. We can now create project-specific environments with precise versions 
+of R, Python, and all dependencies. But there's one more piece to the puzzle: 
+**orchestration**.
+
+How do we take our collection of functions and data files and run them in the 
+correct order to produce our final data product? This problem of managing 
+computational workflows is not new, and a whole category of **build automation 
+tools** has been created to solve it.
+
+### The Evolution of Build Automation
+
+The original solution, dating back to the 1970s, is **`make`**. Created by 
+Stuart Feldman at Bell Labs in 1976, `make` reads a `Makefile` that describes 
+the dependency graph of a project. If you change the code that generates 
+`plot.png`, `make` is smart enough to only re-run the steps needed to rebuild 
+the plot and the final report.
+
+The strength of these tools is their language-agnosticism, but their weaknesses 
+are twofold:
+
+1. **File-centric**: You must manually handle all I/O—your first script saves 
+   `data.csv`, your second loads it. This adds boilerplate and surfaces for 
+   error.
+2. **Environment-agnostic**: They track files but know nothing about the 
+   *software environment* needed to create those files.
+
+This is where R's **`{targets}`** package shines. It tracks dependencies 
+between **R objects directly**, automatically handling serialisation. But 
+`{targets}` operates within a single R session—for polyglot pipelines, you must 
+manually coordinate via `{reticulate}`.
+
+### The Separation Problem
+
+All these tools—from `make` to `{targets}` to Airflow—separate workflow 
+management from environment management. You use one tool to run the pipeline 
+and another (Docker, `{renv}`) to set up the software.
+
+This separation creates friction. Running `{targets}` inside Docker ensures 
+reproducibility, but forces the entire pipeline into one monolithic environment. 
+What if your Python step requires TensorFlow 2.15 but your R step needs 
+reticulate with Python 3.9? You're stuck.
+
+### The Imperative Approach: Make + Docker
+
+To illustrate this, consider the traditional setup for a polyglot pipeline. 
+You'd need:
+
+1. A `Dockerfile` to set up the environment
+2. A `Makefile` to orchestrate the workflow
+3. Wrapper scripts for each step
+
+Here's what a `Makefile` might look like:
+
+```makefile
+# Makefile for a Python → R pipeline
+
+DATA_DIR = data
+OUTPUT_DIR = output
+
+$(OUTPUT_DIR)/predictions.csv: $(DATA_DIR)/raw.csv scripts/train_model.py
+	python scripts/train_model.py $(DATA_DIR)/raw.csv $@
+
+$(OUTPUT_DIR)/plot.png: $(OUTPUT_DIR)/predictions.csv scripts/visualise.R
+	Rscript scripts/visualise.R $< $@
+
+$(OUTPUT_DIR)/report.html: $(OUTPUT_DIR)/plot.png report.qmd
+	quarto render report.qmd -o $@
+
+all: $(OUTPUT_DIR)/report.html
+
+clean:
+	rm -rf $(OUTPUT_DIR)/*
+```
+
+This looks clean, but notice the procedural boilerplate required in each script. 
+Your `train_model.py` must parse command-line arguments and handle file I/O:
+
+```python
+# scripts/train_model.py
+import sys
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+
+def main():
+    input_path = sys.argv[1]
+    output_path = sys.argv[2]
+    
+    # Load data
+    df = pd.read_csv(input_path)
+    
+    # ... actual ML logic ...
+    
+    # Save results
+    predictions.to_csv(output_path, index=False)
+
+if __name__ == "__main__":
+    main()
+```
+
+And your `visualise.R` script needs the same boilerplate:
+
+```r
+# scripts/visualise.R
+args <- commandArgs(trailingOnly = TRUE)
+input_path <- args[1]
+output_path <- args[2]
+
+# Load data
+predictions <- read.csv(input_path)
+
+# ... actual visualisation logic ...
+
+# Save plot
+ggsave(output_path, plot)
+```
+
+The scientific logic is buried under file I/O scaffolding. And the environment? 
+That's a separate 100+ line `Dockerfile` you must maintain.
+
+### rixpress: Unified Orchestration
+
+**`{rixpress}`** solves this by using Nix not just as a package manager, but as 
+the build automation engine itself. Each pipeline step is a **Nix derivation**—a 
+hermetically sealed build unit.
+
+Compare the same pipeline in `{rixpress}`:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+list(
+  rxp_py_file(
+    name = raw_data,
+    path = "data/raw.csv",
+    read_function = "lambda x: pandas.read_csv(x)"
+  ),
+  
+  rxp_py(
+    name = predictions,
+    expr = "train_model(raw_data)",
+    user_functions = "functions.py"
+  ),
+  
+  rxp_py2r(
+    name = predictions_r,
+    expr = predictions
+  ),
+  
+  rxp_r(
+    name = plot,
+    expr = visualise(predictions_r),
+    user_functions = "functions.R"
+  ),
+  
+  rxp_qmd(
+    name = report,
+    qmd_file = "report.qmd"
+  )
+) |>
+  rxp_populate()
+```
+
+And your `functions.py` contains *only* the scientific logic:
+
+```python
+# functions.py
+def train_model(df):
+    # ... pure ML logic, no file I/O ...
+    return predictions
+```
+
+The difference is stark:
+
+| Aspect | Make + Docker | rixpress |
+|--------|--------------|----------|
+| **Files needed** | Dockerfile, Makefile, wrapper scripts | gen-env.R, gen-pipeline.R, function files |
+| **I/O handling** | Manual in every script | Automatic via encoders/decoders |
+| **Dependencies** | Explicit file rules | Inferred from object references |
+| **Environment** | Separate Docker setup | Unified via `{rix}` |
+| **Expertise needed** | Linux admin, Make syntax | R programming |
+
+This provides two key benefits:
+
+1. **True Polyglot Pipelines**: Each step can have its own Nix environment. A 
+   Python step runs in a pure Python environment, an R step in an R environment, 
+   a Quarto step in yet another—all within the same pipeline.
+
+2. **Deep Reproducibility**: Each step is cached based on the cryptographic hash 
+   of *all* its inputs: the code, the data, *and the environment*. Any change in 
+   dependencies triggers a rebuild. This is reproducibility at the build level, 
+   not just the environment level.
+
+The interface is heavily inspired by `{targets}`, so you get the ergonomic, 
+object-passing feel you're used to, combined with the bit-for-bit 
+reproducibility of the Nix build system.
+
+## What is rixpress?
+
+`{rixpress}` streamlines creation of *micropipelines*—small-to-medium, 
+single-machine analytic pipelines—by expressing a pipeline in idiomatic R while 
+delegating build orchestration to the Nix build system.
+
+Key features:
+
+- Define pipeline *derivations* with concise `rxp_*()` helper functions
+- Seamlessly mix R, Python, Julia, and Quarto steps
+- Reuse hermetic environments defined via `{rix}` and a `default.nix`
+- Visualise and inspect the DAG; selectively read, load, or copy outputs
+- Automatic caching: only rebuild what changed
+
+Here is what a basic pipeline looks like:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+list(
+  rxp_r_file(
+    mtcars,
+    'mtcars.csv',
+    \(x) read.csv(file = x, sep = "|")
+  ),
+
+  rxp_r(
+    mtcars_am,
+    filter(mtcars, am == 1)
+  ),
+
+  rxp_r(
+    mtcars_head,
+    head(mtcars_am)
+  ),
+
+  rxp_qmd(
+    page,
+    "page.qmd"
+  )
+) |>
+  rxp_populate()
+```
+
+## Getting Started
+
+### Initialising a project
+
+If you're starting fresh, you can bootstrap a project using a temporary shell:
+
+```bash
+nix-shell --expr "$(curl -sl https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/default.nix)"
+```
+
+Once inside, start R and run:
+
+```{r}
+#| eval: false
+rixpress::rxp_init()
+```
+
+This creates two essential files:
+
+- **`gen-env.R`**: Where you define your environment with `{rix}`
+- **`gen-pipeline.R`**: Where you define your pipeline with `{rixpress}`
+
+### Defining the environment
+
+Open `gen-env.R` and define the tools your pipeline needs:
+
+```{r}
+#| eval: false
+library(rix)
+
+rix(
+  date = "2025-10-14",
+  r_pkgs = c("dplyr", "ggplot2", "quarto", "rixpress"),
+  ide = "none",
+  project_path = ".",
+  overwrite = TRUE
+)
+```
+
+Run this script to generate `default.nix`, then build and enter your environment:
+
+```bash
+nix-build
+nix-shell
+```
+
+### Defining the pipeline
+
+Open `gen-pipeline.R` and define your pipeline:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+list(
+  rxp_r_file(
+    name = mtcars,
+    path = "data/mtcars.csv",
+    read_function = \(x) read.csv(x, sep = "|")
+  ),
+
+  rxp_r(
+    name = mtcars_am,
+    expr = dplyr::filter(mtcars, am == 1)
+  ),
+
+  rxp_r(
+    name = mtcars_head,
+    expr = head(mtcars_am)
+  )
+) |>
+  rxp_populate()
+```
+
+Running `rxp_populate()` generates a `pipeline.nix` file and builds the entire 
+pipeline.
+
+## Core Functions
+
+### Defining derivations
+
+`{rixpress}` provides several functions to define pipeline steps:
+
+| Function | Purpose |
+|----------|---------|
+| `rxp_r()` | Run R code |
+| `rxp_r_file()` | Read a file using R |
+| `rxp_py()` | Run Python code |
+| `rxp_py_file()` | Read a file using Python |
+| `rxp_qmd()` | Render a Quarto document |
+| `rxp_py2r()` | Convert Python object to R |
+| `rxp_r2py()` | Convert R object to Python |
+
+### Building the pipeline
+
+```{r}
+#| eval: false
+# Generate pipeline.nix only (don't build)
+rxp_populate(build = FALSE)
+
+# Build the pipeline
+rxp_make()
+```
+
+### Inspecting outputs
+
+Because outputs live in `/nix/store/`, `{rixpress}` provides helpers:
+
+```{r}
+#| eval: false
+# List all built artifacts
+rxp_inspect()
+
+# Read an artifact into R
+result <- rxp_read("mtcars_head")
+
+# Load an artifact into the global environment
+rxp_load("mtcars_head")
+
+# Copy an output file to current directory
+rxp_copy("page")
+```
+
+### Visualizing the pipeline
+
+```{r}
+#| eval: false
+# Static DAG plot
+rxp_ggdag()
+
+# Interactive network
+rxp_visnetwork()
+
+# Text-based trace
+rxp_trace()
+```
+
+## Polyglot Pipelines
+
+One of `{rixpress}`'s strengths is seamlessly mixing languages. Here's a 
+pipeline that reads data with Python's `polars`, processes it with R's `dplyr`, 
+and renders a Quarto report:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+list(
+  rxp_py_file(
+    name = mtcars_pl,
+    path = "data/mtcars.csv",
+    read_function = "lambda x: polars.read_csv(x, separator='|')"
+  ),
+
+  rxp_py(
+    name = mtcars_filtered,
+    expr = "mtcars_pl.filter(polars.col('am') == 1).to_pandas()"
+  ),
+
+  rxp_py2r(
+    name = mtcars_r,
+    expr = mtcars_filtered
+  ),
+
+  rxp_r(
+    name = mtcars_head,
+    expr = head(mtcars_r)
+  ),
+
+  rxp_qmd(
+    name = report,
+    qmd_file = "report.qmd"
+  )
+) |>
+  rxp_populate()
+```
+
+### Method 1: Using language converters
+
+The `rxp_py2r()` and `rxp_r2py()` functions use `{reticulate}` to convert 
+objects between languages:
+
+```{r}
+#| eval: false
+rxp_py2r(
+  name = mtcars_r,
+  expr = mtcars_py
+)
+```
+
+### Method 2: Using universal data formats
+
+For more control, use `encoder` and `decoder` arguments to serialize to formats 
+like JSON:
+
+```{r}
+#| eval: false
+# Python step: serialize to JSON
+rxp_py(
+  name = mtcars_json,
+  expr = "mtcars_pl.filter(polars.col('am') == 1)",
+  user_functions = "functions.py",
+  encoder = "serialize_to_json"
+),
+
+# R step: deserialize from JSON
+rxp_r(
+  name = mtcars_head,
+  expr = my_head(mtcars_json),
+  user_functions = "functions.R",
+  decoder = "jsonlite::fromJSON"
+)
+```
+
+This approach makes your pipeline more modular—any language that can read JSON 
+could be added in the future.
+
+## Caching and Incremental Builds
+
+One of the most powerful features of using Nix for pipelines is automatic 
+caching. Because Nix tracks all inputs to each derivation, it knows exactly what 
+needs to be rebuilt when something changes.
+
+Try this:
+
+1. Build your pipeline with `rxp_make()`
+2. Change one step in your pipeline
+3. Run `rxp_make()` again
+
+Nix will detect that unchanged steps are already cached and instantly reuse 
+them. It only rebuilds the steps affected by your change.
+
+## Build Logs and Debugging
+
+Every time you run `rxp_populate()`, a timestamped log is saved in the 
+`_rixpress/` directory. This is like having a Git history for your pipeline's 
+*outputs*.
+
+```{r}
+#| eval: false
+# List all past builds
+rxp_list_logs()
+
+# Load artifact from current build
+new_result <- rxp_read("mtcars_head")
+
+# Load artifact from previous build
+old_result <- rxp_read("mtcars_head", which_log = "z9y8x")
+
+# Compare them
+identical(new_result, old_result)
+```
+
+This is incredibly powerful for debugging and validation—you can go back in time 
+to inspect any output from any previous pipeline run.
+
+## ryxpress: The Python Interface
+
+If you prefer working in Python, `ryxpress` provides the same functionality. You 
+still define your pipeline in R (since that's where `{rixpress}` runs), but you 
+can build and inspect artifacts from Python.
+
+To set up an environment with `ryxpress`:
+
+```{r}
+#| eval: false
+rix(
+  date = "2025-10-14",
+  r_pkgs = c("rixpress"),
+  py_conf = list(
+    py_version = "3.13",
+    py_pkgs = c("ryxpress", "rds2py", "biocframe", "pandas")
+  ),
+  ide = "none",
+  project_path = ".",
+  overwrite = TRUE
+)
+```
+
+Then from Python:
+
+```python
+from ryxpress import rxp_make, rxp_inspect, rxp_load
+
+# Build the pipeline
+rxp_make()
+
+# Inspect artifacts
+rxp_inspect()
+
+# Load an artifact
+rxp_load("mtcars_head")
+```
+
+`ryxpress` handles the conversion automatically:
+
+- Tries `pickle.load` first
+- Falls back to `rds2py` for R objects
+- Returns file paths for complex outputs
+
+## Running Someone Else's Pipeline
+
+The ultimate test of reproducibility: can someone else run your pipeline?
+
+With a Nix-based workflow, they need only:
+
+1. `git clone` your repository
+2. Run `nix-build && nix-shell`
+3. Run `source("gen-pipeline.R")` or `rxp_make()`
+
+That's it. Nix reads your `default.nix` and `pipeline.nix` files and builds the 
+*exact* same environment and data product, bit-for-bit.
+
+## Exporting and Importing Artifacts
+
+For CI/CD or sharing between machines:
+
+```{r}
+#| eval: false
+# Export build products to a tarball
+rxp_export_artifacts()
+
+# Import on another machine before building
+rxp_import_artifacts()
+```
+
+This speeds up continuous integration by avoiding unnecessary rebuilds.
+
+## Real-World Examples
+
+The [rixpress_demos](https://github.com/b-rodrigues/rixpress_demos) repository 
+contains many complete examples. Here are a few patterns worth studying.
+
+### Example 1: Machine Learning with XGBoost
+
+This pipeline trains an XGBoost classifier in Python, then passes predictions 
+to R for evaluation with `{yardstick}`:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+list(
+  # Load data as NumPy array
+  rxp_py_file(
+    name = dataset_np,
+    path = "data/pima-indians-diabetes.csv",
+    read_function = "lambda x: loadtxt(x, delimiter=',')"
+  ),
+
+  # Split features and target
+  rxp_py(name = X, expr = "dataset_np[:,0:8]"),
+  rxp_py(name = Y, expr = "dataset_np[:,8]"),
+
+  # Train/test split
+  rxp_py(
+    name = splits,
+    expr = "train_test_split(X, Y, test_size=0.33, random_state=7)"
+  ),
+
+  # Extract splits
+
+  rxp_py(name = X_train, expr = "splits[0]"),
+  rxp_py(name = X_test, expr = "splits[1]"),
+  rxp_py(name = y_train, expr = "splits[2]"),
+  rxp_py(name = y_test, expr = "splits[3]"),
+
+  # Train XGBoost model
+  rxp_py(
+    name = model,
+    expr = "XGBClassifier(use_label_encoder=False, eval_metric='logloss').fit(X_train, y_train)"
+  ),
+
+  # Make predictions
+  rxp_py(name = y_pred, expr = "model.predict(X_test)"),
+
+  # Export predictions to CSV for R
+  rxp_py(
+    name = combined_df,
+    expr = "DataFrame({'truth': y_test, 'estimate': y_pred})"
+  ),
+
+  rxp_py(
+    name = combined_csv,
+    expr = "combined_df",
+    user_functions = "functions.py",
+    encoder = "write_to_csv"
+  ),
+
+  # Compute confusion matrix in R
+  rxp_r(
+    combined_factor,
+    expr = mutate(combined_csv, across(everything(), factor)),
+    decoder = "read.csv"
+  ),
+
+  rxp_r(
+    name = confusion_matrix,
+    expr = yardstick::conf_mat(combined_factor, truth, estimate)
+  )
+) |>
+  rxp_populate(build = FALSE)
+
+# Adjust Python imports
+adjust_import("import numpy", "from numpy import array, loadtxt")
+adjust_import("import xgboost", "from xgboost import XGBClassifier")
+adjust_import("import sklearn", "from sklearn.model_selection import train_test_split")
+add_import("from pandas import DataFrame", "default.nix")
+
+rxp_make()
+```
+
+This demonstrates:
+
+- Python-heavy computation with XGBoost
+- Custom serialization via `encoder`/`decoder`
+- Adjusting Python imports with `adjust_import()` and `add_import()`
+- Passing results to R for evaluation
+
+### Example 2: Reading Many Input Files
+
+When you have multiple CSV files in a directory:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+list(
+  # R approach: read all files at once
+  rxp_r_file(
+    name = mtcars_r,
+    path = "data",
+    read_function = \(x) {
+      readr::read_delim(list.files(x, full.names = TRUE), delim = "|")
+    }
+  ),
+
+  # Python approach: custom function
+  rxp_py_file(
+    name = mtcars_py,
+    path = "data",
+    read_function = "read_many_csvs",
+    user_functions = "functions.py"
+  ),
+
+  rxp_py(
+    name = head_mtcars,
+    expr = "mtcars_py.head()"
+  )
+) |>
+  rxp_populate()
+```
+
+The key insight: `rxp_r_file()` and `rxp_py_file()` can point to a directory, 
+and your `read_function` handles the logic.
+
+### Example 3: Full Python→R→Quarto Workflow
+
+A complete pipeline that bounces data between languages and renders a report:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+list(
+  # Read with Python polars
+  rxp_py_file(
+    name = mtcars_pl,
+    path = "data/mtcars.csv",
+    read_function = "lambda x: polars.read_csv(x, separator='|')"
+  ),
+
+  # Filter in Python, convert to pandas for reticulate
+  rxp_py(
+    name = mtcars_pl_am,
+    expr = "mtcars_pl.filter(polars.col('am') == 1).to_pandas()"
+  ),
+
+  # Convert to R
+  rxp_py2r(name = mtcars_am, expr = mtcars_pl_am),
+
+  # Process in R
+  rxp_r(
+    name = mtcars_head,
+    expr = my_head(mtcars_am),
+    user_functions = "functions.R"
+  ),
+
+  # Back to Python
+  rxp_r2py(name = mtcars_head_py, expr = mtcars_head),
+
+  # More Python processing
+  rxp_py(name = mtcars_tail_py, expr = "mtcars_head_py.tail()"),
+
+  # Back to R
+  rxp_py2r(name = mtcars_tail, expr = mtcars_tail_py),
+
+  # Final R step
+  rxp_r(name = mtcars_mpg, expr = dplyr::select(mtcars_tail, mpg)),
+
+  # Render Quarto document
+  rxp_qmd(
+    name = page,
+    qmd_file = "my_doc/page.qmd",
+    additional_files = c("my_doc/content.qmd", "my_doc/images")
+  )
+) |>
+  rxp_populate()
+```
+
+Note the `additional_files` argument for `rxp_qmd()`: this includes child 
+documents and images that the main Quarto file needs.
+
+### More Examples
+
+The [rixpress_demos](https://github.com/b-rodrigues/rixpress_demos) repository 
+includes:
+
+- **jl_example**: Using Julia in pipelines
+- **r_qs**: Using `{qs}` for faster serialization
+- **python_r_typst**: Compiling to Typst documents
+- **r_multi_envs**: Different Nix environments for different derivations
+- **yanai_lercher_2020**: Reproducing a published paper's analysis
+
+## Summary
+
+`{rixpress}` unifies environment management and workflow orchestration:
+
+- **Define** pipelines with `rxp_*()` functions in familiar R syntax
+- **Mix** languages freely—R, Python, Julia, Quarto
+- **Build** with Nix for deterministic, cached execution
+- **Inspect** outputs with `rxp_read()`, `rxp_load()`, `rxp_copy()`
+- **Debug** with timestamped build logs
+- **Share** reproducible pipelines via Git
+
+The Python port `ryxpress` provides the same experience for Python-first 
+workflows.
+
+By embracing structured, plain-text pipelines over notebooks for production 
+work, your analysis becomes more reliable, more scalable, and fundamentally more 
+reproducible.
