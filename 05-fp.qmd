@@ -1,0 +1,481 @@
+# Functional Programming
+
+What you'll learn by the end of this chapter:
+
+- Why functional programming is crucial for reproducible, testable, and 
+  collaborative data science.
+- How to write self-contained, "pure" functions in both R and Python.
+- How to use functional concepts like `map`, `filter`, and `reduce` to replace 
+  error-prone loops.
+- How writing functions makes your code easier to review, debug, and even 
+  generate with LLMs.
+
+## Introduction: From Scripts to Functions
+
+In the previous chapter, we learned how to create reproducible development 
+environments with `{rix}`. We can now ensure everyone has the *exact same 
+tools*—R, Python, system libraries—to run our code.
+
+But having the right tools is only half the battle. Now we turn to **writing 
+reproducible code itself**. A common way to start a data analysis is by writing 
+a script: a sequence of commands executed from top to bottom.
+
+```{r}
+#| eval: false
+# R script example
+library(dplyr)
+data(mtcars)
+heavy_cars <- filter(mtcars, wt > 4)
+mean_mpg_heavy <- mean(heavy_cars$mpg)
+print(mean_mpg_heavy)
+```
+
+```python
+# Python script example
+import pandas as pd
+mtcars = pd.read_csv("mtcars.csv")
+heavy_cars = mtcars[mtcars['wt'] > 4]
+mean_mpg_heavy = heavy_cars['mpg'].mean()
+print(mean_mpg_heavy)
+```
+
+This works, but it has a hidden, dangerous property: **state**. The script 
+relies on variables like `heavy_cars` existing in the environment, making the 
+code hard to reason about, debug, and test.
+
+### The Notebook Problem
+
+If scripting with state is a crack in the foundation of reproducibility, then 
+using computational notebooks is a gaping hole.
+
+Notebooks like Jupyter introduce an even more insidious form of state: the cell 
+execution order. You can execute cells out of order, meaning the visual layout 
+of your code has no relation to how it actually ran. This is a recipe for 
+non-reproducible results and a primary cause of the "it worked yesterday, why 
+is it broken today?" problem.
+
+### The Functional Solution
+
+The solution is to embrace a paradigm that minimises state: **Functional 
+Programming (FP)**. Instead of a linear script, we structure our code as a 
+collection of self-contained, predictable functions.
+
+The power of FP comes from the concept of **purity**, borrowed from mathematics. 
+A mathematical function has a beautiful property: for a given input, it always 
+returns the same output. `sqrt(4)` is always `2`. Its result doesn't depend on 
+what you calculated before or on a random internet connection.
+
+Our Nix environments handle the "right library" problem; purity handles the 
+"right logic" problem. Our goal is to write our analysis code with this same 
+level of rock-solid predictability.
+
+### FP vs OOP: Transformations vs Actors
+
+To appreciate what FP brings, it helps to contrast it with **Object-Oriented 
+Programming (OOP)**, arguably the dominant paradigm in many software systems.
+
+OOP organises computation around *who does what*—a network of objects 
+communicating with each other and managing their own internal state. You send 
+a message to an object, asking it to perform an action, without needing to know 
+how it works internally.
+
+Functional programming, by contrast, organises computation around *how data 
+changes*. It replaces a network of interacting objects with a flow of 
+transformations: data goes in, data comes out, and nothing else changes in the 
+process.
+
+This shift is especially powerful in data science:
+
+- Analyses are naturally expressed as **pipelines of transformations** 
+  (cleaning, filtering, aggregating, modelling)
+- Pure functions make results **reproducible**—same inputs always yield same 
+  outputs
+- **Immutability** prevents accidental side effects on shared data
+- Because transformations can be composed, tested, and reused independently, 
+  FP encourages **modular, maintainable** analysis code
+
+### Why Does This Matter for Data Science?
+
+Adopting a functional style brings massive benefits:
+
+1. **Unit Testing is Now Possible:** You can't easily test a 200-line script. 
+   But you *can* easily test a small function that does one thing.
+
+2. **Code Review is Easier:** A Pull Request that just adds or modifies a 
+   single function is simple for your collaborators to understand and approve.
+
+3. **Working with LLMs is More Effective:** It's incredibly effective to ask, 
+   "Write a Python function that takes a pandas DataFrame and a column name, 
+   and returns the mean of that column, handling missing values. Also, write 
+   three `pytest` unit tests for it."
+
+4. **Readability:** Well-named functions are self-documenting:
+
+   ```{r}
+   #| eval: false
+   starwars %>% 
+     group_by(species) %>% 
+     summarize(mean_height = mean(height))
+   ``` 
+
+   is instantly understandable. The equivalent `for` loop is a puzzle.
+
+## Purity and Side Effects
+
+A **pure function** has two rules:
+
+1. It only depends on its inputs. It doesn't use any "global" variables defined 
+   outside the function.
+2. It doesn't change anything outside of its own scope. It doesn't modify a 
+   global variable or write a file to disk. This is called having "no side 
+   effects."
+
+Consider this "impure" function in Python:
+
+```python
+# IMPURE: Relies on a global variable
+discount_rate = 0.10
+
+def calculate_discounted_price(price):
+    return price * (1 - discount_rate)  # What if discount_rate changes?
+
+print(calculate_discounted_price(100))
+# > 90.0
+discount_rate = 0.20  # Someone changes the state
+print(calculate_discounted_price(100))
+# > 80.0  -- Same input, different output!
+```
+
+The pure version passes *all* its dependencies as arguments:
+
+```python
+# PURE: All inputs are explicit arguments
+def calculate_discounted_price_pure(price, rate):
+    return price * (1 - rate)
+
+print(calculate_discounted_price_pure(100, 0.10))
+# > 90.0
+print(calculate_discounted_price_pure(100, 0.20))
+# > 80.0
+```
+
+Now the function is predictable and self-contained.
+
+### Handling "Impure" Operations like Randomness
+
+Some operations, like generating random numbers, are inherently impure. Each 
+time you run `rnorm(10)` or `numpy.random.rand(10)`, you get a different result.
+
+The functional approach is not to avoid this, but to *control* it by making the 
+source of impurity (the random seed) an explicit input.
+
+In R, the `{withr}` package helps create a temporary, controlled context:
+
+```{r}
+#| eval: false
+library(withr)
+
+# This function is now pure! For a given seed, the output is always the same.
+pure_rnorm <- function(n, seed) {
+  with_seed(seed, {
+    rnorm(n)
+  })
+}
+
+pure_rnorm(n = 5, seed = 123)
+pure_rnorm(n = 5, seed = 123)  # Same result!
+```
+
+In Python, `numpy` provides a more modern, object-oriented way:
+
+```python
+import numpy as np
+
+# Create a random number generator instance with a seed
+rng = np.random.default_rng(seed=123)
+print(rng.standard_normal(5))
+
+# If we re-create the same generator, we get the same numbers
+rng2 = np.random.default_rng(seed=123)
+print(rng2.standard_normal(5))
+```
+
+The key is the same: the "state" (the seed) is explicitly managed, not hidden 
+globally.
+
+### The OOP Caveat in Python
+
+This introduces a concept from OOP: the `rng` variable is an *object* that 
+bundles together data (its internal seed state) and methods (`.standard_normal()`). 
+This is **encapsulation**.
+
+This is a double-edged sword for reproducibility. The `rng` object is now a 
+stateful entity. If we called `rng.standard_normal(5)` a second time, it would 
+produce different numbers because its internal state was mutated.
+
+Core Python libraries like `pandas`, `scikit-learn`, and `matplotlib` are 
+fundamentally object-oriented. Our guiding principle must be:
+
+> **Use functions for the flow and logic of your analysis, and treat objects 
+> from libraries as values that are passed between these functions.**
+
+Avoid building your own complex classes with hidden state for your data 
+pipeline. A pipeline composed of functions (`df2 = clean_data(df1); df3 = 
+analyze_data(df2)`) is almost always more transparent than an OOP one 
+(`pipeline.load(); pipeline.clean(); pipeline.analyze()`).
+
+## Writing Your Own Functions
+
+Let's learn the syntax. The goal is always to encapsulate a single, logical 
+piece of work.
+
+### In R
+
+R functions are first-class citizens. You can assign them to variables and pass 
+them to other functions.
+
+```{r}
+#| eval: false
+# A simple function
+calculate_ci <- function(x, level = 0.95) {
+  se <- sd(x, na.rm = TRUE) / sqrt(length(x))
+  mean_val <- mean(x, na.rm = TRUE)
+  
+  alpha <- 1 - level
+  lower <- mean_val - qnorm(1 - alpha/2) * se
+  upper <- mean_val + qnorm(1 - alpha/2) * se
+  
+  c(mean = mean_val, lower = lower, upper = upper)
+}
+
+# Use it
+data <- c(1.2, 1.5, 1.8, 1.3, 1.6, 1.7)
+calculate_ci(data)
+```
+
+For data analysis, you'll often want functions that work with column names. 
+The `{dplyr}` package uses "tidy evaluation":
+
+```{r}
+#| eval: false
+library(dplyr)
+
+summarize_variable <- function(dataset, var_to_summarize) {
+  dataset %>%
+    summarise(
+      n = n(),
+      mean = mean({{ var_to_summarize }}, na.rm = TRUE),
+      sd = sd({{ var_to_summarize }}, na.rm = TRUE)
+    )
+}
+
+# The {{ }} syntax tells dplyr to use the column name passed in
+starwars %>%
+  group_by(species) %>%
+  summarize_variable(height)
+```
+
+### In Python
+
+Python uses the `def` keyword. Type hints are a best practice:
+
+```python
+import pandas as pd
+
+def summarize_variable_py(dataset: pd.DataFrame, var_to_summarize: str) -> pd.DataFrame:
+    """Calculates summary statistics for a given column."""
+    summary = dataset.groupby('species').agg(
+        n=(var_to_summarize, 'size'),
+        mean=(var_to_summarize, 'mean'),
+        sd=(var_to_summarize, 'std')
+    ).reset_index()
+    return summary
+```
+
+## The Functional Toolkit: Map, Filter, and Reduce
+
+Most `for` loops can be replaced by one of three core functional concepts: 
+**mapping**, **filtering**, or **reducing**. These are "higher-order 
+functions"—functions that take other functions as arguments.
+
+### 1. Mapping: Applying a Function to Each Element
+
+**The pattern:** You have a list of things, and you want to perform the same 
+action on each element, producing a new list of the same length.
+
+#### In R with `purrr::map()`
+
+The `{purrr}` package is the gold standard for functional programming in R:
+
+- `map()`: Always returns a list
+- `map_dbl()`: Returns a vector of doubles (numeric)
+- `map_chr()`: Returns a vector of characters (strings)
+- `map_lgl()`: Returns a vector of logicals (booleans)
+
+```{r}
+#| eval: false
+library(purrr)
+
+# The classic for-loop way (verbose)
+means_loop <- vector("double", ncol(mtcars))
+for (i in seq_along(mtcars)) {
+  means_loop[[i]] <- mean(mtcars[[i]], na.rm = TRUE)
+}
+
+# The functional way with map_dbl()
+means_functional <- map_dbl(mtcars, mean, na.rm = TRUE)
+```
+
+The `map()` version is not just shorter; it's safer. You can't make an 
+off-by-one error.
+
+#### In Python with List Comprehensions
+
+Python's most idiomatic tool for mapping is the **list comprehension**:
+
+```python
+numbers = [1, 2, 3, 4, 5]
+squares = [n**2 for n in numbers]
+# > [1, 4, 9, 16, 25]
+```
+
+Python also has a built-in `map()` function:
+
+```python
+def to_upper_case(s: str) -> str:
+    return s.upper()
+
+words = ["hello", "world"]
+upper_words = list(map(to_upper_case, words))
+# > ['HELLO', 'WORLD']
+```
+
+### 2. Filtering: Keeping Elements That Match a Condition
+
+**The pattern:** You have a list of things, and you want to keep only the 
+elements that satisfy a certain condition.
+
+#### In R with `purrr::keep()`
+
+```{r}
+#| eval: false
+df1 <- data.frame(x = 1:50)
+df2 <- data.frame(x = 1:200)
+df3 <- data.frame(x = 1:75)
+list_of_dfs <- list(a = df1, b = df2, c = df3)
+
+# Keep only data frames with more than 100 rows
+large_dfs <- keep(list_of_dfs, ~ nrow(.x) > 100)
+```
+
+#### In Python with List Comprehensions
+
+List comprehensions have a built-in `if` clause:
+
+```python
+numbers = [1, 10, 5, 20, 15, 30]
+large_numbers = [n for n in numbers if n > 10]
+# > [20, 15, 30]
+```
+
+### 3. Reducing: Combining All Elements into a Single Value
+
+**The pattern:** You have a list of things, and you want to iteratively combine 
+them into a single summary value.
+
+#### In R with `purrr::reduce()`
+
+```{r}
+#| eval: false
+# Sum all elements
+total_sum <- reduce(c(1, 2, 3, 4, 5), `+`)
+
+# Find common columns across multiple data frames
+list_of_colnames <- map(list_of_dfs, names)
+common_cols <- reduce(list_of_colnames, intersect)
+```
+
+#### In Python with `functools.reduce`
+
+```python
+from functools import reduce
+import operator
+
+numbers = [1, 2, 3, 4, 5]
+total_sum = reduce(operator.add, numbers)
+# > 15
+```
+
+## The Power of Composition
+
+The final, beautiful consequence of a functional style is **composition**. You 
+can chain functions together to build complex workflows from simple, reusable 
+parts.
+
+This R code is a sequence of function compositions:
+
+```{r}
+#| eval: false
+starwars %>%
+  filter(!is.na(mass)) %>%
+  select(species, sex, mass) %>%
+  group_by(sex, species) %>%
+  summarise(mean_mass = mean(mass), .groups = "drop")
+```
+
+The same idea in Python with pandas:
+
+```python
+(starwars_py
+ .dropna(subset=['mass'])
+ .filter(items=['species', 'sex', 'mass'])
+ .groupby(['sex', 'species'])
+ ['mass'].mean()
+ .reset_index()
+)
+```
+
+Each step is a function that takes a data frame and returns a new, transformed 
+data frame. By combining `map`, `filter`, and `reduce` with this compositional 
+style, you can express complex data manipulation pipelines without writing a 
+single `for` loop.
+
+### The Composition Challenge in Python
+
+Method chaining in pandas is elegant but limited to the methods defined for 
+`DataFrame` objects. R's pipe operators (`|>` and `%>%`) are more flexible 
+because functions are not strictly owned by objects—they can be more easily 
+combined.
+
+This reflects the languages' different philosophies:
+
+- **R**'s lineage traces back to Scheme (a Lisp dialect), making functional 
+  composition natural
+- **Python** was designed around "one obvious way to do it," favouring explicit 
+R is fundamentally a functional language that acquired OOP features, while 
+Python is an OOP language with powerful functional capabilities. Recognising 
+this helps you leverage the native strengths of each.
+
+## Summary
+
+This chapter has laid the groundwork for writing reproducible code by embracing 
+**Functional Programming**.
+
+Key takeaways:
+
+- **Pure functions** guarantee the same output for the same input—no hidden 
+  dependencies on global state
+- Make impure operations (like randomness) explicit by controlling the seed
+- Replace error-prone `for` loops with **map, filter, and reduce**
+- Use **composition** to build complex pipelines from simple, reusable functions
+- In Python, treat stateful library objects as values passed between pure 
+  functions
+
+Understanding the distinction between R's functional heritage and Python's OOP 
+nature is key to becoming an effective data scientist in either language. By 
+mastering the functional paradigm, you're building a foundation for code that 
+is robust, easy to review, simple to debug, and truly reproducible.
+
+In the next chapter, we'll put these principles into practice with 
+**`{rixpress}`**—a package that leverages functional composition and Nix to 
+build fully reproducible, polyglot analytical pipelines.
