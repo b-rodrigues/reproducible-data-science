@@ -1,14 +1,6 @@
 # Functional Programming
 
-What you'll learn by the end of this chapter:
-
-- Why functional programming is crucial for reproducible, testable, and 
-  collaborative data science.
-- How to write self-contained, "pure" functions in both R and Python.
-- How to use functional concepts like `map`, `filter`, and `reduce` to replace 
-  error-prone loops.
-- How writing functions makes your code easier to review, debug, and even 
-  generate with LLMs.
+In this chapter, we will see why functional programming is crucial for reproducible, testable, and collaborative data science. We will compare how to write self-contained, "pure" functions in both R and Python, and how to use functional concepts like `map`, `filter`, and `reduce` to replace error-prone loops. Finally, we will discuss how writing functions makes your code easier to review, debug, and even generate with LLMs.
 
 ## Introduction: From Scripts to Functions
 

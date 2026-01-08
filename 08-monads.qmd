@@ -4,11 +4,7 @@ In the previous chapters, you learned functional programming fundamentals and
 how to build reproducible pipelines with `{rixpress}`. Now we'll add another 
 layer of robustness: **monads**.
 
-Monads might sound abstract, but they solve concrete problems:
-
-- **Logging**: Track what each step does without cluttering your functions
-- **Error handling**: Let failures propagate gracefully instead of crashing
-- **Composition**: Keep functions composable even when they need to do "extra" work
+Monads might sound abstract, but they solve concrete problems involving **Logging** (tracing what each step does without cluttering your functions), **Error handling** (letting failures propagate gracefully instead of crashing), and **Composition** (keeping functions composable even when they need to do "extra" work).
 
 By the end of this chapter, you'll know how to integrate `{chronicler}` and 
 `talvez` into your pipelines for more robust, observable data workflows.
