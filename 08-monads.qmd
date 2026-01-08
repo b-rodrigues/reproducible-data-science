@@ -1,0 +1,379 @@
+# Robust Pipelines with Monads
+
+In the previous chapters, you learned functional programming fundamentals and 
+how to build reproducible pipelines with `{rixpress}`. Now we'll add another 
+layer of robustness: **monads**.
+
+Monads might sound abstract, but they solve concrete problems:
+
+- **Logging**: Track what each step does without cluttering your functions
+- **Error handling**: Let failures propagate gracefully instead of crashing
+- **Composition**: Keep functions composable even when they need to do "extra" work
+
+By the end of this chapter, you'll know how to integrate `{chronicler}` and 
+`talvez` into your pipelines for more robust, observable data workflows.
+
+## The Problem: Decorated Functions Don't Compose
+
+Suppose you want your functions to provide logs. You might rewrite `sqrt()` like 
+this:
+
+```{r}
+#| eval: false
+my_sqrt <- function(x, log = "") {
+  list(
+    result = sqrt(x),
+    log = c(log, paste0("Running sqrt with input ", x))
+  )
+}
+
+my_log <- function(x, log = "") {
+  list(
+    result = log(x),
+    log = c(log, paste0("Running log with input ", x))
+  )
+}
+```
+
+These functions now return lists with both the result and a log. But there's a 
+problem—they don't compose:
+
+```{r}
+#| eval: false
+# This works:
+10 |> sqrt() |> log()
+
+# This fails:
+10 |> my_sqrt() |> my_log()
+# Error: non-numeric argument to mathematical function
+```
+
+`my_log()` expects a number, but `my_sqrt()` returns a list. We've broken 
+composition.
+
+## The Solution: Function Factories and Bind
+
+A monad provides two things:
+
+1. **A function factory** that decorates functions so they can provide 
+   additional output without rewriting their core logic
+2. **A `bind()` function** that makes these decorated functions compose
+
+Here's a simple function factory for logging:
+
+```{r}
+#| eval: false
+log_it <- function(.f) {
+  fstring <- deparse(substitute(.f))
+  
+  function(..., .log = NULL) {
+    list(
+      result = .f(...),
+      log = c(.log, paste0("Running ", fstring, " with argument ", ...))
+    )
+  }
+}
+
+# Create decorated functions
+l_sqrt <- log_it(sqrt)
+l_log <- log_it(log)
+
+l_sqrt(10)
+#> $result
+#> [1] 3.162278
+#> $log
+#> [1] "Running sqrt with argument 10"
+```
+
+Now we need `bind()` to make them compose:
+
+```{r}
+#| eval: false
+bind <- function(.l, .f) {
+  .f(.l$result, .log = .l$log)
+}
+
+# Now they compose!
+10 |>
+  l_sqrt() |>
+  bind(l_log)
+
+#> $result
+#> [1] 1.151293
+#> $log
+#> [1] "Running sqrt with argument 10"
+#> [2] "Running log with argument 3.16227766016838"
+```
+
+This pattern of a function factory plus `bind()` is the essence of a monad.
+
+## The chronicler Package
+
+The `{chronicler}` package implements this pattern properly for R. It provides:
+
+- `record()`: A function factory that decorates functions
+- `bind_record()`: The bind operation
+- Automatic logging of all operations
+
+```{r}
+#| eval: false
+library(chronicler)
+
+# Decorate functions
+r_sqrt <- record(sqrt)
+r_exp <- record(exp)
+r_mean <- record(mean)
+
+# Compose them
+result <- 1:10 |>
+  r_sqrt() |>
+  bind_record(r_exp) |>
+  bind_record(r_mean)
+
+# View the result
+result$value
+#> [1] 5.187899
+
+# View the log
+read_log(result)
+#> [1] "Complete log:"
+#> [2] "✔ sqrt ran successfully"
+#> [3] "✔ exp ran successfully"
+#> [4] "✔ mean ran successfully"
+```
+
+## The Maybe Monad: Handling Errors
+
+Another common monad is **Maybe**, which handles computations that might fail. 
+Instead of crashing, functions return either:
+
+- `Just(value)` if successful
+- `Nothing` if something went wrong
+
+The `{chronicler}` package uses this under the hood:
+
+```{r}
+#| eval: false
+r_sqrt <- record(sqrt)
+
+# This works
+r_sqrt(16)
+#> ✔ Value: Just
+#> [1] 4
+
+# This fails gracefully
+r_sqrt("not a number")
+#> ✖ Value: Nothing
+```
+
+When `Nothing` is passed to a decorated function, it immediately returns 
+`Nothing`—the error propagates through the pipeline without crashing.
+
+## Monads in Python: talvez
+
+The same concepts exist in Python. The `talvez` package provides a Maybe monad:
+
+```python
+from talvez import maybe, just
+
+@maybe()
+def parse_int(s: str) -> int:
+    return int(s)
+
+@maybe(ensure=lambda x: x != 0)
+def reciprocal(n: int) -> float:
+    return 1 / n
+
+# Successful computation
+result = (
+    parse_int("25")
+      .bind(reciprocal)
+      .fmap(lambda x: x * 100)
+)
+print(result)            # Just(4.0)
+print(result.get_or(-1)) # 4.0
+
+# Failed computation
+bad = (
+    parse_int("not a number")
+      .bind(reciprocal)
+      .fmap(lambda x: x * 100)
+)
+print(bad)  # Nothing
+```
+
+The key operations are:
+
+- `fmap(fn)`: Apply a pure function to the value inside the monad
+- `bind(fn)`: Apply a function that itself returns a monad
+
+## Building Robust Pipelines
+
+The real power of monads becomes apparent when you combine them with pipeline 
+orchestration. Consider a typical data pipeline:
+
+```{r}
+#| eval: false
+# Standard pipeline - fragile
+raw_data |>
+  basic_cleaning() |>
+  recodings() |>
+  filter_arrivals() |>
+  make_monthly() |>
+  make_plot()
+```
+
+If `recodings()` fails halfway through, the entire pipeline crashes. You get an 
+error message, but no information about what succeeded before the failure.
+
+Now imagine wrapping each function with `record()`:
+
+```{r}
+#| eval: false
+library(chronicler)
+
+# Robust pipeline with logging
+r_basic_cleaning <- record(basic_cleaning)
+r_recodings <- record(recodings)
+r_filter_arrivals <- record(filter_arrivals)
+r_make_monthly <- record(make_monthly)
+r_make_plot <- record(make_plot)
+
+result <- raw_data |>
+  r_basic_cleaning() |>
+  bind_record(r_recodings) |>
+  bind_record(r_filter_arrivals) |>
+  bind_record(r_make_monthly) |>
+  bind_record(r_make_plot)
+
+# Now you get:
+# - The result (or Nothing if any step failed)
+# - A complete log of which steps ran
+# - Exactly where and why it failed
+read_log(result)
+```
+
+This pattern transforms a fragile script into a robust, observable pipeline.
+
+## Integrating with rixpress
+
+You can combine the power of `{chronicler}` with `{rixpress}` for even more 
+robust pipelines. The key insight is that your `user_functions` can use 
+`record()` internally:
+
+```{r}
+#| eval: false
+# functions.R
+library(chronicler)
+
+# Create recorded versions of your functions
+r_basic_cleaning <- record(function(data) {
+  data |>
+    select(contains("TIME"), contains("20")) |>
+    pivot_longer(cols = contains("20"),
+                 names_to = "date",
+                 values_to = "passengers")
+})
+
+r_recodings <- record(function(data) {
+  data |>
+    mutate(tra_meas = fct_recode(tra_meas, ...)) |>
+    mutate(passengers = as.numeric(passengers))
+})
+
+# Export a pipeline function that uses bind_record
+process_aviation_data <- function(raw_data) {
+  raw_data |>
+    r_basic_cleaning() |>
+    bind_record(r_recodings)
+}
+```
+
+Then in your `{rixpress}` pipeline:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+list(
+  rxp_r_file(
+    name = avia_raw,
+    path = "data/avia.tsv",
+    read_function = readr::read_tsv
+  ),
+  
+  rxp_r(
+    name = processed_data,
+    expr = process_aviation_data(avia_raw),
+    user_functions = "functions.R"
+  ),
+  
+  # ... more steps
+) |>
+  rxp_populate()
+```
+
+The `{rixpress}` derivation caches the result while `{chronicler}` provides 
+logging and error handling within the step.
+
+## Python Integration with talvez
+
+The same pattern works in Python pipelines:
+
+```python
+# functions.py
+from talvez import maybe, chain, just
+
+@maybe()
+def basic_cleaning(df):
+    return df.dropna().reset_index(drop=True)
+
+@maybe()
+def recodings(df):
+    df['category'] = df['category'].map(category_mapping)
+    return df
+
+@maybe()
+def filter_arrivals(df):
+    return df[df['tra_meas'] == 'Arrivals']
+
+def process_data(raw_df):
+    """Returns Just(result) or Nothing with error handling."""
+    return chain(
+        just(raw_df),
+        basic_cleaning,
+        recodings,
+        filter_arrivals
+    )
+```
+
+Then in your `{rixpress}` pipeline:
+
+```{r}
+#| eval: false
+rxp_py(
+  name = processed_data,
+  expr = "process_data(raw_data)",
+  user_functions = "functions.py"
+)
+```
+
+## Summary
+
+Monads add a layer of robustness to your pipelines:
+
+- **chronicler** (`record()`, `bind_record()`): Logging and error handling for R
+- **talvez** (`@maybe()`, `bind()`, `chain()`): Error handling for Python
+- **Just/Nothing**: Graceful failure propagation without crashes
+- **Composability preserved**: Even with extra capabilities, functions still 
+  compose
+
+Combined with `{rixpress}`:
+
+- Nix provides **hermetic, cached execution**
+- Monads provide **logging and error handling**
+- Together they give you **robust, reproducible, observable pipelines**
+
+This completes our toolkit for reproducible data science: environments (Nix), 
+functional code (FP), pipelines (rixpress), distribution (Docker), and 
+robustness (monads).
