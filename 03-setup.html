@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Setting up Nix and Positron – Reproducible Polyglot Data Science</title>
+<title>3&nbsp; — – Reproducible Polyglot Data Science</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -288,7 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-setup.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting up Nix and Positron</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-setup.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">—</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -378,13 +378,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-setup.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting up Nix and Positron</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">—</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-rix.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Reproducible Development Environments with rix</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Functional Programming</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-rixpress.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -403,16 +427,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">3.1</span> Introduction</a></li>
-  <li><a href="#windows-pre-requisites" id="toc-windows-pre-requisites" class="nav-link" data-scroll-target="#windows-pre-requisites"><span class="header-section-number">3.2</span> Windows pre-requisites</a></li>
-  <li><a href="#determinate-nix" id="toc-determinate-nix" class="nav-link" data-scroll-target="#determinate-nix"><span class="header-section-number">3.3</span> Determinate Nix</a></li>
-  <li><a href="#temporary-shells" id="toc-temporary-shells" class="nav-link" data-scroll-target="#temporary-shells"><span class="header-section-number">3.4</span> Temporary shells</a></li>
-  <li><a href="#the-rstats-on-nix-cache" id="toc-the-rstats-on-nix-cache" class="nav-link" data-scroll-target="#the-rstats-on-nix-cache"><span class="header-section-number">3.5</span> The rstats-on-nix Cache</a></li>
-  <li><a href="#direnv" id="toc-direnv" class="nav-link" data-scroll-target="#direnv"><span class="header-section-number">3.6</span> direnv</a></li>
-  <li><a href="#installing-and-configuring-an-editor" id="toc-installing-and-configuring-an-editor" class="nav-link" data-scroll-target="#installing-and-configuring-an-editor"><span class="header-section-number">3.7</span> Installing and configuring an editor</a>
+  <li><a href="#reproducibility-with-nix" id="toc-reproducibility-with-nix" class="nav-link active" data-scroll-target="#reproducibility-with-nix"><span class="header-section-number">4</span> Reproducibility with Nix</a>
   <ul class="collapse">
-  <li><a href="#positron-and-vs-code" id="toc-positron-and-vs-code" class="nav-link" data-scroll-target="#positron-and-vs-code"><span class="header-section-number">3.7.1</span> Positron and VS Code</a></li>
-  <li><a href="#emacs" id="toc-emacs" class="nav-link" data-scroll-target="#emacs"><span class="header-section-number">3.7.2</span> Emacs</a></li>
+  <li><a href="#why-reproducibility-why-nix-1h30" id="toc-why-reproducibility-why-nix-1h30" class="nav-link" data-scroll-target="#why-reproducibility-why-nix-1h30"><span class="header-section-number">4.1</span> Why Reproducibility? Why Nix? <em>(1h30)</em></a>
+  <ul class="collapse">
+  <li><a href="#motivation-reproducibility-in-scientific-and-data-workflows" id="toc-motivation-reproducibility-in-scientific-and-data-workflows" class="nav-link" data-scroll-target="#motivation-reproducibility-in-scientific-and-data-workflows"><span class="header-section-number">4.1.1</span> Motivation: Reproducibility in Scientific and Data Workflows</a></li>
+  <li><a href="#problems-with-ad-hoc-tools" id="toc-problems-with-ad-hoc-tools" class="nav-link" data-scroll-target="#problems-with-ad-hoc-tools"><span class="header-section-number">4.1.2</span> Problems with Ad-Hoc Tools</a></li>
+  <li><a href="#nix-a-declarative-package-manager" id="toc-nix-a-declarative-package-manager" class="nav-link" data-scroll-target="#nix-a-declarative-package-manager"><span class="header-section-number">4.1.3</span> Nix, a declarative package manager</a></li>
+  <li><a href="#the-rix-package" id="toc-the-rix-package" class="nav-link" data-scroll-target="#the-rix-package"><span class="header-section-number">4.1.4</span> The rix package</a></li>
+  <li><a href="#installing-nix" id="toc-installing-nix" class="nav-link" data-scroll-target="#installing-nix"><span class="header-section-number">4.1.5</span> Installing Nix</a></li>
+  <li><a href="#temporary-shells" id="toc-temporary-shells" class="nav-link" data-scroll-target="#temporary-shells"><span class="header-section-number">4.1.6</span> Temporary shells</a></li>
+  </ul></li>
+  <li><a href="#session-1.2-dev-environments-with-nix-1h30" id="toc-session-1.2-dev-environments-with-nix-1h30" class="nav-link" data-scroll-target="#session-1.2-dev-environments-with-nix-1h30"><span class="header-section-number">4.2</span> Session 1.2 – Dev Environments with Nix <em>(1h30)</em></a>
+  <ul class="collapse">
+  <li><a href="#some-nix-concepts" id="toc-some-nix-concepts" class="nav-link" data-scroll-target="#some-nix-concepts"><span class="header-section-number">4.2.1</span> Some Nix concepts</a></li>
+  <li><a href="#derivations" id="toc-derivations" class="nav-link" data-scroll-target="#derivations"><span class="header-section-number">4.2.2</span> Derivations</a></li>
+  <li><a href="#using-rix-to-generate-development-environments" id="toc-using-rix-to-generate-development-environments" class="nav-link" data-scroll-target="#using-rix-to-generate-development-environments"><span class="header-section-number">4.2.3</span> Using <code>{rix}</code> to generate development environments</a></li>
+  <li><a href="#using-nix-shell-to-launch-environments" id="toc-using-nix-shell-to-launch-environments" class="nav-link" data-scroll-target="#using-nix-shell-to-launch-environments"><span class="header-section-number">4.2.4</span> Using <code>nix-shell</code> to Launch Environments</a></li>
+  <li><a href="#pinning-with-nixpkgs" id="toc-pinning-with-nixpkgs" class="nav-link" data-scroll-target="#pinning-with-nixpkgs"><span class="header-section-number">4.2.5</span> Pinning with <code>nixpkgs</code></a></li>
+  <li><a href="#installing-python-packages-not-available-via-nixpkgs-impure" id="toc-installing-python-packages-not-available-via-nixpkgs-impure" class="nav-link" data-scroll-target="#installing-python-packages-not-available-via-nixpkgs-impure"><span class="header-section-number">4.2.6</span> Installing Python packages not available via nixpkgs (impure)</a></li>
+  </ul></li>
+  <li><a href="#configuring-your-ide" id="toc-configuring-your-ide" class="nav-link" data-scroll-target="#configuring-your-ide"><span class="header-section-number">4.3</span> Configuring your IDE</a>
+  <ul class="collapse">
+  <li><a href="#pre-requisites" id="toc-pre-requisites" class="nav-link" data-scroll-target="#pre-requisites"><span class="header-section-number">4.3.1</span> Pre-requisites</a></li>
+  <li><a href="#direnv" id="toc-direnv" class="nav-link" data-scroll-target="#direnv"><span class="header-section-number">4.3.2</span> direnv</a></li>
+  <li><a href="#in-summary-and-next-steps" id="toc-in-summary-and-next-steps" class="nav-link" data-scroll-target="#in-summary-and-next-steps"><span class="header-section-number">4.3.3</span> In summary and next steps</a></li>
+  </ul></li>
+  <li><a href="#starting-a-new-project" id="toc-starting-a-new-project" class="nav-link" data-scroll-target="#starting-a-new-project"><span class="header-section-number">4.4</span> Starting a new project:</a></li>
+  <li><a href="#hands-on-exercises" id="toc-hands-on-exercises" class="nav-link" data-scroll-target="#hands-on-exercises"><span class="header-section-number">4.5</span> Hands-On Exercises</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/03-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -423,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting up Nix and Positron</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">—</span></h1>
 </div>
 
 
@@ -440,125 +482,332 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.1</span> Introduction</h2>
-<p>Nix officially supports only macOS and Linux distributions. Windows is technically supported via WSL2, since it runs a Linux kernel underneath. Practically, this means you can treat Linux distributions and Windows (via WSL2) as one system, and macOS as a separate system.</p>
-<p>If you plan to use Nix on Windows, WSL2 must be installed and running first. An advantage of using WSL2 is isolation: any existing tools you have installed on Windows such as R, RStudio, Python, <code>uv</code>, etc., won’t interfere with Nix, allowing you to use it freely.</p>
-<p>On Linux and macOS, however, pre-installed tools can conflict with Nix-managed tools. For example, environment managers like <code>uv</code> or manually installed R/Python versions may interfere with Nix environments. Ideally, you would let Nix manage all your tools, but completely removing existing installations of tools is often impractical especially if the machine you will be using to follow along is also the machine you use for work.</p>
-<p>But I do highly recommend setting up Nix to manage everything, at least once you feel comfortable enough with Nix. However if you’re primarily an R user, you should be fine even with a system-level R installation, and you could just set up Nix on the same machine and there shouldn’t be any issue (if there are it’ll only be when trying to use Nix, not when trying to use your usual system-level installation of R).</p>
-<p>Things can get more complicated with Python, especially if you have auto-loading of environments in your IDE.</p>
-<p>If you prefer a safe way to experiment with Nix, you can set up a Linux virtual machine (but again, only if you are already on Linux or macOS, and only if the machine you will be using already has R or Python).</p>
-<p>On macOS, you could use <a href="https://mac.getutm.app/">UTM</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to set up such a machine. A simple virtualization program for Linux is <a href="https://apps.gnome.org/Boxes/">Gnome Boxes</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. If you use those, I recommend you then get the Lubuntu iso and install Lubuntu. It’s a lightweight Ubuntu variant which is ideal for VMs. Give the VM 4 GB of RAM, and 50 GB of disk space to be safe.</p>
-<p>You can then safely experiment in that machine without interfering with your work computer!</p>
+<section id="reproducibility-with-nix" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Reproducibility with Nix</h1>
+<div style="text-align:center;">
+
+</div>
+<p>In this chapter, we will explore the critical need for environment reproducibility in modern workflows. We will learn how to use <code>{rix}</code> to generate <code>default.nix</code> files and see how this enables building robust, cross-language environments for data science and software development.</p>
+<section id="why-reproducibility-why-nix-1h30" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="why-reproducibility-why-nix-1h30"><span class="header-section-number">4.1</span> Why Reproducibility? Why Nix? <em>(1h30)</em></h2>
+<section id="motivation-reproducibility-in-scientific-and-data-workflows" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="motivation-reproducibility-in-scientific-and-data-workflows"><span class="header-section-number">4.1.1</span> Motivation: Reproducibility in Scientific and Data Workflows</h3>
+<p>To ensure that a project is reproducible you need to deal with at least four things:</p>
+<ul>
+<li>Make sure that the required/correct version of R (or any other language) is installed;</li>
+<li>Make sure that the required versions of packages are installed;</li>
+<li>Make sure that system dependencies are installed (for example, you’d need a working Java installation to install the <code>{rJava}</code> R package on Linux);</li>
+<li>Make sure that you can install all of this for the hardware you have on hand.</li>
+</ul>
+<p>But in practice, one or most of these bullet points are missing from projects. The goal of this course is to learn how to fullfill all the requirements to build reproducible projects.</p>
 </section>
-<section id="windows-pre-requisites" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="windows-pre-requisites"><span class="header-section-number">3.2</span> Windows pre-requisites</h2>
+<section id="problems-with-ad-hoc-tools" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="problems-with-ad-hoc-tools"><span class="header-section-number">4.1.2</span> Problems with Ad-Hoc Tools</h3>
+<p>Tools like Python’s <code>venv</code> or R’s <code>renv</code> only deal with some pieces of the reproducibility puzzle. Often, they assume an underlying OS, do not capture system-level dependencies (like <code>libxml2</code>, <code>pandoc</code>, or <code>curl</code>), and require users to “rebuild” their environments from partial metadata. Docker helps but introduces overhead, security challenges, and complexity, and just adding it to your project doesn’t make it reproducible if you don’t explicitely take some precautionary steps.</p>
+<p>Traditional approaches fail to capture the entire dependency graph of a project in a deterministic way. This leads to “it works on my machine” syndromes, onboarding delays, and subtle bugs.</p>
+</section>
+<section id="nix-a-declarative-package-manager" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="nix-a-declarative-package-manager"><span class="header-section-number">4.1.3</span> Nix, a declarative package manager</h3>
+<p>Nix is a tool for reproducible builds and development environments, often introduced as a package manager. It captures complete dependency trees, from your programming language interpreter to every system-level library you rely on. With Nix, environments are not recreated from documentation, but rebuilt precisely from code.</p>
+<p>Nix can be installed on Linux distributions, macOS and it even works on Windows if you enable WSL2. In this course, we will use Nix mostly as a package manager (but towards also as a build automation tool).</p>
+<p>However Nix has quite a steep learning curve, so this is why for the purposes of this course we are going to use an R package called <code>{rix}</code> to set up reproducible environments.</p>
+</section>
+<section id="the-rix-package" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="the-rix-package"><span class="header-section-number">4.1.4</span> The rix package</h3>
+<p><code>{rix}</code> is an R package (I’m the author) and its goal is to make writing Nix expressions easy. With <code>{rix}</code> you can declare the environment you need using the provided <code>rix()</code> function, which is the package’s main function. Calling it generates a file called <code>default.nix</code> which is then used by the Nix package manager to build that environment. Ideally, you would set up such an environment for each of your projects. You can then use this environment to either work interactively, or run R or Python scripts. It is possible to have as many environments as projects, and software that is common to environments will simply be re-used and not get re-installed to save space. Environments are isolated from each other, but can still interact with your system’s files, unlike with Docker where a volume must be mounted. While this is useful, it can sometimes lead to issues. For example, if you already have R installed, and a user library of R packages, more caution is required to properly use environments managed by Nix.</p>
+<p>You don’t need to have R installed or be an R user to use <code>{rix}</code>. If you have Nix installed on your system, it is possible to “drop” into a temporary environment with R and <code>{rix}</code> available and generate the required Nix expression from there.</p>
+<p>But first, let’s install Nix and try to use temporary shells.</p>
+</section>
+<section id="installing-nix" class="level3" data-number="4.1.5">
+<h3 data-number="4.1.5" class="anchored" data-anchor-id="installing-nix"><span class="header-section-number">4.1.5</span> Installing Nix</h3>
+<section id="for-windows-users-only-some-prerequisites" class="level4" data-number="4.1.5.1">
+<h4 data-number="4.1.5.1" class="anchored" data-anchor-id="for-windows-users-only-some-prerequisites"><span class="header-section-number">4.1.5.1</span> For Windows users only: some prerequisites</h4>
 <p>If you are on Windows, you need the Windows Subsystem for Linux 2 (WSL2) to run Nix. If you are on a recent version of Windows 10 or 11, you can simply run this as an administrator in PowerShell:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wsl</span> <span class="at">--install</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>You can find further installation notes at <a href="https://learn.microsoft.com/en-us/windows/wsl/install">this official Microsoft documentation</a>.</p>
-<p>We recommend to activate systemd in Ubuntu WSL2, mainly because this supports other users than <code>root</code> running Nix. To set this up, please do as outlined in <a href="https://learn.microsoft.com/en-us/windows/wsl/systemd#how-to-enable-systemd">the official Microsoft WSL documentation</a>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wsl</span> <span class="at">--install</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can find further installation notes at <a href="https://learn.microsoft.com/en-us/windows/wsl/install">this official MS documentation</a>.</p>
+<p>I recommend to activate <code>systemd</code> in Ubuntu WSL2, mainly because this supports other users than <code>root</code> running Nix. To set this up, please do as outlined <a href="https://ubuntu.com/blog/ubuntu-wsl-enable-systemd">this official Ubuntu blog entry</a>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># in WSL2 Ubuntu shell</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> <span class="at">-i</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> /etc/wsl.conf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This will open the <code>/etc/wsl.conf</code> in a nano, a command line text editor. Add the following line:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[boot]</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">systemd</span><span class="ot">=</span><span class="kw">true</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[boot]</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">systemd</span><span class="op">=</span><span class="cn">true</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Save the file with CTRL-O and then quit nano with CTRL-X. Then, type the following line in powershell:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wsl</span> <span class="at">--shutdown</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>and then relaunch WSL (Ubuntu) from the start menu.</p>
-<p>Then, you can follow the instructions for Linux.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wsl</span> <span class="at">--shutdown</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and then relaunch WSL (Ubuntu) from the start menu. For those of you running Windows, we will be working exclusively from WSL2 now. If that is not an option, then I highly recommend you set up a virtual machine with Ubuntu using <a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a> for example, or dual-boot Ubuntu.</p>
+<p>Installing (and uninstalling) Nix is quite simple, thanks to the installer from <a href="https://github.com/DeterminateSystems/nix-installer">Determinate Systems</a>, a company that provides services and tools built on Nix, and works the same way on Linux (native or WSL2) and macOS.</p>
 </section>
-<section id="determinate-nix" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="determinate-nix"><span class="header-section-number">3.3</span> Determinate Nix</h2>
-<p>Installing (and uninstalling) Nix is quite simple, thanks to the installer from <a href="https://determinate.systems/posts/determinate-nix-installer">Determinate Systems</a>, a company that provides services and tools built on Nix.</p>
-<p>Do not use your operating system’s package manager to install Nix. Instead, simply open a terminal and run the following line (on Windows, if you cannot or have decided not to activate systemd, then you have to append <code>--init none</code> to the command. You can find more details about this on <a href="https://github.com/DeterminateSystems/nix-installer">The Determinate Nix Installer page</a>):</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> <span class="dt">\</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">-L</span> https://install.determinate.systems/nix <span class="kw">|</span> <span class="dt">\</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">sh</span> <span class="at">-s</span> <span class="at">--</span> install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This will install Nix in a matter of seconds! Restart the terminal (WSL or native on Linux) and let’s try our installation of Nix using so-called temporary shells.</p>
+<section id="actually-installing-nix" class="level4" data-number="4.1.5.2">
+<h4 data-number="4.1.5.2" class="anchored" data-anchor-id="actually-installing-nix"><span class="header-section-number">4.1.5.2</span> Actually installing Nix</h4>
+<p>Do not use your operating system’s package manager to install Nix. Instead, simply open a terminal and run the following line (on Windows, run this inside WSL):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-L</span> https://install.determinate.systems/nix <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sh</span> <span class="at">-s</span> <span class="at">--</span> install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, install the <code>cachix</code> client and configure the <code>rstats-on-nix</code> cache: this will install binary versions of many R packages which will speed up the building process of environments:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-env</span> <span class="at">-iA</span> cachix <span class="at">-f</span> https://cachix.org/api/v1/install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>then use the cache:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cachix</span> use rstats-on-nix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You only need to do this once per machine you want to use <code>{rix}</code> on. Many thanks to <a href="https://www.cachix.org/">Cachix</a> for sponsoring the <code>rstats-on-nix</code> cache!</p>
+<p>If you get this warning when trying to install software with Nix:</p>
+<pre><code>warning: ignoring the client-specified setting 'trusted-public-keys', because it is a restricted setting and you are not a trusted user
+warning: ignoring untrusted substituter 'https://rstats-on-nix.cachix.org', you are not a trusted user.
+Run `man nix.conf` for more information on the `substituters` configuration option.
+warning: ignoring the client-specified setting 'trusted-public-keys', because it is a restricted setting and you are not a trusted user</code></pre>
+<p>Then this means that configuration was not successful. You need to add your user to <code>/etc/nix/nix.custom.conf</code>:</p>
+<pre><code>sudo vim /etc/nix/nix.custom.conf</code></pre>
+<p>then simply add this line in the file:</p>
+<pre><code>trusted-users = root YOURUSERNAME</code></pre>
+<p>where <code>YOURUSERNAME</code> is your current login user name.</p>
 </section>
-<section id="temporary-shells" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="temporary-shells"><span class="header-section-number">3.4</span> Temporary shells</h2>
-<p>You now have Nix installed; before continuing, it let’s see if everything works (close all your terminals and reopen them) by dropping into a temporary shell with a tool you likely have not installed on your machine.</p>
+</section>
+<section id="temporary-shells" class="level3" data-number="4.1.6">
+<h3 data-number="4.1.6" class="anchored" data-anchor-id="temporary-shells"><span class="header-section-number">4.1.6</span> Temporary shells</h3>
+<p>You now have Nix installed; before continuing, it let’s see if everything works (close all your terminals and reopen them) by droping into a temporary shell with a tool you likely have not installed on your machine.</p>
 <p>Open a terminal and run:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> sl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> sl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>you will likely see something like this:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">which:</span> no sl in ....</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">which:</span> no sl in ....</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>now run this:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">-p</span> sl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>and then wait for Nix to do its magic. Then, run again:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> sl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">-p</span> sl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and then again:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> sl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>this time you should see something like:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/nix/store/cndqpx74312xkrrgp842ifinkd4cg89g-sl-5.05/bin/sl</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This is the path to the <code>sl</code> binary installed through Nix. The path starts with <code>/nix/store</code>: the <em>Nix store</em> is where all the software installed through Nix is stored.</p>
-<p>Now type <code>sl</code> and see what happens!</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/nix/store/cndqpx74312xkrrgp842ifinkd4cg89g-sl-5.05/bin/sl</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is the path to the <code>sl</code> binary installed through Nix. The path starts with <code>/nix/store</code>: the <em>Nix store</em> is where all the software installed through Nix is stored. Now type <code>sl</code> and see what happens!</p>
 <p>You can find the list of available packages <a href="https://search.nixos.org/packages?channel=unstable&amp;from=0&amp;size=50&amp;sort=relevance&amp;type=packages&amp;query=">here</a>.</p>
 </section>
-<section id="the-rstats-on-nix-cache" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="the-rstats-on-nix-cache"><span class="header-section-number">3.5</span> The rstats-on-nix Cache</h2>
-<p>Next, we install the <code>cachix</code> client and configure our <code>rstats-on-nix</code> cache: this will install binary versions of many R packages which will speed up the building process of environments:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-env</span> <span class="at">-iA</span> cachix <span class="at">-f</span> https://cachix.org/api/v1/install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>then use the cache:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cachix</span> use rstats-on-nix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>You only need to do this once per machine you want to use <code>{rix}</code> on. Many thanks to <a href="https://www.cachix.org/">Cachix</a> for sponsoring the <code>rstats-on-nix</code> cache!</p>
-<p><code>{rix}</code> also includes a function called <code>setup_cachix()</code> which will configure the cache but it is recommended to use the <code>cachix</code> client instead. This is because <code>setup_cachix()</code> will not edit the files that require admin/root privileges and only edit the user-level files. This may not be enough depending on how you installed Nix. Using the <code>cachix</code> client takes care of everything. Use <code>setup_cachix()</code> when building a Docker image or if you somehow mess up the configuration file (which should be located in <code>~/.config/nix.conf</code>).</p>
-<p>On Linux, once Nix is installed, all the software that will be installed through Nix will be saved to the <code>/nix</code> directory on the root partition. It is common for Linux users to have a separate partition for <code>/</code>, which may be small. Complete development environments built with Nix can take up much space, so if the available space on your root partition is limited, we advise you to mount the <code>/nix</code> folder on another partition with more space (for example, a secondary hard drive). For this, edit <code>/etc/fstab</code> and add the following line at the end:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">/home/path_to/nix /nix none bind 0 0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This will map <code>/nix</code> to <code>/home/path_to/nix</code> which can be on a larger partition. If you have enough space on your root partition, you can ignore the above instructions.</p>
 </section>
-<section id="direnv" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="direnv"><span class="header-section-number">3.6</span> direnv</h2>
-<p><code>direnv</code> will automatically load Nix shells when you open a project managed by Nix. This makes using Nix, especially with an editor (which we will configure in the next section), much more seamless and easy. If you’re using Windows, install <code>direnv</code> in WSL, just like Nix and <code>cachix</code> before. To install <code>direnv</code> run this command:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-env</span> <span class="at">-f</span> <span class="st">'&lt;nixpkgs&gt;'</span> <span class="at">-iA</span> direnv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="session-1.2-dev-environments-with-nix-1h30" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="session-1.2-dev-environments-with-nix-1h30"><span class="header-section-number">4.2</span> Session 1.2 – Dev Environments with Nix <em>(1h30)</em></h2>
+<section id="some-nix-concepts" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="some-nix-concepts"><span class="header-section-number">4.2.1</span> Some Nix concepts</h3>
+<p>While temporary shells are useful for quick testing, this is not how Nix is typically used in practice. Nix is a declarative package manager: users specify what they want to build, and Nix takes care of the rest.</p>
+<p>To do so, users write files called <code>default.nix</code> that contain the a so-called Nix expression. This expression will contain the definition of a (or several) <em>derivations</em>.</p>
+<p>In <code>Nix</code> terminology, a derivation is <em>a specification for running an executable on precisely defined input files to repeatably produce output files at uniquely determined file system paths.</em> (<a href="https://nix.dev/manual/nix/2.25/language/derivations">source</a>)</p>
+<p>In simpler terms, a derivation is a recipe with precisely defined inputs, steps, and a fixed output. This means that given identical inputs and build steps, the exact same output will always be produced. To achieve this level of reproducibility, several important measures must be taken:</p>
+<ul>
+<li>All inputs to a derivation must be explicitly declared.</li>
+<li>Inputs include not just data files, but also software dependencies, configuration flags, and environment variables, essentially anything necessary for the build process.</li>
+<li>The build process takes place in a <em>hermetic</em> sandbox to ensure the exact same output is always produced.</li>
+</ul>
+<p>The next sections of this document explain these three points in more detail.</p>
+</section>
+<section id="derivations" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="derivations"><span class="header-section-number">4.2.2</span> Derivations</h3>
+<p>Here is an example of a <em>simple</em> <code>Nix</code> expression:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a> <span class="va">pkgs</span> <span class="op">=</span> <span class="bu">import</span> <span class="op">(</span><span class="bu">fetchTarball</span> <span class="st">"https://github.com/rstats-on-nix/nixpkgs/archive/2025-04-11.tar.gz"</span><span class="op">)</span> <span class="op">{};</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>pkgs<span class="op">.</span>stdenv<span class="op">.</span>mkDerivation <span class="op">{</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">"filtered_mtcars"</span><span class="op">;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildInputs</span> <span class="op">=</span> <span class="op">[</span> pkgs<span class="op">.</span>gawk <span class="op">];</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="va">dontUnpack</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="va">src</span> <span class="op">=</span> <span class="ss">./mtcars.csv</span><span class="op">;</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="va">installPhase</span> <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="st">    mkdir -p $out</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="st">    awk -F',' 'NR==1 || $9=="1" { print }' $src &gt; $out/filtered.csv</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="st">  ''</span><span class="op">;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>I won’t go into details here, but what’s important is that this code uses <code>awk</code>, a common Unix data processing tool, to filter the <code>mtcars.csv</code> file to keep only rows where the 9th column (the <code>am</code> column) equals 1. As you can see, a significant amount of boilerplate code is required to perform this simple operation. However, this approach is completely reproducible: the dependencies are declared and pinned to a specific dated branch of our <code>rstats-on-nix/nixpkgs</code> fork (more on this later), and the only thing that could make this pipeline fail (though it’s a bit of a stretch to call this a <em>pipeline</em>) is if the <code>mtcars.csv</code> file is not provided to it. This expression can be <em>instantiated</em> into a derivation, and the derivation is then built into the actual output that interests us, namely the filtered <code>mtcars</code> data.</p>
+<p>The derivation above uses the <code>Nix</code> builtin function <code>mkDerivation</code>: as its name implies, this function <em>makes a derivation</em>. But there is also <code>mkShell</code>, which is the function that builds a shell instead. Nix expressions that built a shell is the kind of expressions <code>{rix}</code> generates for you.</p>
+</section>
+<section id="using-rix-to-generate-development-environments" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="using-rix-to-generate-development-environments"><span class="header-section-number">4.2.3</span> Using <code>{rix}</code> to generate development environments</h3>
+<p>If you have successfully installed Nix, but don’t have yet R installed on your system, you could install R as you would usually do on your operating system, and then install the <code>{rix}</code> package, and from there, generate project-specific expressions and build them. But you could also install R using Nix. Actually, I would even recommend you uninstall R and delete all your packages from your computer and only manager R environments using Nix.</p>
+<p>Running the following line in a terminal will drop you in an interactive R session that you can use to start generating expressions:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">-p</span> R rPackages.rix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will drop you in a temporary shell with R and <code>{rix}</code> available. Navigate to an empty directory to help a project, call it <code>rix-session-1</code>:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> rix-session-1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and start R and load <code>{rix}</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>you can now generate an expression by running the following code:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-08-04"</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>), <span class="co"># add languageserver if you plan to use VS Code</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.13"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(<span class="st">"polars"</span>, <span class="st">"great-tables"</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will write a file called <code>default.nix</code> in your project’s directory. This <code>default.nix</code> contains a Nix expression which will build a shell that comes with R, <code>{dplyr}</code> and <code>{ggplot2}</code> as they were on the the 4th of August 2025 on CRAN. This will also add Python 3.13 and the <code>polars</code> and <code>great-tables</code> Python packages as they were at the time in <code>nixpkgs</code> (more on this later). Finally, the <code>ide</code> argument is set to <code>"none"</code>, because we don’t want to use Nix to manage an IDE. However, you should know that this is possible and useful in some cases. See this <a href="https://docs.ropensci.org/rix/articles/e-configuring-ide.html">vignette</a> for learning how to setup your IDE with Nix if you wish to do so. At the end of this chapter we will learn how to set up Positron.</p>
+</section>
+<section id="using-nix-shell-to-launch-environments" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="using-nix-shell-to-launch-environments"><span class="header-section-number">4.2.4</span> Using <code>nix-shell</code> to Launch Environments</h3>
+<p>Once your file is in place, simply run:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This gives you an isolated shell session with all declared packages available. You can test code, explore APIs, or install further tools within this session.</p>
+<p>To remove the packages that were installed, call <code>nix-store --gc</code>. This will call the garbage collector. If you want to avoid that an environment gets garbage-collected, use <code>nix-build</code> instead of <code>nix-shell</code>. This will create a symlink called <code>result</code> in your project’s root directory and <code>nix-store --gc</code> won’t garbage-collect this environment until you manually remove <code>result</code>.</p>
+</section>
+<section id="pinning-with-nixpkgs" class="level3" data-number="4.2.5">
+<h3 data-number="4.2.5" class="anchored" data-anchor-id="pinning-with-nixpkgs"><span class="header-section-number">4.2.5</span> Pinning with <code>nixpkgs</code></h3>
+<p>To ensure long-term reproducibility, a pinned the version of Nixpkgs is used:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">pkgs</span> <span class="op">=</span> <span class="bu">import</span> <span class="op">(</span><span class="bu">fetchTarball</span> <span class="st">"https://github.com/rstats-on-nix/nixpkgs/archive/2025-08-04.tar.gz"</span><span class="op">)</span> <span class="op">{};</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="op">.</span>..</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is done automatically by <code>{rix}</code>. You could change the date manually if you prefer, but I would recommend to always regenerate the <code>default.nix</code> using <code>{rix}</code>.</p>
+</section>
+<section id="installing-python-packages-not-available-via-nixpkgs-impure" class="level3" data-number="4.2.6">
+<h3 data-number="4.2.6" class="anchored" data-anchor-id="installing-python-packages-not-available-via-nixpkgs-impure"><span class="header-section-number">4.2.6</span> Installing Python packages not available via nixpkgs (impure)</h3>
+<p>Not all Python packages can be installed through Nix; unlike CRAN, Pypi doesn’t get automatically mirrored and individual packages fixed by volunteers. Instead, specific Python packages get packaged individually for Nix. Thus, it could very well be the case that a specific Python package (or version of a Python package) that you need for a project is not available via nixpkgs.</p>
+<p>In this case, it is still possible to use Python-specific package managers, like <code>uv</code>, to install packages. This is also useful if you work on a project with colleagues that use <code>uv</code> and that don’t want (yet) to use Nix. <code>uv</code>, is 10-100x faster than <code>pip</code> and also generates a lock file for improved reproducibility.</p>
+<p>The idea is to install <code>uv</code> in your shell (but not any Python nor Python packages):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="fu">c</span>(<span class="st">"uv"</span>),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And then use <code>uv</code> from your shell as you would usually. We recommend specifying Python packages in a <code>requirements.txt</code> file, and specifying explicit versions (e.g., <code>scanpy==1.11.4</code>). Finally, we also recommend setting a shell hook to set up the virtual environment and install the packages from the <code>requirements.txt</code> when entering the shell (mind the quotes):</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="fu">c</span>(<span class="st">"uv"</span>),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">shell_hook =</span> <span class="st">"</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="st">      if [ ! -f pyproject.toml ]; then</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="st">        uv init --python 3.13.5 # or whichever Python version you need</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="st">      fi</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="st">        uv add --requirements requirements.txt</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="st">      # Create alias so python uses uvs environment</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="st">      alias python='uv run python'</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="st">  "</span>,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After running <code>nix-shell</code>, <code>uv</code> should initalize a Python project with the specified Python version and install the packages listed in <code>requirements.txt</code> within the nix environment. This will take place each time <code>nix-shell</code> is called, however this will be cached and not installed each time.</p>
+<p>To make sure everything works fine, you could simply start a Python interpreter and try to load <code>numpy</code>. This should work fine, but if it doesn’t, the following error could be raised:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ImportError:</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="ex">IMPORTANT:</span> PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Importing</span> the numpy C-extensions failed. This error can happen for</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="ex">many</span> reasons, often due to issues with your setup or how NumPy was</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="ex">installed.</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="ex">We</span> have compiled some common reasons and troubleshooting tips at:</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">https://numpy.org/devdocs/user/troubleshooting-importerror.html</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="ex">Please</span> note and check the following:</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">*</span> The Python version is: Python3.13 from <span class="st">"/home/user/projects/rix_uv/.venv/bin/python3"</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="ex">*</span> The NumPy version is: <span class="st">"2.2.6"</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="ex">and</span> make sure that they are the versions you expect. Please carefully study the</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="ex">documentation</span> linked above for further help.</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="ex">Original</span> error was: libstdc++.so.6: cannot open shared object file: No such file or directory</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>That is an issue when using <em>wheels</em> (wheels are binaries of Python packages that get installed by default using <code>uv</code>). These wheels expect certain libraries to be in certain places. One way to solve this is to add the following to your shell hook:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>shellHook <span class="ot">=</span> <span class="st">''</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Export LD_LIBRARY is required for python packages that dynamically load libraries, such as numpy </span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>   export LD_LIBRARY_PATH<span class="ot">=</span><span class="st">"${pkgs.lib.makeLibraryPath (with pkgs; [ zlib gcc.cc glibc stdenv.cc.cc ])}"</span><span class="sc">:</span>LD_LIBRARY_PATH;</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>   ...</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">''</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Your environment should now work.</p>
+<p>If this seems complicated: yes, and that is actually exactly the type of problems that Nix aims to solve. However, there are just too many Python packages to automate their inclusion into nixpkgs like how it’s done for R. If you can, prefer using the Python packages included in nixpkgs.</p>
+</section>
+</section>
+<section id="configuring-your-ide" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="configuring-your-ide"><span class="header-section-number">4.3</span> Configuring your IDE</h2>
+<section id="pre-requisites" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="pre-requisites"><span class="header-section-number">4.3.1</span> Pre-requisites</h3>
+<p>We now need to configure an IDE to use both our Nix shells as development environments, and GitHub Copilot. You are free to use whatever IDE you want but the instructions below are going to focus on Positron, which is a fork of VS Code geared towards data science. It works well with both Python and R and makes it quite easy to choose the right R or Python interpreter (which you’ll have to do to make sure you’re using the one provided by Nix, <a href="https://positron.posit.co/managing-interpreters.html">see here</a>).</p>
+<p>If you want to use VS Code proper, you can follow all the instructions here, but you need to install the <a href="https://marketplace.visualstudio.com/items?itemName=REditorSupport.r">REditorSupport</a> and the <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python">Python</a> extension. You will also need to add the <code>{languageserver}</code> R package to the shell:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-08-04"</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>, <span class="st">"languageserver"</span>),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.13"</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(<span class="st">"polars"</span>, <span class="st">"great-tables"</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and re-create the <code>default.nix</code> file.</p>
+<p>You’ll need to carefully select the Python interpereter provided by Nix, and not the other environments that you might already have on your system. Also, we recommend you uninstall R if it’s installed system-wide and also remove your local library of packages and instead only use dedicated Nix shells to manage your projects. While we made our possible for Nix shells to not interfere with a system-installed R, we recommend users go into the habit of taking some minutes at the start of a project to properly set up their development environment.</p>
+<p>On Windows, you need to install Positron on Windows, not inside WSL. Then, install the <a href="https://open-vsx.org/extension/kv9898/open-remote-wsl">Open Remote extension</a> right from Positron itself.</p>
+</section>
+<section id="direnv" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="direnv"><span class="header-section-number">4.3.2</span> direnv</h3>
+<p>Once Positron is installed, you need to install a piece of software called <code>direnv</code>: <code>direnv</code> will automatically load Nix shells when you open a project that contains a <code>default.nix</code> file in an editor. It works on any operating system and many editors support it, including Positron. If you’re using Windows, install <code>direnv</code> in WSL (even though you’ve just installed Positron for Windows). To install <code>direnv</code> run this command:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-env</span> <span class="at">-f</span> <span class="st">'&lt;nixpkgs&gt;'</span> <span class="at">-iA</span> direnv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will install <code>direnv</code> and make it available even outside of Nix shells!</p>
 <p>Then, we highly recommend to install the <code>nix-direnv</code> extension:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-env</span> <span class="at">-f</span> <span class="st">'&lt;nixpkgs&gt;'</span> <span class="at">-iA</span> nix-direnv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-env</span> <span class="at">-f</span> <span class="st">'&lt;nixpkgs&gt;'</span> <span class="at">-iA</span> nix-direnv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>It is not mandatory to use <code>nix-direnv</code> if you already have <code>direnv</code>, but it’ll make loading environments much faster and seamless.</p>
-<p>Finally, if you haven’t used <code>direnv</code> before, don’t forget <a href="https://direnv.net/docs/hook.html">this last step</a> to make your terminal detected and load <code>direnv</code> automatically. On WSL, need to add <code>eval "$(direnv hook bash)"</code> to a file called <code>.bashrc</code>, which you can find in your <em>home/</em> directory (this is the directory that contains your user’s folder like <em>Downloads</em> and so on). This file starts with a <code>.</code>, which means it is hidden. You need top open it in an editor and add the line right at the bottom. If you’re comfortable with the terminal, you can do it right from WSL, if not, you can navigate to your WSL home directory from a Windows file explorer by typing <code>\\wsl$</code> in the address bar, and then entering the <code>ubuntu</code> directory. Inside, you’ll see the <code>home/</code> directory, and inside a directory named after your username. This is where <code>.bashrc</code> resides, and you can open it using Notepad.</p>
-<p>On macOS, you need to add <code>eval "$(direnv hook zsh)</code> inside of <code>.zshrc</code> instead.</p>
+<p>Finally, if you haven’t used <code>direnv</code> before, don’t forget <a href="https://direnv.net/docs/hook.html">this last step</a> to make your terminal detected and load <code>direnv</code> automatically.</p>
+<p>Then, in Positron, install the <a href="https://github.com/direnv/direnv-vscode">direnv</a> extension. Finally, add a file called <code>.envrc</code> and simply write the following two lines in it (this <code>.envrc</code> file should be in the same folder as your project’s <code>default.nix</code>):</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">use</span> nix</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="va">$TMP</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>in it. On Windows, <em>remotely connect to WSL</em> first, but on other operating systems, simply open the project’s folder using <code>File &gt; Open Folder...</code> and you will see a pop-up stating <code>direnv: /PATH/TO/PROJECT/.envrc is blocked</code> and a button to allow it. Click <code>Allow</code> and then open an R script. You might get another pop-up asking you to restart the extension, so click <code>Restart</code>. Be aware that at this point, <code>direnv</code> will run <code>nix-shell</code> and so will start building the environment. If that particular environment hasn’t been built and cached yet, it might take some time before Code will be able to interact with it. You might get yet another popup, this time from the R Code extension complaining that R can’t be found. In this case, simply restart Code and open the project folder again: now it should work every time.</p>
+<p>Sometimes, dependending on platform and installed packages, Positron might not be able to correctly load a Nix-managed Python interpreter. This happens when it tries to load its own version of <code>ipykernal</code>. To make sure this doesn’t cause issues, add these lines to the shell’s definition in <code>default.nix</code>:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>shellHook <span class="ot">=</span> <span class="st">''</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Export LD_LIBRARY is required for python packages that dynamically load libraries, such as numpy </span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>   export LD_LIBRARY_PATH<span class="ot">=</span><span class="st">"${pkgs.lib.makeLibraryPath (with pkgs; [ zlib gcc.cc glibc stdenv.cc.cc ])}"</span><span class="sc">:</span>LD_LIBRARY_PATH;</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>   ...</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">''</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="installing-and-configuring-an-editor" class="level2" data-number="3.7">
-<h2 data-number="3.7" class="anchored" data-anchor-id="installing-and-configuring-an-editor"><span class="header-section-number">3.7</span> Installing and configuring an editor</h2>
-<section id="positron-and-vs-code" class="level3" data-number="3.7.1">
-<h3 data-number="3.7.1" class="anchored" data-anchor-id="positron-and-vs-code"><span class="header-section-number">3.7.1</span> Positron and VS Code</h3>
-<p>For polyglot data science projects, the recommended editor is Positron. Positron is a fork of VS Code tailored for data scientists, with first-class support for both R and Python. It makes it straightforward to select the correct interpreter for each project, whether managed by Nix or another solution. Being cross-platform, the same setup works on macOS, Windows, and Linux. Since it is based on VS Code, switching from VS Code to Positron is seamless.</p>
-<p>Personally, I use Emacs, but Positron is more accessible for most users. If you prefer, you can also configure <strong>VS Code</strong> directly; instructions are provided below.</p>
-<p><strong>Installing Positron:</strong></p>
+<section id="in-summary-and-next-steps" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="in-summary-and-next-steps"><span class="header-section-number">4.3.3</span> In summary and next steps</h3>
+<p>For a new project, simply repeat this process:</p>
 <ul>
-<li>Download and install the installer for your operating system.</li>
-<li>On Windows, even if Nix is installed under WSL, install the <strong>Windows version</strong> of Positron. It can interact with Nix on WSL via a plugin.</li>
-<li>In Positron, install the <a href="https://github.com/direnv/direnv-vscode">direnv extension</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</li>
-<li>On Windows, also install the <a href="https://open-vsx.org/extension/kv9898/open-remote-wsl">Open Remote extension</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</li>
+<li>Generate the project’s <code>default.nix</code> file;</li>
+<li>Build it using <code>nix-build</code>;</li>
+<li>Create an <code>.envrc</code> and write the two lines from above in it;</li>
+<li>Open the project’s folder in Code and click allow when prompted;</li>
+<li>Restart the extension and Code if necessary.</li>
 </ul>
-<p><strong>Using VS Code instead of Positron:</strong></p>
-<ul>
-<li>Add the <a href="https://marketplace.visualstudio.com/items?itemName=REditorSupport.r">REditorSupport extension</a><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</li>
-<li>Install the <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python">Python extension</a><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</li>
-<li>Add the <code>{languageserver}</code> R package to your projects as well (we’ll see how in the next chapter).</li>
-</ul>
-</section>
-<section id="emacs" class="level3" data-number="3.7.2">
-<h3 data-number="3.7.2" class="anchored" data-anchor-id="emacs"><span class="header-section-number">3.7.2</span> Emacs</h3>
-<p>For Emacs, configuration is minimal:</p>
-<ul>
-<li>Install the <code>direnv</code> package.</li>
-<li>Add <code>python</code> and <code>ess</code> for R support.</li>
-</ul>
-<p>With this setup, opening a Nix-managed project automatically ensures Emacs uses the correct interpreter for that project (assuming we add an <code>.envrc</code> file to the project; more on this later).</p>
-
-
+<p>Another option is to create the <code>.envrc</code> file and write <code>use nix</code> in it, then open a terminal, navigate to the project’s folder, and run <code>direnv allow</code>. Doing this before opening Positron should not prompt you anymore.</p>
+<p>If you’re on Windows, using Positron like this is particularly interesting, because it allows you to install Positron on Windows as usual, and then you can configure it to interact with a Nix shell, even if it’s running from WSL. This is a very seamless experience.</p>
+<p>Now configure Positron to use GitHub Copilot: <a href="https://positron.posit.co/assistant.html">click here</a>.</p>
+<p>You can enable LLM tab-completion if you want. I’m not a fan of this, I prefer simply using the interface and using LLMs as an advanced rubber duck: <a href="https://github.com/copilot/">https://github.com/copilot/</a>.</p>
 </section>
 </section>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr>
-<ol>
-<li id="fn1"><p>https://mac.getutm.app/<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>https://apps.gnome.org/Boxes/<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>https://github.com/direnv/direnv-vscode<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>https://open-vsx.org/extension/kv9898/open-remote-wsl<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>https://marketplace.visualstudio.com/items?itemName=REditorSupport.r<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>https://marketplace.visualstudio.com/items?itemName=ms-python.python<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<section id="starting-a-new-project" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="starting-a-new-project"><span class="header-section-number">4.4</span> Starting a new project:</h2>
+<p>To start a new project, create a new directory, and <code>cd</code> into it. Then, in that folder, create a new script called <code>gen-env.R</code> and add the following:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-09-22"</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"languageserver"</span>, <span class="co"># if you want to use VS Code</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tidyverse"</span> <span class="co"># or whatever packages</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.13"</span>,</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(<span class="st">"polars"</span>, <span class="st">"great-tables"</span>)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">print =</span> <span class="cn">TRUE</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then call:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>nix<span class="sc">-</span>shell <span class="sc">-</span>I nixpkgs<span class="ot">=</span>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>rstats<span class="sc">-</span>on<span class="sc">-</span>nix<span class="sc">/</span>nixpkgs<span class="sc">/</span>archive<span class="sc">/</span>refs<span class="sc">/</span>heads<span class="sc">/</span><span class="dv">2025-09</span><span class="fl">-22.</span>tar.gz <span class="sc">-</span>p R rPackages.rix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>providing a url to my fork of <code>nixpkgs</code> makes sure that you get the latest <code>rix</code> version (change the date in the url to a more recent one if needed). Start R by typing <code>R</code> in the shell, and then <code>source("gen-env.R")</code>. That will create a <code>default.nix</code> which you can then drop into using <code>nix-shell</code>. Then create an <code>.envrc</code> and add the lines from before, and you’re done!</p>
+<p>Note: if you want to use <code>uv</code> instead of Nix to manage the Python packages, follow the instructions above.</p>
+</section>
+<section id="hands-on-exercises" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="hands-on-exercises"><span class="header-section-number">4.5</span> Hands-On Exercises</h2>
+<ol type="1">
+<li>Start a temporary shell with R and <code>{rix}</code> again using <code>nix-shell -p R rPackages.rix</code>. Start an R session (by typing <code>R</code>) and then load the <code>{rix}</code> package (using <code>library(rix)</code>). Run the <code>available_dates()</code> function: using the latest available date, generate a new <code>default.nix</code>.</li>
+<li>Inside of an activated shell, type <code>which R</code> and <code>echo $PATH</code>. Explore what is being added to your environment. What is the significance of paths like <code>/nix/store/...</code>?</li>
+<li>Break it on purpose: generate a new environment with a wrong R package name, for example <code>dplyrnaught</code>. Try to build the environment. What happens?</li>
+<li>Go to <a href="https://search.nixos.org/packages">https://search.nixos.org/packages</a> and look for packages that you usually use for your projects to see if they are available.</li>
 </ol>
+
+
+</section>
 </section>
 
 </main> <!-- /main -->
