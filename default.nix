@@ -71,7 +71,7 @@ let
   });
 
  system_packages = builtins.attrValues {
-  inherit (pkgs) R glibcLocalesUtf8 quarto python312;
+  inherit (pkgs) R glibcLocalesUtf8 quarto python313;
 };
   in
   pkgs.mkShell {
@@ -82,6 +82,9 @@ let
     LC_MONETARY = "en_US.UTF-8";
     LC_PAPER = "en_US.UTF-8";
     LC_MEASUREMENT = "en_US.UTF-8";
+    
+    # Tell reticulate to use the Python from this Nix environment
+    RETICULATE_PYTHON = "${pkgs.python313}/bin/python3";
 
     buildInputs = [ jlconf rix rixpress pyconf rpkgs tex system_packages  ];
       
