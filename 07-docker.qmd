@@ -8,11 +8,22 @@ control over every package and dependency in our project, ensuring bit-for-bit
 reproducibility. However, when it comes to distributing a *data product*, 
 another technology, Docker, is incredibly popular.
 
+A common misconception is that Nix and Docker are alternatives, that you must 
+choose one or the other. This is wrong. They are conceptually different tools 
+that solve different problems. Nix is a **package manager and build system**: it 
+answers "what software do I need and how do I build it reproducibly?" Docker is 
+a **containerisation platform**: it answers "how do I package and run an 
+application in isolation?" Understanding this distinction is key to using them 
+together effectively.
+
 While Nix manages dependencies for an application that runs on a host operating 
 system, Docker takes a different approach: it packages an application *along 
 with* a lightweight operating system and all its dependencies into a single, 
 portable unit called a **container**. This container can then run on any machine 
-that has Docker installed, regardless of its underlying OS.
+that has Docker installed, regardless of its underlying OS. Being familiar with 
+both tools makes you a more versatile data scientist: you can use Nix for 
+precise, reproducible development environments and Docker for distributing your 
+work to colleagues, servers, or CI pipelines that may not have Nix installed.
 
 ### Spatial vs Temporal Reproducibility
 
@@ -20,12 +31,12 @@ To understand when and why to use Docker, it helps to distinguish between two
 types of reproducibility:
 
 - **Spatial reproducibility**: The ability to execute an analysis identically 
-  across different machines *right now*. Docker excels here—a container runs 
+  across different machines *right now*. Docker excels here: a container runs 
   the same way on your laptop, a colleague's workstation, and a cloud server.
 
 - **Temporal reproducibility**: The ability to execute an analysis identically 
   *over time*. Docker is weaker here. The imperative commands in a `Dockerfile` 
-  (like `apt-get update`) are non-deterministic—rebuilding the same file at 
+  (like `apt-get update`) are non-deterministic. Rebuilding the same file at 
   different times can yield different images.
 
 This distinction is crucial. Docker's true reproducibility promise is that a 
@@ -34,7 +45,7 @@ specific, pre-built image will always launch an identical container. It does
 image.
 
 As empirical research has shown, achieving deterministic builds requires systems 
-designed for this purpose—like Nix's functional model, where identical inputs 
+designed for this purpose, like Nix's functional model, where identical inputs 
 always produce identical outputs. Studies rebuilding historical Nix packages 
 found bit-for-bit reproducibility rates exceeding 90%.
 
@@ -42,10 +53,10 @@ found bit-for-bit reproducibility rates exceeding 90%.
 
 This is why we combine Nix and Docker rather than choosing one or the other:
 
-- **Nix** provides strong temporal reproducibility—the guarantee that an 
+- **Nix** provides strong temporal reproducibility: the guarantee that an 
   environment built today will be identical when rebuilt years later.
 - **Docker** provides strong spatial reproducibility and universal 
-  distribution—the guarantee that a container runs the same everywhere Docker 
+  distribution: the guarantee that a container runs the same everywhere Docker 
   runs.
 
 The pattern we'll use is simple: use Nix *inside* a Docker container. Start with 
@@ -252,7 +263,7 @@ and they will appear in the folder you created on your host machine.
 To create our own images, you can start from an image provided by an open source 
 project like Rocker, or you can start from the base Ubuntu image. Since we are 
 using Nix to set up the reproducible development environment, we can use 
-`ubuntu:latest`—our development environment will always be exactly the same, 
+`ubuntu:latest`. Our development environment will always be exactly the same, 
 thanks to Nix.
 
 ### A Minimal Dockerfile with Nix
@@ -471,7 +482,7 @@ with `docker build`.
 
 ### Why Skip the Dockerfile?
 
-A `Dockerfile` is fundamentally imperative—it's a script of commands executed 
+A `Dockerfile` is fundamentally imperative: it's a script of commands executed 
 in order. Commands like `apt-get update` are non-deterministic by nature. Even 
 with careful pinning, you're fighting the tool's design.
 
@@ -530,13 +541,68 @@ docker load < result
 docker run -it --rm my-r-env:latest
 ```
 
+### Using rix with dockerTools
+
+The previous example manually defines the R environment in Nix. If you prefer to 
+use `{rix}` to generate your environment (as we've done throughout this book), 
+you can import the generated `default.nix` into your Docker image definition.
+
+First, create your environment with `{rix}` as usual:
+
+```{r}
+#| eval: false
+library(rix)
+
+rix(
+  date = "2025-10-14",
+  r_pkgs = c("dplyr", "ggplot2", "quarto"),
+  ide = "none",
+  project_path = ".",
+  overwrite = TRUE
+)
+```
+ 
+This generates a `default.nix`. Now create a `docker-image.nix` that imports it:
+
+```nix
+# docker-image.nix
+let
+  pkgs = import (fetchTarball
+    "https://github.com/rstats-on-nix/nixpkgs/archive/2025-10-14.tar.gz"
+  ) {};
+  
+  # Import the shell environment generated by rix
+  rixEnv = import ./default.nix;
+  
+in pkgs.dockerTools.buildImage {
+  name = "my-rix-project";
+  tag = "latest";
+  
+  copyToRoot = pkgs.buildEnv {
+    name = "image-root";
+    paths = rixEnv.buildInputs ++ [ pkgs.coreutils pkgs.bash ];
+    pathsToLink = [ "/bin" ];
+  };
+  
+  config = {
+    Cmd = [ "${pkgs.bash}/bin/bash" ];
+    WorkingDir = "/work";
+  };
+}
+```
+
+This approach lets you keep your familiar `{rix}` workflow for defining 
+environments while gaining the reproducibility benefits of `dockerTools` for 
+image creation. Any changes to your `gen-env.R` → `default.nix` will 
+automatically propagate to the Docker image on the next build.
+
 ### Benefits Over Dockerfiles
 
 | Aspect | Dockerfile | Nix dockerTools |
 |--------|-----------|-----------------|
 | **Reproducibility** | Imperative, non-deterministic | Declarative, deterministic |
 | **Layer caching** | Based on command order | Based on content hashes |
-| **Image size** | Often includes unnecessary packages | Minimal—only what you specify |
+| **Image size** | Often includes unnecessary packages | Minimal: only what you specify |
 | **Composition** | Copy-paste between files | Reuse Nix expressions |
 
 ### Layered Images for Efficiency
@@ -571,7 +637,7 @@ dependencies are cached between builds.
 For simpler use cases, the "Nix inside Docker" approach from earlier sections 
 may be more accessible.
 
-## Dockerizing a rixpress Pipeline
+## Dockerising a rixpress Pipeline
 
 We can package our entire `{rixpress}` project into a single Docker image. This 
 image can then be run by anyone with Docker installed, regardless of their host 
@@ -648,7 +714,7 @@ docker run --rm --name my_pipeline_run \
   my-reproducible-pipeline
 ```
 
-Check your local `output` directory—you'll find the 
+Check your local `output` directory. You'll find the 
 `mtcars_analysis_result.json` file containing the exact, reproducible result of 
 your pipeline.
 
@@ -656,6 +722,68 @@ You have successfully packaged a complex, polyglot pipeline into a simple,
 portable Docker image. This workflow combines the best of both worlds: Nix's 
 power for creating reproducible builds and Docker's universal standard for 
 distributing and running applications.
+
+### Alternative: Using dockerTools for rixpress
+
+You can also build your rixpress pipeline image purely with Nix, avoiding 
+Dockerfiles entirely. This gives you fully deterministic image builds.
+
+Create a `docker-pipeline.nix`:
+
+```nix
+# docker-pipeline.nix
+let
+  pkgs = import (fetchTarball
+    "https://github.com/rstats-on-nix/nixpkgs/archive/2025-10-14.tar.gz"
+  ) {};
+  
+  # Import your rix-generated environment
+  rixEnv = import ./default.nix;
+  
+  # Build the pipeline as a derivation
+  pipelineResult = pkgs.runCommand "pipeline-result" {
+    buildInputs = rixEnv.buildInputs;
+  } ''
+    mkdir -p $out
+    cd ${./. }
+    Rscript -e "source('gen-pipeline.R')"
+    # Copy results to output
+    cp -r _rixpress $out/
+  '';
+  
+in pkgs.dockerTools.buildImage {
+  name = "my-rixpress-pipeline";
+  tag = "latest";
+  
+  copyToRoot = pkgs.buildEnv {
+    name = "image-root";
+    paths = [ 
+      rixEnv.buildInputs 
+      pipelineResult 
+      pkgs.coreutils 
+      pkgs.bash 
+    ];
+    pathsToLink = [ "/bin" "/" ];
+  };
+  
+  config = {
+    Cmd = [ "${pkgs.bash}/bin/bash" "-c" "cp -r /pipeline-result/* /output/" ];
+    WorkingDir = "/work";
+  };
+}
+```
+
+Build and run:
+
+```bash
+nix-build docker-pipeline.nix
+docker load < result
+docker run --rm -v "$(pwd)/output":/output my-rixpress-pipeline:latest
+```
+
+This approach bakes the pipeline results directly into the image during the Nix 
+build phase. The resulting image is minimal and contains only the outputs, not 
+the full R/Python environment needed to produce them.
 
 ## Summary
 
@@ -668,7 +796,7 @@ Docker and Nix complement each other:
 Key Docker concepts:
 
 - **Images** are templates; **containers** are running instances
-- Containers are ephemeral—use **volumes** for persistence
+- Containers are ephemeral; use **volumes** for persistence
 - Use **registries** (Docker Hub) to share images
 - The **Rocker Project** provides ready-made R images
 

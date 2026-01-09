@@ -32,7 +32,7 @@ my_log <- function(x, log = "") {
 ```
 
 These functions now return lists with both the result and a log. But there's a 
-problem—they don't compose:
+problem: they don't compose:
 
 ```{r}
 #| eval: false
@@ -163,7 +163,7 @@ r_sqrt("not a number")
 ```
 
 When `Nothing` is passed to a decorated function, it immediately returns 
-`Nothing`—the error propagates through the pipeline without crashing.
+`Nothing`, the error propagates through the pipeline without crashing.
 
 ## Monads in Python: talvez
 
