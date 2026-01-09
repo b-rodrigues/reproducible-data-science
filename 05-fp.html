@@ -485,7 +485,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction-from-scripts-to-functions" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="introduction-from-scripts-to-functions"><span class="header-section-number">5.1</span> Introduction: From Scripts to Functions</h2>
 <p>In the previous chapter, we learned how to create reproducible development environments with <code>{rix}</code>. We can now ensure everyone has the <em>exact same tools</em>—R, Python, system libraries—to run our code.</p>
-<p>But having the right tools is only half the battle. Now we turn to <strong>writing reproducible code itself</strong>. A common way to start a data analysis is by writing a script: a sequence of commands executed from top to bottom.</p>
+<p>We could have stopped there: after all, we have now reproducible environments, as many as we need for each of our projects. But having the right tools is only half the battle. Now we turn to <strong>writing reproducible code itself</strong>. A common way to start a data analysis is by writing a script: a sequence of commands executed from top to bottom.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R script example</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -500,11 +500,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>heavy_cars <span class="op">=</span> mtcars[mtcars[<span class="st">'wt'</span>] <span class="op">&gt;</span> <span class="dv">4</span>]</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mean_mpg_heavy <span class="op">=</span> heavy_cars[<span class="st">'mpg'</span>].mean()</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mean_mpg_heavy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This works, but it has a hidden, dangerous property: <strong>state</strong>. The script relies on variables like <code>heavy_cars</code> existing in the environment, making the code hard to reason about, debug, and test.</p>
+<p>This works, but it has a hidden, dangerous property: <strong>state</strong>. The script relies on variables like <code>heavy_cars</code> existing in the environment, making the code hard to reason about, debug, and test. Of course, this is a simple example that is only 4 lines long. But what if you have several scripts, each hundreds of lines long? Making sense of that is not easy, if you use the coding style above especially.</p>
 <section id="the-notebook-problem" class="level3" data-number="5.1.1">
 <h3 data-number="5.1.1" class="anchored" data-anchor-id="the-notebook-problem"><span class="header-section-number">5.1.1</span> The Notebook Problem</h3>
-<p>If scripting with state is a crack in the foundation of reproducibility, then using computational notebooks is a gaping hole.</p>
+<p>If scripting with state is a crack in the foundation of reproducibility, then using computational notebooks is a gaping hole. I will not make many friends in the Python community with the following paragraphs, but that’s because only truth hurts.</p>
 <p>Notebooks like Jupyter introduce an even more insidious form of state: the cell execution order. You can execute cells out of order, meaning the visual layout of your code has no relation to how it actually ran. This is a recipe for non-reproducible results and a primary cause of the “it worked yesterday, why is it broken today?” problem.</p>
+<p>In a famous talk from JupyterCon 2018, Joel Grus (a research engineer at the Allen Institute for AI) played the role of the “heel” at a conference dedicated to the very tool he was criticising.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> His central thesis is that data science code should follow software engineering best practices, and Jupyter notebooks actively discourage those practices.</p>
+<p>His biggest complaint is <strong>hidden state and out-of-order execution</strong>. The state of the variables depends on the <em>execution history</em>, not the order of the code on the screen. You can delete a cell that defined a variable, but that variable still exists in memory. This leads to unreproducible results where the code works right now (because of hidden state in memory) but will fail if you restart the kernel and run top-to-bottom. Worse, it confuses beginners who do not understand why their code works one minute and breaks the next.</p>
+<p>Notebooks also <strong>discourage modular code</strong>. Because it is difficult to import code from one notebook into another, users tend to write massive, monolithic scripts, copy and paste the same code blocks into multiple notebooks, and avoid creating functions or modules that can be tested and reused.</p>
+<p>Then there is the <strong>“works on my machine” problem</strong>. Notebooks often lack clear dependency specifications, users hardcode file paths that only exist on their specific computer, and reusing someone else’s work usually involves manually copying and pasting cells, which is error-prone.</p>
+<p>Grus also argues that notebooks have <strong>poor tooling compared to IDEs</strong>. Actual text editors provide linting (identifying stylistic errors or unused variables), type checking, superior autocomplete, and the ability to run unit tests. All of these are difficult or impossible in notebooks.</p>
+<p>Finally, <strong>version control is a nightmare</strong>. Notebooks are JSON files. If two people edit a notebook and try to merge their changes in Git, the diffs are unreadable blocks of JSON metadata, and merge conflicts are incredibly difficult to resolve. This encourages workflows where people email files back and forth rather than using proper version control.</p>
+<p>What does Grus suggest instead? Write code in modules (<code>.py</code> or <code>.R</code> files) using a proper editor, write unit tests to ensure the code works, and use notebooks <em>only</em> for the final step: importing those modules to visualise the data or present the results. Ideally, the notebook should contain very little logic and mostly just function calls.</p>
+<p>This is exactly the approach we will take in this book.</p>
 </section>
 <section id="the-functional-solution" class="level3" data-number="5.1.2">
 <h3 data-number="5.1.2" class="anchored" data-anchor-id="the-functional-solution"><span class="header-section-number">5.1.2</span> The Functional Solution</h3>
@@ -806,6 +814,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In the next chapter, we’ll put these principles into practice with <strong><code>{rixpress}</code></strong>—a package that leverages functional composition and Nix to build fully reproducible, polyglot analytical pipelines.</p>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p><a href="https://www.youtube.com/watch?v=7jiPeIFXb6U">I don’t like notebooks</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
