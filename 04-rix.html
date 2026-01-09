@@ -434,41 +434,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-polyglot-challenge" id="toc-the-polyglot-challenge" class="nav-link" data-scroll-target="#the-polyglot-challenge"><span class="header-section-number">4.1.3</span> The Polyglot Challenge</a></li>
   <li><a href="#enter-rix" id="toc-enter-rix" class="nav-link" data-scroll-target="#enter-rix"><span class="header-section-number">4.1.4</span> Enter rix</a></li>
   </ul></li>
-  <li><a href="#the-rix-function" id="toc-the-rix-function" class="nav-link" data-scroll-target="#the-rix-function"><span class="header-section-number">4.2</span> The rix() Function</a></li>
-  <li><a href="#choosing-an-r-version-or-date" id="toc-choosing-an-r-version-or-date" class="nav-link" data-scroll-target="#choosing-an-r-version-or-date"><span class="header-section-number">4.3</span> Choosing an R Version or Date</a>
+  <li><a href="#transitioning-to-nix-managed-r" id="toc-transitioning-to-nix-managed-r" class="nav-link" data-scroll-target="#transitioning-to-nix-managed-r"><span class="header-section-number">4.2</span> Transitioning to Nix-Managed R</a>
   <ul class="collapse">
-  <li><a href="#using-dates-vs-versions" id="toc-using-dates-vs-versions" class="nav-link" data-scroll-target="#using-dates-vs-versions"><span class="header-section-number">4.3.1</span> Using dates vs versions</a></li>
-  <li><a href="#the-rstats-on-nix-fork" id="toc-the-rstats-on-nix-fork" class="nav-link" data-scroll-target="#the-rstats-on-nix-fork"><span class="header-section-number">4.3.2</span> The rstats-on-nix fork</a></li>
+  <li><a href="#bootstrapping-rix-without-a-local-r-installation" id="toc-bootstrapping-rix-without-a-local-r-installation" class="nav-link" data-scroll-target="#bootstrapping-rix-without-a-local-r-installation"><span class="header-section-number">4.2.1</span> Bootstrapping <code>{rix}</code> without a local R installation</a></li>
   </ul></li>
-  <li><a href="#installing-r-packages" id="toc-installing-r-packages" class="nav-link" data-scroll-target="#installing-r-packages"><span class="header-section-number">4.4</span> Installing R Packages</a>
+  <li><a href="#the-rix-function" id="toc-the-rix-function" class="nav-link" data-scroll-target="#the-rix-function"><span class="header-section-number">4.3</span> The rix() Function</a></li>
+  <li><a href="#choosing-an-r-version-or-date" id="toc-choosing-an-r-version-or-date" class="nav-link" data-scroll-target="#choosing-an-r-version-or-date"><span class="header-section-number">4.4</span> Choosing an R Version or Date</a>
   <ul class="collapse">
-  <li><a href="#from-cranbioconductor" id="toc-from-cranbioconductor" class="nav-link" data-scroll-target="#from-cranbioconductor"><span class="header-section-number">4.4.1</span> From CRAN/Bioconductor</a></li>
-  <li><a href="#installing-archived-versions" id="toc-installing-archived-versions" class="nav-link" data-scroll-target="#installing-archived-versions"><span class="header-section-number">4.4.2</span> Installing archived versions</a></li>
-  <li><a href="#installing-from-github" id="toc-installing-from-github" class="nav-link" data-scroll-target="#installing-from-github"><span class="header-section-number">4.4.3</span> Installing from GitHub</a></li>
-  <li><a href="#installing-local-packages" id="toc-installing-local-packages" class="nav-link" data-scroll-target="#installing-local-packages"><span class="header-section-number">4.4.4</span> Installing local packages</a></li>
-  <li><a href="#why-not-to-use-install.packages" id="toc-why-not-to-use-install.packages" class="nav-link" data-scroll-target="#why-not-to-use-install.packages"><span class="header-section-number">4.4.5</span> Why NOT to use install.packages()</a></li>
+  <li><a href="#using-dates-vs-versions" id="toc-using-dates-vs-versions" class="nav-link" data-scroll-target="#using-dates-vs-versions"><span class="header-section-number">4.4.1</span> Using dates vs versions</a></li>
+  <li><a href="#the-rstats-on-nix-fork" id="toc-the-rstats-on-nix-fork" class="nav-link" data-scroll-target="#the-rstats-on-nix-fork"><span class="header-section-number">4.4.2</span> The rstats-on-nix fork</a></li>
   </ul></li>
-  <li><a href="#system-tools-and-texlive" id="toc-system-tools-and-texlive" class="nav-link" data-scroll-target="#system-tools-and-texlive"><span class="header-section-number">4.5</span> System Tools and TexLive</a>
+  <li><a href="#installing-r-packages" id="toc-installing-r-packages" class="nav-link" data-scroll-target="#installing-r-packages"><span class="header-section-number">4.5</span> Installing R Packages</a>
   <ul class="collapse">
-  <li><a href="#adding-system-packages" id="toc-adding-system-packages" class="nav-link" data-scroll-target="#adding-system-packages"><span class="header-section-number">4.5.1</span> Adding system packages</a></li>
-  <li><a href="#texlive-for-literate-programming" id="toc-texlive-for-literate-programming" class="nav-link" data-scroll-target="#texlive-for-literate-programming"><span class="header-section-number">4.5.2</span> TexLive for literate programming</a></li>
-  <li><a href="#python-and-julia-integration" id="toc-python-and-julia-integration" class="nav-link" data-scroll-target="#python-and-julia-integration"><span class="header-section-number">4.5.3</span> Python and Julia integration</a></li>
-  <li><a href="#installing-python-packages-with-uv-impure" id="toc-installing-python-packages-with-uv-impure" class="nav-link" data-scroll-target="#installing-python-packages-with-uv-impure"><span class="header-section-number">4.5.4</span> Installing Python packages with uv (impure)</a></li>
+  <li><a href="#from-cranbioconductor" id="toc-from-cranbioconductor" class="nav-link" data-scroll-target="#from-cranbioconductor"><span class="header-section-number">4.5.1</span> From CRAN/Bioconductor</a></li>
+  <li><a href="#installing-archived-versions" id="toc-installing-archived-versions" class="nav-link" data-scroll-target="#installing-archived-versions"><span class="header-section-number">4.5.2</span> Installing archived versions</a></li>
+  <li><a href="#installing-from-github" id="toc-installing-from-github" class="nav-link" data-scroll-target="#installing-from-github"><span class="header-section-number">4.5.3</span> Installing from GitHub</a></li>
+  <li><a href="#installing-local-packages" id="toc-installing-local-packages" class="nav-link" data-scroll-target="#installing-local-packages"><span class="header-section-number">4.5.4</span> Installing local packages</a></li>
+  <li><a href="#why-not-to-use-install.packages" id="toc-why-not-to-use-install.packages" class="nav-link" data-scroll-target="#why-not-to-use-install.packages"><span class="header-section-number">4.5.5</span> Why NOT to use install.packages()</a></li>
   </ul></li>
-  <li><a href="#building-and-using-environments" id="toc-building-and-using-environments" class="nav-link" data-scroll-target="#building-and-using-environments"><span class="header-section-number">4.6</span> Building and Using Environments</a>
+  <li><a href="#system-tools-and-texlive" id="toc-system-tools-and-texlive" class="nav-link" data-scroll-target="#system-tools-and-texlive"><span class="header-section-number">4.6</span> System Tools and TexLive</a>
   <ul class="collapse">
-  <li><a href="#building-with-nix-build" id="toc-building-with-nix-build" class="nav-link" data-scroll-target="#building-with-nix-build"><span class="header-section-number">4.6.1</span> Building with nix-build</a></li>
-  <li><a href="#entering-with-nix-shell" id="toc-entering-with-nix-shell" class="nav-link" data-scroll-target="#entering-with-nix-shell"><span class="header-section-number">4.6.2</span> Entering with nix-shell</a></li>
-  <li><a href="#running-scripts" id="toc-running-scripts" class="nav-link" data-scroll-target="#running-scripts"><span class="header-section-number">4.6.3</span> Running scripts</a></li>
-  <li><a href="#pure-shells-for-complete-isolation" id="toc-pure-shells-for-complete-isolation" class="nav-link" data-scroll-target="#pure-shells-for-complete-isolation"><span class="header-section-number">4.6.4</span> Pure shells for complete isolation</a></li>
-  <li><a href="#garbage-collection" id="toc-garbage-collection" class="nav-link" data-scroll-target="#garbage-collection"><span class="header-section-number">4.6.5</span> Garbage collection</a></li>
+  <li><a href="#adding-system-packages" id="toc-adding-system-packages" class="nav-link" data-scroll-target="#adding-system-packages"><span class="header-section-number">4.6.1</span> Adding system packages</a></li>
+  <li><a href="#texlive-for-literate-programming" id="toc-texlive-for-literate-programming" class="nav-link" data-scroll-target="#texlive-for-literate-programming"><span class="header-section-number">4.6.2</span> TexLive for literate programming</a></li>
+  <li><a href="#python-and-julia-integration" id="toc-python-and-julia-integration" class="nav-link" data-scroll-target="#python-and-julia-integration"><span class="header-section-number">4.6.3</span> Python and Julia integration</a></li>
+  <li><a href="#installing-python-packages-with-uv-impure" id="toc-installing-python-packages-with-uv-impure" class="nav-link" data-scroll-target="#installing-python-packages-with-uv-impure"><span class="header-section-number">4.6.4</span> Installing Python packages with uv (impure)</a></li>
   </ul></li>
-  <li><a href="#converting-renv-projects" id="toc-converting-renv-projects" class="nav-link" data-scroll-target="#converting-renv-projects"><span class="header-section-number">4.7</span> Converting renv Projects</a>
+  <li><a href="#building-and-using-environments" id="toc-building-and-using-environments" class="nav-link" data-scroll-target="#building-and-using-environments"><span class="header-section-number">4.7</span> Building and Using Environments</a>
   <ul class="collapse">
-  <li><a href="#recommended-workflow" id="toc-recommended-workflow" class="nav-link" data-scroll-target="#recommended-workflow"><span class="header-section-number">4.7.1</span> Recommended workflow</a></li>
-  <li><a href="#caveats" id="toc-caveats" class="nav-link" data-scroll-target="#caveats"><span class="header-section-number">4.7.2</span> Caveats</a></li>
+  <li><a href="#building-with-nix-build" id="toc-building-with-nix-build" class="nav-link" data-scroll-target="#building-with-nix-build"><span class="header-section-number">4.7.1</span> Building with nix-build</a></li>
+  <li><a href="#entering-with-nix-shell" id="toc-entering-with-nix-shell" class="nav-link" data-scroll-target="#entering-with-nix-shell"><span class="header-section-number">4.7.2</span> Entering with nix-shell</a></li>
+  <li><a href="#pure-shells-for-complete-isolation" id="toc-pure-shells-for-complete-isolation" class="nav-link" data-scroll-target="#pure-shells-for-complete-isolation"><span class="header-section-number">4.7.3</span> Pure shells for complete isolation</a></li>
+  <li><a href="#garbage-collection" id="toc-garbage-collection" class="nav-link" data-scroll-target="#garbage-collection"><span class="header-section-number">4.7.4</span> Garbage collection</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.8</span> Summary</a></li>
+  <li><a href="#converting-renv-projects" id="toc-converting-renv-projects" class="nav-link" data-scroll-target="#converting-renv-projects"><span class="header-section-number">4.8</span> Converting renv Projects</a>
+  <ul class="collapse">
+  <li><a href="#recommended-workflow" id="toc-recommended-workflow" class="nav-link" data-scroll-target="#recommended-workflow"><span class="header-section-number">4.8.1</span> Recommended workflow</a></li>
+  <li><a href="#caveats" id="toc-caveats" class="nav-link" data-scroll-target="#caveats"><span class="header-section-number">4.8.2</span> Caveats</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.9</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/04-rix.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -497,11 +500,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
+<p>Now that we have Nix installed, and our IDE configured we can actually tackle the reproducibility puzzle.</p>
 <section id="the-reproducibility-challenge" class="level3" data-number="4.1.1">
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="the-reproducibility-challenge"><span class="header-section-number">4.1.1</span> The Reproducibility Challenge</h3>
 <p>Reproducibility in research and data science exists on a continuum. At one end, authors might only describe their methods in prose. Moving along the spectrum, they might share code, then data, and finally what we call a <em>computational environment</em>: the complete set of software required to execute an analysis.</p>
 <p>Even when researchers share code and data, they rarely specify the full software stack: the exact version of R, all package versions, and crucially, the system-level dependencies. Yet differences in any of these can lead to divergent results from the same code.</p>
-<p>Tools like <code>{renv}</code> address part of the problem—they capture R package versions in a lockfile. But <code>{renv}</code> doesn’t manage the R version itself (you need <code>rig</code> for that), and neither handles system libraries. If <code>{sf}</code> requires GDAL 3.0 but your system has 2.4, <code>{renv}</code> can’t help. And if your project uses both R and Python? Now you’re coordinating multiple package managers, each with its own configuration.</p>
+<p>Tools like <code>{renv}</code> address part of the puzzle: they capture R package versions in a lockfile. But <code>{renv}</code> does not manage the R version itself (you need <code>rig</code> for that), and neither handles system libraries. If <code>{sf}</code> requires GDAL 3.0 but your system has 2.4, <code>{renv}</code> can’t help. And if your project uses both R and Python? Now you’re coordinating multiple package managers, each with its own configuration.</p>
 </section>
 <section id="component-closures-the-nix-approach" class="level3" data-number="4.1.2">
 <h3 data-number="4.1.2" class="anchored" data-anchor-id="component-closures-the-nix-approach"><span class="header-section-number">4.1.2</span> Component Closures: The Nix Approach</h3>
@@ -529,8 +533,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This chapter covers everything you need to know to create project-specific, reproducible development environments for your R projects.</p>
 </section>
 </section>
-<section id="the-rix-function" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="the-rix-function"><span class="header-section-number">4.2</span> The rix() Function</h2>
+<section id="transitioning-to-nix-managed-r" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="transitioning-to-nix-managed-r"><span class="header-section-number">4.2</span> Transitioning to Nix-Managed R</h2>
+<p>Now that Nix is installed, I strongly recommend uninstalling any system-wide R installation and removing the packages in your user library (typically found in <code>~/R</code> on Linux or <code>~/Library/R</code> on macOS). From this point forward, let Nix handle everything. If you are using Windows, you can keep your Windows-specific R installation, since Nix will not interfere with it (remember, Nix is installed inside WSL and Positron will automatically load Nix environments installed in WSL as well).</p>
+<p>If you are not ready to take this step, you can continue using your local R library. The <code>{rix}</code> package makes efforts not to interfere with your existing setup, and the <code>.Rprofile</code> it generates helps keep Nix environments isolated. However, for the cleanest experience and to avoid subtle conflicts, I recommend fully committing to Nix.</p>
+<section id="bootstrapping-rix-without-a-local-r-installation" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="bootstrapping-rix-without-a-local-r-installation"><span class="header-section-number">4.2.1</span> Bootstrapping <code>{rix}</code> without a local R installation</h3>
+<p>But if R is uninstalled, how do you use <code>{rix}</code> to generate environments? The answer lies in the temporary shells we saw in the previous chapter. Use Nix itself to bootstrap a temporary R session with <code>{rix}</code> available.</p>
+<p>Running the following line in a terminal will drop you into an interactive R session:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">-p</span> R rPackages.rix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This gives you a temporary shell with R and <code>{rix}</code> ready to use. From here, you can generate project-specific Nix expressions.</p>
+<p>For example, navigate to an empty directory for a new project:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> my-project</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> my-project</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then start R:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Load <code>{rix}</code> and generate an expression:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-04-11"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This writes a <code>default.nix</code> file to your project directory. The expression defines a shell with R, <code>{dplyr}</code>, and <code>{ggplot2}</code> as they were on the 11th of April 2025 on CRAN. The <code>ide</code> argument is set to <code>"none"</code> because we configured Positron in the previous chapter rather than having Nix manage an IDE.</p>
+<p>You can now exit this temporary session (type <code>q()</code> in R, then <code>exit</code> in the shell) and build your new environment:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Once built, use <code>nix-shell</code> to enter your project’s environment. This workflow of bootstrapping <code>{rix}</code> via a temporary shell, generating a <code>default.nix</code>, and then building it is the pattern you will follow for every new project.</p>
+<p>This is also the reason why there is no Python version of <code>{rix}</code>: you can bootstrap a Python environment using <code>{rix}</code> in the same way, by only temporarily having the R interpreter available through the Nix shell.</p>
+</section>
+</section>
+<section id="the-rix-function" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="the-rix-function"><span class="header-section-number">4.3</span> The rix() Function</h2>
 <p>The <code>rix()</code> function is the heart of the package. It generates a <code>default.nix</code> file—a Nix expression that defines your development environment. Here are its main arguments:</p>
 <ul>
 <li><code>r_ver</code>: the version of R you need (or use <code>date</code> instead)</li>
@@ -540,31 +576,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>git_pkgs</code>: R packages to install from GitHub</li>
 <li><code>local_r_pkgs</code>: local <code>.tar.gz</code> packages to install</li>
 <li><code>tex_pkgs</code>: TexLive packages for literate programming</li>
-<li><code>ide</code>: which IDE to configure (<code>"rstudio"</code>, <code>"code"</code>, <code>"positron"</code>, <code>"none"</code>)</li>
+<li><code>ide</code>: which IDE to configure (<code>"rstudio"</code>, <code>"code"</code>, <code>"positron"</code>, <code>"none"</code>). Since we’ve configured Positron in the previous chapter, you’ll want to set this to <code>"none"</code>. If you want to use RStudio, then set it to <code>"rstudio"</code>. This will install RStudio using Nix and make it available from the development shell. If you set it to <code>"code"</code> or <code>"positron"</code>, this will then install VS Code or Positron using Nix.</li>
 <li><code>project_path</code>: where to save the <code>default.nix</code> file</li>
 <li><code>overwrite</code>: whether to overwrite an existing <code>default.nix</code></li>
 </ul>
 <p>Let’s create our first environment. Suppose you need R with <code>{dplyr}</code> and <code>{ggplot2}</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.4.2"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>),</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"code"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.4.2"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"rstudio"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This generates two files:</p>
 <ol type="1">
 <li><strong><code>default.nix</code></strong>: The Nix expression defining your environment</li>
 <li><strong><code>.Rprofile</code></strong>: Created by <code>rix_init()</code> (called automatically), this file prevents conflicts with any system-installed R packages</li>
 </ol>
-<p>The <code>.Rprofile</code> is important: it ensures that packages from your user library don’t get loaded into the Nix environment, and it redefines <code>install.packages()</code> to throw an error—because you should never install packages that way in a Nix environment.</p>
+<p>The <code>.Rprofile</code> is important: it ensures that packages from your user library don’t get loaded into the Nix environment, and it redefines <code>install.packages()</code> to throw an error, because you should never install packages that way in a Nix environment.</p>
 </section>
-<section id="choosing-an-r-version-or-date" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="choosing-an-r-version-or-date"><span class="header-section-number">4.3</span> Choosing an R Version or Date</h2>
+<section id="choosing-an-r-version-or-date" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="choosing-an-r-version-or-date"><span class="header-section-number">4.4</span> Choosing an R Version or Date</h2>
 <p>The <code>r_ver</code> argument (or alternatively <code>date</code>) controls which version of R and which package versions you’ll get. Here’s a summary of the options:</p>
 <table class="caption-top table">
 <colgroup>
@@ -622,106 +658,108 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>To see which R versions are available:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">available_r</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">available_r</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To see which dates are available for snapshotting:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">available_dates</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">available_dates</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="using-dates-vs-versions" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="using-dates-vs-versions"><span class="header-section-number">4.3.1</span> Using dates vs versions</h3>
+<section id="using-dates-vs-versions" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="using-dates-vs-versions"><span class="header-section-number">4.4.1</span> Using dates vs versions</h3>
 <p>Using a specific date is often the best choice for reproducibility. When you specify a date, you get the exact state of CRAN on that day:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2024-12-14"</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"code"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2024-12-14"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>I find that this is often easier and clearer than using an R version. Be careful though, as using a date doesn’t reflect the state of PyPi on that date. So if you also need Python packages, the versions of packages for Python that will be provided are the ones available from <code>nixpkgs</code> on that day (but more on this later).</p>
 </section>
-<section id="the-rstats-on-nix-fork" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="the-rstats-on-nix-fork"><span class="header-section-number">4.3.2</span> The rstats-on-nix fork</h3>
+<section id="the-rstats-on-nix-fork" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="the-rstats-on-nix-fork"><span class="header-section-number">4.4.2</span> The rstats-on-nix fork</h3>
 <p>When you use a specific R version or date (rather than <code>"latest-upstream"</code>), <code>{rix}</code> uses our <code>rstats-on-nix</code> fork of <code>nixpkgs</code> rather than the upstream repository. This fork:</p>
 <ul>
-<li>Provides better compatibility for older packages</li>
-<li>Includes many fixes, especially for Apple Silicon</li>
-<li>Offers newer R releases faster than the official channels</li>
 <li>Snapshots CRAN more frequently</li>
+<li>Offers newer R releases faster than the official channels</li>
+<li>Includes many fixes, especially for Apple Silicon (even though as time goes by, this is becoming much rarer, because Nix is getting better and more support for Apple Silicon)</li>
 </ul>
 </section>
 </section>
-<section id="installing-r-packages" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="installing-r-packages"><span class="header-section-number">4.4</span> Installing R Packages</h2>
-<section id="from-cranbioconductor" class="level3" data-number="4.4.1">
-<h3 data-number="4.4.1" class="anchored" data-anchor-id="from-cranbioconductor"><span class="header-section-number">4.4.1</span> From CRAN/Bioconductor</h3>
+<section id="installing-r-packages" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="installing-r-packages"><span class="header-section-number">4.5</span> Installing R Packages</h2>
+<section id="from-cranbioconductor" class="level3" data-number="4.5.1">
+<h3 data-number="4.5.1" class="anchored" data-anchor-id="from-cranbioconductor"><span class="header-section-number">4.5.1</span> From CRAN/Bioconductor</h3>
 <p>The simplest case—just list package names in <code>r_pkgs</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.4.2"</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>, <span class="st">"tidyr"</span>, <span class="st">"readr"</span>),</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"code"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.4.2"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>, <span class="st">"tidyr"</span>, <span class="st">"readr"</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Both CRAN and Bioconductor packages can be specified this way.</p>
 </section>
-<section id="installing-archived-versions" class="level3" data-number="4.4.2">
-<h3 data-number="4.4.2" class="anchored" data-anchor-id="installing-archived-versions"><span class="header-section-number">4.4.2</span> Installing archived versions</h3>
+<section id="installing-archived-versions" class="level3" data-number="4.5.2">
+<h3 data-number="4.5.2" class="anchored" data-anchor-id="installing-archived-versions"><span class="header-section-number">4.5.2</span> Installing archived versions</h3>
 <p>Need a specific old version of a package? Use the <code>@</code> syntax:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.2.1"</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr@0.8.0"</span>, <span class="st">"janitor@1.0.0"</span>),</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.2.1"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr@0.8.0"</span>, <span class="st">"janitor@1.0.0"</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This will install <code>{dplyr}</code> version 0.8.0 from the CRAN archives. Note that archived packages are built from source, which may fail for packages requiring compilation.</p>
+<p>This will install <code>{dplyr}</code> version 0.8.0 from the CRAN archives. Note that archived packages are built from source, which may fail for packages requiring compilation. Thus I recommend you use a date on which that specific version of <code>{dplyr}</code> was current.</p>
 </section>
-<section id="installing-from-github" class="level3" data-number="4.4.3">
-<h3 data-number="4.4.3" class="anchored" data-anchor-id="installing-from-github"><span class="header-section-number">4.4.3</span> Installing from GitHub</h3>
+<section id="installing-from-github" class="level3" data-number="4.5.3">
+<h3 data-number="4.5.3" class="anchored" data-anchor-id="installing-from-github"><span class="header-section-number">4.5.3</span> Installing from GitHub</h3>
 <p>For packages on GitHub, use the <code>git_pkgs</code> argument with a list containing the package name, repository URL, and commit hash:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.4.2"</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>),</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">git_pkgs =</span> <span class="fu">list</span>(</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">package_name =</span> <span class="st">"housing"</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">repo_url =</span> <span class="st">"https://github.com/rap4all/housing/"</span>,</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">commit =</span> <span class="st">"1c860959310b80e67c41f7bbdc3e84cef00df18e"</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.4.2"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">git_pkgs =</span> <span class="fu">list</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">package_name =</span> <span class="st">"housing"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">repo_url =</span> <span class="st">"https://github.com/rap4all/housing/"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">commit =</span> <span class="st">"1c860959310b80e67c41f7bbdc3e84cef00df18e"</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Always specify a commit hash, not a branch name. This ensures reproducibility— branch names can change, but commits are immutable.</p>
+<p>Always specify a commit hash, not a branch name. This ensures reproducibility: branch names can change, but commits are immutable.</p>
 <p>If the R package lives in a subfolder of the repository, append the subfolder to the URL:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>git_pkgs <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">package_name =</span> <span class="st">"BPCells"</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">repo_url =</span> <span class="st">"https://github.com/bnprks/BPCells/r"</span>,  <span class="co"># Note the /r suffix</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">commit =</span> <span class="st">"16faeade0a26b392637217b0caf5d7017c5bdf9b"</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>git_pkgs <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">package_name =</span> <span class="st">"BPCells"</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">repo_url =</span> <span class="st">"https://github.com/bnprks/BPCells/r"</span>,  <span class="co"># Note the /r suffix</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">commit =</span> <span class="st">"16faeade0a26b392637217b0caf5d7017c5bdf9b"</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Note that this will install the package from source, so if it’s a package that requires specific system dependencies, you will need to specify them manually (Nix takes care of this for you for packages that are available through <code>nixpkgs</code>, but not for ad-hoc packages from other sources).</p>
 </section>
-<section id="installing-local-packages" class="level3" data-number="4.4.4">
-<h3 data-number="4.4.4" class="anchored" data-anchor-id="installing-local-packages"><span class="header-section-number">4.4.4</span> Installing local packages</h3>
+<section id="installing-local-packages" class="level3" data-number="4.5.4">
+<h3 data-number="4.5.4" class="anchored" data-anchor-id="installing-local-packages"><span class="header-section-number">4.5.4</span> Installing local packages</h3>
 <p>For local <code>.tar.gz</code> archives, place them in the same directory as your <code>default.nix</code> and use <code>local_r_pkgs</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.3.1"</span>,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_r_pkgs =</span> <span class="fu">c</span>(<span class="st">"mypackage_1.0.0.tar.gz"</span>),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"4.3.1"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">local_r_pkgs =</span> <span class="fu">c</span>(<span class="st">"mypackage_1.0.0.tar.gz"</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Just like with packages from Git, note that this will install the package from source, so if it’s a package that requires specific system dependencies, you will need to specify them manually (Nix takes care of this for you for packages that are available through <code>nixpkgs</code>, but not for ad-hoc packages from other sources).</p>
 </section>
-<section id="why-not-to-use-install.packages" class="level3" data-number="4.4.5">
-<h3 data-number="4.4.5" class="anchored" data-anchor-id="why-not-to-use-install.packages"><span class="header-section-number">4.4.5</span> Why NOT to use install.packages()</h3>
+<section id="why-not-to-use-install.packages" class="level3" data-number="4.5.5">
+<h3 data-number="4.5.5" class="anchored" data-anchor-id="why-not-to-use-install.packages"><span class="header-section-number">4.5.5</span> Why NOT to use install.packages()</h3>
 <p>It’s crucial to understand: <strong>never call <code>install.packages()</code> from within a Nix environment</strong>. Here’s why:</p>
 <ol type="1">
 <li><strong>Declarative environments</strong>: If you install packages imperatively, your <code>default.nix</code> no longer matches your actual environment.</li>
@@ -731,68 +769,68 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Instead, add packages to your <code>rix()</code> call and rebuild the environment.</p>
 </section>
 </section>
-<section id="system-tools-and-texlive" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="system-tools-and-texlive"><span class="header-section-number">4.5</span> System Tools and TexLive</h2>
-<section id="adding-system-packages" class="level3" data-number="4.5.1">
-<h3 data-number="4.5.1" class="anchored" data-anchor-id="adding-system-packages"><span class="header-section-number">4.5.1</span> Adding system packages</h3>
+<section id="system-tools-and-texlive" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="system-tools-and-texlive"><span class="header-section-number">4.6</span> System Tools and TexLive</h2>
+<section id="adding-system-packages" class="level3" data-number="4.6.1">
+<h3 data-number="4.6.1" class="anchored" data-anchor-id="adding-system-packages"><span class="header-section-number">4.6.1</span> Adding system packages</h3>
 <p>Need command-line tools like Quarto or Git? Add them via <code>system_pkgs</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"latest-upstream"</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"quarto"</span>),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="fu">c</span>(<span class="st">"quarto"</span>, <span class="st">"git"</span>),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"latest-upstream"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"quarto"</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="fu">c</span>(<span class="st">"quarto"</span>, <span class="st">"git"</span>),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that here we install both the R <code>{quarto}</code> package and the <code>quarto</code> command-line tool—they’re different things!</p>
 <p>To find available packages, search at <a href="https://search.nixos.org/packages">search.nixos.org</a>.</p>
 </section>
-<section id="texlive-for-literate-programming" class="level3" data-number="4.5.2">
-<h3 data-number="4.5.2" class="anchored" data-anchor-id="texlive-for-literate-programming"><span class="header-section-number">4.5.2</span> TexLive for literate programming</h3>
+<section id="texlive-for-literate-programming" class="level3" data-number="4.6.2">
+<h3 data-number="4.6.2" class="anchored" data-anchor-id="texlive-for-literate-programming"><span class="header-section-number">4.6.2</span> TexLive for literate programming</h3>
 <p>For PDF output from Quarto, R Markdown, or Sweave, you need TexLive packages:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"latest-upstream"</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"quarto"</span>),</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="st">"quarto"</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">tex_pkgs =</span> <span class="fu">c</span>(<span class="st">"amsmath"</span>, <span class="st">"framed"</span>, <span class="st">"fvextra"</span>),</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_ver =</span> <span class="st">"latest-upstream"</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"quarto"</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="st">"quarto"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">tex_pkgs =</span> <span class="fu">c</span>(<span class="st">"amsmath"</span>, <span class="st">"framed"</span>, <span class="st">"fvextra"</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This installs the <code>scheme-small</code> TexLive distribution plus the specified packages.</p>
 </section>
-<section id="python-and-julia-integration" class="level3" data-number="4.5.3">
-<h3 data-number="4.5.3" class="anchored" data-anchor-id="python-and-julia-integration"><span class="header-section-number">4.5.3</span> Python and Julia integration</h3>
+<section id="python-and-julia-integration" class="level3" data-number="4.6.3">
+<h3 data-number="4.6.3" class="anchored" data-anchor-id="python-and-julia-integration"><span class="header-section-number">4.6.3</span> Python and Julia integration</h3>
 <p><code>{rix}</code> can also add Python or Julia to your environment:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-02-17"</span>,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="st">"ggplot2"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.12"</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(<span class="st">"polars"</span>, <span class="st">"great-tables"</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"positron"</span>,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-02-17"</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="st">"ggplot2"</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.12"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(<span class="st">"polars"</span>, <span class="st">"great-tables"</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This creates a polyglot environment with R, Python, and the specified packages for each.</p>
 </section>
-<section id="installing-python-packages-with-uv-impure" class="level3" data-number="4.5.4">
-<h3 data-number="4.5.4" class="anchored" data-anchor-id="installing-python-packages-with-uv-impure"><span class="header-section-number">4.5.4</span> Installing Python packages with uv (impure)</h3>
-<p>Not all Python packages are available through Nix. Unlike CRAN, PyPI doesn’t get automatically mirrored—individual packages must be packaged by volunteers. If a Python package you need isn’t in nixpkgs, you can use <code>uv</code> as an escape hatch.</p>
+<section id="installing-python-packages-with-uv-impure" class="level3" data-number="4.6.4">
+<h3 data-number="4.6.4" class="anchored" data-anchor-id="installing-python-packages-with-uv-impure"><span class="header-section-number">4.6.4</span> Installing Python packages with uv (impure)</h3>
+<p>Not all Python packages (or versions of packages) are available through Nix. Unlike CRAN, PyPI doesn’t get automatically mirrored—individual packages must be packaged by volunteers. If a Python package you need isn’t in nixpkgs, you can use <code>uv</code> as an escape hatch.</p>
 <p>This approach is also useful when collaborating with colleagues who use <code>uv</code> but haven’t adopted Nix yet. <code>uv</code> is 10–100x faster than <code>pip</code> and generates a lock file for improved reproducibility.</p>
 <p>The idea is to install <code>uv</code> in your shell (but not Python or Python packages through Nix):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-02-17"</span>,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="st">"ggplot2"</span>,</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="fu">c</span>(<span class="st">"uv"</span>),</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-02-17"</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="st">"ggplot2"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="fu">c</span>(<span class="st">"uv"</span>),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then use <code>uv</code> from within your shell. We recommend:</p>
 <ol type="1">
@@ -801,85 +839,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>Here’s a complete example with a shell hook:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-02-17"</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="st">"ggplot2"</span>,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="fu">c</span>(<span class="st">"uv"</span>),</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">shell_hook =</span> <span class="st">"</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="st">    if [ ! -f pyproject.toml ]; then</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="st">      uv init --python 3.13.5</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="st">    fi</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="st">    uv add --requirements requirements.txt</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="st">    alias python='uv run python'</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="st">  "</span>,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-02-17"</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="st">"ggplot2"</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="fu">c</span>(<span class="st">"uv"</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">shell_hook =</span> <span class="st">"</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="st">    if [ ! -f pyproject.toml ]; then</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="st">      uv init --python 3.13.5</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="st">    fi</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="st">    uv add --requirements requirements.txt</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="st">    alias python='uv run python'</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="st">  "</span>,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>After running <code>nix-shell</code>, <code>uv</code> initialises a Python project with the specified version and installs packages from <code>requirements.txt</code>. This happens each time you enter the shell, but <code>uv</code> caches everything so it’s nearly instant after the first run.</p>
-<section id="troubleshooting-wheel-issues" class="level4" data-number="4.5.4.1">
-<h4 data-number="4.5.4.1" class="anchored" data-anchor-id="troubleshooting-wheel-issues"><span class="header-section-number">4.5.4.1</span> Troubleshooting wheel issues</h4>
+<section id="troubleshooting-wheel-issues" class="level4" data-number="4.6.4.1">
+<h4 data-number="4.6.4.1" class="anchored" data-anchor-id="troubleshooting-wheel-issues"><span class="header-section-number">4.6.4.1</span> Troubleshooting wheel issues</h4>
 <p>When using wheels (pre-compiled Python packages), you may encounter errors like:</p>
 <pre><code>ImportError: libstdc++.so.6: cannot open shared object file</code></pre>
 <p>This happens because wheels expect certain libraries in certain locations. Add this to your shell hook to fix it:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>shellHook = <span class="st">''</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="st">  export LD_LIBRARY_PATH="</span><span class="sc">${</span>pkgs<span class="op">.</span>lib<span class="op">.</span>makeLibraryPath <span class="op">(</span><span class="kw">with</span> pkgs<span class="op">;</span> <span class="op">[</span> </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    zlib gcc<span class="op">.</span>cc glibc stdenv<span class="op">.</span>cc<span class="op">.</span>cc </span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">])</span><span class="sc">}</span><span class="st">":$LD_LIBRARY_PATH</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">  # ... rest of your hook</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="st">''</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>shellHook = <span class="st">''</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="st">  export LD_LIBRARY_PATH="</span><span class="sc">${</span>pkgs<span class="op">.</span>lib<span class="op">.</span>makeLibraryPath <span class="op">(</span><span class="kw">with</span> pkgs<span class="op">;</span> <span class="op">[</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    zlib gcc<span class="op">.</span>cc glibc stdenv<span class="op">.</span>cc<span class="op">.</span>cc </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">])</span><span class="sc">}</span><span class="st">":$LD_LIBRARY_PATH</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="st">  # ... rest of your hook</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="st">''</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If this seems complicated: yes, it is. This is exactly the kind of problem Nix aims to solve. When possible, prefer Python packages included in nixpkgs.</p>
 </section>
 </section>
 </section>
-<section id="building-and-using-environments" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="building-and-using-environments"><span class="header-section-number">4.6</span> Building and Using Environments</h2>
-<section id="building-with-nix-build" class="level3" data-number="4.6.1">
-<h3 data-number="4.6.1" class="anchored" data-anchor-id="building-with-nix-build"><span class="header-section-number">4.6.1</span> Building with nix-build</h3>
+<section id="building-and-using-environments" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="building-and-using-environments"><span class="header-section-number">4.7</span> Building and Using Environments</h2>
+<section id="building-with-nix-build" class="level3" data-number="4.7.1">
+<h3 data-number="4.7.1" class="anchored" data-anchor-id="building-with-nix-build"><span class="header-section-number">4.7.1</span> Building with nix-build</h3>
 <p>Once you have a <code>default.nix</code>, build the environment:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This downloads/builds all required packages and creates a <code>result</code> symlink in your project directory. The <code>result</code> file prevents the environment from being garbage-collected.</p>
 </section>
-<section id="entering-with-nix-shell" class="level3" data-number="4.6.2">
-<h3 data-number="4.6.2" class="anchored" data-anchor-id="entering-with-nix-shell"><span class="header-section-number">4.6.2</span> Entering with nix-shell</h3>
+<section id="entering-with-nix-shell" class="level3" data-number="4.7.2">
+<h3 data-number="4.7.2" class="anchored" data-anchor-id="entering-with-nix-shell"><span class="header-section-number">4.7.2</span> Entering with nix-shell</h3>
 <p>To use the environment interactively:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>You’ll drop into a shell where R and all your packages are available. Type <code>R</code> to start an R session, or start your editor directly.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You’ll drop into a shell where R and all your packages are available. Type <code>R</code> to start an R session. If you’re using RStudio (and specified <code>ide = "rstudio"</code> in the call to <code>rix()</code>) then type <code>rstudio</code> to launch RStudio. If instead you configured Positron, (or any other IDE), open Positron, and open the project folder that contains the <code>default.nix</code> (make sure you also have an <code>.envrc</code> there for <code>direnv</code> to load the environment directly).</p>
+<p>You can even run scripts directly without entering the shell:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> default.nix <span class="at">--run</span> <span class="st">"Rscript analysis.R"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is quite useful on CI/CD platforms.</p>
 </section>
-<section id="running-scripts" class="level3" data-number="4.6.3">
-<h3 data-number="4.6.3" class="anchored" data-anchor-id="running-scripts"><span class="header-section-number">4.6.3</span> Running scripts</h3>
-<p>You can run scripts directly without entering the shell:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> default.nix <span class="at">--run</span> <span class="st">"Rscript analysis.R"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Or run a <code>{targets}</code> pipeline:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> default.nix <span class="at">--run</span> <span class="st">"Rscript -e 'targets::tar_make()'"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="pure-shells-for-complete-isolation" class="level3" data-number="4.6.4">
-<h3 data-number="4.6.4" class="anchored" data-anchor-id="pure-shells-for-complete-isolation"><span class="header-section-number">4.6.4</span> Pure shells for complete isolation</h3>
-<p>By default, <code>nix-shell</code> can still see programs installed on your system. For complete isolation:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">--pure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="pure-shells-for-complete-isolation" class="level3" data-number="4.7.3">
+<h3 data-number="4.7.3" class="anchored" data-anchor-id="pure-shells-for-complete-isolation"><span class="header-section-number">4.7.3</span> Pure shells for complete isolation</h3>
+<p>By default, <code>nix-shell</code> can still see programs installed on your system. This is quite important to understand: building the environment happens in an isolated, hermetic sandbox, but when inside a shell, isolation is more porous and it is possible to use other systems tools. For example, you don’t need to install <code>git</code> inside the Nix development environment: you can just keep using the <code>git</code> executable already available on your system.</p>
+<p>But it is possible to run the environment with increased isolation:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">--pure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This hides everything not explicitly included in your environment.</p>
 </section>
-<section id="garbage-collection" class="level3" data-number="4.6.5">
-<h3 data-number="4.6.5" class="anchored" data-anchor-id="garbage-collection"><span class="header-section-number">4.6.5</span> Garbage collection</h3>
+<section id="garbage-collection" class="level3" data-number="4.7.4">
+<h3 data-number="4.7.4" class="anchored" data-anchor-id="garbage-collection"><span class="header-section-number">4.7.4</span> Garbage collection</h3>
 <p>Nix never deletes old packages automatically. To clean up:</p>
 <ol type="1">
-<li>Delete the <code>result</code> symlink</li>
+<li>Delete the <code>result</code> symlink that will appear in your project’s folder after calling <code>nix-build</code></li>
 <li>Run <code>nix-store --gc</code></li>
 </ol>
 <p>This removes all packages that are no longer referenced by any environment.</p>
 </section>
 </section>
-<section id="converting-renv-projects" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="converting-renv-projects"><span class="header-section-number">4.7</span> Converting renv Projects</h2>
+<section id="converting-renv-projects" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="converting-renv-projects"><span class="header-section-number">4.8</span> Converting renv Projects</h2>
 <p>If you have existing projects using <code>{renv}</code>, the <code>renv2nix()</code> function can help you migrate:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">renv2nix</span>(</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">renv_lock_path =</span> <span class="st">"path/to/project/renv.lock"</span>,</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"path/to/new_nix_project"</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">renv2nix</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">renv_lock_path =</span> <span class="st">"path/to/project/renv.lock"</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"path/to/new_nix_project"</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="recommended-workflow" class="level3" data-number="4.7.1">
-<h3 data-number="4.7.1" class="anchored" data-anchor-id="recommended-workflow"><span class="header-section-number">4.7.1</span> Recommended workflow</h3>
+<section id="recommended-workflow" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="recommended-workflow"><span class="header-section-number">4.8.1</span> Recommended workflow</h3>
 <ol type="1">
 <li>Copy the <code>renv.lock</code> file to a new, empty folder</li>
 <li>Run <code>renv2nix()</code> pointing to that folder</li>
@@ -887,16 +922,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>Do <strong>not</strong> convert in the same folder as the original <code>{renv}</code> project—the generated <code>.Rprofile</code> will conflict with <code>{renv}</code>’s <code>.Rprofile</code>.</p>
 </section>
-<section id="caveats" class="level3" data-number="4.7.2">
-<h3 data-number="4.7.2" class="anchored" data-anchor-id="caveats"><span class="header-section-number">4.7.2</span> Caveats</h3>
+<section id="caveats" class="level3" data-number="4.8.2">
+<h3 data-number="4.8.2" class="anchored" data-anchor-id="caveats"><span class="header-section-number">4.8.2</span> Caveats</h3>
 <ul>
 <li>Package versions may not match exactly due to how Nix handles snapshotting</li>
 <li>If the <code>renv.lock</code> lists an old R version but recent packages, use the <code>override_r_ver</code> argument to specify a more appropriate R version</li>
 </ul>
 </section>
 </section>
-<section id="summary" class="level2" data-number="4.8">
-<h2 data-number="4.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.8</span> Summary</h2>
+<section id="summary" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.9</span> Summary</h2>
 <p>In this chapter, we learned how to use <code>{rix}</code> to create reproducible development environments:</p>
 <ul>
 <li>The <code>rix()</code> function generates <code>default.nix</code> files from R</li>
