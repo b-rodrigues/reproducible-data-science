@@ -23,7 +23,7 @@ the plot and the final report.
 The strength of these tools is their language-agnosticism, but their weaknesses 
 are twofold:
 
-1. **File-centric**: You must manually handle all I/O—your first script saves 
+1. **File-centric**: You must manually handle all I/O. Your first script saves 
    `data.csv`, your second loads it. This adds boilerplate and surfaces for 
    error.
 2. **Environment-agnostic**: They track files but know nothing about the 
@@ -31,12 +31,12 @@ are twofold:
 
 This is where R's **`{targets}`** package shines. It tracks dependencies 
 between **R objects directly**, automatically handling serialisation. But 
-`{targets}` operates within a single R session—for polyglot pipelines, you must 
+`{targets}` operates within a single R session; for polyglot pipelines, you must 
 manually coordinate via `{reticulate}`.
 
 ### The Separation Problem
 
-All these tools—from `make` to `{targets}` to Airflow—separate workflow 
+All these tools (from `make` to `{targets}` to Airflow) separate workflow 
 management from environment management. You use one tool to run the pipeline 
 and another (Docker, `{renv}`) to set up the software.
 
@@ -125,7 +125,7 @@ That's a separate 100+ line `Dockerfile` you must maintain.
 ### rixpress: Unified Orchestration
 
 **`{rixpress}`** solves this by using Nix not just as a package manager, but as 
-the build automation engine itself. Each pipeline step is a **Nix derivation**—a 
+the build automation engine itself. Each pipeline step is a **Nix derivation**: a 
 hermetically sealed build unit.
 
 Compare the same pipeline in `{rixpress}`:
@@ -189,7 +189,7 @@ This provides two key benefits:
 
 1. **True Polyglot Pipelines**: Each step can have its own Nix environment. A 
    Python step runs in a pure Python environment, an R step in an R environment, 
-   a Quarto step in yet another—all within the same pipeline.
+   a Quarto step in yet another, all within the same pipeline.
 
 2. **Deep Reproducibility**: Each step is cached based on the cryptographic hash 
    of *all* its inputs: the code, the data, *and the environment*. Any change in 
@@ -202,8 +202,8 @@ reproducibility of the Nix build system.
 
 ## What is rixpress?
 
-`{rixpress}` streamlines creation of *micropipelines*—small-to-medium, 
-single-machine analytic pipelines—by expressing a pipeline in idiomatic R while 
+`{rixpress}` streamlines creation of *micropipelines* (small-to-medium, 
+single-machine analytic pipelines) by expressing a pipeline in idiomatic R while 
 delegating build orchestration to the Nix build system.
 
 Key features:
@@ -368,7 +368,7 @@ rxp_load("mtcars_head")
 rxp_copy("page")
 ```
 
-### Visualizing the pipeline
+### Visualising the pipeline
 
 ```{r}
 #| eval: false
@@ -459,7 +459,7 @@ rxp_r(
 )
 ```
 
-This approach makes your pipeline more modular—any language that can read JSON 
+This approach makes your pipeline more modular: any language that can read JSON 
 could be added in the future.
 
 ## Caching and Incremental Builds
@@ -498,7 +498,7 @@ old_result <- rxp_read("mtcars_head", which_log = "z9y8x")
 identical(new_result, old_result)
 ```
 
-This is incredibly powerful for debugging and validation—you can go back in time 
+This is incredibly powerful for debugging and validation. You can go back in time 
 to inspect any output from any previous pipeline run.
 
 ## ryxpress: The Python Interface
@@ -774,7 +774,7 @@ includes:
 `{rixpress}` unifies environment management and workflow orchestration:
 
 - **Define** pipelines with `rxp_*()` functions in familiar R syntax
-- **Mix** languages freely—R, Python, Julia, Quarto
+- **Mix** languages freely: R, Python, Julia, Quarto
 - **Build** with Nix for deterministic, cached execution
 - **Inspect** outputs with `rxp_read()`, `rxp_load()`, `rxp_copy()`
 - **Debug** with timestamped build logs
