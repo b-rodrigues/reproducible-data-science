@@ -15,9 +15,10 @@ let
  };
 
  pyconf = builtins.attrValues {
-   inherit (pkgs.python312Packages)
+   inherit (pkgs.python313Packages)
      beautifulsoup4
      lxml
+     numpy
      pandas
      plotnine
      polars
