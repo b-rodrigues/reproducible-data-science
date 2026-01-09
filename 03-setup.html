@@ -430,7 +430,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#installing-nix" id="toc-installing-nix" class="nav-link active" data-scroll-target="#installing-nix"><span class="header-section-number">3.1</span> Installing Nix</a>
   <ul class="collapse">
   <li><a href="#for-windows-users-wsl2-prerequisites" id="toc-for-windows-users-wsl2-prerequisites" class="nav-link" data-scroll-target="#for-windows-users-wsl2-prerequisites"><span class="header-section-number">3.1.1</span> For Windows Users: WSL2 Prerequisites</a></li>
-  <li><a href="#installing-nix-all-systems" id="toc-installing-nix-all-systems" class="nav-link" data-scroll-target="#installing-nix-all-systems"><span class="header-section-number">3.1.2</span> installing Nix (All Systems)</a></li>
+  <li><a href="#the-determinate-systems-installer" id="toc-the-determinate-systems-installer" class="nav-link" data-scroll-target="#the-determinate-systems-installer"><span class="header-section-number">3.1.2</span> The Determinate Systems installer</a></li>
   </ul></li>
   <li><a href="#configuring-the-cache" id="toc-configuring-the-cache" class="nav-link" data-scroll-target="#configuring-the-cache"><span class="header-section-number">3.2</span> Configuring the Cache</a></li>
   <li><a href="#verifying-installation-with-temporary-shells" id="toc-verifying-installation-with-temporary-shells" class="nav-link" data-scroll-target="#verifying-installation-with-temporary-shells"><span class="header-section-number">3.3</span> Verifying installation with Temporary Shells</a></li>
@@ -440,7 +440,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#direnv" id="toc-direnv" class="nav-link" data-scroll-target="#direnv"><span class="header-section-number">3.4.2</span> direnv</a></li>
   <li><a href="#in-summary-and-next-steps" id="toc-in-summary-and-next-steps" class="nav-link" data-scroll-target="#in-summary-and-next-steps"><span class="header-section-number">3.4.3</span> In summary and next steps</a></li>
   </ul></li>
-  <li><a href="#hands-on-exercises" id="toc-hands-on-exercises" class="nav-link" data-scroll-target="#hands-on-exercises"><span class="header-section-number">3.5</span> Hands-On Exercises</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/03-setup.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -478,27 +477,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If you are on Windows, you need the Windows Subsystem for Linux 2 (WSL2) to run Nix. If you are on a recent version of Windows 10 or 11, you can simply run this as an administrator in PowerShell:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wsl</span> <span class="at">--install</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You can find further installation notes at <a href="https://learn.microsoft.com/en-us/windows/wsl/install">this official MS documentation</a>.</p>
-<p>I recommend to activate <code>systemd</code> in Ubuntu WSL2, mainly because this supports other users than <code>root</code> running Nix. To set this up, please do as outlined <a href="https://ubuntu.com/blog/ubuntu-wsl-enable-systemd">this official Ubuntu blog entry</a>:</p>
+<p>I recommend activating <code>systemd</code> in Ubuntu WSL2, mainly because this supports users other than <code>root</code> running Nix. To set this up, please follow <a href="https://ubuntu.com/blog/ubuntu-wsl-enable-systemd">this official Ubuntu blog entry</a>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># in WSL2 Ubuntu shell</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> <span class="at">-i</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> /etc/wsl.conf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This will open the <code>/etc/wsl.conf</code> in a nano, a command line text editor. Add the following line:</p>
+<p>This will open <code>/etc/wsl.conf</code> in nano, a command line text editor. Add the following line:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[boot]</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">systemd</span><span class="op">=</span><span class="cn">true</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Save the file with CTRL-O and then quit nano with CTRL-X. Then, type the following line in powershell:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wsl</span> <span class="at">--shutdown</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>and then relaunch WSL (Ubuntu) from the start menu. For those of you running Windows, we will be working exclusively from WSL2 now. If that is not an option, then I highly recommend you set up a virtual machine with Ubuntu using <a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a> for example, or dual-boot Ubuntu.</p>
 </section>
-<section id="installing-nix-all-systems" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="installing-nix-all-systems"><span class="header-section-number">3.1.2</span> installing Nix (All Systems)</h3>
+<section id="the-determinate-systems-installer" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="the-determinate-systems-installer"><span class="header-section-number">3.1.2</span> The Determinate Systems installer</h3>
 <p>Installing (and uninstalling) Nix is quite simple, thanks to the installer from <a href="https://github.com/DeterminateSystems/nix-installer">Determinate Systems</a>, a company that provides services and tools built on Nix, and works the same way on Linux (native or WSL2) and macOS.</p>
-<p>Do not use your operating system’s package manager to install Nix. Instead, simply open a terminal and run the following line (on Windows, run this inside WSL):</p>
+<p>Do not use your operating system’s package manager to install Nix. Instead, simply open a terminal and run the following line (on Windows, run this inside WSL, and after the prerequisites listed above):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> <span class="dt">\</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-L</span> https://install.determinate.systems/nix <span class="kw">|</span> <span class="dt">\</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sh</span> <span class="at">-s</span> <span class="at">--</span> install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Just follow the instructions on screen, and in no time Nix will be available on your machine!</p>
 </section>
 </section>
 <section id="configuring-the-cache" class="level2" data-number="3.2">
@@ -514,7 +514,7 @@ warning: ignoring untrusted substituter 'https://rstats-on-nix.cachix.org', you 
 Run `man nix.conf` for more information on the `substituters` configuration option.
 warning: ignoring the client-specified setting 'trusted-public-keys', because it is a restricted setting and you are not a trusted user</code></pre>
 <p>Then this means that configuration was not successful. You need to add your user to <code>/etc/nix/nix.custom.conf</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> vim /etc/nix/nix.custom.conf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> nano /etc/nix/nix.custom.conf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>then simply add this line in the file:</p>
 <pre><code>trusted-users = root YOURUSERNAME</code></pre>
 <p>where <code>YOURUSERNAME</code> is your current login user name.</p>
@@ -533,28 +533,30 @@ warning: ignoring the client-specified setting 'trusted-public-keys', because it
 <p>this time you should see something like:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/nix/store/cndqpx74312xkrrgp842ifinkd4cg89g-sl-5.05/bin/sl</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This is the path to the <code>sl</code> binary installed through Nix. The path starts with <code>/nix/store</code>: the <em>Nix store</em> is where all the software installed through Nix is stored. Now type <code>sl</code> and see what happens!</p>
+<p>Temporary shells are quite useful, especially if you want to simply run a command using some tool that you only need infrequently. But this is not how we are going to be using Nix.</p>
 </section>
 <section id="configuring-your-ide" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="configuring-your-ide"><span class="header-section-number">3.4</span> Configuring your IDE</h2>
 <section id="pre-requisites" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="pre-requisites"><span class="header-section-number">3.4.1</span> Pre-requisites</h3>
-<p>We now need to configure an IDE to use both our Nix shells as development environments, and GitHub Copilot. You are free to use whatever IDE you want but the instructions below are going to focus on Positron, which is a fork of VS Code geared towards data science. It works well with both Python and R and makes it quite easy to choose the right R or Python interpreter (which you’ll have to do to make sure you’re using the one provided by Nix, <a href="https://positron.posit.co/managing-interpreters.html">see here</a>).</p>
+<p>We now need to configure an IDE to use our Nix shells as development environments. You are free to use whatever IDE you want but the instructions below are going to focus on Positron, which is a fork of VS Code geared towards data science. It works well with both Python and R and makes it quite easy to choose the right R or Python interpreter (which you’ll have to do to make sure you’re using the one provided by Nix, <a href="https://positron.posit.co/managing-interpreters.html">see here</a>).</p>
 <p>If you want to use VS Code proper, you can follow all the instructions here, but you need to install the <a href="https://marketplace.visualstudio.com/items?itemName=REditorSupport.r">REditorSupport</a> and the <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python">Python</a> extension. You will also need to add the <code>{languageserver}</code> R package to your Nix shells.</p>
-<p>On Windows, you need to install Positron on Windows, not inside WSL. Then, install the <a href="https://open-vsx.org/extension/kv9898/open-remote-wsl">Open Remote extension</a> right from Positron itself.</p>
+<p>On Windows, you need to install Positron on Windows, not inside WSL.</p>
+<p>If you want to use RStudio, you can, but you will need to install it through Nix: an RStudio installed through the usual means for your system is not going to be able to interact with Nix! This is a limitation of RStudio and there is currently no workaround. If you want to use RStudio, just skip the rest of the chapter, as it’s irrelevant to you. Later, when we use <code>{rix}</code> to set up our first Nix development environment, I’ll tell you what to do to use RStudio.</p>
 </section>
 <section id="direnv" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="direnv"><span class="header-section-number">3.4.2</span> direnv</h3>
-<p>Once Positron is installed, you need to install a piece of software called <code>direnv</code>: <code>direnv</code> will automatically load Nix shells when you open a project that contains a <code>default.nix</code> file in an editor. It works on any operating system and many editors support it, including Positron. If you’re using Windows, install <code>direnv</code> in WSL (even though you’ve just installed Positron for Windows). To install <code>direnv</code> run this command:</p>
+<p>Once Positron is installed, you need to install a piece of software called <code>direnv</code>: <code>direnv</code> will automatically load Nix shells when you open a project that contains a <code>default.nix</code> file in an editor.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> It works on any operating system and many editors support it, including Positron. If you’re using Windows, install <code>direnv</code> in WSL (even though you’ve just installed Positron for Windows). To install <code>direnv</code> run this command:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-env</span> <span class="at">-f</span> <span class="st">'&lt;nixpkgs&gt;'</span> <span class="at">-iA</span> direnv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This will install <code>direnv</code> and make it available even outside of Nix shells!</p>
-<p>Then, we highly recommend to install the <code>nix-direnv</code> extension:</p>
+<p>Then, I highly recommend to install the <code>nix-direnv</code> extension:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-env</span> <span class="at">-f</span> <span class="st">'&lt;nixpkgs&gt;'</span> <span class="at">-iA</span> nix-direnv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>It is not mandatory to use <code>nix-direnv</code> if you already have <code>direnv</code>, but it’ll make loading environments much faster and seamless.</p>
-<p>Finally, if you haven’t used <code>direnv</code> before, don’t forget <a href="https://direnv.net/docs/hook.html">this last step</a> to make your terminal detected and load <code>direnv</code> automatically.</p>
+<p>Finally, if you haven’t used <code>direnv</code> before, don’t forget <a href="https://direnv.net/docs/hook.html">this last step</a> to make your terminal detect and load <code>direnv</code> automatically.</p>
 <p>Then, in Positron, install the <a href="https://github.com/direnv/direnv-vscode">direnv</a> extension. Finally, add a file called <code>.envrc</code> and simply write the following two lines in it (this <code>.envrc</code> file should be in the same folder as your project’s <code>default.nix</code>):</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">use</span> nix</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="va">$TMP</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>in it. On Windows, <em>remotely connect to WSL</em> first, but on other operating systems, simply open the project’s folder using <code>File &gt; Open Folder...</code> and you will see a pop-up stating <code>direnv: /PATH/TO/PROJECT/.envrc is blocked</code> and a button to allow it. Click <code>Allow</code> and then open an R script. You might get another pop-up asking you to restart the extension, so click <code>Restart</code>. Be aware that at this point, <code>direnv</code> will run <code>nix-shell</code> and so will start building the environment. If that particular environment hasn’t been built and cached yet, it might take some time before Code will be able to interact with it. You might get yet another popup, this time from the R Code extension complaining that R can’t be found. In this case, simply restart Code and open the project folder again: now it should work every time.</p>
+<p>in it. On Windows, <em>remotely connect to WSL</em> first, but on other operating systems, simply open the project’s folder using <code>File &gt; Open Folder...</code> and you will see a pop-up stating <code>direnv: /PATH/TO/PROJECT/.envrc is blocked</code> and a button to allow it. Click <code>Allow</code> and then open an R script. You might get another pop-up asking you to restart the extension, so click <code>Restart</code>. Be aware that at this point, <code>direnv</code> will run <code>nix-shell</code> and so will start building the environment. If that particular environment hasn’t been built and cached yet, it might take some time before Code will be able to interact with it. You might get yet another popup, this time from the R Code extension complaining that R can’t be found. In this case, simply restart Positron and open the project folder again: now it should work every time.</p>
 </section>
 <section id="in-summary-and-next-steps" class="level3" data-number="3.4.3">
 <h3 data-number="3.4.3" class="anchored" data-anchor-id="in-summary-and-next-steps"><span class="header-section-number">3.4.3</span> In summary and next steps</h3>
@@ -563,24 +565,20 @@ warning: ignoring the client-specified setting 'trusted-public-keys', because it
 <li>Generate the project’s <code>default.nix</code> file (we will see how in the next chapter);</li>
 <li>Build it using <code>nix-build</code>;</li>
 <li>Create an <code>.envrc</code> and write the two lines from above in it;</li>
-<li>Open the project’s folder in Code and click allow when prompted;</li>
-<li>Restart the extension and Code if necessary.</li>
+<li>Open the project’s folder in Positron and click allow when prompted;</li>
+<li>Restart the extension and Positron if necessary.</li>
 </ul>
-<p>Another option is to create the <code>.envrc</code> file and write <code>use nix</code> in it, then open a terminal, navigate to the project’s folder, and run <code>direnv allow</code>. Doing this before opening Positron should not prompt you anymore.</p>
+<p>Another option is to create the <code>.envrc</code> file and write the two required lines, then open a terminal, navigate to the project’s folder, and run <code>direnv allow</code>. Doing this before opening Positron should not prompt you anymore.</p>
 <p>If you’re on Windows, using Positron like this is particularly interesting, because it allows you to install Positron on Windows as usual, and then you can configure it to interact with a Nix shell, even if it’s running from WSL. This is a very seamless experience.</p>
-<p>Now configure Positron to use GitHub Copilot: <a href="https://positron.posit.co/assistant.html">click here</a>.</p>
-<p>You can enable LLM tab-completion if you want. I’m not a fan of this, I prefer simply using the interface and using LLMs as an advanced rubber duck: <a href="https://github.com/copilot/">https://github.com/copilot/</a>.</p>
+
+
 </section>
 </section>
-<section id="hands-on-exercises" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="hands-on-exercises"><span class="header-section-number">3.5</span> Hands-On Exercises</h2>
-<ol type="1">
-<li>Start a temporary shell with R and <code>{rix}</code> again using <code>nix-shell -p R rPackages.rix</code>. Start an R session (by typing <code>R</code>) and then load the <code>{rix}</code> package (using <code>library(rix)</code>). Run the <code>available_dates()</code> function to see the list of available snapshots.</li>
-<li>Inside of an activated shell, type <code>which R</code> and <code>echo $PATH</code>. Explore what is being added to your environment. What is the significance of paths like <code>/nix/store/...</code>?</li>
-<li>Go to <a href="https://search.nixos.org/packages">https://search.nixos.org/packages</a> and look for packages that you usually use for your projects to see if they are available.</li>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>A <code>default.nix</code> file is a file that contains the specification of our development environments, and is the file that will be automatically generated by <code>{rix}</code><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-
-
 </section>
 
 </main> <!-- /main -->
