@@ -1,6 +1,12 @@
 # Welcome! {.unnumbered}
 ## A modern, unified, and language-agnostic workflow for data science using Nix.
 
+```{r}
+#| include: false
+library(reticulate)
+use_python(Sys.which("python3"), required = TRUE)
+```
+
 *This book is a complete reimagining of my previous work, "Building Reproducible
 Analytical Pipelines with R." If you're looking for that book, you can find it
 [here](https://www.raps-with-r.dev). But if you're ready for the next step,

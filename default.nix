@@ -3,9 +3,11 @@ let
 
  rpkgs = builtins.attrValues {
   inherit (pkgs.rPackages)
-    quarto
+    dplyr
     ggplot2
     knitr
+    purrr
+    quarto
     reticulate
     rmarkdown
     withr
@@ -14,13 +16,15 @@ let
 
  pyconf = builtins.attrValues {
    inherit (pkgs.python312Packages)
-     plotnine
      beautifulsoup4
-     polars
-     requests
-     xlsx2csv
      lxml
+     pandas
+     plotnine
+     polars
      pyarrow
+     requests
+     scipy
+     xlsx2csv
      ;
  };
 
