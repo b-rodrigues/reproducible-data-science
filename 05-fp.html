@@ -439,10 +439,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#handling-impure-operations-like-randomness" id="toc-handling-impure-operations-like-randomness" class="nav-link" data-scroll-target="#handling-impure-operations-like-randomness"><span class="header-section-number">5.2.1</span> Handling “Impure” Operations like Randomness</a></li>
   <li><a href="#the-oop-caveat-in-python" id="toc-the-oop-caveat-in-python" class="nav-link" data-scroll-target="#the-oop-caveat-in-python"><span class="header-section-number">5.2.2</span> The OOP Caveat in Python</a></li>
   </ul></li>
-  <li><a href="#writing-your-own-functions" id="toc-writing-your-own-functions" class="nav-link" data-scroll-target="#writing-your-own-functions"><span class="header-section-number">5.3</span> Writing Your Own Functions</a>
+  <li><a href="#functions-a-refresher-and-beyond" id="toc-functions-a-refresher-and-beyond" class="nav-link" data-scroll-target="#functions-a-refresher-and-beyond"><span class="header-section-number">5.3</span> Functions: A Refresher and Beyond</a>
   <ul class="collapse">
-  <li><a href="#in-r" id="toc-in-r" class="nav-link" data-scroll-target="#in-r"><span class="header-section-number">5.3.1</span> In R</a></li>
-  <li><a href="#in-python" id="toc-in-python" class="nav-link" data-scroll-target="#in-python"><span class="header-section-number">5.3.2</span> In Python</a></li>
+  <li><a href="#the-basics" id="toc-the-basics" class="nav-link" data-scroll-target="#the-basics"><span class="header-section-number">5.3.1</span> The Basics</a></li>
+  <li><a href="#higher-order-functions" id="toc-higher-order-functions" class="nav-link" data-scroll-target="#higher-order-functions"><span class="header-section-number">5.3.2</span> Higher-Order Functions</a></li>
+  <li><a href="#closures-functions-that-remember" id="toc-closures-functions-that-remember" class="nav-link" data-scroll-target="#closures-functions-that-remember"><span class="header-section-number">5.3.3</span> Closures: Functions That Remember</a></li>
+  <li><a href="#decorators-python" id="toc-decorators-python" class="nav-link" data-scroll-target="#decorators-python"><span class="header-section-number">5.3.4</span> Decorators (Python)</a></li>
+  <li><a href="#tidy-evaluation-in-r" id="toc-tidy-evaluation-in-r" class="nav-link" data-scroll-target="#tidy-evaluation-in-r"><span class="header-section-number">5.3.5</span> Tidy Evaluation in R</a></li>
+  <li><a href="#anonymous-functions-and-lambdas" id="toc-anonymous-functions-and-lambdas" class="nav-link" data-scroll-target="#anonymous-functions-and-lambdas"><span class="header-section-number">5.3.6</span> Anonymous Functions and Lambdas</a></li>
+  <li><a href="#partial-application" id="toc-partial-application" class="nav-link" data-scroll-target="#partial-application"><span class="header-section-number">5.3.7</span> Partial Application</a></li>
+  <li><a href="#immutability-data-that-does-not-change" id="toc-immutability-data-that-does-not-change" class="nav-link" data-scroll-target="#immutability-data-that-does-not-change"><span class="header-section-number">5.3.8</span> Immutability: Data That Does Not Change</a></li>
   </ul></li>
   <li><a href="#the-functional-toolkit-map-filter-and-reduce" id="toc-the-functional-toolkit-map-filter-and-reduce" class="nav-link" data-scroll-target="#the-functional-toolkit-map-filter-and-reduce"><span class="header-section-number">5.4</span> The Functional Toolkit: Map, Filter, and Reduce</a>
   <ul class="collapse">
@@ -454,7 +460,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#the-composition-challenge-in-python" id="toc-the-composition-challenge-in-python" class="nav-link" data-scroll-target="#the-composition-challenge-in-python"><span class="header-section-number">5.5.1</span> The Composition Challenge in Python</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">5.6</span> Summary</a></li>
+  <li><a href="#handling-errors-functionally" id="toc-handling-errors-functionally" class="nav-link" data-scroll-target="#handling-errors-functionally"><span class="header-section-number">5.6</span> Handling Errors Functionally</a>
+  <ul class="collapse">
+  <li><a href="#in-r-with-purrrsafely-and-purrrpossibly" id="toc-in-r-with-purrrsafely-and-purrrpossibly" class="nav-link" data-scroll-target="#in-r-with-purrrsafely-and-purrrpossibly"><span class="header-section-number">5.6.1</span> In R with <code>purrr::safely()</code> and <code>purrr::possibly()</code></a></li>
+  <li><a href="#in-python-with-tryexcept-and-result-patterns" id="toc-in-python-with-tryexcept-and-result-patterns" class="nav-link" data-scroll-target="#in-python-with-tryexcept-and-result-patterns"><span class="header-section-number">5.6.2</span> In Python with try/except and Result patterns</a></li>
+  </ul></li>
+  <li><a href="#when-not-to-use-functional-programming" id="toc-when-not-to-use-functional-programming" class="nav-link" data-scroll-target="#when-not-to-use-functional-programming"><span class="header-section-number">5.7</span> When NOT to Use Functional Programming</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">5.8</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/05-fp.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -484,7 +496,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In this chapter, we will see why functional programming is crucial for reproducible, testable, and collaborative data science. We will compare how to write self-contained, “pure” functions in both R and Python, and how to use functional concepts like <code>map</code>, <code>filter</code>, and <code>reduce</code> to replace error-prone loops. Finally, we will discuss how writing functions makes your code easier to review, debug, and even generate with LLMs.</p>
 <section id="introduction-from-scripts-to-functions" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="introduction-from-scripts-to-functions"><span class="header-section-number">5.1</span> Introduction: From Scripts to Functions</h2>
-<p>In the previous chapter, we learned how to create reproducible development environments with <code>{rix}</code>. We can now ensure everyone has the <em>exact same tools</em>—R, Python, system libraries—to run our code.</p>
+<p>In the previous chapter, we learned how to create reproducible development environments with <code>{rix}</code>. We can now ensure everyone has the <em>exact same tools</em> (R, Python, system libraries) *to run our code.</p>
 <p>We could have stopped there: after all, we have now reproducible environments, as many as we need for each of our projects. But having the right tools is only half the battle. Now we turn to <strong>writing reproducible code itself</strong>. A common way to start a data analysis is by writing a script: a sequence of commands executed from top to bottom.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R script example</span></span>
@@ -494,12 +506,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mean_mpg_heavy <span class="ot">&lt;-</span> <span class="fu">mean</span>(heavy_cars<span class="sc">$</span>mpg)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(mean_mpg_heavy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python script example</span></span>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python script example</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mtcars <span class="op">=</span> pd.read_csv(<span class="st">"mtcars.csv"</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>heavy_cars <span class="op">=</span> mtcars[mtcars[<span class="st">'wt'</span>] <span class="op">&gt;</span> <span class="dv">4</span>]</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mean_mpg_heavy <span class="op">=</span> heavy_cars[<span class="st">'mpg'</span>].mean()</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mean_mpg_heavy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>This works, but it has a hidden, dangerous property: <strong>state</strong>. The script relies on variables like <code>heavy_cars</code> existing in the environment, making the code hard to reason about, debug, and test. Of course, this is a simple example that is only 4 lines long. But what if you have several scripts, each hundreds of lines long? Making sense of that is not easy, if you use the coding style above especially.</p>
 <section id="the-notebook-problem" class="level3" data-number="5.1.1">
 <h3 data-number="5.1.1" class="anchored" data-anchor-id="the-notebook-problem"><span class="header-section-number">5.1.1</span> The Notebook Problem</h3>
@@ -523,15 +537,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="fp-vs-oop-transformations-vs-actors" class="level3" data-number="5.1.3">
 <h3 data-number="5.1.3" class="anchored" data-anchor-id="fp-vs-oop-transformations-vs-actors"><span class="header-section-number">5.1.3</span> FP vs OOP: Transformations vs Actors</h3>
 <p>To appreciate what FP brings, it helps to contrast it with <strong>Object-Oriented Programming (OOP)</strong>, arguably the dominant paradigm in many software systems.</p>
-<p>OOP organises computation around <em>who does what</em>—a network of objects communicating with each other and managing their own internal state. You send a message to an object, asking it to perform an action, without needing to know how it works internally.</p>
+<p>OOP organises computation around <em>who does what</em>: a network of objects communicating with each other and managing their own internal state. You send a message to an object, asking it to perform an action, without needing to know how it works internally.</p>
 <p>Functional programming, by contrast, organises computation around <em>how data changes</em>. It replaces a network of interacting objects with a flow of transformations: data goes in, data comes out, and nothing else changes in the process.</p>
 <p>This shift is especially powerful in data science:</p>
 <ul>
 <li>Analyses are naturally expressed as <strong>pipelines of transformations</strong> (cleaning, filtering, aggregating, modelling)</li>
-<li>Pure functions make results <strong>reproducible</strong>—same inputs always yield same outputs</li>
+<li>Pure functions make results <strong>reproducible</strong>: same inputs always yield same outputs</li>
 <li><strong>Immutability</strong> prevents accidental side effects on shared data</li>
 <li>Because transformations can be composed, tested, and reused independently, FP encourages <strong>modular, maintainable</strong> analysis code</li>
 </ul>
+<p>There is also a structural reason why FP fits data science better than OOP. OOP excels when you have <em>many different types of objects</em>, each with a <em>small set of methods</em>. A graphical user interface, for example, has buttons, menus, windows, and dialogs, each responding to a few actions like <code>click()</code> or <code>resize()</code>. But data science is the opposite: we typically work with <em>a small number of data structures</em> (data frames, arrays, models) and apply <em>a large number of operations</em> to them (filtering, grouping, joining, summarising, plotting). FP handles this case naturally: adding a new function is trivial, while OOP would require modifying every class.</p>
 </section>
 <section id="why-does-this-matter-for-data-science" class="level3" data-number="5.1.4">
 <h3 data-number="5.1.4" class="anchored" data-anchor-id="why-does-this-matter-for-data-science"><span class="header-section-number">5.1.4</span> Why Does This Matter for Data Science?</h3>
@@ -558,26 +573,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>It doesn’t change anything outside of its own scope. It doesn’t modify a global variable or write a file to disk. This is called having “no side effects.”</li>
 </ol>
 <p>Consider this “impure” function in Python:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># IMPURE: Relies on a global variable</span></span>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># IMPURE: Relies on a global variable</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>discount_rate <span class="op">=</span> <span class="fl">0.10</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_discounted_price(price):</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> price <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> discount_rate)  <span class="co"># What if discount_rate changes?</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(calculate_discounted_price(<span class="dv">100</span>))</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 90.0</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>discount_rate <span class="op">=</span> <span class="fl">0.20</span>  <span class="co"># Someone changes the state</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(calculate_discounted_price(<span class="dv">100</span>))</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 80.0  -- Same input, different output!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(calculate_discounted_price(<span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>90.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 90.0</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>discount_rate <span class="op">=</span> <span class="fl">0.20</span>  <span class="co"># Someone changes the state</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(calculate_discounted_price(<span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>80.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 80.0  -- Same input, different output!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>The pure version passes <em>all</em> its dependencies as arguments:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PURE: All inputs are explicit arguments</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_discounted_price_pure(price, rate):</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> price <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> rate)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(calculate_discounted_price_pure(<span class="dv">100</span>, <span class="fl">0.10</span>))</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 90.0</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(calculate_discounted_price_pure(<span class="dv">100</span>, <span class="fl">0.20</span>))</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 80.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PURE: All inputs are explicit arguments</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_discounted_price_pure(price, rate):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> price <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> rate)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(calculate_discounted_price_pure(<span class="dv">100</span>, <span class="fl">0.10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>90.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 90.0</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(calculate_discounted_price_pure(<span class="dv">100</span>, <span class="fl">0.20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>80.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 80.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Now the function is predictable and self-contained.</p>
 <section id="handling-impure-operations-like-randomness" class="level3" data-number="5.2.1">
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="handling-impure-operations-like-randomness"><span class="header-section-number">5.2.1</span> Handling “Impure” Operations like Randomness</h3>
@@ -585,28 +616,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The functional approach is not to avoid this, but to <em>control</em> it by making the source of impurity (the random seed) an explicit input.</p>
 <p>In R, the <code>{withr}</code> package helps create a temporary, controlled context:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(withr)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This function is now pure! For a given seed, the output is always the same.</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>pure_rnorm <span class="ot">&lt;-</span> <span class="cf">function</span>(n, seed) {</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with_seed</span>(seed, {</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(n)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">pure_rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">seed =</span> <span class="dv">123</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">pure_rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">seed =</span> <span class="dv">123</span>)  <span class="co"># Same result!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(withr)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This function is now pure! For a given seed, the output is always the same.</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>pure_rnorm <span class="ot">&lt;-</span> <span class="cf">function</span>(n, seed) {</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with_seed</span>(seed, {</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(n)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">pure_rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">seed =</span> <span class="dv">123</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.56047565 -0.23017749  1.55870831  0.07050839  0.12928774</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pure_rnorm</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">seed =</span> <span class="dv">123</span>)  <span class="co"># Same result!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.56047565 -0.23017749  1.55870831  0.07050839  0.12928774</code></pre>
+</div>
 </div>
 <p>In Python, <code>numpy</code> provides a more modern, object-oriented way:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a random number generator instance with a seed</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span><span class="dv">123</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rng.standard_normal(<span class="dv">5</span>))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># If we re-create the same generator, we get the same numbers</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>rng2 <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span><span class="dv">123</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rng2.standard_normal(<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a random number generator instance with a seed</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span><span class="dv">123</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rng.standard_normal(<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[-0.98912135 -0.36778665  1.28792526  0.19397442  0.9202309 ]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If we re-create the same generator, we get the same numbers</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>rng2 <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span><span class="dv">123</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rng2.standard_normal(<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[-0.98912135 -0.36778665  1.28792526  0.19397442  0.9202309 ]</code></pre>
+</div>
+</div>
 <p>The key is the same: the “state” (the seed) is explicitly managed, not hidden globally.</p>
 </section>
 <section id="the-oop-caveat-in-python" class="level3" data-number="5.2.2">
@@ -620,66 +664,312 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Avoid building your own complex classes with hidden state for your data pipeline. A pipeline composed of functions (<code>df2 = clean_data(df1); df3 =  analyze_data(df2)</code>) is almost always more transparent than an OOP one (<code>pipeline.load(); pipeline.clean(); pipeline.analyze()</code>).</p>
 </section>
 </section>
-<section id="writing-your-own-functions" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="writing-your-own-functions"><span class="header-section-number">5.3</span> Writing Your Own Functions</h2>
-<p>Let’s learn the syntax. The goal is always to encapsulate a single, logical piece of work.</p>
-<section id="in-r" class="level3" data-number="5.3.1">
-<h3 data-number="5.3.1" class="anchored" data-anchor-id="in-r"><span class="header-section-number">5.3.1</span> In R</h3>
-<p>R functions are first-class citizens. You can assign them to variables and pass them to other functions.</p>
+<section id="functions-a-refresher-and-beyond" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="functions-a-refresher-and-beyond"><span class="header-section-number">5.3</span> Functions: A Refresher and Beyond</h2>
+<p>You likely already know how to write functions in R and Python. This section serves as a quick refresher, but also introduces some concepts you may not have encountered: <strong>higher-order functions</strong>, <strong>closures</strong>, and <strong>decorators</strong>.</p>
+<section id="the-basics" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="the-basics"><span class="header-section-number">5.3.1</span> The Basics</h3>
+<p>In R, functions are first-class citizens. You assign them to variables and pass them around like any other value:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A simple function</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>calculate_ci <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">level =</span> <span class="fl">0.95</span>) {</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  se <span class="ot">&lt;-</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(x))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  mean_val <span class="ot">&lt;-</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  alpha <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> level</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  lower <span class="ot">&lt;-</span> mean_val <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> se</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  upper <span class="ot">&lt;-</span> mean_val <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> se</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">mean =</span> mean_val, <span class="at">lower =</span> lower, <span class="at">upper =</span> upper)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Use it</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.2</span>, <span class="fl">1.5</span>, <span class="fl">1.8</span>, <span class="fl">1.3</span>, <span class="fl">1.6</span>, <span class="fl">1.7</span>)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_ci</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>calculate_ci <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">level =</span> <span class="fl">0.95</span>) {</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  se <span class="ot">&lt;-</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(x))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  mean_val <span class="ot">&lt;-</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  alpha <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> level</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  lower <span class="ot">&lt;-</span> mean_val <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> se</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  upper <span class="ot">&lt;-</span> mean_val <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> se</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">mean =</span> mean_val, <span class="at">lower =</span> lower, <span class="at">upper =</span> upper)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>For data analysis, you’ll often want functions that work with column names. The <code>{dplyr}</code> package uses “tidy evaluation”:</p>
+<p>In Python, the <code>def</code> keyword defines functions. Type hints are recommended:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>summarize_variable <span class="ot">&lt;-</span> <span class="cf">function</span>(dataset, var_to_summarize) {</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  dataset <span class="sc">%&gt;%</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">mean =</span> <span class="fu">mean</span>({{ var_to_summarize }}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">sd =</span> <span class="fu">sd</span>({{ var_to_summarize }}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># The {{ }} syntax tells dplyr to use the column name passed in</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_variable</span>(height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_ci(x: <span class="bu">list</span>[<span class="bu">float</span>], level: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.95</span>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Calculate confidence interval for a list of numbers."""</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> statistics</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(x)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    mean_val <span class="op">=</span> statistics.mean(x)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    se <span class="op">=</span> statistics.stdev(x) <span class="op">/</span> (n <span class="op">**</span> <span class="fl">0.5</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    alpha <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> level</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> stats.norm.ppf(<span class="dv">1</span> <span class="op">-</span> alpha <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">"mean"</span>: mean_val, <span class="st">"lower"</span>: mean_val <span class="op">-</span> z <span class="op">*</span> se, <span class="st">"upper"</span>: mean_val <span class="op">+</span> z <span class="op">*</span> se}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="in-python" class="level3" data-number="5.3.2">
-<h3 data-number="5.3.2" class="anchored" data-anchor-id="in-python"><span class="header-section-number">5.3.2</span> In Python</h3>
-<p>Python uses the <code>def</code> keyword. Type hints are a best practice:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> summarize_variable_py(dataset: pd.DataFrame, var_to_summarize: <span class="bu">str</span>) <span class="op">-&gt;</span> pd.DataFrame:</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Calculates summary statistics for a given column."""</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    summary <span class="op">=</span> dataset.groupby(<span class="st">'species'</span>).agg(</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        n<span class="op">=</span>(var_to_summarize, <span class="st">'size'</span>),</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        mean<span class="op">=</span>(var_to_summarize, <span class="st">'mean'</span>),</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        sd<span class="op">=</span>(var_to_summarize, <span class="st">'std'</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    ).reset_index()</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="higher-order-functions" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="higher-order-functions"><span class="header-section-number">5.3.2</span> Higher-Order Functions</h3>
+<p>A <strong>higher-order function</strong> is a function that takes another function as an argument, returns a function, or both. This is the foundation of functional programming.</p>
+<p>You have already seen examples: <code>map()</code>, <code>filter()</code>, and <code>reduce()</code> are all higher-order functions because they take a function as their first argument.</p>
+<p>Here is a simple example in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>apply_twice <span class="ot">&lt;-</span> <span class="cf">function</span>(f, x) {</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">f</span>(<span class="fu">f</span>(x))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">apply_twice</span>(sqrt, <span class="dv">16</span>)  <span class="co"># sqrt(sqrt(16)) = sqrt(4) = 2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<p>And in Python:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_twice(f, x):</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> f(f(x))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>apply_twice(<span class="kw">lambda</span> x: x <span class="op">**</span> <span class="dv">2</span>, <span class="dv">2</span>)  <span class="co"># (2^2)^2 = 16</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>16</code></pre>
+</div>
+</div>
+</section>
+<section id="closures-functions-that-remember" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="closures-functions-that-remember"><span class="header-section-number">5.3.3</span> Closures: Functions That Remember</h3>
+<p>A <strong>closure</strong> is a function that “remembers” variables from its enclosing scope, even after that scope has finished executing. This is useful for creating specialised functions. These are sometimes called <em>function factories</em>.</p>
+<p>In R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>make_power <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) x<span class="sc">^</span>n</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>square <span class="ot">&lt;-</span> <span class="fu">make_power</span>(<span class="dv">2</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>cube <span class="ot">&lt;-</span> <span class="fu">make_power</span>(<span class="dv">3</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">square</span>(<span class="dv">4</span>)  <span class="co"># 16</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cube</span>(<span class="dv">4</span>)    <span class="co"># 64</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 64</code></pre>
+</div>
+</div>
+<p>In Python:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_power(n):</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> power(x):</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x <span class="op">**</span> n</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> power</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>square <span class="op">=</span> make_power(<span class="dv">2</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>cube <span class="op">=</span> make_power(<span class="dv">3</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>square(<span class="dv">4</span>)  <span class="co"># 16</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>cube(<span class="dv">4</span>)    <span class="co"># 64</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>64</code></pre>
+</div>
+</div>
+<p>The inner function “closes over” the variable <code>n</code>, preserving its value.</p>
+</section>
+<section id="decorators-python" class="level3" data-number="5.3.4">
+<h3 data-number="5.3.4" class="anchored" data-anchor-id="decorators-python"><span class="header-section-number">5.3.4</span> Decorators (Python)</h3>
+<p>Python has a special syntax for a common use of higher-order functions: <strong>decorators</strong>. A decorator wraps a function to extend its behaviour without modifying its code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> timer(func):</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""A decorator that prints how long a function takes to run."""</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>        start <span class="op">=</span> time.time()</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> func(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>        end <span class="op">=</span> time.time()</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>func<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss"> took </span><span class="sc">{</span>end <span class="op">-</span> start<span class="sc">:.4f}</span><span class="ss"> seconds"</span>)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> result</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> wrapper</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="at">@timer</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> slow_sum(n):</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">sum</span>(<span class="bu">range</span>(n))</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>slow_sum(<span class="dv">1_000_000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>slow_sum took 0.0219 seconds
+499999500000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; slow_sum took 0.0312 seconds</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>@timer</code> syntax is equivalent to <code>slow_sum = timer(slow_sum)</code>. Decorators are widely used in Python frameworks (Flask, FastAPI, pytest) for logging, authentication, and caching.</p>
+<p>If you find decorators elegant, you will appreciate the chapter on <strong>monads</strong> later in this book. Monads take the idea of wrapping and chaining functions further, providing a principled way to handle errors, missing values, and side effects in a purely functional style.</p>
+<p>R does not have built-in decorator syntax, but you can achieve the same effect with higher-order functions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>timer <span class="ot">&lt;-</span> <span class="cf">function</span>(f) {</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(...) {</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="fu">f</span>(...)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    end <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="fu">sprintf</span>(<span class="st">"Elapsed: %.4f seconds"</span>, end <span class="sc">-</span> start))</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    result</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>slow_sum <span class="ot">&lt;-</span> <span class="fu">timer</span>(<span class="cf">function</span>(n) <span class="fu">sum</span>(<span class="fu">seq_len</span>(n)))</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="fu">slow_sum</span>(<span class="fl">1e6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Elapsed: 0.0000 seconds</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 500000500000</code></pre>
+</div>
+</div>
+</section>
+<section id="tidy-evaluation-in-r" class="level3" data-number="5.3.5">
+<h3 data-number="5.3.5" class="anchored" data-anchor-id="tidy-evaluation-in-r"><span class="header-section-number">5.3.5</span> Tidy Evaluation in R</h3>
+<p>For data analysis, you will often want functions that work with column names. The <code>{dplyr}</code> package uses “tidy evaluation” with the <code>{ }</code> (curly-curly) syntax:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>summarise_variable <span class="ot">&lt;-</span> <span class="cf">function</span>(data, var) {</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">%&gt;%</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">mean =</span> <span class="fu">mean</span>({{ var }}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">sd =</span> <span class="fu">sd</span>({{ var }}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_variable</span>(height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 38 × 4
+   species       n  mean    sd
+   &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 Aleena        1   79   NA  
+ 2 Besalisk      1  198   NA  
+ 3 Cerean        1  198   NA  
+ 4 Chagrian      1  196   NA  
+ 5 Clawdite      1  168   NA  
+ 6 Droid         6  131.  49.1
+ 7 Dug           1  112   NA  
+ 8 Ewok          1   88   NA  
+ 9 Geonosian     1  183   NA  
+10 Gungan        3  209.  14.2
+# ℹ 28 more rows</code></pre>
+</div>
+</div>
+<p>The <code>{ var }</code> tells <code>dplyr</code> to treat <code>var</code> as a column name rather than a literal variable.</p>
+</section>
+<section id="anonymous-functions-and-lambdas" class="level3" data-number="5.3.6">
+<h3 data-number="5.3.6" class="anchored" data-anchor-id="anonymous-functions-and-lambdas"><span class="header-section-number">5.3.6</span> Anonymous Functions and Lambdas</h3>
+<p>Sometimes you need a quick, throwaway function that does not deserve a name. Both R and Python support <strong>anonymous functions</strong>.</p>
+<p>In Python, the <code>lambda</code> keyword creates a small function in a single expression:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>squares <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x: x <span class="op">**</span> <span class="dv">2</span>, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]))</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>squares</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1, 4, 9, 16]</code></pre>
+</div>
+</div>
+<p>In R, the base syntax is verbose, but <code>{purrr}</code> introduced the <strong>formula shorthand</strong> using <code>~</code> and <code>.x</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Full anonymous function</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1  4  9 16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Formula shorthand (purrr style)</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="sc">~</span> .x<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1  4  9 16</code></pre>
+</div>
+</div>
+<p>R 4.1 also introduced a shorter base syntax with <code>\(x)</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Base R shorthand (R &gt;= 4.1)</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, \(x) x<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1  4  9 16</code></pre>
+</div>
+</div>
+<p>Use anonymous functions when the logic is simple and a full function definition would be overkill.</p>
+</section>
+<section id="partial-application" class="level3" data-number="5.3.7">
+<h3 data-number="5.3.7" class="anchored" data-anchor-id="partial-application"><span class="header-section-number">5.3.7</span> Partial Application</h3>
+<p><strong>Partial application</strong> means fixing some arguments of a function to create a more specialised version. This is closely related to function factories but works with existing functions rather than defining new ones.</p>
+<p>In R, use <code>purrr::partial()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a function that always rounds to 2 decimal places</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>round2 <span class="ot">&lt;-</span> <span class="fu">partial</span>(round, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round2</span>(<span class="fl">3.14159</span>)  <span class="co"># 3.14</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.14</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round2</span>(<span class="fl">2.71828</span>)  <span class="co"># 2.72</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.72</code></pre>
+</div>
+</div>
+<p>In Python, use <code>functools.partial()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a function that always rounds to 2 decimal places</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>round2 <span class="op">=</span> partial(<span class="bu">round</span>, ndigits<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>round2(<span class="fl">3.14159</span>)  <span class="co"># 3.14</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3.14</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>round2(<span class="fl">2.71828</span>)  <span class="co"># 2.72</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2.72</code></pre>
+</div>
+</div>
+<p>Partial application is useful for creating callbacks, simplifying repetitive code, and making functions fit the signature expected by <code>map()</code> or similar.</p>
+</section>
+<section id="immutability-data-that-does-not-change" class="level3" data-number="5.3.8">
+<h3 data-number="5.3.8" class="anchored" data-anchor-id="immutability-data-that-does-not-change"><span class="header-section-number">5.3.8</span> Immutability: Data That Does Not Change</h3>
+<p>A core principle of functional programming is <strong>immutability</strong>: once data is created, it is never modified in place. Instead, transformations produce <em>new</em> copies of the data.</p>
+<p>R has <strong>copy-on-modify</strong> semantics. When you “modify” a data frame, R actually creates a new copy:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> df</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>df2<span class="sc">$</span>x[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">99</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>x[<span class="dv">1</span>]  <span class="co"># Still 1, df was not mutated</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>Python, by contrast, has <strong>mutable defaults</strong>, which can surprise newcomers:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"x"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]})</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df  <span class="co"># This is a reference, not a copy!</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>df2.loc[<span class="dv">0</span>, <span class="st">"x"</span>] <span class="op">=</span> <span class="dv">99</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>df.loc[<span class="dv">0</span>, <span class="st">"x"</span>]  <span class="co"># Now 99, df was mutated!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>np.int64(99)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co"># To avoid this, explicitly copy:</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df.copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Immutability prevents entire classes of bugs where one part of your code unexpectedly modifies data used elsewhere. When using Python, be explicit about copying when you need independent data.</p>
 </section>
 </section>
 <section id="the-functional-toolkit-map-filter-and-reduce" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="the-functional-toolkit-map-filter-and-reduce"><span class="header-section-number">5.4</span> The Functional Toolkit: Map, Filter, and Reduce</h2>
-<p>Most <code>for</code> loops can be replaced by one of three core functional concepts: <strong>mapping</strong>, <strong>filtering</strong>, or <strong>reducing</strong>. These are “higher-order functions”—functions that take other functions as arguments.</p>
+<p>Most <code>for</code> loops can be replaced by one of three core functional concepts: <strong>mapping</strong>, <strong>filtering</strong>, or <strong>reducing</strong>. These are “higher-order functions”: functions that take other functions as arguments.</p>
 <section id="mapping-applying-a-function-to-each-element" class="level3" data-number="5.4.1">
 <h3 data-number="5.4.1" class="anchored" data-anchor-id="mapping-applying-a-function-to-each-element"><span class="header-section-number">5.4.1</span> 1. Mapping: Applying a Function to Each Element</h3>
 <p><strong>The pattern:</strong> You have a list of things, and you want to perform the same action on each element, producing a new list of the same length.</p>
@@ -693,32 +983,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>map_lgl()</code>: Returns a vector of logicals (booleans)</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The classic for-loop way (verbose)</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>means_loop <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"double"</span>, <span class="fu">ncol</span>(mtcars))</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(mtcars)) {</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  means_loop[[i]] <span class="ot">&lt;-</span> <span class="fu">mean</span>(mtcars[[i]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># The functional way with map_dbl()</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>means_functional <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(mtcars, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The classic for-loop way (verbose)</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>means_loop <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"double"</span>, <span class="fu">ncol</span>(mtcars))</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(mtcars)) {</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>  means_loop[[i]] <span class="ot">&lt;-</span> <span class="fu">mean</span>(mtcars[[i]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a><span class="co"># The functional way with map_dbl()</span></span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>means_functional <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(mtcars, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>map()</code> version is not just shorter; it’s safer. You can’t make an off-by-one error.</p>
 </section>
 <section id="in-python-with-list-comprehensions" class="level4" data-number="5.4.1.2">
 <h4 data-number="5.4.1.2" class="anchored" data-anchor-id="in-python-with-list-comprehensions"><span class="header-section-number">5.4.1.2</span> In Python with List Comprehensions</h4>
 <p>Python’s most idiomatic tool for mapping is the <strong>list comprehension</strong>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>numbers <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>squares <span class="op">=</span> [n<span class="op">**</span><span class="dv">2</span> <span class="cf">for</span> n <span class="kw">in</span> numbers]</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; [1, 4, 9, 16, 25]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>numbers <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>squares <span class="op">=</span> [n<span class="op">**</span><span class="dv">2</span> <span class="cf">for</span> n <span class="kw">in</span> numbers]</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; [1, 4, 9, 16, 25]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Python also has a built-in <code>map()</code> function:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_upper_case(s: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> s.upper()</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [<span class="st">"hello"</span>, <span class="st">"world"</span>]</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>upper_words <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(to_upper_case, words))</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; ['HELLO', 'WORLD']</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_upper_case(s: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> s.upper()</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [<span class="st">"hello"</span>, <span class="st">"world"</span>]</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>upper_words <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(to_upper_case, words))</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; ['HELLO', 'WORLD']</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 <section id="filtering-keeping-elements-that-match-a-condition" class="level3" data-number="5.4.2">
@@ -727,21 +1021,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="in-r-with-purrrkeep" class="level4" data-number="5.4.2.1">
 <h4 data-number="5.4.2.1" class="anchored" data-anchor-id="in-r-with-purrrkeep"><span class="header-section-number">5.4.2.1</span> In R with <code>purrr::keep()</code></h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">200</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">75</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>list_of_dfs <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a =</span> df1, <span class="at">b =</span> df2, <span class="at">c =</span> df3)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only data frames with more than 100 rows</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>large_dfs <span class="ot">&lt;-</span> <span class="fu">keep</span>(list_of_dfs, <span class="sc">~</span> <span class="fu">nrow</span>(.x) <span class="sc">&gt;</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">200</span>)</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">75</span>)</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>list_of_dfs <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a =</span> df1, <span class="at">b =</span> df2, <span class="at">c =</span> df3)</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only data frames with more than 100 rows</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>large_dfs <span class="ot">&lt;-</span> <span class="fu">keep</span>(list_of_dfs, <span class="sc">~</span> <span class="fu">nrow</span>(.x) <span class="sc">&gt;</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="in-python-with-list-comprehensions-1" class="level4" data-number="5.4.2.2">
 <h4 data-number="5.4.2.2" class="anchored" data-anchor-id="in-python-with-list-comprehensions-1"><span class="header-section-number">5.4.2.2</span> In Python with List Comprehensions</h4>
 <p>List comprehensions have a built-in <code>if</code> clause:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>numbers <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">15</span>, <span class="dv">30</span>]</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>large_numbers <span class="op">=</span> [n <span class="cf">for</span> n <span class="kw">in</span> numbers <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">10</span>]</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; [20, 15, 30]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>numbers <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">15</span>, <span class="dv">30</span>]</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>large_numbers <span class="op">=</span> [n <span class="cf">for</span> n <span class="kw">in</span> numbers <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">10</span>]</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; [20, 15, 30]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 <section id="reducing-combining-all-elements-into-a-single-value" class="level3" data-number="5.4.3">
@@ -750,22 +1046,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="in-r-with-purrrreduce" class="level4" data-number="5.4.3.1">
 <h4 data-number="5.4.3.1" class="anchored" data-anchor-id="in-r-with-purrrreduce"><span class="header-section-number">5.4.3.1</span> In R with <code>purrr::reduce()</code></h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sum all elements</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>total_sum <span class="ot">&lt;-</span> <span class="fu">reduce</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="st">`</span><span class="at">+</span><span class="st">`</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Find common columns across multiple data frames</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>list_of_colnames <span class="ot">&lt;-</span> <span class="fu">map</span>(list_of_dfs, names)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>common_cols <span class="ot">&lt;-</span> <span class="fu">reduce</span>(list_of_colnames, intersect)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sum all elements</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>total_sum <span class="ot">&lt;-</span> <span class="fu">reduce</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="st">`</span><span class="at">+</span><span class="st">`</span>)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Find common columns across multiple data frames</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>list_of_colnames <span class="ot">&lt;-</span> <span class="fu">map</span>(list_of_dfs, names)</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>common_cols <span class="ot">&lt;-</span> <span class="fu">reduce</span>(list_of_colnames, intersect)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="in-python-with-functools.reduce" class="level4" data-number="5.4.3.2">
 <h4 data-number="5.4.3.2" class="anchored" data-anchor-id="in-python-with-functools.reduce"><span class="header-section-number">5.4.3.2</span> In Python with <code>functools.reduce</code></h4>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> <span class="bu">reduce</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> operator</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>numbers <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>total_sum <span class="op">=</span> <span class="bu">reduce</span>(operator.add, numbers)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 15</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> <span class="bu">reduce</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> operator</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>numbers <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>total_sum <span class="op">=</span> <span class="bu">reduce</span>(operator.add, numbers)</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a><span class="co"># &gt; 15</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -774,44 +1072,119 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The final, beautiful consequence of a functional style is <strong>composition</strong>. You can chain functions together to build complex workflows from simple, reusable parts.</p>
 <p>This R code is a sequence of function compositions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(mass)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, sex, mass) <span class="sc">%&gt;%</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, species) <span class="sc">%&gt;%</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_mass =</span> <span class="fu">mean</span>(mass), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(mass)) <span class="sc">%&gt;%</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, sex, mass) <span class="sc">%&gt;%</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex, species) <span class="sc">%&gt;%</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_mass =</span> <span class="fu">mean</span>(mass), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The same idea in Python with pandas:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(starwars_py</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a> .dropna(subset<span class="op">=</span>[<span class="st">'mass'</span>])</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a> .<span class="bu">filter</span>(items<span class="op">=</span>[<span class="st">'species'</span>, <span class="st">'sex'</span>, <span class="st">'mass'</span>])</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a> .groupby([<span class="st">'sex'</span>, <span class="st">'species'</span>])</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a> [<span class="st">'mass'</span>].mean()</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a> .reset_index()</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>(starwars_py</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a> .dropna(subset<span class="op">=</span>[<span class="st">'mass'</span>])</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a> .<span class="bu">filter</span>(items<span class="op">=</span>[<span class="st">'species'</span>, <span class="st">'sex'</span>, <span class="st">'mass'</span>])</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a> .groupby([<span class="st">'sex'</span>, <span class="st">'species'</span>])</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a> [<span class="st">'mass'</span>].mean()</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a> .reset_index()</span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Each step is a function that takes a data frame and returns a new, transformed data frame. By combining <code>map</code>, <code>filter</code>, and <code>reduce</code> with this compositional style, you can express complex data manipulation pipelines without writing a single <code>for</code> loop.</p>
 <section id="the-composition-challenge-in-python" class="level3" data-number="5.5.1">
 <h3 data-number="5.5.1" class="anchored" data-anchor-id="the-composition-challenge-in-python"><span class="header-section-number">5.5.1</span> The Composition Challenge in Python</h3>
-<p>Method chaining in pandas is elegant but limited to the methods defined for <code>DataFrame</code> objects. R’s pipe operators (<code>|&gt;</code> and <code>%&gt;%</code>) are more flexible because functions are not strictly owned by objects—they can be more easily combined.</p>
+<p>Method chaining in pandas is elegant but limited to the methods defined for <code>DataFrame</code> objects. R’s pipe operators (<code>|&gt;</code> and <code>%&gt;%</code>) are more flexible because functions are not strictly owned by objects, and they can be more easily combined.</p>
 <p>This reflects the languages’ different philosophies:</p>
 <ul>
 <li><strong>R</strong>’s lineage traces back to Scheme (a Lisp dialect), making functional composition natural</li>
-<li><strong>Python</strong> was designed around “one obvious way to do it,” favouring explicit R is fundamentally a functional language that acquired OOP features, while Python is an OOP language with powerful functional capabilities. Recognising this helps you leverage the native strengths of each.</li>
+<li><strong>Python</strong> was designed around “one obvious way to do it,” favouring explicit loops and method chaining over function composition</li>
 </ul>
+<p>R is fundamentally a functional language that acquired OOP features, while Python is an OOP language with powerful functional capabilities. Recognising this helps you leverage the native strengths of each.</p>
 </section>
 </section>
-<section id="summary" class="level2" data-number="5.6">
-<h2 data-number="5.6" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.6</span> Summary</h2>
+<section id="handling-errors-functionally" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="handling-errors-functionally"><span class="header-section-number">5.6</span> Handling Errors Functionally</h2>
+<p>What happens when a function in your pipeline fails? In imperative code, you might wrap everything in try/catch blocks. Functional programming offers a cleaner approach: functions that <em>capture</em> errors rather than throw them.</p>
+<section id="in-r-with-purrrsafely-and-purrrpossibly" class="level3" data-number="5.6.1">
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="in-r-with-purrrsafely-and-purrrpossibly"><span class="header-section-number">5.6.1</span> In R with <code>purrr::safely()</code> and <code>purrr::possibly()</code></h3>
+<p>The <code>{purrr}</code> package provides wrappers that turn error-prone functions into safe ones:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A function that might fail</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>risky_log <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (x <span class="sc">&lt;=</span> <span class="dv">0</span>) <span class="fu">stop</span>(<span class="st">"x must be positive"</span>)</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(x)</span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a><span class="co"># safely() returns a list with $result and $error</span></span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a>safe_log <span class="ot">&lt;-</span> <span class="fu">safely</span>(risky_log)</span>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a><span class="fu">safe_log</span>(<span class="dv">10</span>)   <span class="co"># list(result = 2.302585, error = NULL)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$result
+[1] 2.302585
+
+$error
+NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">safe_log</span>(<span class="sc">-</span><span class="dv">1</span>)   <span class="co"># list(result = NULL, error = &lt;error&gt;)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$result
+NULL
+
+$error
+&lt;simpleError in .f(...): x must be positive&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># possibly() returns a default value on error</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>maybe_log <span class="ot">&lt;-</span> <span class="fu">possibly</span>(risky_log, <span class="at">otherwise =</span> <span class="cn">NA</span>)</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(<span class="fu">c</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">5</span>), maybe_log)  <span class="co"># c(2.30, NA, 1.61)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.302585       NA 1.609438</code></pre>
+</div>
+</div>
+<p>This lets your pipeline continue even when some elements fail, and you can inspect failures afterwards.</p>
+</section>
+<section id="in-python-with-tryexcept-and-result-patterns" class="level3" data-number="5.6.2">
+<h3 data-number="5.6.2" class="anchored" data-anchor-id="in-python-with-tryexcept-and-result-patterns"><span class="header-section-number">5.6.2</span> In Python with try/except and Result patterns</h3>
+<p>Python’s traditional approach uses <code>try/except</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> safe_log(x):</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"x must be positive"</span>)</span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>        <span class="im">import</span> math</span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> math.log(x)</span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">ValueError</span>:</span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb84-9"><a href="#cb84-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-10"><a href="#cb84-10" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> [safe_log(x) <span class="cf">for</span> x <span class="kw">in</span> [<span class="dv">10</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">5</span>]]</span>
+<span id="cb84-11"><a href="#cb84-11" aria-hidden="true" tabindex="-1"></a><span class="co"># [2.302585, None, 1.609437]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For a more functional approach, libraries like <code>returns</code> provide a <code>Result</code> type that explicitly represents success or failure. We will explore this pattern further in the chapter on monads.</p>
+</section>
+</section>
+<section id="when-not-to-use-functional-programming" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="when-not-to-use-functional-programming"><span class="header-section-number">5.7</span> When NOT to Use Functional Programming</h2>
+<p>Functional programming is powerful, but it is not always the best choice. Here are situations where imperative or object-oriented code may be clearer:</p>
+<ol type="1">
+<li><p><strong>Complex stateful algorithms</strong>: Some algorithms (like graph traversals or simulations) naturally require mutable state. Forcing them into a functional style can make the code harder to read.</p></li>
+<li><p><strong>Performance-critical inner loops</strong>: Functional abstractions like <code>map()</code> introduce overhead. In tight loops where microseconds matter, a simple <code>for</code> loop may be faster, especially in Python.</p></li>
+<li><p><strong>Interactive or exploratory work</strong>: When exploring data interactively, it is fine to use scripts and notebooks to iterate quickly. The functional discipline matters most when code needs to be shared, tested, or maintained.</p></li>
+<li><p><strong>When your team is not familiar</strong>: Code is read more often than written. If your colleagues are not comfortable with functional patterns, overly abstract code becomes a liability.</p></li>
+</ol>
+<p>The goal is not functional purity for its own sake, but <strong>clarity and correctness</strong>. Use functional techniques where they help, and step back to simpler approaches when they do not.</p>
+</section>
+<section id="summary" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.8</span> Summary</h2>
 <p>This chapter has laid the groundwork for writing reproducible code by embracing <strong>Functional Programming</strong>.</p>
 <p>Key takeaways:</p>
 <ul>
-<li><strong>Pure functions</strong> guarantee the same output for the same input—no hidden dependencies on global state</li>
+<li><strong>Pure functions</strong> guarantee the same output for the same input, with no hidden dependencies on global state</li>
 <li>Make impure operations (like randomness) explicit by controlling the seed</li>
 <li>Replace error-prone <code>for</code> loops with <strong>map, filter, and reduce</strong></li>
 <li>Use <strong>composition</strong> to build complex pipelines from simple, reusable functions</li>
 <li>In Python, treat stateful library objects as values passed between pure functions</li>
 </ul>
 <p>Understanding the distinction between R’s functional heritage and Python’s OOP nature is key to becoming an effective data scientist in either language. By mastering the functional paradigm, you’re building a foundation for code that is robust, easy to review, simple to debug, and truly reproducible.</p>
-<p>In the next chapter, we’ll put these principles into practice with <strong><code>{rixpress}</code></strong>—a package that leverages functional composition and Nix to build fully reproducible, polyglot analytical pipelines.</p>
+<p>In the next chapter, we’ll put these principles into practice with <strong><code>{rixpress}</code></strong>, a package that leverages functional composition and Nix to build fully reproducible, polyglot analytical pipelines.</p>
 
 
 </section>
