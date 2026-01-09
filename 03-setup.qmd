@@ -6,7 +6,9 @@
 ```
 </div>
 
-In this chapter, we will install Nix, configure the `rstats-on-nix` binary cache to speed up installations, and set up our development environment (Positron, VS Code, or Emacs) to work seamlessly with reproducible Nix environments.
+In this chapter, we will install Nix, configure the `rstats-on-nix` binary cache
+to speed up installations, and set up our development environment (Positron, VS
+Code, or Emacs) to work seamlessly with reproducible Nix environments.
 
 ## Installing Nix
 
@@ -23,8 +25,8 @@ wsl --install
 You can find further installation notes at [this official MS
 documentation](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-I recommend to activate `systemd` in Ubuntu WSL2, mainly because this supports
-other users than `root` running Nix. To set this up, please do as outlined [this
+I recommend activating `systemd` in Ubuntu WSL2, mainly because this supports
+users other than `root` running Nix. To set this up, please follow [this
 official Ubuntu blog entry](https://ubuntu.com/blog/ubuntu-wsl-enable-systemd):
 
 ```sh
@@ -34,7 +36,7 @@ sudo -i
 nano /etc/wsl.conf
 ```
 
-This will open the `/etc/wsl.conf` in a nano, a command line text editor. Add
+This will open `/etc/wsl.conf` in nano, a command line text editor. Add
 the following line:
 
 ```toml
@@ -42,8 +44,8 @@ the following line:
 systemd=true
 ```
 
-Save the file with CTRL-O and then quit nano with CTRL-X.
-Then, type the following line in powershell:
+Save the file with CTRL-O and then quit nano with CTRL-X. Then, type the
+following line in powershell:
 
 ```sh
 wsl --shutdown
@@ -55,22 +57,25 @@ then I highly recommend you set up a virtual machine with Ubuntu using
 [VirtualBox](https://www.virtualbox.org/wiki/Downloads) for example, or
 dual-boot Ubuntu.
 
-### installing Nix (All Systems)
+### The Determinate Systems installer
 
 Installing (and uninstalling) Nix is quite simple, thanks to the installer from
-[Determinate Systems](https://github.com/DeterminateSystems/nix-installer), a company
-that provides services and tools built on Nix, and works the same way on Linux
-(native or WSL2) and macOS.
+[Determinate Systems](https://github.com/DeterminateSystems/nix-installer), a
+company that provides services and tools built on Nix, and works the same way on
+Linux (native or WSL2) and macOS.
 
-Do not use your operating system’s package manager to install Nix. Instead,
+Do not use your operating system's package manager to install Nix. Instead,
 simply open a terminal and run the following line (on Windows, run this inside
-WSL):
+WSL, and after the prerequisites listed above):
 
 ```{sh parsermd-chunk-1, eval = FALSE}
 curl --proto '=https' --tlsv1.2 -sSf \
   -L https://install.determinate.systems/nix | \
   sh -s -- install
 ```
+
+Just follow the instructions on screen, and in no time Nix will be available
+on your machine!
 
 ## Configuring the Cache
 
@@ -101,10 +106,11 @@ Run `man nix.conf` for more information on the `substituters` configuration opti
 warning: ignoring the client-specified setting 'trusted-public-keys', because it is a restricted setting and you are not a trusted user
 ```
 
-Then this means that configuration was not successful. You need to add your user to `/etc/nix/nix.custom.conf`:
+Then this means that configuration was not successful. You need to add your user
+to `/etc/nix/nix.custom.conf`:
 
 ```bash
-sudo vim /etc/nix/nix.custom.conf
+sudo nano /etc/nix/nix.custom.conf
 ```
 
 then simply add this line in the file:
@@ -155,16 +161,20 @@ This is the path to the `sl` binary installed through Nix. The path starts with
 `/nix/store`: the *Nix store* is where all the software installed through Nix is
 stored. Now type `sl` and see what happens!
 
+Temporary shells are quite useful, especially if you want to simply run a
+command using some tool that you only need infrequently. But this is not how we
+are going to be using Nix.
+
 ## Configuring your IDE
 
 ### Pre-requisites
 
-We now need to configure an IDE to use both our Nix shells as development
-environments, and GitHub Copilot. You are free to use whatever IDE you want but
-the instructions below are going to focus on Positron, which is a fork of VS
-Code geared towards data science. It works well with both Python and R and makes
-it quite easy to choose the right R or Python interpreter (which you'll have to
-do to make sure you're using the one provided by Nix, [see
+We now need to configure an IDE to use our Nix shells as development
+environments. You are free to use whatever IDE you want but the instructions
+below are going to focus on Positron, which is a fork of VS Code geared towards
+data science. It works well with both Python and R and makes it quite easy to
+choose the right R or Python interpreter (which you'll have to do to make sure
+you're using the one provided by Nix, [see
 here](https://positron.posit.co/managing-interpreters.html)).
 
 If you want to use VS Code proper, you can follow all the instructions here, but
@@ -174,16 +184,22 @@ and the
 [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
 extension. You will also need to add the `{languageserver}` R package to your Nix shells.
 
-On Windows, you need to install Positron on Windows, not inside WSL. Then,
-install the [Open Remote
-extension](https://open-vsx.org/extension/kv9898/open-remote-wsl) right from
-Positron itself.
+On Windows, you need to install Positron on Windows, not inside WSL.
+
+If you want to use RStudio, you can, but you will need to install it through
+Nix: an RStudio installed through the usual means for your system is not going
+to be able to interact with Nix! This is a limitation of RStudio and there is
+currently no workaround. If you want to use RStudio, just skip the rest of the
+chapter, as it's irrelevant to you. Later, when we use `{rix}` to set up our
+first Nix development environment, I'll tell you what to do to use RStudio.
 
 ### direnv
 
 Once Positron is installed, you need to install a piece of software called
 `direnv`: `direnv` will automatically load Nix shells when you open a project
-that contains a `default.nix` file in an editor. It works on any operating
+that contains a `default.nix` file in an editor.^[A `default.nix` file is a file
+that contains the specification of our development environments, and is the file
+that will be automatically generated by `{rix}`] It works on any operating
 system and many editors support it, including Positron. If you're using Windows,
 install `direnv` in WSL (even though you’ve just installed Positron for
 Windows). To install `direnv` run this command:
@@ -194,7 +210,7 @@ nix-env -f '<nixpkgs>' -iA direnv
 
 This will install `direnv` and make it available even outside of Nix shells!
 
-Then, we highly recommend to install the `nix-direnv` extension:
+Then, I highly recommend to install the `nix-direnv` extension:
 
 ```bash
 nix-env -f '<nixpkgs>' -iA nix-direnv
@@ -204,7 +220,7 @@ It is not mandatory to use `nix-direnv` if you already have `direnv`, but it'll
 make loading environments much faster and seamless.
 
 Finally, if you haven't used `direnv` before, don't forget [this last
-step](https://direnv.net/docs/hook.html) to make your terminal detected and load
+step](https://direnv.net/docs/hook.html) to make your terminal detect and load
 `direnv` automatically.
 
 Then, in Positron, install the [direnv](https://github.com/direnv/direnv-vscode)
@@ -226,44 +242,25 @@ that at this point, `direnv` will run `nix-shell` and so will start building the
 environment. If that particular environment hasn't been built and cached yet, it
 might take some time before Code will be able to interact with it. You might get
 yet another popup, this time from the R Code extension complaining that R can't
-be found. In this case, simply restart Code and open the project folder again:
-now it should work every time.
+be found. In this case, simply restart Positron and open the project folder
+again: now it should work every time.
 
 ### In summary and next steps
 
 For a new project, simply repeat this process:
 
-- Generate the project's `default.nix` file (we will see how in the next chapter);
+- Generate the project's `default.nix` file (we will see how in the next
+  chapter);
 - Build it using `nix-build`;
 - Create an `.envrc` and write the two lines from above in it;
-- Open the project's folder in Code and click allow when prompted;
-- Restart the extension and Code if necessary.
+- Open the project's folder in Positron and click allow when prompted;
+- Restart the extension and Positron if necessary.
 
-Another option is to create the `.envrc` file and write `use nix` in it, then
-open a terminal, navigate to the project's folder, and run `direnv allow`. Doing
-this before opening Positron should not prompt you anymore.
+Another option is to create the `.envrc` file and write the two required lines,
+then open a terminal, navigate to the project's folder, and run `direnv allow`.
+Doing this before opening Positron should not prompt you anymore.
 
-If you're on Windows, using Positron like this is particularly interesting, because
-it allows you to install Positron on Windows as usual, and then you can configure
-it to interact with a Nix shell, even if it's running from WSL. This is a very
-seamless experience.
-
-Now configure Positron to use GitHub Copilot:
-[click here](https://positron.posit.co/assistant.html).
-
-You can enable LLM tab-completion if you want. I’m not a fan of this, I prefer
-simply using the interface and using LLMs as an advanced rubber duck:
-[https://github.com/copilot/](https://github.com/copilot/).
-
-## Hands-On Exercises
-
-1. Start a temporary shell with R and `{rix}` again using
-  `nix-shell -p R rPackages.rix`. Start an R session (by typing `R`)
-  and then load the `{rix}` package (using `library(rix)`).
-  Run the `available_dates()` function to see the list of available snapshots.
-2. Inside of an activated shell, type `which R` and `echo $PATH`. Explore what
-  is being added to your environment. What is the significance of paths like
-  `/nix/store/...`?
-3. Go to [https://search.nixos.org/packages](https://search.nixos.org/packages)
-  and look for packages that you usually use for your projects to see if they
-  are available.
+If you're on Windows, using Positron like this is particularly interesting,
+because it allows you to install Positron on Windows as usual, and then you can
+configure it to interact with a Nix shell, even if it's running from WSL. This
+is a very seamless experience.

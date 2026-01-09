@@ -31,7 +31,7 @@ things:
 -   Ensure you can install all of this on the hardware you have on hand.
 
 But in practice, one or most of these bullet points are missing from projects.
-The goal of this course is to learn how to fullfill all the requirements to
+The goal of this course is to learn how to fulfil all the requirements to
 build reproducible projects.
 
 The current consensus for tackling the first three points is often a mixture of
@@ -48,7 +48,7 @@ reproducibility puzzle. Often, they assume an underlying OS, do not capture
 system-level dependencies (like `libxml2`, `pandoc`, or `curl`), and require
 users to "rebuild" their environments from partial metadata. Docker helps but
 introduces overhead, security challenges, and complexity, and just adding it to
-your project doesn’t make it reproducible if you don’t explicitely take some
+your project doesn’t make it reproducible if you don’t explicitly take some
 precautionary steps.
 
 Traditional approaches fail to capture the entire dependency graph of a project
@@ -104,11 +104,11 @@ and a fixed output. This means that given identical inputs and build steps, the
 exact same output will always be produced. To achieve this level of
 reproducibility, several important measures must be taken:
 
--   All inputs to a derivation must be explicitly declared (and inputs here is
+-   All inputs to a derivation must be explicitly declared (and "inputs" here is
     meant in a very broad sense; for example, configuration flags are also
     inputs!).
 -   Inputs include not just data files but also software dependencies,
-    configuration flags, and environment variables—essentially, anything
+    configuration flags, and environment variables: essentially, anything
     necessary for the build process.
 -   The build process takes place in a *hermetic* sandbox to ensure the exact
     same output is always produced.
@@ -183,7 +183,7 @@ In the figure, `subversion` depends on `openssl`, which itself depends on
 `glibc`. Similarly, if you write a derivation to filter `mtcars`, it requires an
 input file, R, `{dplyr}`, and all of their respective dependencies. All of these
 must be managed by Nix. If any dependency exists "outside" this closure, the
-pipeline will only *work on your machine*—defeating the purpose of
+pipeline will only *work on your machine*, defeating the purpose of
 reproducibility.
 
 ### The Nix store and hermetic builds
@@ -244,7 +244,7 @@ concepts worth knowing about before we move on:
 
 - **Flakes**: The newer way to define and pin Nix projects. Flakes make it
   easier to share and reuse Nix setups across machines and repositories. There
-  is a lot of discussion around flakes, as they're official still considered as
+  is a lot of discussion around flakes, as they're officially still considered
   not stable, even though they've been widely adopted by the community. But
   don't worry, this is not something you'll need to think about for this book.
 
