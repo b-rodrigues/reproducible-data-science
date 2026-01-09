@@ -446,7 +446,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#defining-derivations" id="toc-defining-derivations" class="nav-link" data-scroll-target="#defining-derivations"><span class="header-section-number">6.4.1</span> Defining derivations</a></li>
   <li><a href="#building-the-pipeline" id="toc-building-the-pipeline" class="nav-link" data-scroll-target="#building-the-pipeline"><span class="header-section-number">6.4.2</span> Building the pipeline</a></li>
   <li><a href="#inspecting-outputs" id="toc-inspecting-outputs" class="nav-link" data-scroll-target="#inspecting-outputs"><span class="header-section-number">6.4.3</span> Inspecting outputs</a></li>
-  <li><a href="#visualizing-the-pipeline" id="toc-visualizing-the-pipeline" class="nav-link" data-scroll-target="#visualizing-the-pipeline"><span class="header-section-number">6.4.4</span> Visualizing the pipeline</a></li>
+  <li><a href="#visualising-the-pipeline" id="toc-visualising-the-pipeline" class="nav-link" data-scroll-target="#visualising-the-pipeline"><span class="header-section-number">6.4.4</span> Visualising the pipeline</a></li>
   </ul></li>
   <li><a href="#polyglot-pipelines" id="toc-polyglot-pipelines" class="nav-link" data-scroll-target="#polyglot-pipelines"><span class="header-section-number">6.5</span> Polyglot Pipelines</a>
   <ul class="collapse">
@@ -501,14 +501,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The original solution, dating back to the 1970s, is <strong><code>make</code></strong>. Created by Stuart Feldman at Bell Labs in 1976, <code>make</code> reads a <code>Makefile</code> that describes the dependency graph of a project. If you change the code that generates <code>plot.png</code>, <code>make</code> is smart enough to only re-run the steps needed to rebuild the plot and the final report.</p>
 <p>The strength of these tools is their language-agnosticism, but their weaknesses are twofold:</p>
 <ol type="1">
-<li><strong>File-centric</strong>: You must manually handle all I/O—your first script saves <code>data.csv</code>, your second loads it. This adds boilerplate and surfaces for error.</li>
+<li><strong>File-centric</strong>: You must manually handle all I/O. Your first script saves <code>data.csv</code>, your second loads it. This adds boilerplate and surfaces for error.</li>
 <li><strong>Environment-agnostic</strong>: They track files but know nothing about the <em>software environment</em> needed to create those files.</li>
 </ol>
-<p>This is where R’s <strong><code>{targets}</code></strong> package shines. It tracks dependencies between <strong>R objects directly</strong>, automatically handling serialisation. But <code>{targets}</code> operates within a single R session—for polyglot pipelines, you must manually coordinate via <code>{reticulate}</code>.</p>
+<p>This is where R’s <strong><code>{targets}</code></strong> package shines. It tracks dependencies between <strong>R objects directly</strong>, automatically handling serialisation. But <code>{targets}</code> operates within a single R session; for polyglot pipelines, you must manually coordinate via <code>{reticulate}</code>.</p>
 </section>
 <section id="the-separation-problem" class="level3" data-number="6.1.2">
 <h3 data-number="6.1.2" class="anchored" data-anchor-id="the-separation-problem"><span class="header-section-number">6.1.2</span> The Separation Problem</h3>
-<p>All these tools—from <code>make</code> to <code>{targets}</code> to Airflow—separate workflow management from environment management. You use one tool to run the pipeline and another (Docker, <code>{renv}</code>) to set up the software.</p>
+<p>All these tools (from <code>make</code> to <code>{targets}</code> to Airflow) separate workflow management from environment management. You use one tool to run the pipeline and another (Docker, <code>{renv}</code>) to set up the software.</p>
 <p>This separation creates friction. Running <code>{targets}</code> inside Docker ensures reproducibility, but forces the entire pipeline into one monolithic environment. What if your Python step requires TensorFlow 2.15 but your R step needs reticulate with Python 3.9? You’re stuck.</p>
 </section>
 <section id="the-imperative-approach-make-docker" class="level3" data-number="6.1.3">
@@ -575,7 +575,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="rixpress-unified-orchestration" class="level3" data-number="6.1.4">
 <h3 data-number="6.1.4" class="anchored" data-anchor-id="rixpress-unified-orchestration"><span class="header-section-number">6.1.4</span> rixpress: Unified Orchestration</h3>
-<p><strong><code>{rixpress}</code></strong> solves this by using Nix not just as a package manager, but as the build automation engine itself. Each pipeline step is a <strong>Nix derivation</strong>—a hermetically sealed build unit.</p>
+<p><strong><code>{rixpress}</code></strong> solves this by using Nix not just as a package manager, but as the build automation engine itself. Each pipeline step is a <strong>Nix derivation</strong>: a hermetically sealed build unit.</p>
 <p>Compare the same pipeline in <code>{rixpress}</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
@@ -660,7 +660,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>This provides two key benefits:</p>
 <ol type="1">
-<li><p><strong>True Polyglot Pipelines</strong>: Each step can have its own Nix environment. A Python step runs in a pure Python environment, an R step in an R environment, a Quarto step in yet another—all within the same pipeline.</p></li>
+<li><p><strong>True Polyglot Pipelines</strong>: Each step can have its own Nix environment. A Python step runs in a pure Python environment, an R step in an R environment, a Quarto step in yet another, all within the same pipeline.</p></li>
 <li><p><strong>Deep Reproducibility</strong>: Each step is cached based on the cryptographic hash of <em>all</em> its inputs: the code, the data, <em>and the environment</em>. Any change in dependencies triggers a rebuild. This is reproducibility at the build level, not just the environment level.</p></li>
 </ol>
 <p>The interface is heavily inspired by <code>{targets}</code>, so you get the ergonomic, object-passing feel you’re used to, combined with the bit-for-bit reproducibility of the Nix build system.</p>
@@ -668,7 +668,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="what-is-rixpress" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="what-is-rixpress"><span class="header-section-number">6.2</span> What is rixpress?</h2>
-<p><code>{rixpress}</code> streamlines creation of <em>micropipelines</em>—small-to-medium, single-machine analytic pipelines—by expressing a pipeline in idiomatic R while delegating build orchestration to the Nix build system.</p>
+<p><code>{rixpress}</code> streamlines creation of <em>micropipelines</em> (small-to-medium, single-machine analytic pipelines) by expressing a pipeline in idiomatic R while delegating build orchestration to the Nix build system.</p>
 <p>Key features:</p>
 <ul>
 <li>Define pipeline <em>derivations</em> with concise <code>rxp_*()</code> helper functions</li>
@@ -839,8 +839,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_copy</span>(<span class="st">"page"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="visualizing-the-pipeline" class="level3" data-number="6.4.4">
-<h3 data-number="6.4.4" class="anchored" data-anchor-id="visualizing-the-pipeline"><span class="header-section-number">6.4.4</span> Visualizing the pipeline</h3>
+<section id="visualising-the-pipeline" class="level3" data-number="6.4.4">
+<h3 data-number="6.4.4" class="anchored" data-anchor-id="visualising-the-pipeline"><span class="header-section-number">6.4.4</span> Visualising the pipeline</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Static DAG plot</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_ggdag</span>()</span>
@@ -918,7 +918,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">decoder =</span> <span class="st">"jsonlite::fromJSON"</span></span>
 <span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This approach makes your pipeline more modular—any language that can read JSON could be added in the future.</p>
+<p>This approach makes your pipeline more modular: any language that can read JSON could be added in the future.</p>
 </section>
 </section>
 <section id="caching-and-incremental-builds" class="level2" data-number="6.6">
@@ -948,7 +948,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare them</span></span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(new_result, old_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This is incredibly powerful for debugging and validation—you can go back in time to inspect any output from any previous pipeline run.</p>
+<p>This is incredibly powerful for debugging and validation. You can go back in time to inspect any output from any previous pipeline run.</p>
 </section>
 <section id="ryxpress-the-python-interface" class="level2" data-number="6.8">
 <h2 data-number="6.8" class="anchored" data-anchor-id="ryxpress-the-python-interface"><span class="header-section-number">6.8</span> ryxpress: The Python Interface</h2>
@@ -1197,7 +1197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>{rixpress}</code> unifies environment management and workflow orchestration:</p>
 <ul>
 <li><strong>Define</strong> pipelines with <code>rxp_*()</code> functions in familiar R syntax</li>
-<li><strong>Mix</strong> languages freely—R, Python, Julia, Quarto</li>
+<li><strong>Mix</strong> languages freely: R, Python, Julia, Quarto</li>
 <li><strong>Build</strong> with Nix for deterministic, cached execution</li>
 <li><strong>Inspect</strong> outputs with <code>rxp_read()</code>, <code>rxp_load()</code>, <code>rxp_copy()</code></li>
 <li><strong>Debug</strong> with timestamped build logs</li>
