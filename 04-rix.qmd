@@ -2,75 +2,78 @@
 
 ## Introduction
 
+Now that we have Nix installed, and our IDE configured we can actually tackle
+the reproducibility puzzle.
+
 ### The Reproducibility Challenge
 
-Reproducibility in research and data science exists on a continuum. At one end, 
-authors might only describe their methods in prose. Moving along the spectrum, 
-they might share code, then data, and finally what we call a *computational 
+Reproducibility in research and data science exists on a continuum. At one end,
+authors might only describe their methods in prose. Moving along the spectrum,
+they might share code, then data, and finally what we call a *computational
 environment*: the complete set of software required to execute an analysis.
 
-Even when researchers share code and data, they rarely specify the full software 
-stack: the exact version of R, all package versions, and crucially, the 
-system-level dependencies. Yet differences in any of these can lead to divergent 
+Even when researchers share code and data, they rarely specify the full software
+stack: the exact version of R, all package versions, and crucially, the
+system-level dependencies. Yet differences in any of these can lead to divergent
 results from the same code.
 
-Tools like `{renv}` address part of the problem—they capture R package versions 
-in a lockfile. But `{renv}` doesn't manage the R version itself (you need 
-`rig` for that), and neither handles system libraries. If `{sf}` requires GDAL 
-3.0 but your system has 2.4, `{renv}` can't help. And if your project uses both 
-R and Python? Now you're coordinating multiple package managers, each with its 
-own configuration.
+Tools like `{renv}` address part of the puzzle—they capture R package versions
+in a lockfile. But `{renv}` doesn't manage the R version itself (you need `rig`
+for that), and neither handles system libraries. If `{sf}` requires GDAL 3.0 but
+your system has 2.4, `{renv}` can't help. And if your project uses both R and
+Python? Now you're coordinating multiple package managers, each with its own
+configuration.
 
 ### Component Closures: The Nix Approach
 
-This is where Nix shines. Nix deploys *component closures*: when you install a 
-package, Nix also installs all its dependencies, their dependencies, and so on. 
-Think of it like packing for a trip—traditional package managers assume you'll 
+This is where Nix shines. Nix deploys *component closures*: when you install a
+package, Nix also installs all its dependencies, their dependencies, and so on.
+Think of it like packing for a trip—traditional package managers assume you'll
 find essentials at your destination, while Nix packs everything you need.
 
 As the original Nix paper explains:
 
-> The idea is to always deploy component closures: if we deploy a component, 
-> then we must also deploy its dependencies, their dependencies, and so on. 
-> Since closures are self-contained, they are the units of complete software 
+> The idea is to always deploy component closures: if we deploy a component,
+> then we must also deploy its dependencies, their dependencies, and so on.
+> Since closures are self-contained, they are the units of complete software
 > deployment.
 
-This means when you install `{sf}` through Nix, you automatically get the 
+This means when you install `{sf}` through Nix, you automatically get the
 correct versions of GDAL, GEOS, and PROJ—no manual system configuration needed.
 
 ### The Polyglot Challenge
 
-Modern data science is increasingly polyglot. Research shows that data 
-scientists use, on average, nearly two programming languages in their work, with 
-R and Python being the most common combination. Python dominates machine 
-learning, R excels at statistical modelling, and Julia offers high-performance 
+Modern data science is increasingly polyglot. Research shows that data
+scientists use, on average, nearly two programming languages in their work, with
+R and Python being the most common combination. Python dominates machine
+learning, R excels at statistical modelling, and Julia offers high-performance
 numerics. Projects increasingly combine these strengths.
 
-This creates a reproducibility challenge: a project using R, Python, and Quarto 
-requires coordinating multiple package managers. Nix solves this by providing a 
+This creates a reproducibility challenge: a project using R, Python, and Quarto
+requires coordinating multiple package managers. Nix solves this by providing a
 unified framework for all languages and system tools.
 
 ### Enter rix
 
-However, Nix has a steep learning curve. Its functional programming language 
-can be daunting for researchers focused on their analysis, not system 
+However, Nix has a steep learning curve. Its functional programming language can
+be daunting for researchers focused on their analysis, not system
 administration.
 
-`{rix}` bridges this gap. It's an R package that generates Nix expressions 
-from intuitive R function calls. You describe *what* you want, and `{rix}` 
-figures out *how* to express it in Nix. The workflow is simple:
+`{rix}` bridges this gap. It's an R package that generates Nix expressions from
+intuitive R function calls. You describe *what* you want, and `{rix}` figures
+out *how* to express it in Nix. The workflow is simple:
 
 1. **Declare** your environment using `rix()`
 2. **Build** the environment using `nix-build`
 3. **Use** the environment using `nix-shell`
 
-This chapter covers everything you need to know to create project-specific, 
+This chapter covers everything you need to know to create project-specific,
 reproducible development environments for your R projects.
 
 ## The rix() Function
 
-The `rix()` function is the heart of the package. It generates a `default.nix` 
-file—a Nix expression that defines your development environment. Here are its 
+The `rix()` function is the heart of the package. It generates a `default.nix`
+file—a Nix expression that defines your development environment. Here are its
 main arguments:
 
 - `r_ver`: the version of R you need (or use `date` instead)
@@ -80,13 +83,18 @@ main arguments:
 - `git_pkgs`: R packages to install from GitHub
 - `local_r_pkgs`: local `.tar.gz` packages to install
 - `tex_pkgs`: TexLive packages for literate programming
-- `ide`: which IDE to configure (`"rstudio"`, `"code"`, `"positron"`, `"none"`)
+- `ide`: which IDE to configure (`"rstudio"`, `"code"`, `"positron"`, `"none"`).
+  Since we've configured Positron in the previous chapter, you'll want to set
+  this to `"none"`. If you want to use RStudio, then set it to `"rstudio"`. This
+  will install RStudio using Nix and make it available from the development
+  shell. If you set it to `"code"` or `"positron"`, this will then install VS
+  Code or Positron using Nix.
 - `project_path`: where to save the `default.nix` file
 - `overwrite`: whether to overwrite an existing `default.nix`
 
-Let's create our first environment. Suppose you need R with `{dplyr}` and 
+Let's create our first environment. Suppose you need R with `{dplyr}` and
 `{ggplot2}`:
-  
+
 ```{r}
 #| eval: false
 library(rix)
@@ -94,7 +102,7 @@ library(rix)
 rix(
   r_ver = "4.4.2",
   r_pkgs = c("dplyr", "ggplot2"),
-  ide = "code",
+  ide = "rstudio",
   project_path = ".",
   overwrite = TRUE
 )
@@ -103,17 +111,17 @@ rix(
 This generates two files:
 
 1. **`default.nix`**: The Nix expression defining your environment
-2. **`.Rprofile`**: Created by `rix_init()` (called automatically), this file 
+2. **`.Rprofile`**: Created by `rix_init()` (called automatically), this file
    prevents conflicts with any system-installed R packages
 
-The `.Rprofile` is important: it ensures that packages from your user library 
-don't get loaded into the Nix environment, and it redefines `install.packages()` 
-to throw an error—because you should never install packages that way in a Nix 
+The `.Rprofile` is important: it ensures that packages from your user library
+don't get loaded into the Nix environment, and it redefines `install.packages()`
+to throw an error, because you should never install packages that way in a Nix
 environment.
 
 ## Choosing an R Version or Date
 
-The `r_ver` argument (or alternatively `date`) controls which version of R and 
+The `r_ver` argument (or alternatively `date`) controls which version of R and
 which package versions you'll get. Here's a summary of the options:
 
 | `r_ver` / `date` | Intended Use | R Version | Package Versions |
@@ -141,7 +149,7 @@ available_dates()
 
 ### Using dates vs versions
 
-Using a specific date is often the best choice for reproducibility. When you 
+Using a specific date is often the best choice for reproducibility. When you
 specify a date, you get the exact state of CRAN on that day:
 
 ```{r}
@@ -149,22 +157,29 @@ specify a date, you get the exact state of CRAN on that day:
 rix(
   date = "2024-12-14",
   r_pkgs = c("dplyr", "ggplot2"),
-  ide = "code",
+  ide = "none",
   project_path = ".",
   overwrite = TRUE
 )
 ```
 
+I find that this is often easier and clearer than using an R version. Be careful
+though, as using a date doesn't reflect the state of PyPi on that date. So if
+you also need Python packages, the versions of packages for Python that will be
+provided are the ones available from `nixpkgs` on that day (but more on this
+later).
+
 ### The rstats-on-nix fork
 
-When you use a specific R version or date (rather than `"latest-upstream"`), 
-`{rix}` uses our `rstats-on-nix` fork of `nixpkgs` rather than the upstream 
+When you use a specific R version or date (rather than `"latest-upstream"`),
+`{rix}` uses our `rstats-on-nix` fork of `nixpkgs` rather than the upstream
 repository. This fork:
 
-- Provides better compatibility for older packages
-- Includes many fixes, especially for Apple Silicon
-- Offers newer R releases faster than the official channels
 - Snapshots CRAN more frequently
+- Offers newer R releases faster than the official channels
+- Includes many fixes, especially for Apple Silicon (even though as time goes
+  by, this is becoming much rarer, because Nix is getting better and more
+  support for Apple Silicon)
 
 ## Installing R Packages
 
@@ -177,7 +192,7 @@ The simplest case—just list package names in `r_pkgs`:
 rix(
   r_ver = "4.4.2",
   r_pkgs = c("dplyr", "ggplot2", "tidyr", "readr"),
-  ide = "code",
+  ide = "none",
   project_path = "."
 )
 ```
@@ -198,13 +213,14 @@ rix(
 )
 ```
 
-This will install `{dplyr}` version 0.8.0 from the CRAN archives. Note that 
-archived packages are built from source, which may fail for packages requiring 
-compilation.
+This will install `{dplyr}` version 0.8.0 from the CRAN archives. Note that
+archived packages are built from source, which may fail for packages requiring
+compilation. Thus I recommend you use a date on which that specific version of
+`{dplyr}` was current.
 
 ### Installing from GitHub
 
-For packages on GitHub, use the `git_pkgs` argument with a list containing the 
+For packages on GitHub, use the `git_pkgs` argument with a list containing the
 package name, repository URL, and commit hash:
 
 ```{r}
@@ -227,8 +243,8 @@ rix(
 Always specify a commit hash, not a branch name. This ensures reproducibility—
 branch names can change, but commits are immutable.
 
-If the R package lives in a subfolder of the repository, append the subfolder 
-to the URL:
+If the R package lives in a subfolder of the repository, append the subfolder to
+the URL:
 
 ```{r}
 #| eval: false
@@ -239,9 +255,14 @@ git_pkgs = list(
 )
 ```
 
+Note that this will install the package from source, so if it's a package that
+requires specific system dependencies, you will need to specify them manually
+(Nix takes care of this for you for package that are available through
+`nixpkgs`, but not for ad-hoc packages from other sources).
+
 ### Installing local packages
 
-For local `.tar.gz` archives, place them in the same directory as your 
+For local `.tar.gz` archives, place them in the same directory as your
 `default.nix` and use `local_r_pkgs`:
 
 ```{r}
@@ -254,18 +275,24 @@ rix(
 )
 ```
 
+Just like with packages from Git, that this will install the package from
+source, so if it's a package that requires specific system dependencies, you
+will need to specify them manually (Nix takes care of this for you for package
+that are available through `nixpkgs`, but not for ad-hoc packages from other
+sources).
+
 ### Why NOT to use install.packages()
 
-It's crucial to understand: **never call `install.packages()` from within a 
-Nix environment**. Here's why:
+It's crucial to understand: **never call `install.packages()` from within a Nix
+environment**. Here's why:
 
-1. **Declarative environments**: If you install packages imperatively, your 
+1. **Declarative environments**: If you install packages imperatively, your
    `default.nix` no longer matches your actual environment.
-2. **Leaking packages**: Packages installed via `install.packages()` go to your 
-   user library, not the Nix environment. They'll be visible to *all* Nix 
+2. **Leaking packages**: Packages installed via `install.packages()` go to your
+   user library, not the Nix environment. They'll be visible to *all* Nix
    shells, breaking isolation.
-3. **Reproducibility**: The whole point of Nix is that your environment is 
-   fully defined by the `default.nix`. Ad-hoc installations defeat this.
+3. **Reproducibility**: The whole point of Nix is that your environment is fully
+   defined by the `default.nix`. Ad-hoc installations defeat this.
 
 Instead, add packages to your `rix()` call and rebuild the environment.
 
@@ -286,10 +313,10 @@ rix(
 )
 ```
 
-Note that here we install both the R `{quarto}` package and the `quarto` 
+Note that here we install both the R `{quarto}` package and the `quarto`
 command-line tool—they're different things!
 
-To find available packages, search at 
+To find available packages, search at
 [search.nixos.org](https://search.nixos.org/packages).
 
 ### TexLive for literate programming
@@ -323,25 +350,26 @@ rix(
     py_version = "3.12",
     py_pkgs = c("polars", "great-tables")
   ),
-  ide = "positron",
+  ide = "none",
   project_path = "."
 )
 ```
 
-This creates a polyglot environment with R, Python, and the specified packages 
+This creates a polyglot environment with R, Python, and the specified packages
 for each.
 
 ### Installing Python packages with uv (impure)
 
-Not all Python packages are available through Nix. Unlike CRAN, PyPI doesn't get 
-automatically mirrored—individual packages must be packaged by volunteers. If a 
-Python package you need isn't in nixpkgs, you can use `uv` as an escape hatch.
+Not all Python packages (or versions of packages) are available through Nix.
+Unlike CRAN, PyPI doesn't get automatically mirrored—individual packages must be
+packaged by volunteers. If a Python package you need isn't in nixpkgs, you can
+use `uv` as an escape hatch.
 
-This approach is also useful when collaborating with colleagues who use `uv` but 
-haven't adopted Nix yet. `uv` is 10–100x faster than `pip` and generates a lock 
+This approach is also useful when collaborating with colleagues who use `uv` but
+haven't adopted Nix yet. `uv` is 10–100x faster than `pip` and generates a lock
 file for improved reproducibility.
 
-The idea is to install `uv` in your shell (but not Python or Python packages 
+The idea is to install `uv` in your shell (but not Python or Python packages
 through Nix):
 
 ```{r}
@@ -357,7 +385,7 @@ rix(
 
 Then use `uv` from within your shell. We recommend:
 
-1. Specify Python packages in a `requirements.txt` file with explicit versions 
+1. Specify Python packages in a `requirements.txt` file with explicit versions
    (e.g., `scanpy==1.11.4`)
 2. Set up a shell hook to automatically configure the virtual environment
 
@@ -381,9 +409,9 @@ rix(
 )
 ```
 
-After running `nix-shell`, `uv` initialises a Python project with the specified 
-version and installs packages from `requirements.txt`. This happens each time 
-you enter the shell, but `uv` caches everything so it's nearly instant after the 
+After running `nix-shell`, `uv` initialises a Python project with the specified
+version and installs packages from `requirements.txt`. This happens each time
+you enter the shell, but `uv` caches everything so it's nearly instant after the
 first run.
 
 #### Troubleshooting wheel issues
@@ -394,7 +422,7 @@ When using wheels (pre-compiled Python packages), you may encounter errors like:
 ImportError: libstdc++.so.6: cannot open shared object file
 ```
 
-This happens because wheels expect certain libraries in certain locations. Add 
+This happens because wheels expect certain libraries in certain locations. Add
 this to your shell hook to fix it:
 
 ```nix
@@ -406,7 +434,7 @@ shellHook = ''
 '';
 ```
 
-If this seems complicated: yes, it is. This is exactly the kind of problem Nix 
+If this seems complicated: yes, it is. This is exactly the kind of problem Nix
 aims to solve. When possible, prefer Python packages included in nixpkgs.
 
 ## Building and Using Environments
@@ -414,13 +442,13 @@ aims to solve. When possible, prefer Python packages included in nixpkgs.
 ### Building with nix-build
 
 Once you have a `default.nix`, build the environment:
-  
+
 ```bash
 nix-build
 ```
 
-This downloads/builds all required packages and creates a `result` symlink in 
-your project directory. The `result` file prevents the environment from being 
+This downloads/builds all required packages and creates a `result` symlink in
+your project directory. The `result` file prevents the environment from being
 garbage-collected.
 
 ### Entering with nix-shell
@@ -431,27 +459,30 @@ To use the environment interactively:
 nix-shell
 ```
 
-You'll drop into a shell where R and all your packages are available. Type `R` 
-to start an R session, or start your editor directly.
+You'll drop into a shell where R and all your packages are available. Type `R`
+to start an R session. If you're using RStudio (and specified `ide = "rstudio"`
+in the call to `rix()`) then type `rstudio` to launch RStudio. If instead you
+configured Positron, (or any other IDE), open Positron, and open the project
+folder that contains the `default.nix` (make sure you also have an `.envrc`
+there for `direnv` to load the environment directly).
 
-### Running scripts
-
-You can run scripts directly without entering the shell:
+You can even run scripts directly without entering the shell:
 
 ```bash
 nix-shell default.nix --run "Rscript analysis.R"
 ```
 
-Or run a `{targets}` pipeline:
-
-```bash
-nix-shell default.nix --run "Rscript -e 'targets::tar_make()'"
-```
+This is quite useful on CI/CD platforms.
 
 ### Pure shells for complete isolation
 
-By default, `nix-shell` can still see programs installed on your system. For 
-complete isolation:
+By default, `nix-shell` can still see programs installed on your system. This is quite
+important to understand: building the environment happens in an isolated, hermetic sandbox,
+but when inside a shell, isolation is more porous and it is possible to use other
+systems tools. For example, you don't need to install `git` inside the Nix development
+environment: you can just keep using the `git` executable already available on your system.
+
+But it is possible to run the environment with increased isolation:
 
 ```bash
 nix-shell --pure
@@ -463,16 +494,17 @@ This hides everything not explicitly included in your environment.
 
 Nix never deletes old packages automatically. To clean up:
 
-1. Delete the `result` symlink
+1. Delete the `result` symlink that will appear in your project's folder after
+   calling `nix-build`
 2. Run `nix-store --gc`
 
 This removes all packages that are no longer referenced by any environment.
 
 ## Converting renv Projects
 
-If you have existing projects using `{renv}`, the `renv2nix()` function can 
-help you migrate:
-  
+If you have existing projects using `{renv}`, the `renv2nix()` function can help
+you migrate:
+
 ```{r}
 #| eval: false
 renv2nix(
@@ -487,18 +519,18 @@ renv2nix(
 2. Run `renv2nix()` pointing to that folder
 3. Build the environment with `nix-build`
 
-Do **not** convert in the same folder as the original `{renv}` project—the 
+Do **not** convert in the same folder as the original `{renv}` project—the
 generated `.Rprofile` will conflict with `{renv}`'s `.Rprofile`.
 
 ### Caveats
 
 - Package versions may not match exactly due to how Nix handles snapshotting
-- If the `renv.lock` lists an old R version but recent packages, use the 
+- If the `renv.lock` lists an old R version but recent packages, use the
   `override_r_ver` argument to specify a more appropriate R version
 
 ## Summary
 
-In this chapter, we learned how to use `{rix}` to create reproducible 
+In this chapter, we learned how to use `{rix}` to create reproducible
 development environments:
 
 - The `rix()` function generates `default.nix` files from R
@@ -508,6 +540,6 @@ development environments:
 - Build with `nix-build`, use with `nix-shell`
 - Convert existing `{renv}` projects with `renv2nix()`
 
-The key insight is that your environment is now *declared* in a text file. 
-Anyone with that file can recreate the exact same environment, on any machine, 
+The key insight is that your environment is now *declared* in a text file.
+Anyone with that file can recreate the exact same environment, on any machine,
 at any point in the future. That's the power of Nix.
