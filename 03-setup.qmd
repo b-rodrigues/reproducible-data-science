@@ -193,6 +193,13 @@ currently no workaround. If you want to use RStudio, just skip the rest of the
 chapter, as it's irrelevant to you. Later, when we use `{rix}` to set up our
 first Nix development environment, I'll tell you what to do to use RStudio.
 
+Other editors work well with Nix too. Emacs users can use the
+[envrc](https://github.com/purcell/envrc) or
+[emacs-direnv](https://github.com/wbolster/emacs-direnv) packages to
+automatically load Nix environments. Neovim users can use
+[direnv.nvim](https://github.com/direnv/direnv.vim). The key is that any editor
+with `direnv` support will work with the setup described below.
+
 ### direnv
 
 Once Positron is installed, you need to install a piece of software called
