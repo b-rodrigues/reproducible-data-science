@@ -17,8 +17,8 @@ stack: the exact version of R, all package versions, and crucially, the
 system-level dependencies. Yet differences in any of these can lead to divergent
 results from the same code.
 
-Tools like `{renv}` address part of the puzzle—they capture R package versions
-in a lockfile. But `{renv}` doesn't manage the R version itself (you need `rig`
+Tools like `{renv}` address part of the puzzle: they capture R package versions
+in a lockfile. But `{renv}` does not manage the R version itself (you need `rig`
 for that), and neither handles system libraries. If `{sf}` requires GDAL 3.0 but
 your system has 2.4, `{renv}` can't help. And if your project uses both R and
 Python? Now you're coordinating multiple package managers, each with its own
@@ -69,6 +69,85 @@ out *how* to express it in Nix. The workflow is simple:
 
 This chapter covers everything you need to know to create project-specific,
 reproducible development environments for your R projects.
+
+## Transitioning to Nix-Managed R
+
+Now that Nix is installed, I strongly recommend uninstalling any system-wide R
+installation and removing the packages in your user library (typically found in
+`~/R` on Linux or `~/Library/R` on macOS). From this point forward, let Nix
+handle everything. If you are using Windows, you can keep your Windows-specific
+R installation, since Nix will not interfere with it (remember, Nix is installed
+inside WSL and Positron will automatically load Nix environments installed in
+WSL as well).
+
+If you are not ready to take this step, you can continue using your local R
+library. The `{rix}` package makes efforts not to interfere with your existing
+setup, and the `.Rprofile` it generates helps keep Nix environments isolated.
+However, for the cleanest experience and to avoid subtle conflicts, I recommend
+fully committing to Nix.
+
+### Bootstrapping `{rix}` without a local R installation
+
+But if R is uninstalled, how do you use `{rix}` to generate environments? The
+answer lies in the temporary shells we saw in the previous chapter. Use Nix
+itself to bootstrap a temporary R session with `{rix}` available.
+
+Running the following line in a terminal will drop you into an interactive R
+session:
+
+```bash
+nix-shell -p R rPackages.rix
+```
+
+This gives you a temporary shell with R and `{rix}` ready to use. From here, you
+can generate project-specific Nix expressions.
+
+For example, navigate to an empty directory for a new project:
+
+```bash
+mkdir my-project
+cd my-project
+```
+
+Then start R:
+
+```bash
+R
+```
+
+Load `{rix}` and generate an expression:
+
+```r
+library(rix)
+
+rix(
+  date = "2025-04-11",
+  r_pkgs = c("dplyr", "ggplot2"),
+  ide = "none",
+  project_path = ".",
+  overwrite = TRUE
+)
+```
+
+This writes a `default.nix` file to your project directory. The expression
+defines a shell with R, `{dplyr}`, and `{ggplot2}` as they were on the 11th of
+April 2025 on CRAN. The `ide` argument is set to `"none"` because we configured
+Positron in the previous chapter rather than having Nix manage an IDE.
+
+You can now exit this temporary session (type `q()` in R, then `exit` in the
+shell) and build your new environment:
+
+```bash
+nix-build
+```
+
+Once built, use `nix-shell` to enter your project's environment. This workflow
+of bootstrapping `{rix}` via a temporary shell, generating a `default.nix`, and
+then building it is the pattern you will follow for every new project.
+
+This is also the reason why there is no Python version of `{rix}`: you can bootstrap
+a Python environment using `{rix}` in the same way, by only temporarily having the
+R interpreter available through the Nix shell.
 
 ## The rix() Function
 
@@ -240,7 +319,7 @@ rix(
 )
 ```
 
-Always specify a commit hash, not a branch name. This ensures reproducibility—
+Always specify a commit hash, not a branch name. This ensures reproducibility:
 branch names can change, but commits are immutable.
 
 If the R package lives in a subfolder of the repository, append the subfolder to
@@ -257,7 +336,7 @@ git_pkgs = list(
 
 Note that this will install the package from source, so if it's a package that
 requires specific system dependencies, you will need to specify them manually
-(Nix takes care of this for you for package that are available through
+(Nix takes care of this for you for packages that are available through
 `nixpkgs`, but not for ad-hoc packages from other sources).
 
 ### Installing local packages
@@ -275,9 +354,9 @@ rix(
 )
 ```
 
-Just like with packages from Git, that this will install the package from
+Just like with packages from Git, note that this will install the package from
 source, so if it's a package that requires specific system dependencies, you
-will need to specify them manually (Nix takes care of this for you for package
+will need to specify them manually (Nix takes care of this for you for packages
 that are available through `nixpkgs`, but not for ad-hoc packages from other
 sources).
 
