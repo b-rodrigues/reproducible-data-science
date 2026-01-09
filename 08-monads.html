@@ -483,7 +483,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>These functions now return lists with both the result and a log. But there’s a problem—they don’t compose:</p>
+<p>These functions now return lists with both the result and a log. But there’s a problem: they don’t compose:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This works:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> <span class="sc">|&gt;</span> <span class="fu">sqrt</span>() <span class="sc">|&gt;</span> <span class="fu">log</span>()</span>
@@ -597,7 +597,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">r_sqrt</span>(<span class="st">"not a number"</span>)</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✖ Value: Nothing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>When <code>Nothing</code> is passed to a decorated function, it immediately returns <code>Nothing</code>—the error propagates through the pipeline without crashing.</p>
+<p>When <code>Nothing</code> is passed to a decorated function, it immediately returns <code>Nothing</code>, the error propagates through the pipeline without crashing.</p>
 </section>
 <section id="monads-in-python-talvez" class="level2" data-number="8.5">
 <h2 data-number="8.5" class="anchored" data-anchor-id="monads-in-python-talvez"><span class="header-section-number">8.5</span> Monads in Python: talvez</h2>
