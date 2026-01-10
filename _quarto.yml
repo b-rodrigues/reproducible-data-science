@@ -25,6 +25,9 @@ book:
     - 06-rixpress.qmd
     - 07-docker.qmd
     - 08-monads.qmd
+    - 09-testing.qmd
+    - 10-packaging.qmd
+    - 11-ci.qmd
     - references.qmd
   page-navigation: true
 
