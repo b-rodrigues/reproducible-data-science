@@ -3,10 +3,10 @@
 ## Introduction
 
 I hope you are starting to see the pieces of our reproducible workflow coming
-together. We now have reproducible environments with Nix, reproducible history
-with Git, and reproducible logic with functional programming. In the previous
-chapter, we explored monads as a way to make our functions even more robust by
-handling logging and errors in a principled way.
+together. We now have reproducible environments and pipelines with Nix,
+reproducible logic with functional programming and in the previous chapter, we
+explored monads as a way to make our functions even more robust by handling
+logging and errors in a principled way.
 
 This brings us to two final, crucial questions: how do we prove that our
 functions actually do what we claim they do? And how do we manage the complexity
@@ -157,9 +157,9 @@ def test_normalize_vector_with_nas():
     np.testing.assert_allclose(actual_output, expected_output)
 ```
 
-Because this isn't a package though, but a simple project with scripts, you
-also need to create another file called `pytest.ini`, which will tell `pytest`
-where to find the tests:
+Because this isn't a package though (yet), but a simple project with scripts,
+you also need to create another file called `pytest.ini`, which will tell
+`pytest` where to find the tests:
 
 ```ini
 [pytest]
