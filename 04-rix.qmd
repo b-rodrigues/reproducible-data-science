@@ -140,6 +140,23 @@ edit `gen-env.R`, run it to regenerate `default.nix`, and rebuild with
 `nix-build`. This keeps your environment definition readable and versioned
 alongside your project.
 
+::: {.callout-tip}
+## Getting LLM assistance with `{rix}`
+
+If the `{rix}` syntax is new to you, remember that you can use `pkgctx` to
+generate LLM-ready context (as mentioned in the introduction). The `{rix}`
+repository includes a `.pkgctx.yaml` file you can feed to your LLM to help it
+understand the package's API. You can also generate your own context file:
+
+```bash
+nix run github:b-rodrigues/pkgctx -- r github:ropensci/rix > rix.pkgctx.yaml
+```
+
+With this context, your LLM can help you write correct `rix()` calls, even if
+you've never used the package before. You can do so for any package hosted on 
+CRAN, GitHub, or local `.tar.gz` files.
+:::
+
 You can now exit this temporary session (type `q()` in R, then `exit` in the
 shell) and build your new environment:
 

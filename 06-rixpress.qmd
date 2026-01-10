@@ -200,6 +200,28 @@ The interface is heavily inspired by `{targets}`, so you get the ergonomic,
 object-passing feel you're used to, combined with the bit-for-bit 
 reproducibility of the Nix build system.
 
+::: {.callout-tip}
+## Getting LLM assistance with `{rixpress}` and `ryxpress`
+
+If the `{rixpress}` syntax is new to you, remember that you can use `pkgctx` to
+generate LLM-ready context (as mentioned in the introduction). Both the
+`{rixpress}` (R) and `ryxpress` (Python) repositories include `.pkgctx.yaml`
+files you can feed to your LLM to help it understand the package's API. You can
+also generate your own context files:
+
+```bash
+# For the R package
+nix run github:b-rodrigues/pkgctx -- r github:b-rodrigues/rixpress > rixpress.pkgctx.yaml
+
+# For the Python package
+nix run github:b-rodrigues/pkgctx -- python ryxpress > ryxpress.pkgctx.yaml
+```
+
+With this context, your LLM can help you write correct pipeline definitions,
+even if the syntax is completely new to you. You can do so for any package hosted on 
+CRAN, GitHub, or local `.tar.gz` files.
+:::
+
 ## What is rixpress?
 
 `{rixpress}` streamlines creation of *micropipelines* (small-to-medium, 

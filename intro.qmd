@@ -17,6 +17,37 @@ depending on what you're doing, it's likely to be correct. However, setting up
 another language is still quite annoying. This is where Nix comes in. Nix makes
 adding another language to a project extremely simple.
 
+Even though tools like `{rix}`, `{rixpress}`, and Docker might be new to you, you
+can become productive with them very quickly by leveraging LLMs. The key is to
+provide the LLM with the right context. I have built a tool called
+[pkgctx](https://github.com/b-rodrigues/pkgctx)^[https://github.com/b-rodrigues/pkgctx]
+that extracts structured, compact API specifications from R or Python packages
+for use in LLMs, minimising tokens while maximising context. Each of the
+repositories for these tools—`{rix}`, `{rixpress}` (R), and `rixpress` (Python)—contains
+a `.pkgctx.yaml` file that you can feed to an LLM to help it understand the
+package's API. With this context, the LLM can assist you in writing correct code
+using these tools, even if you've never used them before.
+
+You can run `pkgctx` directly without installing it, thanks to Nix:
+
+```bash
+# Extract context for an R package from CRAN
+nix run github:b-rodrigues/pkgctx -- r dplyr > dplyr.pkgctx.yaml
+
+# Extract context for an R package from GitHub
+nix run github:b-rodrigues/pkgctx -- r github:ropensci/rix > rix.pkgctx.yaml
+
+# Extract context for a Python package from PyPI
+nix run github:b-rodrigues/pkgctx -- python requests > requests.pkgctx.yaml
+```
+
+I encourage you to do the same for the packages you use in your analyses. By
+generating context files using `pkgctx`, you enable LLMs to help you write code
+more efficiently and correctly. This is especially useful for packages with
+complex APIs or for packages you don't use frequently. Simply generate the
+context file once and include it in your project repository—or feed it to your
+LLM whenever you need assistance with that package.
+
 ## Who is this book for?
 
 This book is for anyone who uses raw data to build any type of output. This
