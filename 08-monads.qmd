@@ -138,6 +138,22 @@ read_log(result)
 #> [4] "✔ mean ran successfully"
 ```
 
+::: {.callout-tip}
+## Getting LLM assistance with `{chronicler}`
+
+If the functional programming patterns in `{chronicler}` feel unfamiliar,
+remember that you can use `pkgctx` to generate LLM-ready context. The
+`{chronicler}` repository includes a `.pkgctx.yaml` file you can feed to your
+LLM. You can also generate your own:
+
+```bash
+nix run github:b-rodrigues/pkgctx -- r github:b-rodrigues/chronicler > chronicler.pkgctx.yaml
+```
+
+With this context, your LLM can help you refactor your existing functions to be
+monadic using `record()` and `bind_record()`.
+:::
+
 ## The Maybe Monad: Handling Errors
 
 Another common monad is **Maybe**, which handles computations that might fail. 
@@ -197,6 +213,21 @@ bad = (
 )
 print(bad)  # Nothing
 ```
+
+::: {.callout-tip}
+## Getting LLM assistance with `talvez`
+
+Just like with `{chronicler}`, you can use `pkgctx` to help your LLM understand
+`talvez`. The repository includes a `.pkgctx.yaml` file, or you can generate
+one:
+
+```bash
+nix run github:b-rodrigues/pkgctx -- python github:b-rodrigues/talvez > talvez.pkgctx.yaml
+```
+
+This is particularly useful for learning how to chain monadic operations in
+Python correctly.
+:::
 
 The key operations are:
 
