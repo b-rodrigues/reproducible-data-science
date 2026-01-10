@@ -28,6 +28,7 @@ book:
     - 09-testing.qmd
     - 10-packaging.qmd
     - 11-ci.qmd
+    - 12-conclusion.qmd
     - references.qmd
   page-navigation: true
 

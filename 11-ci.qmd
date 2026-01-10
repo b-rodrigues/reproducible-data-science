@@ -411,6 +411,153 @@ file from `{rix}`'s repository
 [here](https://github.com/ropensci/rix/blob/main/.github/workflows/tests-r-via-nix.yaml).
 Setting up the environment is much easier, as is running the actual test suite.
 
+## Advanced patterns
+
+Now that you understand the basics, let's look at some more advanced patterns
+that will make your CI workflows more efficient and informative.
+
+### Caching with Cachix
+
+Building Nix environments from scratch on every CI run can be slow. Cachix
+solves this by providing a binary cache for your Nix derivations. Once you build
+something, subsequent runs can download the pre-built binaries instead of
+rebuilding from source.
+
+To use Cachix, you first need to create a free account at
+[cachix.org](https://cachix.org) and create a cache. Then, generate an auth
+token and add it as a secret in your GitHub repository settings (under Settings
+→ Secrets and variables → Actions). Call it something like `CACHIX_AUTH`.
+
+Here is a workflow that builds your development environment and pushes the
+results to your Cachix cache:
+
+```yaml
+name: Update Cachix cache
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: cachix/cachix-action@v15
+        with:
+          name: your-cache-name
+          authToken: '${{ secrets.CACHIX_AUTH }}'
+
+      - name: Build and push to cache
+        run: |
+          nix-build
+          nix-store -qR --include-outputs $(nix-instantiate default.nix) | cachix push your-cache-name
+```
+
+The key line here is the `nix-store` command at the end. It queries all the
+dependencies of your build and pushes them to Cachix. The next time you or
+anyone else runs this workflow, the `cachix/cachix-action` will automatically
+pull from your cache, dramatically speeding up the build.
+
+If you want to build on both Linux and macOS (since Nix binaries are
+platform-specific), you can use a matrix:
+
+```yaml
+jobs:
+  build-and-cache:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+```
+
+### Storing outputs in orphan branches
+
+When running a pipeline on CI, you often want to keep the outputs (plots, data,
+reports) without committing them to your main branch. A clean solution is to
+store them in an orphan branch. An orphan branch has no commit history and is
+completely separate from your main code.
+
+Here is the pattern:
+
+```yaml
+- name: Check if outputs branch exists
+  id: branch-exists
+  run: git ls-remote --exit-code --heads origin pipeline-outputs
+  continue-on-error: true
+
+- name: Create orphan branch if needed
+  if: steps.branch-exists.outcome != 'success'
+  run: |
+    git checkout --orphan pipeline-outputs
+    git rm -rf .
+    echo "Pipeline outputs" > README.md
+    git add README.md
+    git commit -m "Initial commit"
+    git push origin pipeline-outputs
+    git checkout -
+
+- name: Push outputs to branch
+  run: |
+    git config --local user.name "GitHub Actions"
+    git config --local user.email "actions@github.com"
+    git fetch origin pipeline-outputs
+    git worktree add ./outputs pipeline-outputs
+    cp -r _outputs/* ./outputs/
+    cd outputs
+    git add .
+    git commit -m "Update outputs" || echo "No changes"
+    git push origin pipeline-outputs
+```
+
+This pattern first checks if the branch exists using `git ls-remote`. If not, it
+creates an orphan branch. Then it uses `git worktree` to work with both branches
+simultaneously, copies the outputs, and pushes them. The `{rix}` and `{rixpress}`
+packages use this pattern to store pipeline outputs between runs.
+
+### Creating workflow summaries
+
+GitHub Actions has a built-in feature for creating rich summaries that appear
+directly on the workflow run page. You write Markdown to a special file path
+stored in the `GITHUB_STEP_SUMMARY` environment variable.
+
+```yaml
+- name: Create summary
+  run: |
+    echo "## Pipeline Results 🎉" >> $GITHUB_STEP_SUMMARY
+    echo "" >> $GITHUB_STEP_SUMMARY
+    echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+    echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+    echo "| Tests passed | 42 |" >> $GITHUB_STEP_SUMMARY
+    echo "| Coverage | 87% |" >> $GITHUB_STEP_SUMMARY
+```
+
+You can also generate the summary dynamically from your R or Python code:
+
+```yaml
+- name: Generate summary from R
+  run: |
+    nix-shell --run "Rscript -e '
+      results <- readRDS(\"results.rds\")
+      cat(\"## Analysis Complete\n\n\", file = Sys.getenv(\"GITHUB_STEP_SUMMARY\"), append = TRUE)
+      cat(paste(\"Processed\", nrow(results), \"observations\n\"), file = Sys.getenv(\"GITHUB_STEP_SUMMARY\"), append = TRUE)
+    '"
+```
+
+This is particularly useful for: 
+
+- Showing test results at a glance
+- Displaying key metrics from your analysis
+- Providing download links to artifacts
+- Reporting any warnings or issues
+
+The summary appears right on the Actions tab, making it easy for collaborators
+to see what happened without digging through logs.
+
 ## Further reading
 
 - http://haines-lab.com/post/2022-01-23-automating-computational-reproducibility-with-r-using-renv-docker-and-github-actions/
