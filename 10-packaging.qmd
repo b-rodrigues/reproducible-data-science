@@ -1,11 +1,5 @@
 # A Short Intro to Packaging Your Code in R and Python
 
-<div style="text-align:center;">
-```{r, echo = F}
-knitr::include_graphics("images/packaging.png")
-```
-</div>
-
 ## Introduction
 
 In the previous chapter, we learned how to prove that our code works through

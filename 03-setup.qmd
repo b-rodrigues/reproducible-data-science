@@ -1,11 +1,5 @@
 # Setting Up Your Environment
 
-<div style="text-align:center;">
-```{r, echo = F}
-# knitr::include_graphics("images/Nix_Snowflake_Logo.png")
-```
-</div>
-
 In this chapter, we will install Nix, configure the `rstats-on-nix` binary cache
 to speed up installations, and set up our development environment (Positron, VS
 Code, or Emacs) to work seamlessly with reproducible Nix environments.

@@ -1,11 +1,5 @@
 # Intro to CI/CD with Github Actions
 
-<div style="text-align:center;">
-```{r, echo = F}
-knitr::include_graphics("images/octopus.png")
-```
-</div>
-
 ## Introduction
 
 We are almost at the end of our journey. In the previous chapters, we built

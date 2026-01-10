@@ -1,11 +1,5 @@
 # Professional Workflows: Testing and Git
 
-<div style="text-align:center;">
-```{r, echo = F}
-knitr::include_graphics("images/pcr_test.png")
-```
-</div>
-
 ## Introduction
 
 I hope you are starting to see the pieces of our reproducible workflow coming
