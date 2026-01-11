@@ -1,4 +1,4 @@
-# Intro to CI/CD with Github Actions
+# Continuous Integration with GitHub Actions
 
 ## Introduction
 
@@ -18,16 +18,20 @@ and your teammates should be focusing on writing code, not on repetitive tasks
 like building images or running tests. Ideally, we would want to automate these
 steps. That is what we are going to learn in this chapter.
 
-This chapter will introduce you to the basic ideas of CI/CD (Continuous
-Integration and Continuous Deployment) and DevOps with GitHub Actions. You will
-learn how to set up workflows that automatically run your tests when you push
-code, how to build Docker images and recover artifacts, and how to run your
-pipelines directly from GitHub's servers. Because we're using Git to trigger all
-the events and automate the whole pipeline, this approach is sometimes called
-GitOps. The bottom line is that DevOps makes it easy for developers to focus on
-coding and makes it easy for them to ship data products. By the end of this
-chapter, you will have enough knowledge of GitHub Actions to automate your
-Reproducible Analytical Pipeline in the cloud.
+This chapter will introduce you to **Continuous Integration (CI)** with GitHub
+Actions. You will learn how to set up workflows that automatically run your
+tests when you push code, how to build Docker images and recover artifacts, and
+how to run your pipelines directly from GitHub's servers. Because we're using
+Git to trigger all the events and automate the whole pipeline, this approach is
+sometimes called GitOps.
+
+You may have heard the term "CI/CD," where CD stands for Continuous Deployment
+or Continuous Delivery. We will focus on CI in this chapter. Continuous
+Deployment (automatically pushing results to a database, dashboard, or API) is
+highly specific to your organisation and infrastructure. What we cover here,
+however, gives you the foundation: once your pipeline runs reliably on CI, the
+"deployment" step is just one more workflow job pointing to wherever your
+results need to go.
 
 ## Getting your repo ready for Github Actions
 
@@ -425,10 +429,9 @@ file is all you need to get your pipeline running on CI.
 
 ## GitHub Actions without Nix
 
-If you’re not using Nix, you’ll have to set up GitHub Actions manually. 
-Suppose you have a package project and want to run unit tests on each push.
-See for example the `{myPackage}`
-package, in particular [this
+If you’re not using Nix, you’ll have to set up GitHub Actions manually. Suppose
+you have a package project and want to run unit tests on each push. See for
+example the `{myPackage}` package, in particular [this
 file](https://github.com/b-rodrigues/myPackage/blob/main/.github/workflows/rcmdcheck.yaml).
 This action runs on each push and pull request on Windows, Ubuntu and macOS:
 
@@ -611,7 +614,7 @@ You can also generate the summary dynamically from your R or Python code:
     '"
 ```
 
-This is particularly useful for: 
+This is particularly useful for:
 
 - Showing test results at a glance
 - Displaying key metrics from your analysis
@@ -621,9 +624,25 @@ This is particularly useful for:
 The summary appears right on the Actions tab, making it easy for collaborators
 to see what happened without digging through logs.
 
-## Further reading
+## Conclusion
 
-- http://haines-lab.com/post/2022-01-23-automating-computational-reproducibility-with-r-using-renv-docker-and-github-actions/
-- https://orchid00.github.io/actions_sandbox/
-- https://www.petefreitag.com/item/903.cfm
-- https://dev.to/mihinduranasinghe/using-docker-containers-in-jobs-github-actions-3eof
+This chapter introduced Continuous Integration with GitHub Actions, the final
+piece of our reproducible workflow.
+
+Key takeaways:
+
+- **Automation removes manual steps**: Every push triggers tests, builds, and
+  deployments without human intervention
+- **Nix simplifies CI setup**: The same `default.nix` you use locally works on
+  GitHub Actions, eliminating "works on my machine" problems
+- **Cachix speeds up builds**: By caching Nix derivations, subsequent runs avoid
+  rebuilding unchanged dependencies
+- **`rxp_ga()` handles the boilerplate**: One function call generates a complete
+  workflow for running `{rixpress}` pipelines on CI
+- **Artifact caching persists outputs**: Using `rxp_export_artifacts()` and an
+  orphan branch, pipeline outputs survive between ephemeral CI runs
+
+With continuous integration in place, your reproducible analytical pipeline is
+truly automated. Push your code, and GitHub takes care of the rest: running
+tests, building your environment, executing your pipeline, and storing the
+results. This frees you to focus on what matters: the analysis itself.
