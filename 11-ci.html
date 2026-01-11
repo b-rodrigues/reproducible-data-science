@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>11&nbsp; Intro to CI/CD with Github Actions – Reproducible Polyglot Data Science</title>
+<title>11&nbsp; Continuous Integration with GitHub Actions – Reproducible Polyglot Data Science</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -288,7 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11-ci.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Intro to CI/CD with Github Actions</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11-ci.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -426,7 +426,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11-ci.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Intro to CI/CD with Github Actions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -468,7 +468,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#storing-outputs-in-orphan-branches" id="toc-storing-outputs-in-orphan-branches" class="nav-link" data-scroll-target="#storing-outputs-in-orphan-branches"><span class="header-section-number">11.8.2</span> Storing outputs in orphan branches</a></li>
   <li><a href="#creating-workflow-summaries" id="toc-creating-workflow-summaries" class="nav-link" data-scroll-target="#creating-workflow-summaries"><span class="header-section-number">11.8.3</span> Creating workflow summaries</a></li>
   </ul></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">11.9</span> Further reading</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">11.9</span> Conclusion</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/11-ci.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -478,7 +478,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Intro to CI/CD with Github Actions</span></h1>
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></h1>
 </div>
 
 
@@ -499,7 +499,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="11.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">11.1</span> Introduction</h2>
 <p>We are almost at the end of our journey. In the previous chapters, we built reproducible environments with Nix, organised our code into pure functions, added robustness with monads, proved correctness with unit tests, managed our collaboration with Git, and bundled everything into shareable packages. We can now run our pipelines in a 100% reproducible way.</p>
 <p>However, all of this still requires manual steps. And maybe that’s not a problem; if your environment is set up and users only need to drop into a Nix shell and run the pipeline, that’s already a huge improvement. But you should keep in mind that manual steps don’t scale. Imagine you are part of a team that needs to quickly ship products to clients. Several people contribute to the product, and you might need to work on multiple projects in the same day. You and your teammates should be focusing on writing code, not on repetitive tasks like building images or running tests. Ideally, we would want to automate these steps. That is what we are going to learn in this chapter.</p>
-<p>This chapter will introduce you to the basic ideas of CI/CD (Continuous Integration and Continuous Deployment) and DevOps with GitHub Actions. You will learn how to set up workflows that automatically run your tests when you push code, how to build Docker images and recover artifacts, and how to run your pipelines directly from GitHub’s servers. Because we’re using Git to trigger all the events and automate the whole pipeline, this approach is sometimes called GitOps. The bottom line is that DevOps makes it easy for developers to focus on coding and makes it easy for them to ship data products. By the end of this chapter, you will have enough knowledge of GitHub Actions to automate your Reproducible Analytical Pipeline in the cloud.</p>
+<p>This chapter will introduce you to <strong>Continuous Integration (CI)</strong> with GitHub Actions. You will learn how to set up workflows that automatically run your tests when you push code, how to build Docker images and recover artifacts, and how to run your pipelines directly from GitHub’s servers. Because we’re using Git to trigger all the events and automate the whole pipeline, this approach is sometimes called GitOps.</p>
+<p>You may have heard the term “CI/CD,” where CD stands for Continuous Deployment or Continuous Delivery. We will focus on CI in this chapter. Continuous Deployment (automatically pushing results to a database, dashboard, or API) is highly specific to your organisation and infrastructure. What we cover here, however, gives you the foundation: once your pipeline runs reliably on CI, the “deployment” step is just one more workflow job pointing to wherever your results need to go.</p>
 </section>
 <section id="getting-your-repo-ready-for-github-actions" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="getting-your-repo-ready-for-github-actions"><span class="header-section-number">11.2</span> Getting your repo ready for Github Actions</h2>
@@ -834,14 +835,18 @@ jobs:
 <p>The summary appears right on the Actions tab, making it easy for collaborators to see what happened without digging through logs.</p>
 </section>
 </section>
-<section id="further-reading" class="level2" data-number="11.9">
-<h2 data-number="11.9" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">11.9</span> Further reading</h2>
+<section id="conclusion" class="level2" data-number="11.9">
+<h2 data-number="11.9" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">11.9</span> Conclusion</h2>
+<p>This chapter introduced Continuous Integration with GitHub Actions, the final piece of our reproducible workflow.</p>
+<p>Key takeaways:</p>
 <ul>
-<li>http://haines-lab.com/post/2022-01-23-automating-computational-reproducibility-with-r-using-renv-docker-and-github-actions/</li>
-<li>https://orchid00.github.io/actions_sandbox/</li>
-<li>https://www.petefreitag.com/item/903.cfm</li>
-<li>https://dev.to/mihinduranasinghe/using-docker-containers-in-jobs-github-actions-3eof</li>
+<li><strong>Automation removes manual steps</strong>: Every push triggers tests, builds, and deployments without human intervention</li>
+<li><strong>Nix simplifies CI setup</strong>: The same <code>default.nix</code> you use locally works on GitHub Actions, eliminating “works on my machine” problems</li>
+<li><strong>Cachix speeds up builds</strong>: By caching Nix derivations, subsequent runs avoid rebuilding unchanged dependencies</li>
+<li><strong><code>rxp_ga()</code> handles the boilerplate</strong>: One function call generates a complete workflow for running <code>{rixpress}</code> pipelines on CI</li>
+<li><strong>Artifact caching persists outputs</strong>: Using <code>rxp_export_artifacts()</code> and an orphan branch, pipeline outputs survive between ephemeral CI runs</li>
 </ul>
+<p>With continuous integration in place, your reproducible analytical pipeline is truly automated. Push your code, and GitHub takes care of the rest: running tests, building your environment, executing your pipeline, and storing the results. This frees you to focus on what matters: the analysis itself.</p>
 
 
 </section>
