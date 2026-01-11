@@ -124,6 +124,11 @@ That's a separate 100+ line `Dockerfile` you must maintain.
 
 ### rixpress: Unified Orchestration
 
+This brings us to a key insight: a reproducible pipeline should be nothing more
+than a **composition of pure functions**, each with explicit inputs and outputs,
+no hidden state, and no reliance on execution order beyond what the data
+dependencies require.
+
 **`{rixpress}`** solves this by using Nix not just as a package manager, but as 
 the build automation engine itself. Each pipeline step is a **Nix derivation**: a 
 hermetically sealed build unit.
@@ -408,7 +413,25 @@ rxp_trace()
 
 One of `{rixpress}`'s strengths is seamlessly mixing languages. Here's a 
 pipeline that reads data with Python's `polars`, processes it with R's `dplyr`, 
-and renders a Quarto report:
+and renders a Quarto report.
+
+::: {.callout-tip}
+## Polyglot Development Is Now Cheap
+
+Historically, using multiple languages in one project meant significant setup
+overhead: installing interpreters, managing conflicting dependencies, writing
+glue code. With Nix, that cost drops to near zero. You declare your R and Python
+dependencies in one file, and Nix handles the rest.
+
+LLMs lower the barrier further. Even if you are primarily an R programmer, you
+can ask an LLM to generate the Python code for a specific step, or vice versa.
+You don't need to master both languages; you just need to know enough to
+recognise when each shines. Use R for statistics, Bayesian modelling, and
+visualisation with `{ggplot2}`. Use Python for deep learning, web scraping, or
+leveraging a library that only exists in the Python ecosystem. With Nix handling
+environments and LLMs helping with syntax, the "cost" of crossing language
+boundaries becomes negligible.
+:::
 
 ```{r}
 #| eval: false
