@@ -31,9 +31,9 @@ Reproducible Analytical Pipeline in the cloud.
 
 ## Getting your repo ready for Github Actions
 
-Obviously, you should use a project that is versioned on GitHub. Use the 
-package we’ve developed previously. If you go on its GitHub page, 
-you should see an "Actions" tab on top:
+Obviously, you should use a project that is versioned on GitHub. Use the package
+we’ve developed previously. If you go on its GitHub page, you should see an
+"Actions" tab on top:
 
 <div style="text-align:center;">
 ```{r, echo = F}
@@ -42,14 +42,15 @@ knitr::include_graphics("images/ga_1.png")
 </div>
 
 This will open a new view where you can select a lot of available, ready to use
-actions. "Actions" are premade scripts that execute some commands you might need:
-such as setting up R, Python, running tests, etc. Since we’re using Nix, we don’t 
-really need to look for any actions to set up our environments. However, we might
-want to use some pre-made actions to upload artifacts for instance.
+actions. "Actions" are premade scripts that execute some commands you might
+need: such as setting up R, Python, running tests, etc. Since we’re using Nix,
+we don’t really need to look for any actions to set up our environments.
+However, we might want to use some pre-made actions to upload artifacts for
+instance.
 
-To actually configure our repository to run actions, we need to edit a file in our
-project under the `.github/workflows` directory (create them if needed). 
-In it, write a `yaml` file called `hello.yaml` and write the following in it:
+To actually configure our repository to run actions, we need to edit a file in
+our project under the `.github/workflows` directory (create them if needed). In
+it, write a `yaml` file called `hello.yaml` and write the following in it:
 
 ```yaml
 name: Hello world
@@ -114,19 +115,11 @@ inside the VM. Then, run this next command:
       - run: echo "This command is running from an Ubuntu VM each time you push."
 ```
 
-Let's push, and see what happens on github.com:
-
-
-<div style="text-align:center;">
-  <video width="640" height="480" controls>
-    <source src="images/ga_1.mp4" type="video/mp4">
-  </video>
-</div>
-
-If we take a look at the commit we just pushed, we see this yellow dot next to
-the commit name. This means that an action is running. We can then take a look
-at the output of the job, and see that our commands, defined with the `run`
-statements in the workflow file, succeeded and echoed what we asked them.
+If we take a look at the commit we just pushed, on GitHub, we see this yellow
+dot next to the commit name. This means that an action is running. We can then
+take a look at the output of the job, and see that our commands, defined with
+the `run` statements in the workflow file, succeeded and echoed what we asked
+them.
 
 ## Nix and GitHub Actions
 
@@ -145,9 +138,9 @@ called `run-tests.yaml`):
     name: rstats-on-nix
 ```
 
-If you’re repository contains a `default.nix` file, the same environment you’ve been using
-locally can be used on GitHub Actions just as easily. You can also instead
-generate the `default.nix` from the `gen-env.R` script:
+If you’re repository contains a `default.nix` file, the same environment you’ve
+been using locally can be used on GitHub Actions just as easily. You can also
+instead generate the `default.nix` from the `gen-env.R` script:
 
 ```yaml
 - name: Build dev env
@@ -155,7 +148,7 @@ generate the `default.nix` from the `gen-env.R` script:
     nix-shell --expr "$(curl -sl https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/default.nix)" --run "Rscript -e 'source(\"gen-env.R\")'"
 ```
 
-You can then use the shell to run whatever you need. For example, if you’re 
+You can then use the shell to run whatever you need. For example, if you’re
 developing a package, you could run unit tests on each push:
 
 ```yaml
@@ -166,9 +159,10 @@ developing a package, you could run unit tests on each push:
 `stop_on_failure = TRUE` is needed to make the step fail if there’s an error,
 otherwise, the step would run successfully, even with failing tests.
 
-Of course, if you’re developing a Python package, use `nix-shell --run "pytest"` instead to run the tests.
+Of course, if you’re developing a Python package, use `nix-shell --run "pytest"`
+instead to run the tests.
 
-I highly recommend you run tests when pull requests get opened:
+I highly recommend you run tests when pull requests get opened:
 
 ```yaml
 on:
@@ -178,9 +172,9 @@ on:
     branches: [ "main" ]
 ```
 
-This will ensure that if someone contributes to your project, you know immediately if 
-what they did breaks tests or not. If it does, ask them to fix the code until tests
-pass.
+This will ensure that if someone contributes to your project, you know
+immediately if what they did breaks tests or not. If it does, ask them to fix
+the code until tests pass.
 
 ## Running a dockerized workflow
 
@@ -188,7 +182,8 @@ This next example can be found in [this
 repository](https://github.com/b-rodrigues/dockerized_pipeline_demo). This
 example doesn't use Nix, `{rix}` nor `{rixpress}`, but the point here is to show
 how a Docker container can be executed on GitHub Actions, and artifacts can be
-recovered. The process is always the same, regardless is inside the Docker image.
+recovered. The process is always the same, regardless is inside the Docker
+image. If you want to follow along, fork this repository.
 
 This is what our workflow file looks like:
 
@@ -256,44 +251,30 @@ output of our pipeline) and makes the contents available as so-called
 the output of the pipeline. So let's run this by pushing a change, and let's
 take a look at these artifacts!
 
-<div style="text-align:center;">
-  <video width="640" height="480" controls>
-    <source src="images/ga_2.mp4" type="video/mp4">
-  </video>
-</div>
+After the action done running, you will be able to download a zip file
+containing the plots. It is thus possible to rerun our workflow in the cloud.
+This has the advantage that we can now focus on simply changing the code, and
+not have to bother with boring manual steps. For example, let's change this
+target in the `_targets.R` file:
 
-As you can see from the video above, a zip file is now available and can be
-downloaded. This zip contains our plots! It is thus possible to rerun our
-workflow in the cloud. This has the advantage that we can now focus on simply
-changing the code, and not have to bother with boring manual steps. For example,
-let's change this target in the `_targets.R` file:
-
-```
+```R
 tar_target(
-    commune_data,
-    clean_unemp(unemp_data,
-                place_name_of_interest = c("Luxembourg", "Dippach",
-                                           "Wiltz", "Esch/Alzette",
-                                           "Mersch", "Dudelange"),
-                col_of_interest = active_population)
+  commune_data,
+  clean_unemp(
+    unemp_data,
+    place_name_of_interest = c(
+      "Luxembourg", "Dippach",
+      "Wiltz", "Esch/Alzette",
+      "Mersch", "Dudelange"),
+    col_of_interest = active_population)
 )
 
 ```
 
-I've added "Dudelange" to the list of communes to plot. Let me push this change
-to the repo now, and let's take a look at the artifacts. The video below
-summarises the process:
-
-<div style="text-align:center;">
-  <video width="640" height="480" controls>
-    <source src="images/ga_3.mp4" type="video/mp4">
-  </video>
-</div>
-
-As you can see in the video, the `_targets.R` script was changed, and the
-changes pushed to Github. This triggered the action we've defined before. The
-plots (artifacts) get refreshed, and we can download them. We see then that
-Dudelange was added in the `communes.png` plot!
+I've added "Dudelange" to the list of communes to plot. Pushing this change to
+GitHub triggers the action we've defined before. The plots (artifacts) get
+refreshed, and we can download them. Take a look and see that Dudelange was
+added in the `communes.png` plot!
 
 It is also possible to "deploy" the plots directly to another branch, and do
 much, much more. I just wanted to give you a little taste of Github Actions (and
@@ -305,54 +286,142 @@ can't get over the fact that Github Actions is free for public repositories.
 It is also possible to build a Docker image and have it made available on an
 image registry. You can see how this works on this
 [repository](https://github.com/b-rodrigues/ga_demo). This images can then be
-used as a base for other RAPs, as in this
+used as a base for other reproducible pipelines, as in this
 [repository](https://github.com/b-rodrigues/ga_demo_rap/tree/main). Why do this?
 Well because of "separation of concerns". You could have a repository which
 builds in image containing your development environment: this could be an image
 with a specific version of R and R packages built with Nix. And then have as
-many repositories as projects that run RAPs using that development environment
-image as a basis. Simply add the project-specific packages that you need for
-each project.
+many repositories as projects that run pipelines using that development
+environment image as a basis. Simply add the project-specific packages that you
+need for each project.
 
-## Running a pipeline straight from Github Actions
+## Running a rixpress Pipeline from GitHub Actions
 
-Using Docker on Github Actions has the advantage that you can use the same image
-to develop locally on your computer, and then also on CI. However, you could
-also run the pipeline straight from a Github Actions runner, but it'll take some
-effort to set up the environment on CI. Take a look at [the example from this
-repository](https://github.com/rap4all/housing/tree/gitops-pipeline).
+With Nix and `{rixpress}`, running your pipeline directly on GitHub Actions is
+straightforward. Because Nix handles all dependencies reproducibly, you don't
+need Docker as an intermediary. The
+[rixpress_demos](https://github.com/b-rodrigues/rixpress_demos) repository
+contains several complete examples; here we will walk through the key steps.
 
-The yaml file used in this action (which you can find
-[here](https://github.com/rap4all/housing/blob/gitops-pipeline/.github/workflows/targets.yaml))
-was generated by running `targets::tar_github_actions()` and was then modified
-further, mostly to add the required development libraries to compile the needed
-R packages (under the `Install Linux system dependencies` step).
+The workflow triggers on pushes and pull requests to `main`:
 
-This action takes advantage of the included Github Actions cache to backup the
-targets from the pipeline, so they can also get skipped with subsequent runs:
-
-<div style="text-align:center;">
-```{r, echo = F}
-knitr::include_graphics("images/tar_github_actions_skip.png")
+```yaml
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
 ```
-</div>
 
-This can also be achieved with Docker by mounting volumes, but requires more manual setup.
+After checking out the repository and installing Nix (with Cachix for faster
+builds), the first step generates or regenerates the development environment
+from the `gen-env.R` script:
 
-Another difference with Docker is that the outputs are not saved as an artifact, but instead
-get pushed to the `targets-runs` branch:
-
-<div style="text-align:center;">
-```{r, echo = F}
-knitr::include_graphics("images/tar_github_actions_targets-runs.png")
+```yaml
+- name: Build dev env
+  run: |
+    nix-shell -p R "rPackages.rix" "rPackages.rixpress" --run "Rscript gen-env.R"
 ```
-</div>
 
-The previous examples assumed you didn't use Nix, but if you did, you can also
-run pipelines from inside Nix and with `{rixpress}`. Look at this `yaml` file
-from the `rixpress_demos` repository that shows how to run a `{rixpress}`
-pipeline on GitHub Actions
-[link](https://github.com/b-rodrigues/rixpress_demos/blob/master/.github/workflows/run_r_py_xgboost.yaml).
+Next, the pipeline definition is generated from `gen-pipeline.R`:
+
+```yaml
+- name: Generate pipeline
+  run: |
+    nix-shell --quiet --run "Rscript gen-pipeline.R"
+```
+
+You can optionally visualise the DAG to verify the pipeline structure:
+
+```yaml
+- name: Check DAG
+  run: |
+    nix-shell --quiet -p haskellPackages.stacked-dag --run "stacked-dag dot _rixpress/dag.dot"
+```
+
+Finally, build and inspect the pipeline:
+
+```yaml
+- name: Build pipeline
+  run: |
+    nix-shell --quiet --run "Rscript -e 'rixpress::rxp_make()'"
+
+- name: Inspect built derivations
+  run: |
+    nix-shell --quiet --run "Rscript -e 'rixpress::rxp_inspect()'"
+
+- name: Show result
+  run: |
+    nix-shell --quiet --run "Rscript -e 'rixpress::rxp_read(\"confusion_matrix\")'"
+```
+
+### Caching Pipeline Outputs Between Runs
+
+While Nix caches derivations, CI runners are ephemeral: each run starts fresh.
+To avoid rebuilding the entire pipeline every time, `{rixpress}` provides
+`rxp_export_artifacts()` and `rxp_import_artifacts()` to persist outputs between
+runs.
+
+Before building, check if cached outputs exist and import them:
+
+```yaml
+- name: Import cached outputs if available
+  run: |
+    if [ -f "../outputs/my_pipeline/pipeline_outputs.nar" ]; then
+      nix-shell --quiet --run "Rscript -e 'rixpress::rxp_import_artifacts(archive_file = \"../outputs/my_pipeline/pipeline_outputs.nar\")'"
+    else
+      echo "No cached outputs found, will build from scratch"
+    fi
+```
+
+After building, export the outputs so they can be reused:
+
+```yaml
+- name: Export outputs to avoid rebuild
+  run: |
+    mkdir -p ../outputs/my_pipeline
+    nix-shell --quiet --run "Rscript -e 'rixpress::rxp_export_artifacts(archive_file = \"../outputs/my_pipeline/pipeline_outputs.nar\")'"
+```
+
+Finally, commit the cached outputs back to the repository:
+
+```yaml
+- name: Push cached outputs
+  run: |
+    cd ..
+    git config --global user.name "GitHub Actions"
+    git config --global user.email "actions@github.com"
+    git pull --rebase --autostash origin main
+    git add outputs/my_pipeline/pipeline_outputs.nar
+    if git diff --cached --quiet; then
+      echo "No changes to commit."
+    else
+      git commit -m "Update cached pipeline outputs"
+      git push origin main
+    fi
+```
+
+This pattern ensures that only changed derivations are rebuilt on subsequent
+runs. The `.nar` file format is Nix's archive format and contains all the built
+outputs.
+
+### The Easy Way: `rxp_ga()`
+
+If the above seems like a lot of boilerplate, `{rixpress}` provides a helper
+function that generates a complete GitHub Actions workflow for you:
+
+```r
+rixpress::rxp_ga()
+```
+
+This creates a `.github/workflows/run-rxp-pipeline.yaml` file that handles
+everything: installing Nix, setting up Cachix, generating the environment and
+pipeline, importing and exporting artifacts, and storing them in a dedicated
+`rixpress-runs` orphan branch. Using an orphan branch keeps your main branch
+clean while persisting the cached outputs between runs.
+
+For most projects, running `rxp_ga()` once and committing the generated workflow
+file is all you need to get your pipeline running on CI.
 
 ## GitHub Actions without Nix
 

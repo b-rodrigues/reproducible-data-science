@@ -206,8 +206,9 @@ FAILED tests/test_utils.py::test_normalize_vector_with_nas - AssertionError:
 ========================================================= 2 failed in 0.15s ==========================================================
 ```
 
-You don't encounter this issue in R and understanding why reveals how valuable unit tests can be.
-(Hint: how does the implementation of the `sd` function, which computes the standard deviation, differ between R and NumPy?)
+You don't encounter this issue in R and understanding why reveals how valuable
+unit tests can be. (Hint: how does the implementation of the `sd` function,
+which computes the standard deviation, differ between R and NumPy?)
 
 ### Testing as a Design Tool
 
@@ -218,6 +219,7 @@ the same?
 Let's write a test for this edge case first.
 
 `pytest` version:
+
 ```python
 # tests/test_utils.py
 def test_normalize_vector_with_zero_std():
@@ -230,13 +232,12 @@ def test_normalize_vector_with_zero_std():
 
 If we run `pytest` now, this test will fail. Our test has just revealed a flaw
 in our function's design. This process is a core part of Test-Driven Development
-(TDD): write a failing test, then write the code to make it pass.
+(TDD): write a failing, but correct, test, then write the code to make it pass.
 
 Let's improve our function:
 
-Improved Python version (`utils.py`):
-
 ```python
+
 import numpy as np
 
 def normalize_vector(x):
@@ -258,7 +259,7 @@ process very easy.
 #### Using LLMs to Write Tests
 
 LLMs are fantastic at writing unit tests. They are good at handling boilerplate
-code and thinking of edge cases. You can provide your function to an LLM and
+code and *thinking* of edge cases. You can provide your function to an LLM and
 give it a prompt like this:
 
 > "Here is my Python function `normalize_vector`. Please write three `pytest`
@@ -270,7 +271,7 @@ The LLM will likely generate high-quality test code that is very similar to what
 we wrote above.
 
 ::: {.callout-tip}
-## Supercharging test generation with `pkgctx`
+## All you need is context
 
 When using an LLM to generate tests, context is everything. If you are writing
 tests for functions that heavily use specific packages (like `{dplyr}` or
@@ -279,7 +280,10 @@ writes idiomatic and correct tests.
 
 For example, if you are testing a function that uses `{rix}`, feed the
 `rix.pkgctx.yaml` to the LLM so it knows exactly how to mock or assert the
-outputs of `rix()` functions.
+outputs of `rix()` functions. This is very useful particularly for packages that
+are not very well-known (or internal packages to your company that aren't even
+public) or packages that have been updated very recently, as the LLMs training
+data cutoff might not include the latest versions of the package.
 :::
 
 This is a massive productivity boost. However, this introduces a new, critical
@@ -296,14 +300,28 @@ responsibility to:
 "A COMPUTER CAN NEVER BE HELD ACCOUNTABLE THEREFORE A COMPUTER MUST NEVER MAKE A
 MANAGEMENT DECISION" - IBM Training Manual, 1979.
 
-If I ask you why you did something, and your answer is something to the effect
-of "I dunno, the LLM generated it", be glad we're not in the USA where I could
-just fire you, because that's what I'd do.
+This principle is, in my opinion, even more important for tests than for
+production code. Even before LLMs, we relied on code we didn't write ourselves.
+At my first job, my boss insisted that I avoid external packages entirely and
+rewrite everything from scratch. I ignored her and continued using the packages
+I trusted. At some point, you have to trust strangers. That was true then, and
+it is true now, except that "strangers" now includes LLMs and developers who
+themselves rely heavily on LLMs.
+
+But here is the key difference: tests are small. Unlike a sprawling codebase, a
+unit test is short enough to read and understand completely. When you review an
+LLM-generated test, you can verify that the expected output is correct and that
+the test covers the right cases. This makes tests uniquely suited to the "trust
+but verify" workflow that AI-assisted development demands.
+
+In the next chapter, we will learn the very basics of packaging, which makes
+testing even easier.
 
 ## Part 2: Advanced Version Control
 
-We assume you already know the basics of Git: `clone`, `add`, `commit`, and
-`push`. If you don't, there are countless tutorials available.
+I assume you already know the basics of Git: `clone`, `add`, `commit`, and
+`push`. If you don't, there are countless tutorials available, and I highly
+recommend you check one out and then come back to this.
 
 In this section, we will focus on the techniques that separate the "I submit
 code via Dropbox" novice from the professional data scientist: Trunk-Based
@@ -311,12 +329,12 @@ Development and managing AI-generated code.
 
 ### A Better Way to Collaborate: Trunk-Based Development
 
-A common mistake for new teams is to let feature branches live for a very long
-time. A data scientist might create a branch called `feature-big-analysis`, work
-on it for three weeks, and then try to merge it back into `main`. The result is
-often what's called "merge hell": `main` has changed so much in three weeks that
-merging the branch back in creates dozens of conflicts and is a painful,
-stressful process.
+A common mistake for new teams is to use branches to add new features, and then
+let these feature branches live for a very long time. A data scientist might
+create a branch called `feature-big-analysis`, work on it for three weeks, and
+then try to merge it back into `main`. The result is often what's called "merge
+hell": `main` has changed so much in three weeks that merging the branch back in
+creates dozens of conflicts and is a painful, stressful process.
 
 To avoid this, many professional teams use a workflow called Trunk-Based
 Development (TBD). The philosophy is simple but powerful:
@@ -449,56 +467,3 @@ engineering:
 3.  Code review (via Interactive Staging) is your primary defence against
     AI-generated bugs.
 
-With these practices in place, you are ready for the final step: automating it all.
-
-### Hands-On Exercises
-
-#### Exercise 1: Testing the "Happy Path"
-
-The median of a list of numbers is a common calculation. However, the logic is
-slightly different depending on whether the list has an odd or even number of
-elements. Your task is to test both of these "happy paths."
-
-R (`my_functions.R`):
-```R
-calculate_median <- function(x) {
-  sorted_x <- sort(x)
-  n <- length(sorted_x)
-  mid <- floor(n / 2)
-
-  if (n %% 2 == 1) {
-    # Odd number of elements
-    return(sorted_x[mid + 1])
-  } else {
-    # Even number of elements
-    return(mean(c(sorted_x[mid], sorted_x[mid + 1])))
-  }
-}
-```
-
-Your Task:
-
-1.  Create a test file `test-my_functions.R`.
-2.  Write a check for an odd number of elements.
-3.  Write a check for an even number of elements.
-
-#### Exercise 2: Reviewing AI-Generated Code with Git
-
-Goal: To practise the safe workflow for reviewing and selectively accepting code suggested by an LLM using interactive staging.
-
-1.  Create a file `hello.py` with `print("Hello!")` and commit it.
-2.  Edit the file to look like this (simulating an LLM change):
-    ```python
-    import sys
-    def greet(name):
-        print(f"Hello, {name}!")
-        print("Debug: Function finished.", file=sys.stderr) # Unwanted line!
-
-    if __name__ == '__main__':
-        greet("Git")
-    ```
-3.  Use interactive staging: `git add -p hello.py`.
-4.  When prompted, select `e` (edit).
-5.  Manually remove the `+print("Debug..."` line in the editor popup. Save and close.
-6.  Commit the clean version.
-7.  Check `git diff` to see that the unwanted line is still in your working directory (unstaged), then discard it with `git checkout -- hello.py`.
