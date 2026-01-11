@@ -413,6 +413,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./09-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Intro to CI/CD with Github Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -575,6 +599,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="rixpress-unified-orchestration" class="level3" data-number="6.1.4">
 <h3 data-number="6.1.4" class="anchored" data-anchor-id="rixpress-unified-orchestration"><span class="header-section-number">6.1.4</span> rixpress: Unified Orchestration</h3>
+<p>This brings us to a key insight: a reproducible pipeline should be nothing more than a <strong>composition of pure functions</strong>, each with explicit inputs and outputs, no hidden state, and no reliance on execution order beyond what the data dependencies require.</p>
 <p><strong><code>{rixpress}</code></strong> solves this by using Nix not just as a package manager, but as the build automation engine itself. Each pipeline step is a <strong>Nix derivation</strong>: a hermetically sealed build unit.</p>
 <p>Compare the same pipeline in <code>{rixpress}</code>:</p>
 <div class="cell">
@@ -874,7 +899,21 @@ Getting LLM assistance with <code>{rixpress}</code> and <code>ryxpress</code>
 </section>
 <section id="polyglot-pipelines" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="polyglot-pipelines"><span class="header-section-number">6.5</span> Polyglot Pipelines</h2>
-<p>One of <code>{rixpress}</code>’s strengths is seamlessly mixing languages. Here’s a pipeline that reads data with Python’s <code>polars</code>, processes it with R’s <code>dplyr</code>, and renders a Quarto report:</p>
+<p>One of <code>{rixpress}</code>’s strengths is seamlessly mixing languages. Here’s a pipeline that reads data with Python’s <code>polars</code>, processes it with R’s <code>dplyr</code>, and renders a Quarto report.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Polyglot Development Is Now Cheap
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Historically, using multiple languages in one project meant significant setup overhead: installing interpreters, managing conflicting dependencies, writing glue code. With Nix, that cost drops to near zero. You declare your R and Python dependencies in one file, and Nix handles the rest.</p>
+<p>LLMs lower the barrier further. Even if you are primarily an R programmer, you can ask an LLM to generate the Python code for a specific step, or vice versa. You don’t need to master both languages; you just need to know enough to recognise when each shines. Use R for statistics, Bayesian modelling, and visualisation with <code>{ggplot2}</code>. Use Python for deep learning, web scraping, or leveraging a library that only exists in the Python ecosystem. With Nix handling environments and LLMs helping with syntax, the “cost” of crossing language boundaries becomes negligible.</p>
+</div>
+</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
