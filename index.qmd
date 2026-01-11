@@ -7,7 +7,8 @@
 library(reticulate)
 ```
 
-*This book is a complete reimagining of my previous work, "Building Reproducible
+*This is still WIP! Expected first finalized release at the end of Q1 2026. This
+book is a complete reimagining of my previous work, "Building Reproducible
 Analytical Pipelines with R." If you're looking for that book, you can find it
 [here](https://www.raps-with-r.dev). But if you're ready for the next step,
 you're in the right place.*
@@ -98,7 +99,7 @@ and reproducibility of your code.
 
 If you find this book useful, don’t hesitate to let me know! You can submit
 issues, suggest improvements, and ask questions on the book’s [Github
-repository](https://github.com/b-rodrigues/reproducible-data-science).
+repository](https://reproducible-data-science.dev/).
 
 ::: {.content-hidden when-format="pdf"}
 You can also buy a physical copy of the book on [Amazon](https://www.amazon.com/dp/B0C87H6MGF/).
