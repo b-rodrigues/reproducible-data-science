@@ -470,11 +470,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#step-5-install-from-github-1" id="toc-step-5-install-from-github-1" class="nav-link" data-scroll-target="#step-5-install-from-github-1"><span class="header-section-number">10.3.5</span> Step 5: Install from GitHub</a></li>
   </ul></li>
   <li><a href="#conclusion-the-packaging-mindset-in-the-age-of-ai" id="toc-conclusion-the-packaging-mindset-in-the-age-of-ai" class="nav-link" data-scroll-target="#conclusion-the-packaging-mindset-in-the-age-of-ai"><span class="header-section-number">10.4</span> Conclusion: The Packaging Mindset in the Age of AI</a></li>
-  <li><a href="#hands-on-exercises" id="toc-hands-on-exercises" class="nav-link" data-scroll-target="#hands-on-exercises"><span class="header-section-number">10.5</span> Hands-on Exercises</a>
-  <ul class="collapse">
-  <li><a href="#exercise-1-build-your-first-python-package-with-nix" id="toc-exercise-1-build-your-first-python-package-with-nix" class="nav-link" data-scroll-target="#exercise-1-build-your-first-python-package-with-nix"><span class="header-section-number">10.5.1</span> Exercise 1: Build Your First Python Package with Nix</a></li>
-  <li><a href="#exercise-2-build-and-package-an-r-tool-with-nix" id="toc-exercise-2-build-and-package-an-r-tool-with-nix" class="nav-link" data-scroll-target="#exercise-2-build-and-package-an-r-tool-with-nix"><span class="header-section-number">10.5.2</span> Exercise 2: Build and Package an R Tool with Nix</a></li>
-  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/10-packaging.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -622,7 +617,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="part-2-creating-a-minimal-python-package-with-uv" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="part-2-creating-a-minimal-python-package-with-uv"><span class="header-section-number">10.3</span> Part 2: Creating a Minimal Python Package with uv</h2>
-<p>The Python packaging ecosystem is rapidly modernising. While we use Nix to manage our overall environment, we still need to define the metadata and structure for our Python package. We will use <code>uv</code>, an extremely fast and modern tool, for one specific purpose: initialising our project’s configuration file. We will not use <code>uv</code> to manage a virtual environment, as Nix already handles that for us (unless you absolutely want to: however, you should then make sure that <code>uv</code> itself is being managed by Nix to ensure reproducibility).</p>
+<p>There are many different ways to build packages in Python, and what I propose here is just one way to do it. While we will use Nix to manage our overall environment, we still need to define the metadata and structure for our Python package. We will use <code>uv</code>, an extremely fast and modern tool, for one specific purpose: initialising our project’s configuration file. We will not use <code>uv</code> to manage a virtual environment, as Nix already handles that for us (unless you absolutely want to: however, you should then make sure that <code>uv</code> itself is being managed by Nix to ensure reproducibility).</p>
 <p>Let’s build a Python package called <code>pyclean</code>, the equivalent of our R package.</p>
 <section id="step-1-project-setup-with-uv" class="level3" data-number="10.3.1">
 <h3 data-number="10.3.1" class="anchored" data-anchor-id="step-1-project-setup-with-uv"><span class="header-section-number">10.3.1</span> Step 1: Project Setup with uv</h3>
@@ -700,7 +695,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="dt">pythonpath</span> <span class="op">=</span> <span class="op">[</span></span>
 <span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"src"</span></span>
 <span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The <code>pythonpath = ["src"]</code> line is the key. Without it, you’d first need to install your <code>pyclean</code> library in editable mode using <code>pip</code> before running the tests. By adding this block, simply running <code>pytest</code> from the command line will work.</p>
+<p>The <code>pythonpath = ["src"]</code> line is very important. Without it, you’d first need to install your <code>pyclean</code> library in editable mode using <code>pip</code> before running the tests. By adding this block, simply running <code>pytest</code> from the command line will work.</p>
 </section>
 <section id="step-3-add-unit-tests-1" class="level3" data-number="10.3.3">
 <h3 data-number="10.3.3" class="anchored" data-anchor-id="step-3-add-unit-tests-1"><span class="header-section-number">10.3.3</span> Step 3: Add Unit Tests</h3>
@@ -731,11 +726,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Outside of a Nix shell, to use your package during development, you can install it in “editable” mode. This creates a link to your source code, so any changes you make are immediately reflected without needing to reinstall.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install the package and its test dependencies</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> .<span class="pp">[</span><span class="ss">test</span><span class="pp">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>But we are working from a Nix shell. Instead, we will simply edit our <code>default.nix</code> to update the <code>PYTHONPATH</code> environment variable, so our package can easily be found. If you look at the <code>default.nix</code> file of the course you’ve been using, you’ll see the following at the bottom:</p>
+<p>But we are working from a Nix shell. Instead, we will simply edit our <code>default.nix</code> to update the <code>PYTHONPATH</code> environment variable, so our package can easily be found:</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>shellHook = <span class="st">''</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="st">  export PYTHONPATH=$PWD/src:$PYTHONPATH</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="st">''</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>(you may need to adapt the path depending on where you’re developing the package). With this, dropping into the Nix shell, starting the Python interpreter and then typing <code>import pyclean</code> will work without any issues.</p>
+<p>To generate this with <code>{rix}</code>, use the <code>shell_hook</code> argument:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-10-07"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.13"</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(<span class="st">"pytest"</span>, <span class="st">"pandas"</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">system_pkgs =</span> <span class="st">"uv"</span>,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">shell_hook =</span> <span class="st">"export PYTHONPATH=$PWD/src:$PYTHONPATH"</span>,</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With this, dropping into the Nix shell, starting the Python interpreter and then typing <code>import pyclean</code> will work without any issues. You may need to adapt the path depending on where you’re developing the package.</p>
 </section>
 <section id="step-5-install-from-github-1" class="level3" data-number="10.3.5">
 <h3 data-number="10.3.5" class="anchored" data-anchor-id="step-5-install-from-github-1"><span class="header-section-number">10.3.5</span> Step 5: Install from GitHub</h3>
@@ -760,7 +770,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 };</code></pre>
 <p>You need to add the <code>rev</code>, which corresponds to the commit that want, and the <code>sha256</code>. To find the right <code>sha256</code>, start with an empty one (<code>sha256 = "";</code>) and try to build the package. The error message will give you the right <code>sha256</code>. Also not that this isn’t the the most idiomatic way to build a Python package for Nix, but it’s good enough for our purposes.</p>
 <p>Finally, add <code>pyclean</code> to the <code>buildInputs</code> of the shell:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>  buildInputs = <span class="op">[</span> rpkgs pyconf pyclean tex system_packages github_pkgs <span class="op">]</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>  buildInputs = <span class="op">[</span> rpkgs pyconf pyclean tex system_packages github_pkgs <span class="op">]</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This process is naturally more involved than simply calling <code>pip install</code>, but it has the advantage of being entirely reproducible.</p>
 </section>
 </section>
@@ -792,95 +802,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>For Python: the official <a href="https://packaging.python.org/en/latest/tutorials/packaging-projects/">Python Packaging User Guide</a> is the place to start. For a more modern and streamlined approach that handles dependency management and publishing, many developers use tools like <a href="https://python-poetry.org/docs/">Poetry</a> or <a href="https://hatch.pypa.io/latest/">Hatch</a>.</li>
 </ul>
 <p>Treating your data analysis project like a small, internal software package, complete with functions and tests, is a powerful mindset that will elevate the quality and reliability of your work.</p>
-<p>Here are two new exercises to add to the end of the chapter.</p>
-</section>
-<section id="hands-on-exercises" class="level2" data-number="10.5">
-<h2 data-number="10.5" class="anchored" data-anchor-id="hands-on-exercises"><span class="header-section-number">10.5</span> Hands-on Exercises</h2>
-<section id="exercise-1-build-your-first-python-package-with-nix" class="level3" data-number="10.5.1">
-<h3 data-number="10.5.1" class="anchored" data-anchor-id="exercise-1-build-your-first-python-package-with-nix"><span class="header-section-number">10.5.1</span> Exercise 1: Build Your First Python Package with Nix</h3>
-<p>Goal: to build a complete, testable, and documented Python package and make it available in a reproducible Nix environment.</p>
-<p>You will create a small Python package called <code>statstools</code>. This package will contain a single function that calculates descriptive statistics for a list of numbers.</p>
-<p>Requirements:</p>
-<ol type="1">
-<li><p><strong>Project Structure:</strong> Create the following directory structure for your package:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">statstools/</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> pyproject.toml</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> default.nix</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> src/</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── statstools/</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>       ├── __init__.py</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>       └── calculations.py</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> tests/</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> test_calculations.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p><strong>Functionality:</strong> In <code>src/statstools/calculations.py</code>, create a function <code>descriptive_stats(numbers: list) -&gt; dict</code>. This function should take a list of numbers and return a dictionary containing the mean and standard deviation. Use the <code>numpy</code> library for the calculations.</p></li>
-<li><p><strong>Documentation:</strong> Write a clear docstring for your <code>descriptive_stats</code> function explaining what it does, its parameters (<code>Args</code>), and what it returns (<code>Returns</code>).</p></li>
-<li><p><strong>Dependencies:</strong> In your <code>pyproject.toml</code> file:</p>
-<ul>
-<li>Define the project name as <code>statstools</code> and give it a version of <code>0.1.0</code>.</li>
-<li>Add <code>numpy</code> as a runtime dependency.</li>
-<li>Add <code>pytest</code> as an optional dependency for testing.</li>
-<li>Add the <code>[tool.pytest.ini_options]</code> block to set the <code>pythonpath</code> correctly so <code>pytest</code> can find your <code>src</code> directory.</li>
-</ul></li>
-<li><p><strong>Unit Tests:</strong> In <code>tests/test_calculations.py</code>, write at least two tests for your function using <code>pytest</code>:</p>
-<ul>
-<li>A “happy path” test with a simple list like <code>[1, 2, 3, 4, 5]</code>.</li>
-<li>A test with negative numbers and floats.</li>
-</ul></li>
-<li><p><strong>GitHub Repository:</strong> Push your completed package to a new public repository on GitHub.</p></li>
-<li><p><strong>Nix Expression:</strong> This is the most critical part. Create a <code>default.nix</code> file in the root of your project. This file should:</p>
-<ul>
-<li>Fetch your package’s source code from your GitHub repository using <code>pkgs.fetchgit</code>. You will need to get the commit hash (<code>rev</code>) and the <code>sha256</code> hash (remember, you can get the correct <code>sha256</code> from the error message when you first try to build with an empty <code>sha256 = "";</code>).</li>
-<li>Define your package using <code>pkgs.python3Packages.buildPythonPackage</code>. Ensure you set <code>pyproject = true;</code> and list its dependencies (<code>numpy</code>, <code>pytest</code>) in <code>propagatedBuildInputs</code>.</li>
-<li>Create a reproducible shell using <code>pkgs.mkShell</code> that includes both your <code>statstools</code> package and the Python interpreter.</li>
-<li><strong>Hint:</strong> Look closely at the <code>default.nix</code> file from the main course repository for a complete example of how a Python package is fetched from GitHub and built.</li>
-</ul></li>
-</ol>
-<p><strong>To verify your work:</strong> * Run <code>pytest</code> from within the Nix shell to ensure all your tests pass. * Start a Python interpreter inside the Nix shell and successfully run <code>from     statstools import descriptive_stats</code>.</p>
-</section>
-<section id="exercise-2-build-and-package-an-r-tool-with-nix" class="level3" data-number="10.5.2">
-<h3 data-number="10.5.2" class="anchored" data-anchor-id="exercise-2-build-and-package-an-r-tool-with-nix"><span class="header-section-number">10.5.2</span> Exercise 2: Build and Package an R Tool with Nix</h3>
-<p>Goal: to apply R’s best practices for package development (<code>usethis</code>, <code>devtools</code>, <code>roxygen2</code>) and integrate the final product into a reproducible Nix environment.</p>
-<p>You will create a small R package called <code>datasummary</code>. This package will provide a function to quickly summarize a data frame.</p>
-<p>Requirements:</p>
-<ol type="1">
-<li><p><strong>Project Setup:</strong> Use <code>usethis::create_package("datasummary")</code> to generate the standard R package structure.</p></li>
-<li><p><strong>Functionality:</strong></p>
-<ul>
-<li>Use <code>usethis::use_r("summarize_df")</code> to create a new file for your function.</li>
-<li>The function, <code>summarize_df(df)</code>, should take a data frame as input.</li>
-<li>It should return a new data frame with two columns: <code>column_name</code> and <code>missing_values</code>, showing the count of <code>NA</code>s in each column of the input data frame.</li>
-<li>This function will require the <code>{dplyr}</code> package. Use <code>usethis::use_package("dplyr")</code> to declare this dependency in your <code>DESCRIPTION</code> file.</li>
-</ul></li>
-<li><p><strong>Documentation:</strong></p>
-<ul>
-<li>Use <code>roxygen2</code> comments to document your <code>summarize_df</code> function.</li>
-<li>Include <code>@param</code>, <code>@return</code>, and <code>@export</code> tags.</li>
-<li>Provide a working example in the <code>@examples</code> tag.</li>
-<li>Since your function will use functions from <code>{dplyr}</code>, add the appropriate <code>@importFrom</code> tags (e.g., <code>@importFrom dplyr %&gt;%     summarise_all</code>).</li>
-<li>Run <code>devtools::document()</code> to generate the documentation.</li>
-</ul></li>
-<li><p><strong>Unit Tests:</strong></p>
-<ul>
-<li>Set up testing with <code>usethis::use_testthat()</code>.</li>
-<li>Create a test file with <code>usethis::use_test("summarize_df")</code>.</li>
-<li>In the test file, write at least one test using <code>test_that()</code> that creates a sample data frame with missing values and checks if your function returns the correct counts.</li>
-<li>Run <code>devtools::test()</code> to execute your tests.</li>
-</ul></li>
-<li><p><strong>Quality Check:</strong> Run <code>devtools::check()</code> to ensure your package is free of errors, warnings, and notes.</p></li>
-<li><p><strong>GitHub Repository:</strong> Push your completed R package to a new public repository on GitHub.</p></li>
-<li><p><strong>Nix Expression:</strong> Create a <code>default.nix</code> file in the root of your <code>datasummary</code> project. This file must:</p>
-<ul>
-<li>Define a custom R environment.</li>
-<li>Define your <code>datasummary</code> package by using <code>buildRPackage</code>. Fetch the source from your GitHub repository using <code>pkgs.fetchgit</code> (you will need the <code>rev</code> and <code>sha256</code>).</li>
-<li>Make sure to list its R dependencies (like <code>{dplyr}</code> and its own dependencies) in <code>propagatedBuildInputs</code>.</li>
-<li>Create a final shell with <code>pkgs.mkShell</code> that drops you into an R session where your <code>datasummary</code> package is installed and available.</li>
-<li><strong>Hint:</strong> Refer to the main course repository’s <code>default.nix</code> file to see how R packages are defined with <code>buildRPackage</code> and included in the final R environment. Using <code>{rix}</code> is also an option.</li>
-</ul></li>
-</ol>
-<p><strong>To verify your work:</strong> * Drop into the Nix shell provided by your <code>default.nix</code>. * Start an R session. * Successfully run <code>library(datasummary)</code> and test your <code>summarize_df()</code> function on a data frame like <code>iris</code>.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
