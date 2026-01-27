@@ -409,6 +409,79 @@ rxp_visnetwork()
 rxp_trace()
 ```
 
+## Organizing Large Projects with Sub-Pipelines
+
+As pipelines grow, a single `gen-pipeline.R` can become hard to navigate and
+collaborate on. `{rixpress}` includes `rxp_pipeline()` to group derivations into
+named sub-pipelines and combine them into a master pipeline.
+
+Typical project layout:
+
+```
+my-project/
+├── gen-env.R
+├── gen-pipeline.R
+└── pipelines/
+    ├── 01_data_prep.R
+    ├── 02_analysis.R
+    └── 03_reporting.R
+```
+
+Each sub-pipeline file returns a list of derivations:
+
+```{r}
+#| eval: false
+# pipelines/01_data_prep.R
+library(rixpress)
+
+list(
+  rxp_r(name = raw_mtcars, expr = mtcars),
+  rxp_r(name = clean_mtcars, expr = dplyr::filter(raw_mtcars, am == 1)),
+  rxp_r(name = selected_mtcars, expr = dplyr::select(clean_mtcars, mpg, cyl, hp, wt))
+)
+```
+
+The master script stays concise by pointing to those files:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+pipe_data_prep <- rxp_pipeline(
+  name = "Data Preparation",
+  path = "pipelines/01_data_prep.R",
+  color = "#E69F00"
+)
+
+pipe_analysis <- rxp_pipeline(
+  name = "Statistical Analysis",
+  path = "pipelines/02_analysis.R",
+  color = "#56B4E9"
+)
+
+rxp_populate(list(pipe_data_prep, pipe_analysis), project_path = ".", build = TRUE)
+```
+
+When pipelines are defined, visualisation tools use pipeline metadata:
+
+- `rxp_visnetwork()` colours nodes by pipeline group.
+- `rxp_ggdag()` defaults to dual encoding (fill = derivation type, border = pipeline).
+- `rxp_trace()` uses pipeline colours in the console.
+
+Switch colour modes as needed:
+
+```{r}
+#| eval: false
+# Color by pipeline group (default when pipelines are defined)
+rxp_ggdag(color_by = "pipeline")
+
+# Color by derivation type
+rxp_ggdag(color_by = "type")
+```
+
+Sub-pipelines keep large workflows modular while preserving metadata for DAG
+rendering and tracing.
+
 ## Polyglot Pipelines
 
 One of `{rixpress}`'s strengths is seamlessly mixing languages. Here's a 
