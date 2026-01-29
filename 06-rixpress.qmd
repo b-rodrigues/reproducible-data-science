@@ -225,7 +225,8 @@ nix run github:b-rodrigues/pkgctx -- python ryxpress > ryxpress.pkgctx.yaml
 
 With this context, your LLM can help you write correct pipeline definitions,
 even if the syntax is completely new to you. You can do so for any package
-hosted on CRAN, GitHub, or local `.tar.gz` files. :::
+hosted on CRAN, GitHub, or local `.tar.gz` files. 
+:::
 
 ## What is rixpress?
 
