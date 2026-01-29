@@ -2,52 +2,52 @@
 
 ## Introduction: From Scripts and Notebooks to Pipelines
 
-So far, we have learned about reproducible development environments with Nix and 
-`{rix}`. We can now create project-specific environments with precise versions 
-of R, Python, and all dependencies. But there's one more piece to the puzzle: 
+So far, we have learned about reproducible development environments with Nix and
+`{rix}`. We can now create project-specific environments with precise versions
+of R, Python, and all dependencies. But there's one more piece to the puzzle:
 **orchestration**.
 
-How do we take our collection of functions and data files and run them in the 
-correct order to produce our final data product? This problem of managing 
-computational workflows is not new, and a whole category of **build automation 
+How do we take our collection of functions and data files and run them in the
+correct order to produce our final data product? This problem of managing
+computational workflows is not new, and a whole category of **build automation
 tools** has been created to solve it.
 
 ### The Evolution of Build Automation
 
-The original solution, dating back to the 1970s, is **`make`**. Created by 
-Stuart Feldman at Bell Labs in 1976, `make` reads a `Makefile` that describes 
-the dependency graph of a project. If you change the code that generates 
-`plot.png`, `make` is smart enough to only re-run the steps needed to rebuild 
+The original solution, dating back to the 1970s, is **`make`**. Created by
+Stuart Feldman at Bell Labs in 1976, `make` reads a `Makefile` that describes
+the dependency graph of a project. If you change the code that generates
+`plot.png`, `make` is smart enough to only re-run the steps needed to rebuild
 the plot and the final report.
 
-The strength of these tools is their language-agnosticism, but their weaknesses 
+The strength of these tools is their language-agnosticism, but their weaknesses
 are twofold:
 
-1. **File-centric**: You must manually handle all I/O. Your first script saves 
-   `data.csv`, your second loads it. This adds boilerplate and surfaces for 
+1. **File-centric**: You must manually handle all I/O. Your first script saves
+   `data.csv`, your second loads it. This adds boilerplate and surfaces for
    error.
-2. **Environment-agnostic**: They track files but know nothing about the 
+2. **Environment-agnostic**: They track files but know nothing about the
    *software environment* needed to create those files.
 
-This is where R's **`{targets}`** package shines. It tracks dependencies 
-between **R objects directly**, automatically handling serialisation. But 
-`{targets}` operates within a single R session; for polyglot pipelines, you must 
-manually coordinate via `{reticulate}`.
+This is where R's **`{targets}`** package shines. It tracks dependencies between
+**R objects directly**, automatically handling serialisation. But `{targets}`
+operates within a single R session; for polyglot pipelines, you must manually
+coordinate via `{reticulate}`.
 
 ### The Separation Problem
 
-All these tools (from `make` to `{targets}` to Airflow) separate workflow 
-management from environment management. You use one tool to run the pipeline 
-and another (Docker, `{renv}`) to set up the software.
+All these tools (from `make` to `{targets}` to Airflow) separate workflow
+management from environment management. You use one tool to run the pipeline and
+another (Docker, `{renv}`) to set up the software.
 
-This separation creates friction. Running `{targets}` inside Docker ensures 
-reproducibility, but forces the entire pipeline into one monolithic environment. 
-What if your Python step requires TensorFlow 2.15 but your R step needs 
+This separation creates friction. Running `{targets}` inside Docker ensures
+reproducibility, but forces the entire pipeline into one monolithic environment.
+What if your Python step requires TensorFlow 2.15 but your R step needs
 reticulate with Python 3.9? You're stuck.
 
 ### The Imperative Approach: Make + Docker
 
-To illustrate this, consider the traditional setup for a polyglot pipeline. 
+To illustrate this, consider the traditional setup for a polyglot pipeline.
 You'd need:
 
 1. A `Dockerfile` to set up the environment
@@ -89,12 +89,12 @@ from sklearn.ensemble import RandomForestClassifier
 def main():
     input_path = sys.argv[1]
     output_path = sys.argv[2]
-    
+
     # Load data
     df = pd.read_csv(input_path)
-    
+
     # ... actual ML logic ...
-    
+
     # Save results
     predictions.to_csv(output_path, index=False)
 
@@ -119,7 +119,7 @@ predictions <- read.csv(input_path)
 ggsave(output_path, plot)
 ```
 
-The scientific logic is buried under file I/O scaffolding. And the environment? 
+The scientific logic is buried under file I/O scaffolding. And the environment?
 That's a separate 100+ line `Dockerfile` you must maintain.
 
 ### rixpress: Unified Orchestration
@@ -129,9 +129,9 @@ than a **composition of pure functions**, each with explicit inputs and outputs,
 no hidden state, and no reliance on execution order beyond what the data
 dependencies require.
 
-**`{rixpress}`** solves this by using Nix not just as a package manager, but as 
-the build automation engine itself. Each pipeline step is a **Nix derivation**: a 
-hermetically sealed build unit.
+**`{rixpress}`** solves this by using Nix not just as a package manager, but as
+the build automation engine itself. Each pipeline step is a **Nix derivation**:
+a hermetically sealed build unit.
 
 Compare the same pipeline in `{rixpress}`:
 
@@ -145,24 +145,25 @@ list(
     path = "data/raw.csv",
     read_function = "lambda x: pandas.read_csv(x)"
   ),
-  
+
   rxp_py(
     name = predictions,
     expr = "train_model(raw_data)",
     user_functions = "functions.py"
   ),
-  
+
   rxp_py2r(
+    # rxp_py2r uses reticulate for conversion
     name = predictions_r,
     expr = predictions
   ),
-  
+
   rxp_r(
     name = plot,
     expr = visualise(predictions_r),
     user_functions = "functions.R"
   ),
-  
+
   rxp_qmd(
     name = report,
     qmd_file = "report.qmd"
@@ -192,17 +193,17 @@ The difference is stark:
 
 This provides two key benefits:
 
-1. **True Polyglot Pipelines**: Each step can have its own Nix environment. A 
-   Python step runs in a pure Python environment, an R step in an R environment, 
+1. **True Polyglot Pipelines**: Each step can have its own Nix environment. A
+   Python step runs in a pure Python environment, an R step in an R environment,
    a Quarto step in yet another, all within the same pipeline.
 
-2. **Deep Reproducibility**: Each step is cached based on the cryptographic hash 
-   of *all* its inputs: the code, the data, *and the environment*. Any change in 
-   dependencies triggers a rebuild. This is reproducibility at the build level, 
+2. **Deep Reproducibility**: Each step is cached based on the cryptographic hash
+   of *all* its inputs: the code, the data, *and the environment*. Any change in
+   dependencies triggers a rebuild. This is reproducibility at the build level,
    not just the environment level.
 
-The interface is heavily inspired by `{targets}`, so you get the ergonomic, 
-object-passing feel you're used to, combined with the bit-for-bit 
+The interface is heavily inspired by `{targets}`, so you get the ergonomic,
+object-passing feel you're used to, combined with the bit-for-bit
 reproducibility of the Nix build system.
 
 ::: {.callout-tip}
@@ -223,14 +224,13 @@ nix run github:b-rodrigues/pkgctx -- python ryxpress > ryxpress.pkgctx.yaml
 ```
 
 With this context, your LLM can help you write correct pipeline definitions,
-even if the syntax is completely new to you. You can do so for any package hosted on 
-CRAN, GitHub, or local `.tar.gz` files.
-:::
+even if the syntax is completely new to you. You can do so for any package
+hosted on CRAN, GitHub, or local `.tar.gz` files. :::
 
 ## What is rixpress?
 
-`{rixpress}` streamlines creation of *micropipelines* (small-to-medium, 
-single-machine analytic pipelines) by expressing a pipeline in idiomatic R while 
+`{rixpress}` streamlines creation of *micropipelines* (small-to-medium,
+single-machine analytic pipelines) by expressing a pipeline in idiomatic R while
 delegating build orchestration to the Nix build system.
 
 Key features:
@@ -362,8 +362,8 @@ pipeline.
 | `rxp_py()` | Run Python code |
 | `rxp_py_file()` | Read a file using Python |
 | `rxp_qmd()` | Render a Quarto document |
-| `rxp_py2r()` | Convert Python object to R |
-| `rxp_r2py()` | Convert R object to Python |
+| `rxp_py2r()` | Convert Python object to R using reticulate |
+| `rxp_r2py()` | Convert R object to Python using reticulate |
 
 ### Building the pipeline
 
@@ -484,8 +484,8 @@ rendering and tracing.
 
 ## Polyglot Pipelines
 
-One of `{rixpress}`'s strengths is seamlessly mixing languages. Here's a 
-pipeline that reads data with Python's `polars`, processes it with R's `dplyr`, 
+One of `{rixpress}`'s strengths is seamlessly mixing languages. Here's a
+pipeline that reads data with Python's `polars`, processes it with R's `dplyr`,
 and renders a Quarto report.
 
 ::: {.callout-tip}
@@ -506,43 +506,53 @@ environments and LLMs helping with syntax, the "cost" of crossing language
 boundaries becomes negligible.
 :::
 
+Open `gen-env.R` and define the tools your pipeline needs:
+
 ```{r}
 #| eval: false
-library(rixpress)
+library(rix)
 
-list(
-  rxp_py_file(
-    name = mtcars_pl,
-    path = "data/mtcars.csv",
-    read_function = "lambda x: polars.read_csv(x, separator='|')"
+rix(
+  date = "2026-01-26",
+  r_pkgs = c(
+    "chronicler",
+    "dplyr",
+    "igraph",
+    "quarto",
+    "reticulate",
+    "rix",
+    "rixpress"
   ),
-
-  rxp_py(
-    name = mtcars_filtered,
-    expr = "mtcars_pl.filter(polars.col('am') == 1).to_pandas()"
+  py_conf = list(
+    py_version = "3.14",
+    py_pkgs = c(
+      "biocframe",
+      "numpy",
+      "phart",
+      "polars",
+      "pyarrow",
+      "rds2py",
+      "ryxpress"
+    )
   ),
-
-  rxp_py2r(
-    name = mtcars_r,
-    expr = mtcars_filtered
-  ),
-
-  rxp_r(
-    name = mtcars_head,
-    expr = head(mtcars_r)
-  ),
-
-  rxp_qmd(
-    name = report,
-    qmd_file = "report.qmd"
-  )
-) |>
-  rxp_populate()
+  ide = "none",
+  project_path = ".",
+  overwrite = TRUE
+)
 ```
 
-### Method 1: Using language converters
+The Python packages `biocframe`, `phart`, and `rds2py` are optional but highly
+recommended when working with `ryxpress`. `biocframe` enables direct transfer to
+`polars` or Bioconductor DataFrames, bypassing the need for `pandas`. `rds2py`
+(also from the BiocPy project) allows Python to read `.rds` files, R's native
+binary format. Together, these packages ensure seamless interoperability between
+your R and Python steps. `phart` is a nice little package that allows you to
+visualise pipelines from a Python interpreter prompt: not as sexy as R's
+`{ggdag}` but it gets the job done!
 
-The `rxp_py2r()` and `rxp_r2py()` functions use `{reticulate}` to convert 
+### Transferring data between Python and R
+
+The `rxp_py2r()` and `rxp_r2py()` functions use `{reticulate}` to convert
 objects between languages:
 
 ```{r}
@@ -553,10 +563,12 @@ rxp_py2r(
 )
 ```
 
-### Method 2: Using universal data formats
+However, `{reticulate}` conversions can sometimes be fragile or behave unexpectedly
+with complex objects. For robust production pipelines, I recommend using the
+`encoder` and `decoder` arguments to explicitly serialize data to intermediary
+formats like CSV, JSON, or Apache Arrow (Parquet/Feather).
 
-For more control, use `encoder` and `decoder` arguments to serialize to formats 
-like JSON:
+You can define a custom encoder in Python and a decoder in R:
 
 ```{r}
 #| eval: false
@@ -577,8 +589,53 @@ rxp_r(
 )
 ```
 
-This approach makes your pipeline more modular: any language that can read JSON 
-could be added in the future.
+The Python `serialize_to_json` function would be defined in `functions.py`:
+
+```python
+#| eval: false
+def serialize_to_json(pl_df, path):
+    with open(path, 'w') as f:
+        f.write(pl_df.write_json())
+```
+
+For larger datasets, Apache Arrow is ideal because it allows zero-copy reads and
+is supported natively by `polars`, `pandas`, and R's `{arrow}` package.
+
+Here is how you would transfer data from Python to R:
+
+```{r}
+#| eval: false
+rxp_py(
+  name = processed_data,
+  expr = "prepare_features(raw_data)",
+  user_functions = "functions.py",
+  encoder = "save_arrow"
+),
+
+rxp_r(
+  name = analysis_results,
+  expr = "run_analysis(processed_data)",
+  user_functions = "functions.R",
+  decoder = "arrow::read_feather"
+)
+```
+
+The Python `save_arrow` encoder function:
+
+```python
+#| eval: false
+def save_arrow(df: pd.DataFrame, path: str):
+    """Encoder function to save a pandas DataFrame to an Arrow file."""
+    feather.write_feather(df, path)
+```
+
+Both `encoder` and `decoder` functions must accept the object as the first
+argument and the file path as the second argument. This pattern works for any
+serialization format supported by your languages of choice.
+
+### Complete polyglot pipeline walkthrough
+
+
 
 ## Caching and Incremental Builds
 
