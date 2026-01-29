@@ -458,6 +458,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-imperative-approach-make-docker" id="toc-the-imperative-approach-make-docker" class="nav-link" data-scroll-target="#the-imperative-approach-make-docker"><span class="header-section-number">6.1.3</span> The Imperative Approach: Make + Docker</a></li>
   <li><a href="#rixpress-unified-orchestration" id="toc-rixpress-unified-orchestration" class="nav-link" data-scroll-target="#rixpress-unified-orchestration"><span class="header-section-number">6.1.4</span> rixpress: Unified Orchestration</a></li>
   </ul></li>
+  <li><a href="#what-is-rixpress" id="toc-what-is-rixpress" class="nav-link" data-scroll-target="#what-is-rixpress"><span class="header-section-number">6.2</span> What is rixpress?</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">6.3</span> Getting Started</a>
+  <ul class="collapse">
+  <li><a href="#initialising-a-project" id="toc-initialising-a-project" class="nav-link" data-scroll-target="#initialising-a-project"><span class="header-section-number">6.3.1</span> Initialising a project</a></li>
+  <li><a href="#defining-the-environment" id="toc-defining-the-environment" class="nav-link" data-scroll-target="#defining-the-environment"><span class="header-section-number">6.3.2</span> Defining the environment</a></li>
+  <li><a href="#defining-the-pipeline" id="toc-defining-the-pipeline" class="nav-link" data-scroll-target="#defining-the-pipeline"><span class="header-section-number">6.3.3</span> Defining the pipeline</a></li>
+  </ul></li>
+  <li><a href="#core-functions" id="toc-core-functions" class="nav-link" data-scroll-target="#core-functions"><span class="header-section-number">6.4</span> Core Functions</a>
+  <ul class="collapse">
+  <li><a href="#defining-derivations" id="toc-defining-derivations" class="nav-link" data-scroll-target="#defining-derivations"><span class="header-section-number">6.4.1</span> Defining derivations</a></li>
+  <li><a href="#building-the-pipeline" id="toc-building-the-pipeline" class="nav-link" data-scroll-target="#building-the-pipeline"><span class="header-section-number">6.4.2</span> Building the pipeline</a></li>
+  <li><a href="#inspecting-outputs" id="toc-inspecting-outputs" class="nav-link" data-scroll-target="#inspecting-outputs"><span class="header-section-number">6.4.3</span> Inspecting outputs</a></li>
+  <li><a href="#visualising-the-pipeline" id="toc-visualising-the-pipeline" class="nav-link" data-scroll-target="#visualising-the-pipeline"><span class="header-section-number">6.4.4</span> Visualising the pipeline</a></li>
+  </ul></li>
+  <li><a href="#organizing-large-projects-with-sub-pipelines" id="toc-organizing-large-projects-with-sub-pipelines" class="nav-link" data-scroll-target="#organizing-large-projects-with-sub-pipelines"><span class="header-section-number">6.5</span> Organizing Large Projects with Sub-Pipelines</a></li>
+  <li><a href="#polyglot-pipelines" id="toc-polyglot-pipelines" class="nav-link" data-scroll-target="#polyglot-pipelines"><span class="header-section-number">6.6</span> Polyglot Pipelines</a>
+  <ul class="collapse">
+  <li><a href="#transferring-data-between-python-and-r" id="toc-transferring-data-between-python-and-r" class="nav-link" data-scroll-target="#transferring-data-between-python-and-r"><span class="header-section-number">6.6.1</span> Transferring data between Python and R</a></li>
+  <li><a href="#complete-polyglot-pipeline-walkthrough" id="toc-complete-polyglot-pipeline-walkthrough" class="nav-link" data-scroll-target="#complete-polyglot-pipeline-walkthrough"><span class="header-section-number">6.6.2</span> Complete polyglot pipeline walkthrough</a></li>
+  </ul></li>
+  <li><a href="#caching-and-incremental-builds" id="toc-caching-and-incremental-builds" class="nav-link" data-scroll-target="#caching-and-incremental-builds"><span class="header-section-number">6.7</span> Caching and Incremental Builds</a></li>
+  <li><a href="#build-logs-and-debugging" id="toc-build-logs-and-debugging" class="nav-link" data-scroll-target="#build-logs-and-debugging"><span class="header-section-number">6.8</span> Build Logs and Debugging</a></li>
+  <li><a href="#ryxpress-the-python-interface" id="toc-ryxpress-the-python-interface" class="nav-link" data-scroll-target="#ryxpress-the-python-interface"><span class="header-section-number">6.9</span> ryxpress: The Python Interface</a></li>
+  <li><a href="#running-someone-elses-pipeline" id="toc-running-someone-elses-pipeline" class="nav-link" data-scroll-target="#running-someone-elses-pipeline"><span class="header-section-number">6.10</span> Running Someone Else’s Pipeline</a></li>
+  <li><a href="#exporting-and-importing-artifacts" id="toc-exporting-and-importing-artifacts" class="nav-link" data-scroll-target="#exporting-and-importing-artifacts"><span class="header-section-number">6.11</span> Exporting and Importing Artifacts</a></li>
+  <li><a href="#real-world-examples" id="toc-real-world-examples" class="nav-link" data-scroll-target="#real-world-examples"><span class="header-section-number">6.12</span> Real-World Examples</a>
+  <ul class="collapse">
+  <li><a href="#example-1-machine-learning-with-xgboost" id="toc-example-1-machine-learning-with-xgboost" class="nav-link" data-scroll-target="#example-1-machine-learning-with-xgboost"><span class="header-section-number">6.12.1</span> Example 1: Machine Learning with XGBoost</a></li>
+  <li><a href="#example-2-reading-many-input-files" id="toc-example-2-reading-many-input-files" class="nav-link" data-scroll-target="#example-2-reading-many-input-files"><span class="header-section-number">6.12.2</span> Example 2: Reading Many Input Files</a></li>
+  <li><a href="#example-3-full-pythonrquarto-workflow" id="toc-example-3-full-pythonrquarto-workflow" class="nav-link" data-scroll-target="#example-3-full-pythonrquarto-workflow"><span class="header-section-number">6.12.3</span> Example 3: Full Python→R→Quarto Workflow</a></li>
+  <li><a href="#more-examples" id="toc-more-examples" class="nav-link" data-scroll-target="#more-examples"><span class="header-section-number">6.12.4</span> More Examples</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6.13</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/06-rixpress.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -566,7 +599,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The scientific logic is buried under file I/O scaffolding. And the environment? That’s a separate 100+ line <code>Dockerfile</code> you must maintain.</p>
 </section>
 <section id="rixpress-unified-orchestration" class="level3" data-number="6.1.4">
-<h3 data-number="6.1.4" class="anchored"><span class="header-section-number">6.1.4</span> rixpress: Unified Orchestration</h3>
+<h3 data-number="6.1.4" class="anchored" data-anchor-id="rixpress-unified-orchestration"><span class="header-section-number">6.1.4</span> rixpress: Unified Orchestration</h3>
 <p>This brings us to a key insight: a reproducible pipeline should be nothing more than a <strong>composition of pure functions</strong>, each with explicit inputs and outputs, no hidden state, and no reliance on execution order beyond what the data dependencies require.</p>
 <p><strong><code>{rixpress}</code></strong> solves this by using Nix not just as a package manager, but as the build automation engine itself. Each pipeline step is a <strong>Nix derivation</strong>: a hermetically sealed build unit.</p>
 <p>Compare the same pipeline in <code>{rixpress}</code>:</p>
@@ -674,7 +707,11 @@ Getting LLM assistance with <code>{rixpress}</code> and <code>ryxpress</code>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># For the Python package</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> run github:b-rodrigues/pkgctx <span class="at">--</span> python ryxpress <span class="op">&gt;</span> ryxpress.pkgctx.yaml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>With this context, your LLM can help you write correct pipeline definitions, even if the syntax is completely new to you. You can do so for any package hosted on CRAN, GitHub, or local <code>.tar.gz</code> files. :::</p>
+<p>With this context, your LLM can help you write correct pipeline definitions, even if the syntax is completely new to you. You can do so for any package hosted on CRAN, GitHub, or local <code>.tar.gz</code> files.</p>
+</div>
+</div>
+</section>
+</section>
 <section id="what-is-rixpress" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="what-is-rixpress"><span class="header-section-number">6.2</span> What is rixpress?</h2>
 <p><code>{rixpress}</code> streamlines creation of <em>micropipelines</em> (small-to-medium, single-machine analytic pipelines) by expressing a pipeline in idiomatic R while delegating build orchestration to the Nix build system.</p>
@@ -1315,10 +1352,6 @@ Polyglot Development Is Now Cheap
 <p>By embracing structured, plain-text pipelines over notebooks for production work, your analysis becomes more reliable, more scalable, and fundamentally more reproducible.</p>
 
 
-</section>
-</div>
-</div>
-</section>
 </section>
 
 </main> <!-- /main -->
