@@ -348,7 +348,11 @@ list(
 ```
 
 Running `rxp_populate()` generates a `pipeline.nix` file and builds the entire 
-pipeline.
+pipeline. In an interactive session, one can use `rxp_read()`, `rxp_load()` to read or
+load artifacts into the R session respectively and `rxp_trace()` to check the
+lineage of an artifact. The pipeline could also be built from a Python session,
+using `ryxpress`, the Python port of `{rixpress}`.
+
 
 ## Core Functions
 
@@ -689,8 +693,275 @@ Both `encoder` and `decoder` functions must accept the object as the first
 argument and the file path as the second argument. This pattern works for any
 serialization format supported by your languages of choice.
 
-### Complete polyglot pipeline walkthrough
+## Complete polyglot pipeline walkthrough
 
+You can find the complete code source to this example over 
+[here](https://github.com/b-rodrigues/rixpress_demos/tree/master/rbc)^[https://github.com/b-rodrigues/rixpress_demos/tree/master/rbc].
+
+For this polyglot pipeline, I use three programming languages: Julia to simulate
+synthetic data from a macroeconimic model, Python to train a machine learning model
+and R to visualize the results. Let me make clear though, that scientifically speaking,
+this is non-sensical: this is merely an example to showcase how to setup a complete
+end-to-end project with `{rixpress}`.
+
+The model I use is the foundational Real Business Cycle (RBC) model. The theory and log-linearized
+equations used in the Julia script are taken directly from the excellent lecture
+slides by Bianca De Paoli.
+
+::: {.callout-note}
+### Source Attribution
+
+The economic theory and equations for the RBC model are based on the following
+source. This document serves as a guide for our implementation.
+
+**Source:** De Paoli, B. (2009). *Slides 1: The RBC Model, Analytical and
+Numerical solutions*.
+[https://personal.lse.ac.uk/depaoli/RBC_slides1.pdf](https://personal.lse.ac.uk/depaoli/RBC_slides1.pdf)
+:::
+
+First, we need the actual execution environment. Thanks to the `{rix}` package we
+can declaratively define a `default.nix` file. This file locks down the exact
+versions of R, Julia, Python, and all their respective packages, ensuring the
+pipeline runs identically today, tomorrow, or on any machine with Nix installed.
+
+```r
+#| eval: false
+#| code-summary: "Environment Definition with {rix}"
+s
+# This script defines the polyglot environment our pipeline will run in.
+library(rix)
+
+# Define the complete execution environment
+rix(
+  # Pin the environment to a specific date to ensure that all package
+  # versions are resolved as they were on this day.
+  date = "2025-10-14",
+
+  # 1. R Packages
+  # We need packages for plotting, data manipulation, and reading arrow files.
+  r_pkgs = c(
+    "ggplot2",
+    "dplyr",
+    "arrow",
+    "rix",
+    "rixpress"
+  ),
+
+  # 2. Julia Configuration
+  # We specify the Julia version and the list of packages needed
+  # for our manual RBC model simulation.
+  jl_conf = list(
+    jl_version = "lts",
+    jl_pkgs = c(
+      "Distributions", # For creating random shocks
+      "DataFrames", # For structuring the output
+      "Arrow", # For saving the data in a cross-language format
+      "Random"
+    )
+  ),
+
+  # 3. Python Configuration
+  # We specify the Python version and the packages needed for the
+  # machine learning step.
+  py_conf = list(
+    py_version = "3.13",
+    py_pkgs = c(
+      "pandas",
+      "scikit-learn",
+      "xgboost",
+      "pyarrow"
+    )
+  ),
+
+  # We set the IDE to 'none' for a minimal environment. You could change
+  # this to "rstudio" if you prefer to work interactively in RStudio.
+  ide = "none",
+
+  # Define the project path and allow overwriting the default.nix file.
+  project_path = ".",
+  overwrite = TRUE
+)
+
+```
+
+Assuming we are working on a system that has Nix installed, we can "drop" into
+a temporary Nix shell with R and `{rix}` available:
+
+```bash
+nix-shell --expr "$(curl -sl https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/default.nix)"
+```
+
+Once the shell is ready, start R (by simply typing `R`) and run `source("gen-env.R")`
+to generate the adequate `default.nix` file (or even easier, just `Rscript gen-env.R`). 
+This is the environment that we can use to work interactively with the code while developing, 
+and in which the pipeline will be executed.
+
+We then need some dedicated scripts with our code. This Julia script contains a pure 
+function that simulates the RBC model and returns a DataFrame. The code is a direct 
+implementation of the state-space solution derived from the equations in the aforementioned lecture
+and is saved under `functions/functions.jl`. I don’t show the scripts contents here,
+as it is quite long, so look for it in the link from before.
+
+At the end of the script, I create a wrapper around `Arrow.write()` called
+`arrow_write()` to serialize the generated data frame into an Arrow file.
+
+While developing, it is possible to start the Julia interpreter and test things
+and see if they work. Or you could even start by writing the first lines
+of `gen-pipeline.R` like so:
+
+```r
+library(rixpress)
+
+list(
+  # STEP 0: Define RBC Model Parameters as Derivations
+  # This makes the parameters an explicit part of the pipeline.
+  # Changing a parameter will cause downstream steps to rebuild.
+  rxp_jl(alpha, 0.3), # Capital's share of income
+  rxp_jl(beta, 1 / 1.01), # Discount factor
+  rxp_jl(delta, 0.025), # Depreciation rate
+  rxp_jl(rho, 0.95), # Technology shock persistence
+  rxp_jl(sigma, 1.0), # Risk aversion (log-utility)
+  rxp_jl(sigma_z, 0.01), # Technology shock standard deviation
+
+  # STEP 1: Julia - Simulate a Real Business Cycle (RBC) model.
+  # This derivation runs our Julia script to generate the source data.
+  rxp_jl(
+    name = simulated_rbc_data,
+    expr = "simulate_rbc_model(alpha, beta, delta, rho, sigma, sigma_z)",
+    user_functions = "functions/functions.jl", # The file containing the function
+    encoder = "arrow_write" # The function to use for saving the output
+  )
+) |>
+  rxp_populate(
+    project_path = ".",
+    build = TRUE,
+    verbose = 1
+  )
+```
+
+Start an R session, and run `source("gen-pipeline.R")`. This will cause the model to be simulated.
+Now, to inspect the data, you can use `rxp_read()`: by default, `rxp_read()` will try to find the 
+adequate function to read the data and present it to you. This works for common R and Python objects.
+But in this case, the generated data is is an Arrow data file, so `rxp_read()`, not knowing how to read it, 
+will simply return the path to the file in the Nix store. We can pass this file to the adequate reader.
+
+```r
+rxp_read("simulated_rbc_data") |>
+  arrow::read_feather() |>
+  head()
+```
+
+Now that we are happy that our Julia code works, we can move on to the Python step, by writing
+a dedicated Python script, `functions/functions.py`.
+
+This Python script defines a function to perform our machine learning task. It
+takes the DataFrame from the Julia step, trains an XGBoost model to predict
+next-quarter's output, and returns a new DataFrame containing the predictions.
+Of course, we could have simply used the RBC model itself for the predictions,
+but again, this is a toy example.
+
+The Python script contains several little functions to make the code as modular
+as possible. I don’t show the script here, as it is quite long, but just 
+as for the Julia script, I write a wrapper around `feather.write_feather()`
+to serialize the data into an Arrow file and pass it finally to R. Just as before,
+it is possible to start a Python interpreter as defined in the `default.nix` file
+and use to test and debug, or to add derivations to `gen-pipeline.R`, rebuild the pipeline
+and check the outputs:
+
+
+```r
+library(rixpress)
+
+list(
+  # ... the julia steps from before ...,
+  
+  # STEP 2.1: Python - Prepare features (lagging data)
+  rxp_py(
+    name = processed_data,
+    expr = "prepare_features(simulated_rbc_data)",
+    user_functions = "functions/functions.py",
+    # Decode the Arrow file from Julia into a pandas DataFrame
+    decoder = "feather.read_feather"
+    # Note: No encoder needed here. {rixpress} will use pickle by default
+    # to pass the DataFrame between Python steps.
+  ),
+
+  # STEP 2.2: Python - Split data into training and testing sets
+  rxp_py(
+    name = X_train,
+    expr = "get_X_train(processed_data)",
+    user_functions = "functions/functions.py"
+  ),
+
+  # ... more Python steps as needed ...
+  )
+) |>
+  rxp_populate(
+    project_path = ".",
+    build = TRUE,
+    verbose = 1
+  )
+```
+
+Arrow is used to pass data from Julia to Python, but then from Python to Python,
+pickle is used. Finally, we can continue by passing data further down to R. Once
+again, I recommend writing a dedicated script with your functions that you need and
+save it in `functions/functions.R`. The `gen-pipeline.R` script would look something
+like this:
+
+
+```r
+library(rixpress)
+
+list(
+  # ... the julia steps from before ...,
+
+  # ... Python steps ...
+  
+  # STEP 2.5: Python - Format final results for R
+  rxp_py(
+    name = predictions,
+    expr = "format_results(y_test, model_predictions)",
+    user_functions = "functions/functions.py",
+    # We need an encoder here to save the final DataFrame as an Arrow file
+    # so the R step can read it.
+    encoder = "save_arrow"
+  ),
+
+  # STEP 3: R - Visualize the predictions from the Python model.
+  # This final derivation depends on the output of the Python step.
+  rxp_r(
+    name = output_plot,
+    expr = plot_predictions(predictions), # The function to call from functions.R
+    user_functions = "functions/functions.R",
+    # Specify how to load the upstream data (from Python) into R.
+    decoder = arrow::read_feather
+  ),
+
+  # STEP 4: Quarto - Compile the final report.
+  rxp_qmd(
+    name = final_report,
+    additional_files = "_rixpress",
+    qmd_file = "readme.qmd"
+  )
+) |>
+  rxp_populate(
+    project_path = ".",
+    build = TRUE,
+    verbose = 1
+  )
+```
+
+To view the plot in an interactive session, you can use `rxp_read()` again:
+
+```r
+rxp_read("output_plot")
+```
+
+To run the pipeline, start the environment by simply typing `nix-shell` in the terminal,
+which will use the environment as defined in the `default.nix` and run `source("gen-pipeline.R")`.
+If there are issues, setting the `verbose` argument of `rxp_populate()` to `1` is helpful
+to see the full error logs.
 
 
 ## Caching and Incremental Builds
