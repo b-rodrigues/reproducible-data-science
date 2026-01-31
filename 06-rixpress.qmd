@@ -739,7 +739,7 @@ Finally, you can also use `rxp_visnetwork()` (which requires the `{visNetwork}`
 package). This opens an interactive JavaScript visualization in your browser,
 allowing you to zoom into and explore different parts of your pipeline.
 
-### Caching, Incremental Builds, Build Logs and Debugging
+### Caching, Incremental Builds and Build Logs
 
 One of the most powerful features of using Nix for pipelines is automatic
 caching. Because Nix tracks all inputs to each derivation, it knows exactly what
@@ -824,34 +824,6 @@ new_result <- rxp_read("output_plot", which_log = "20260131_110120")
 The `which_log` argument is used to select the log you want. This is incredibly
 powerful for debugging and validation. You can go back in time to inspect any
 output from any previous pipeline run.
-
-### Running Someone Else's Pipeline
-
-The ultimate test of reproducibility: can someone else run your pipeline?
-
-With a Nix-based workflow, they need only:
-
-1. `git clone` your repository
-2. Run `nix-build && nix-shell`
-3. Run `source("gen-pipeline.R")` or `rxp_make()`
-
-That's it. Nix reads your `default.nix` and `pipeline.nix` files and builds the 
-*exact* same environment and data product, bit-for-bit.
-
-### Exporting and Importing Artifacts
-
-For CI/CD or sharing between machines:
-
-```{r}
-#| eval: false
-# Export build products to a tarball
-rxp_export_artifacts()
-
-# Import on another machine before building
-rxp_import_artifacts()
-```
-
-This speeds up continuous integration by avoiding unnecessary rebuilds.
 
 ## Troubleshooting and Common Issues
 
@@ -1773,6 +1745,22 @@ rxp_load("mtcars_head")
 - Tries `pickle.load` first
 - Falls back to `rds2py` for R objects
 - Returns file paths for complex outputs
+
+### Using rixpress in CI
+
+For CI/CD or sharing between machines:
+
+```{r}
+#| eval: false
+# Export build products to a tarball
+rxp_export_artifacts()
+
+# Import on another machine before building
+rxp_import_artifacts()
+```
+
+This speeds up continuous integration by avoiding unnecessary rebuilds.
+
 
 ### More Examples
 
