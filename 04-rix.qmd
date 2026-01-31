@@ -706,3 +706,8 @@ Here is the workflow you will follow for every new project:
 
 That's it. Your project is now reproducible. Anyone with Nix installed can clone
 your repository, run `nix-build`, and get the exact same environment you have.
+
+In the next chapter, we'll explore **Functional Programming** principles—a
+foundation you'll need before we can build pipelines with `{rixpress}`. After
+that, we'll learn how to **test** our code (Chapter 6), and then put everything
+together in Chapters 7 and 8 where we build complete analytical pipelines.

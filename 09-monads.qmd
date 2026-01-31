@@ -401,6 +401,7 @@ Combined with `{rixpress}`:
 - Monads provide **logging and error handling**
 - Together they give you **robust, reproducible, observable pipelines**
 
-This completes our toolkit for reproducible data science: environments (Nix), 
-functional code (FP), pipelines (rixpress), distribution (Docker), and 
-robustness (monads).
+This completes our code quality toolkit: environments (Nix), functional code
+(FP), testing, pipelines (rixpress), and robustness (monads). In the next
+chapter, we'll learn how to distribute our work with Docker, followed by
+packaging and continuous integration.

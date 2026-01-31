@@ -2,11 +2,13 @@
 
 ## Introduction
 
-I hope you are starting to see the pieces of our reproducible workflow coming
-together. We now have reproducible environments and pipelines with Nix,
-reproducible logic with functional programming and in the previous chapter, we
-explored monads as a way to make our functions even more robust by handling
-logging and errors in a principled way.
+In the previous chapter, we learned that pure functions—those with no side
+effects and deterministic outputs—are the building blocks of reliable code.
+Small, testable functions are the foundation of reproducible pipelines.
+
+But how do we *prove* that our functions actually do what we claim they do? And
+how do we manage the complexity of collaborating with others (and with AI)
+without breaking everything?
 
 This brings us to two final, crucial questions: how do we prove that our
 functions actually do what we claim they do? And how do we manage the complexity
@@ -314,8 +316,8 @@ LLM-generated test, you can verify that the expected output is correct and that
 the test covers the right cases. This makes tests uniquely suited to the "trust
 but verify" workflow that AI-assisted development demands.
 
-In the next chapter, we will learn the very basics of packaging, which makes
-testing even easier.
+In the next chapter, we will start building reproducible pipelines with
+`{rixpress}`, putting our tested functions to work.
 
 ## Part 2: Advanced Version Control
 

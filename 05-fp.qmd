@@ -872,9 +872,9 @@ While `safely()` and decorators help, they are still working around the
 fundamental impurity of exceptions. The returned `None` or `NA` values can
 propagate silently, causing confusing errors downstream. For a more principled
 approach, you need **monads**: data structures that explicitly represent success
-or failure and force you to handle both cases. We will explore this in the
-chapter on monads, where we introduce `{chronicler}` for R and `talvez` for
-Python.
+or failure and force you to handle both cases. We will explore this in
+**Chapter 9: Robust Pipelines with Monads**, where we introduce `{chronicler}`
+for R and `talvez` for Python.
 
 ## When NOT to Use Functional Programming
 
@@ -915,6 +915,8 @@ nature is key to becoming an effective data scientist in either language. By
 mastering the functional paradigm, you're building a foundation for code that is
 robust, easy to review, simple to debug, and truly reproducible.
 
-In the next chapter, we'll put these principles into practice with `{rixpress}`,
-a package that leverages functional composition and Nix to build fully
-reproducible, polyglot analytical pipelines.
+But first, in the next chapter, we'll learn how to **test** these pure
+functions—a skill that will make your code far more reliable. Then, in Chapters
+7 and 8, we'll put everything into practice with `{rixpress}`, a package that
+leverages functional composition and Nix to build fully reproducible, polyglot
+analytical pipelines.

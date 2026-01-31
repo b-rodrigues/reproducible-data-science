@@ -2,11 +2,15 @@
 
 ## Introduction
 
-Up until now, we've been using Nix as a powerful tool for creating reproducible 
-development environments directly on our machines. Nix gives us fine-grained 
-control over every package and dependency in our project, ensuring bit-for-bit 
-reproducibility. However, when it comes to distributing a *data product*, 
-another technology, Docker, is incredibly popular.
+Up until now, we've built reproducible environments with Nix, written testable
+code with FP principles, orchestrated pipelines with `{rixpress}`, and added
+robustness with monads. Now we turn to **distribution**: how do we share our
+work with others who may not have Nix installed?
+
+Nix gives us fine-grained control over every package and dependency in our
+project, ensuring bit-for-bit reproducibility. However, when it comes to
+distributing a *data product*, another technology, Docker, is incredibly
+popular.
 
 A common misconception is that Nix and Docker are alternatives, that you must 
 choose one or the other. This is wrong. They are conceptually different tools 
@@ -24,6 +28,7 @@ that has Docker installed, regardless of its underlying OS. Being familiar with
 both tools makes you a more versatile data scientist: you can use Nix for 
 precise, reproducible development environments and Docker for distributing your 
 work to colleagues, servers, or CI pipelines that may not have Nix installed.
+
 
 ### Spatial vs Temporal Reproducibility
 

@@ -22,14 +22,16 @@ book:
     - 03-setup.qmd
     - 04-rix.qmd
     - 05-fp.qmd
-    - 06-rixpress.qmd
-    - 07-docker.qmd
-    - 08-monads.qmd
-    - 09-testing.qmd
-    - 10-packaging.qmd
-    - 11-ci.qmd
-    - 12-conclusion.qmd
+    - 06-testing.qmd
+    - 07-rixpress-basics.qmd
+    - 08-rixpress-advanced.qmd
+    - 09-monads.qmd
+    - 10-docker.qmd
+    - 11-packaging.qmd
+    - 12-ci.qmd
+    - 13-conclusion.qmd
     - references.qmd
+
   page-navigation: true
 
 bibliography: references.bib
