@@ -739,7 +739,7 @@ Finally, you can also use `rxp_visnetwork()` (which requires the `{visNetwork}`
 package). This opens an interactive JavaScript visualization in your browser,
 allowing you to zoom into and explore different parts of your pipeline.
 
-### Caching and Incremental Builds
+### Caching, Incremental Builds, Build Logs and Debugging
 
 One of the most powerful features of using Nix for pipelines is automatic
 caching. Because Nix tracks all inputs to each derivation, it knows exactly what
@@ -752,31 +752,78 @@ Try this:
 3. Run `rxp_make()` again
 
 Nix will detect that unchanged steps are already cached and instantly reuse
-them. It only rebuilds the steps affected by your change.
-
-### Build Logs and Debugging
+them. It only rebuilds the steps affected by your change. Also, your pipeline
+is actually also a *child* of the environment. So if the environment changes
+(for example, you update the date argument in the `rix()` call), your entire
+pipeline will be rebuilt. While this might seem like overkill, this is actually
+the only way you can guarantee that the pipeline is reproducible and works. If
+the pipeline weren't rebuilt when updating the environment, and cached results
+were re-used, you'd never know if a non-backwards-compatible change in a
+function in some package would break your pipeline!
 
 Every time you run `rxp_populate()`, a timestamped log is saved in the
 `_rixpress/` directory. This is like having a Git history for your pipeline's
-*outputs*.
+*outputs*. Suppose I update a derivation in my pipeline, and build the pipeline
+again. Calling `rxp_list_logs()` shows me this:
 
 ```{r}
 #| eval: false
-# List all past builds
 rxp_list_logs()
-
-# Load artifact from current build
-new_result <- rxp_read("mtcars_head")
-
-# Load artifact from previous build
-old_result <- rxp_read("mtcars_head", which_log = "z9y8x")
-
-# Compare them
-identical(new_result, old_result)
 ```
 
-This is incredibly powerful for debugging and validation. You can go back in
-time to inspect any output from any previous pipeline run.
+```r
+> rxp_list_logs()
+filename
+1 build_log_20260131_104726_bpjnnq2nax40w45rzbl83ggp5y766dsv.json
+2 build_log_20260131_101941_y4gz22nl1aym5yfzp3wgj5glmzv3wx5v.json
+modification_time size_kb
+1 2026-01-31 10:47:26    3.06
+2 2026-01-31 10:19:41    3.06
+```
+
+I also recommend committing the change, so the time of the rixpress log matches
+the time of the change:
+
+```bash
+git log
+```
+
+```bash
+commit 043dd99cb56966af449796f636470462b5624d85
+Author: Bruno Rodrigues <bruno@brodrigues.co>
+Date:   Sat Jan 31 10:46:02 2026 +0100
+
+  updated alpha from 0.3 to 0.4
+```
+
+I can now update the derivation again, and rebuild the pipeline. `rxp_list_logs()`
+shows the following:
+
+```r
+                                                         filename
+1 build_log_20260131_110120_v470crwiqx2k0g5bfvd4mqm73ssjdaa5.json
+2 build_log_20260131_104726_bpjnnq2nax40w45rzbl83ggp5y766dsv.json
+3 build_log_20260131_101941_y4gz22nl1aym5yfzp3wgj5glmzv3wx5v.json
+    modification_time size_kb
+1 2026-01-31 11:01:20    3.06
+2 2026-01-31 10:47:26    3.06
+3 2026-01-31 10:19:41    3.06
+```
+
+I can now compare results:
+
+```r
+#| eval: false
+rxp_list_logs()
+
+old_result <- rxp_read("output_plot", which_log = "20260131_101941")
+
+new_result <- rxp_read("output_plot", which_log = "20260131_110120")
+```
+
+The `which_log` argument is used to select the log you want. This is incredibly
+powerful for debugging and validation. You can go back in time to inspect any
+output from any previous pipeline run.
 
 ### Running Someone Else's Pipeline
 
