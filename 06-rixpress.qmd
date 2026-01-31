@@ -853,6 +853,305 @@ rxp_import_artifacts()
 
 This speeds up continuous integration by avoiding unnecessary rebuilds.
 
+## Troubleshooting and Common Issues
+
+When working with `{rixpress}`, you will inevitably encounter build failures.
+Understanding how to read Nix error messages and debug your pipelines is
+essential for productive development. This section covers the most common issues
+and how to resolve them.
+
+### Understanding Build Output
+
+The `verbose` argument in `rxp_populate()` and `rxp_make()` controls how much
+information you see during builds:
+
+| Level | Description | Use Case |
+|-------|-------------|----------|
+| `0` | Progress indicators only (default) | Normal development |
+| `1` | Informational messages | **Recommended for debugging** |
+| `2` | Talkative | Detailed troubleshooting |
+| `3+` | Debug/Vomit | Deep Nix internals |
+
+For most debugging, `verbose = 1` provides the right balance:
+
+```{r}
+#| eval: false
+rxp_make(verbose = 1)
+# or
+rxp_populate(build = TRUE, verbose = 1)
+```
+
+### Common Errors and Solutions
+
+#### R Syntax Errors
+
+**Symptom**: Build fails immediately with an R parse error before any Nix
+activity.
+
+**Example**: Missing a comma between derivations in `gen-pipeline.R`:
+
+```r
+list(
+  rxp_jl(alpha, 0.5)  # Missing comma here!
+  rxp_jl(beta, 1 / 1.01),
+  ...
+)
+```
+
+**Error output**:
+
+```
+Error: unexpected symbol in:
+"  rxp_jl(alpha, 0.5)
+  rxp_jl"
+Execution halted
+```
+
+**Solution**: These are standard R syntax errors. Check the line number and the
+context shown in the error message. Common culprits:
+
+- Missing commas between list elements
+- Unmatched parentheses or brackets
+- Missing closing quotes
+
+::: {.callout-tip}
+## IDE Syntax Checking
+
+Use an IDE like RStudio or VS Code with R language support. These will highlight
+syntax errors before you even try to run the pipeline.
+:::
+
+---
+
+#### Missing Function Errors
+
+**Symptom**: The build starts but a derivation fails with "could not find
+function".
+
+**Example**: Typo in a function name:
+
+```r
+rxp_r(
+  name = output_plot,
+  expr = plot_predictions_typo(predictions),  # Typo!
+  user_functions = "functions/functions.R"
+)
+```
+
+**Error output** (with `verbose = 1`):
+
+```
+building '/nix/store/...-output_plot.drv'...
+Running phase: buildPhase
+Error in plot_predictions_typo(predictions) :
+  could not find function "plot_predictions_typo"
+Execution halted
+
+error: Cannot build '/nix/store/...-output_plot.drv'.
+       Reason: builder failed with exit code 1.
+```
+
+**Solution**: Check for:
+
+1. **Typos** in function names
+2. **Missing `user_functions`** argument—did you forget to specify the file
+   containing your function?
+3. **Wrong file path** in `user_functions`—is the path relative to your project
+   root?
+4. **Function not exported**—is the function defined in the file you specified?
+
+---
+
+#### Python Import Errors
+
+**Symptom**: Python derivation fails with `ModuleNotFoundError`.
+
+**Example**: Using a package not listed in your `default.nix`:
+
+```python
+# In functions.py
+def prepare_features(df):
+    import nonexistent_module  # Not in environment!
+    ...
+```
+
+**Error output**:
+
+```
+Running phase: buildPhase
+Traceback (most recent call last):
+  File "<string>", line 5, in <module>
+    exec('processed_data = prepare_features(simulated_rbc_data)')
+  File "<string>", line 1, in <module>
+  File "<string>", line 22, in prepare_features
+ModuleNotFoundError: No module named 'nonexistent_module'
+```
+
+**Solution**:
+
+1. **Add the package** to `py_pkgs` in your `gen-env.R`:
+
+```r
+rix(
+  ...
+  py_conf = list(
+    py_version = "3.13",
+    py_pkgs = c("pandas", "numpy", "your_missing_package")
+  ),
+  ...
+)
+```
+
+2. **Rebuild the environment**: Run `source("gen-env.R")`, then exit and
+   re-enter the shell with `nix-shell`.
+
+3. **Check import syntax** using `adjust_import()` or `add_import()` if your
+   Python code uses non-standard import patterns.
+
+---
+
+#### Decoder/Encoder Mismatches
+
+**Symptom**: A derivation fails when trying to read data from an upstream step.
+
+**Example**: Using `readRDS` to read an Arrow file:
+
+```r
+rxp_r(
+  name = output_plot,
+  expr = plot_predictions(predictions),
+  user_functions = "functions/functions.R",
+  decoder = readRDS  # Wrong! predictions is an Arrow file
+)
+```
+
+**Error output**:
+
+```
+Error in readRDS("/nix/store/.../predictions") :
+  read error
+Execution halted
+```
+
+**Solution**: Match the decoder to the upstream encoder:
+
+| Upstream Encoder | Correct Decoder |
+|-----------------|-----------------|
+| Default (pickle) for Python | `rxp_py2r()` or keep in Python |
+| `save_arrow` / `feather.write_feather` | `arrow::read_feather` |
+| `write_to_csv` | `read.csv` |
+| Default (`saveRDS`) for R | `readRDS` (default) |
+
+```r
+rxp_r(
+  name = output_plot,
+  expr = plot_predictions(predictions),
+  user_functions = "functions/functions.R",
+  decoder = arrow::read_feather  # Correct!
+)
+```
+
+---
+
+### Debugging Strategies
+
+#### 1. Enable Verbose Output
+
+Always start debugging with `verbose = 1`:
+
+```{r}
+#| eval: false
+rxp_make(verbose = 1)
+```
+
+This shows you exactly which derivation failed and the actual error message from
+R, Python, or Julia.
+
+#### 2. Inspect Build Results
+
+Use `rxp_inspect()` to see the status of all derivations:
+
+```{r}
+#| eval: false
+rxp_inspect()
+```
+
+This returns a data frame showing which derivations succeeded, failed, and their
+paths. You can filter for failures:
+
+```{r}
+#| eval: false
+results <- rxp_inspect()
+subset(results, !build_success)
+```
+
+#### 3. Test Functions Interactively First
+
+Before adding a function to your pipeline, test it in an interactive R or Python
+session within the Nix shell:
+```r
+# In R
+source("functions/functions.R")
+test_data <- arrow::read_feather("path/to/test/data.arrow")
+plot_predictions(test_data)
+```
+
+```python
+# In Python
+from functions.functions import prepare_features
+import pyarrow.feather as feather
+df = feather.read_feather("path/to/test/data.arrow")
+prepare_features(df)
+```
+
+#### 4. Check Intermediate Outputs
+
+Use `rxp_read()` to inspect the output of any successful derivation:
+
+```{r}
+#| eval: false
+# What does the upstream data look like?
+upstream_data <- rxp_read("predictions")
+str(upstream_data)
+```
+
+This helps you understand what format the data is in and whether your
+decoder/encoder is appropriate.
+
+#### 5. View Full Nix Logs
+
+For complex failures, Nix provides the full build log:
+
+```bash
+nix log /nix/store/...-derivation_name.drv
+```
+
+The path is shown in the error output. This gives you the complete stdout/stderr
+from the failed build.
+
+---
+
+### Quick Reference: Error → Solution
+
+| Error Message | Likely Cause | Solution |
+|--------------|--------------|----------|
+| `unexpected symbol` | R syntax error | Check for missing commas, brackets |
+| `could not find function` | Missing/misspelled function | Verify `user_functions` path and function name |
+| `ModuleNotFoundError` | Python package not installed | Add to `py_pkgs` in `gen-env.R` |
+| `read error` in decoder | Wrong decoder for data format | Match decoder to upstream encoder |
+| `object 'x' not found` | Upstream derivation failed | Fix the upstream error first |
+| `1 dependency failed` | Cascading failure | Look for the root cause higher in the log |
+| `No such file or directory` | Missing `additional_files` | Add required files to derivation |
+
+::: {.callout-note}
+## The Cascade Effect
+
+When one derivation fails, all downstream derivations that depend on it will
+also fail with "dependency failed". Always look for the **first** failure in the
+build output—that's your root cause. The error message `Reason: N dependencies
+failed` means you need to scroll up to find the actual error.
+:::
+
 ## Organizing Large Projects with Sub-Pipelines
 
 As pipelines grow, a single `gen-pipeline.R` file can become difficult to
