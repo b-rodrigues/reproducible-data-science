@@ -1878,6 +1878,38 @@ includes:
 - **r_multi_envs**: Different Nix environments for different derivations
 - **yanai_lercher_2020**: Reproducing a published paper's analysis
 
+## Caveats: Consequences of Hermetic Builds
+
+Nix derivations are *hermetic*: they run in an isolated sandbox with no network
+access and a minimal, reproducible filesystem. This design ensures
+reproducibility but has practical implications:
+
+**No network access during builds.** If your analysis requires downloading data
+from an API or remote source, this must happen *before* the pipeline runs. Use
+`rxp_r_file()` or `rxp_py_file()` to read pre-downloaded data, or create a
+separate script outside the pipeline to fetch data into a `data/` directory.
+
+**Environment variables must be explicit.** Tools that rely on environment
+variables (like CmdStan for Bayesian modelling) need these set via the `env_var`
+argument. For example, CmdStanR requires pointing to the CmdStan installation:
+
+```{r}
+#| eval: false
+rxp_r(
+  name = model_fit,
+  expr = fit_stan_model(data),
+  user_functions = "functions.R",
+  env_var = c(CMDSTAN = "${defaultPkgs.cmdstan}/opt/cmdstan")
+)
+```
+
+See `vignette("cmdstanr", package = "rixpress")` for a complete Bayesian
+workflow example.
+
+**Paths are relative to the build sandbox.** Files referenced in your code must
+be explicitly included via `additional_files` or `user_functions`. The build
+environment doesn't see your working directory—only what you declare.
+
 ## Summary
 
 `{rixpress}` unifies environment management and workflow orchestration:
