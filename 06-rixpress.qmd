@@ -1748,18 +1748,104 @@ rxp_load("mtcars_head")
 
 ### Using rixpress in CI
 
-For CI/CD or sharing between machines:
+Running `{rixpress}` pipelines in Continuous Integration is straightforward.
+The `rxp_ga()` function generates a complete GitHub Actions workflow file that
+handles everything automatically.
+
+To set up CI for your pipeline, simply run:
 
 ```{r}
 #| eval: false
-# Export build products to a tarball
+rxp_ga()
+```
+
+This creates a `.github/workflows/` directory with a workflow file that runs
+your pipeline on every push or pull request.
+
+The generated workflow performs these steps:
+
+1. **Restore cached artifacts**: If previous run artifacts exist, they are
+   restored using `rxp_import_artifacts()` to avoid recomputing unchanged
+   derivations.
+
+2. **Install Nix**: The deterministic Nix installer is used to set up Nix on
+   the runner.
+
+3. **Build the environment**: Your `default.nix` environment is built, with
+   the `rstats-on-nix` cache enabled to speed up R package builds.
+
+4. **Generate the pipeline**: Your `gen-pipeline.R` script is executed.
+
+5. **Visualise the DAG**: Since there's no graphical interface in CI, the
+   workflow uses `stacked-dag` (a Haskell tool) to print a textual
+   representation of the pipeline.
+
+6. **Build the pipeline**: `rxp_make()` executes, building any derivations
+   that aren't already cached.
+
+7. **Archive artifacts**: Build outputs are exported using
+   `rxp_export_artifacts()` and pushed to a `rixpress-runs` branch for reuse
+   in subsequent runs.
+
+In an interactive session, you would use `rxp_ggdag()` or `rxp_visnetwork()`
+to visualise your pipeline. In CI, the workflow uses `stacked-dag` to produce
+a text-based DAG:
+
+```yaml
+- name: Check DAG if dag.dot exists and show it if yes
+  run: |
+    if [ -f _rixpress/dag.dot ]; then
+      nix-shell --quiet -p haskellPackages.stacked-dag \
+        --run "stacked-dag dot _rixpress/dag.dot"
+    else
+      echo "dag.dot not found"
+    fi
+```
+
+When `rxp_ga()` is called, it automatically invokes `rxp_dag_for_ci()` to
+generate the required `.dot` file. The output looks like this:
+
+::: {.content-hidden when-format="pdf"}
+<figure>
+    <img src="https://raw.githubusercontent.com/ropensci/rixpress/refs/heads/main/vignettes/stacked-dag.png"
+         alt="Text representation of the DAG in CI."></img>
+    <figcaption>Text representation of the DAG in CI.</figcaption>
+</figure>
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r, echo = F, out.width="400px"}
+#| fig-cap: "Text representation of the DAG in CI."
+knitr::include_graphics("https://raw.githubusercontent.com/ropensci/rixpress/refs/heads/main/vignettes/stacked-dag.png")
+```
+:::
+
+#### Manual Artifact Management
+
+For custom CI setups or sharing artifacts between machines, you can use the
+export and import functions directly:
+
+```{r}
+#| eval: false
+# Export all build outputs to a .nar archive
 rxp_export_artifacts()
 
-# Import on another machine before building
+# On another machine or CI run, import before building
 rxp_import_artifacts()
 ```
 
-This speeds up continuous integration by avoiding unnecessary rebuilds.
+By default, artifacts are saved to `_rixpress/pipeline_outputs.nar`. You can
+specify a different path:
+  
+```{r}
+#| eval: false
+rxp_export_artifacts(archive_file = "my_outputs.nar")
+rxp_import_artifacts(archive_file = "my_outputs.nar")
+```
+
+This approach dramatically speeds up CI by leveraging Nix's content-addressed
+storage: if an artifact's hash matches what's already in the Nix store, it's
+instantly available without rebuilding.
 
 
 ### More Examples
