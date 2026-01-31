@@ -612,6 +612,25 @@ rxp_copy("clean_data")
 This will copy the `clean_data` artifacts into the current working directory. If
 you call `rxp_copy()` without arguments, every artifact will be copied over.
 
+Over time, the Nix store can accumulate many artifacts from previous pipeline
+runs. Use `rxp_gc()` to clean up old build outputs and reclaim disk space:
+
+```{r}
+#| eval: false
+# Preview what would be deleted (dry run)
+rxp_gc(keep_since = "2026-01-01", dry_run = TRUE)
+
+# Delete artifacts older than a specific date
+rxp_gc(keep_since = "2026-01-01")
+
+# Full garbage collection (removes all unreferenced store paths)
+rxp_gc()
+```
+
+The `keep_since` argument lets you preserve recent builds while cleaning up
+older ones. This is particularly useful on shared machines or CI runners where
+disk space is limited.
+
 ### Visualising the pipeline
 
 There are three ways to visualise pipelines. The first is to look at the *trace*
