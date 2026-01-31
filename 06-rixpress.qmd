@@ -347,19 +347,21 @@ list(
   rxp_populate()
 ```
 
-Running `rxp_populate()` generates a `pipeline.nix` file (and also a `_rixpress` folder
-with required files for the project) and builds the entire 
-pipeline. You don’t need to write `gen-pipeline.R` completely in one go. Instead, 
-start by a single derivation, usually the one loading the data, and build the pipeline using
-`source("gen-pipeline.R")` and then `rxp_make()` (or if you set `build = TRUE` in `rxp_populate()`,
-sourcing the script would be enough, as the pipeline would get built). 
+Running `rxp_populate()` generates a `pipeline.nix` file and builds the entire 
+pipeline. It also creates a `_rixpress` folder with required files for the project.
+
+You don't need to write `gen-pipeline.R` completely in one go. Instead, 
+start with a single derivation, usually the one loading the data, and build the pipeline using
+`source("gen-pipeline.R")` and then `rxp_make()`. Alternatively, if you set `build = TRUE` 
+in `rxp_populate()`, sourcing the script alone would be enough, as the pipeline would be 
+built automatically. 
 
 In an interactive session, you can use `rxp_read()`, `rxp_load()` to read or
 load artifacts into the R session respectively and `rxp_trace()` to check the
 lineage of an artifact. This way, you can also work interactively with `{rixpress}`: 
-add derivations one by one, and incrementally build the pipeline. If you change previous
-derivations or functions that affect previous derivations, you don’t need to worry about
-re-running past steps: these would get executed automatically, as they’ve changed!
+add derivations one by one and incrementally build the pipeline. If you change previous
+derivations or functions that affect them, you don't need to worry about
+re-running past steps—these will be executed automatically since they've changed!
 
 
 ## Core Functions
@@ -721,9 +723,9 @@ You can find the complete code source to this example over
 [here](https://github.com/b-rodrigues/rixpress_demos/tree/master/rbc)^[https://github.com/b-rodrigues/rixpress_demos/tree/master/rbc].
 
 For this polyglot pipeline, I use three programming languages: Julia to simulate
-synthetic data from a macroeconimic model, Python to train a machine learning model
-and R to visualize the results. Let me make clear though, that scientifically speaking,
-this is non-sensical: this is merely an example to showcase how to setup a complete
+synthetic data from a macroeconomic model, Python to train a machine learning model
+and R to visualize the results. Let me make it clear, though, that scientifically speaking,
+this is nonsensical: this is merely an example to showcase how to setup a complete
 end-to-end project with `{rixpress}`.
 
 The model I use is the foundational Real Business Cycle (RBC) model. The theory and log-linearized
@@ -749,7 +751,6 @@ pipeline runs identically today, tomorrow, or on any machine with Nix installed.
 ```r
 #| eval: false
 #| code-summary: "Environment Definition with {rix}"
-s
 # This script defines the polyglot environment our pipeline will run in.
 library(rix)
 
@@ -864,7 +865,7 @@ list(
 Start an R session, and run `source("gen-pipeline.R")`. This will cause the model to be simulated.
 Now, to inspect the data, you can use `rxp_read()`: by default, `rxp_read()` will try to find the 
 adequate function to read the data and present it to you. This works for common R and Python objects.
-But in this case, the generated data is is an Arrow data file, so `rxp_read()`, not knowing how to read it, 
+But in this case, the generated data is an Arrow data file, so `rxp_read()`, not knowing how to read it, 
 will simply return the path to the file in the Nix store. We can pass this file to the adequate reader.
 
 ```r
