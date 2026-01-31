@@ -37,7 +37,18 @@ let
  ];
 
  tex = (pkgs.texlive.combine {
-   inherit (pkgs.texlive) scheme-small amsmath framed fvextra environ fontawesome5 orcidlink pdfcol tcolorbox tikzfill;
+   inherit (pkgs.texlive) 
+     scheme-small 
+     amsmath 
+     framed 
+     fvextra 
+     environ 
+     fontawesome5 
+     orcidlink
+     lualatex-math 
+     pdfcol 
+     tcolorbox 
+     tikzfill;
   });
 
  system_packages = builtins.attrValues {
