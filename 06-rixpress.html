@@ -501,7 +501,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#using-rixpress-in-ci" id="toc-using-rixpress-in-ci" class="nav-link" data-scroll-target="#using-rixpress-in-ci"><span class="header-section-number">6.9.3</span> Using rixpress in CI</a></li>
   <li><a href="#more-examples" id="toc-more-examples" class="nav-link" data-scroll-target="#more-examples"><span class="header-section-number">6.9.4</span> More Examples</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6.10</span> Summary</a></li>
+  <li><a href="#caveats-consequences-of-hermetic-builds" id="toc-caveats-consequences-of-hermetic-builds" class="nav-link" data-scroll-target="#caveats-consequences-of-hermetic-builds"><span class="header-section-number">6.10</span> Caveats: Consequences of Hermetic Builds</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6.11</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/06-rixpress.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -2058,8 +2059,24 @@ Text representation of the DAG in CI.
 </ul>
 </section>
 </section>
-<section id="summary" class="level2" data-number="6.10">
-<h2 data-number="6.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.10</span> Summary</h2>
+<section id="caveats-consequences-of-hermetic-builds" class="level2" data-number="6.10">
+<h2 data-number="6.10" class="anchored" data-anchor-id="caveats-consequences-of-hermetic-builds"><span class="header-section-number">6.10</span> Caveats: Consequences of Hermetic Builds</h2>
+<p>Nix derivations are <em>hermetic</em>: they run in an isolated sandbox with no network access and a minimal, reproducible filesystem. This design ensures reproducibility but has practical implications:</p>
+<p><strong>No network access during builds.</strong> If your analysis requires downloading data from an API or remote source, this must happen <em>before</em> the pipeline runs. Use <code>rxp_r_file()</code> or <code>rxp_py_file()</code> to read pre-downloaded data, or create a separate script outside the pipeline to fetch data into a <code>data/</code> directory.</p>
+<p><strong>Environment variables must be explicit.</strong> Tools that rely on environment variables (like CmdStan for Bayesian modelling) need these set via the <code>env_var</code> argument. For example, CmdStanR requires pointing to the CmdStan installation:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_r</span>(</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> model_fit,</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="fu">fit_stan_model</span>(data),</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">user_functions =</span> <span class="st">"functions.R"</span>,</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">env_var =</span> <span class="fu">c</span>(<span class="at">CMDSTAN =</span> <span class="st">"${defaultPkgs.cmdstan}/opt/cmdstan"</span>)</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>See <code>vignette("cmdstanr", package = "rixpress")</code> for a complete Bayesian workflow example.</p>
+<p><strong>Paths are relative to the build sandbox.</strong> Files referenced in your code must be explicitly included via <code>additional_files</code> or <code>user_functions</code>. The build environment doesn’t see your working directory—only what you declare.</p>
+</section>
+<section id="summary" class="level2" data-number="6.11">
+<h2 data-number="6.11" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.11</span> Summary</h2>
 <p><code>{rixpress}</code> unifies environment management and workflow orchestration:</p>
 <ul>
 <li><strong>Define</strong> pipelines with <code>rxp_*()</code> functions in familiar R syntax</li>
