@@ -195,7 +195,9 @@ This provides two key benefits:
 
 1. **True Polyglot Pipelines**: Each step can have its own Nix environment. A
    Python step runs in a pure Python environment, an R step in an R environment,
-   a Quarto step in yet another, all within the same pipeline.
+   a Quarto step in yet another, all within the same pipeline. Julia is also
+   supported, and `{reticulate}` can be used for data transfer, but arbitrary
+   encoder and decoder as well (more on this later).
 
 2. **Deep Reproducibility**: Each step is cached based on the cryptographic hash
    of *all* its inputs: the code, the data, *and the environment*. Any change in
@@ -612,17 +614,130 @@ you call `rxp_copy()` without arguments, every artifact will be copied over.
 
 ### Visualising the pipeline
 
-```{r}
-#| eval: false
-# Static DAG plot
-rxp_ggdag()
+There are three ways to visualise pipelines. The first is to look at the *trace*
+of a derivation or of the full pipeline. This is similar to a genealogy tree.
+You can start by running `rxp_inspect()` to double check how the derivation
+names are written:
 
-# Interactive network
-rxp_visnetwork()
+```r
+rxp_inspect()
+```
 
-# Text-based trace
+```r
+derivation build_success
+1              X_test          TRUE
+2             X_train          TRUE
+3               alpha          TRUE
+4                beta          TRUE
+5     all-derivations          TRUE
+6               delta          TRUE
+7        final_report          TRUE
+8   model_predictions          TRUE
+9         output_plot          TRUE
+10        predictions          TRUE
+11     processed_data          TRUE
+12                rho          TRUE
+13              sigma          TRUE
+14            sigma_z          TRUE
+15 simulated_rbc_data          TRUE
+16      trained_model          TRUE
+17             y_test          TRUE
+18            y_train          TRUE
+```
+
+Let's check the trace of `output_plot`:
+
+```r
+rxp_trace("output_plot")
+```
+
+```r
+==== Lineage for: output_plot ====
+Dependencies (ancestors):
+  - predictions
+    - y_test*
+      - processed_data*
+        - simulated_rbc_data*
+          - alpha*
+          - beta*
+          - delta*
+          - rho*
+          - sigma*
+          - sigma_z*
+    - model_predictions*
+      - X_test*
+        - processed_data*
+      - trained_model*
+        - X_train*
+          - processed_data*
+        - y_train*
+          - processed_data*
+
+Reverse dependencies (children):
+  - final_report
+
+Note: '*' marks transitive dependencies (depth >= 2).
+```
+
+
+We see that `output_plot` depends directly on `predictions`, and `predictions`
+on `y_test`, which itself depends on all the other listed dependencies. The
+children of the derivation are also listed, in this case `final_report`.
+
+Calling `rxp_trace()` without arguments shows the entire pipeline:
+
+```r
 rxp_trace()
 ```
+
+```r
+- final_report
+  - simulated_rbc_data
+    - alpha*
+    - beta*
+    - delta*
+    - rho*
+    - sigma*
+    - sigma_z*
+  - output_plot
+    - predictions*
+      - y_test*
+        - processed_data*
+          - simulated_rbc_data*
+      - model_predictions*
+        - X_test*
+          - processed_data*
+        - trained_model*
+          - X_train*
+            - processed_data*
+          - y_train*
+            - processed_data*
+
+Note: '*' marks transitive dependencies (depth >= 2).
+```
+
+Another way to visualise the pipeline is by using `rxp_ggdag()`. This
+requires the `{ggdag}` package to be installed in the environment. Calling
+`rxp_ggdag()` shows the following plot:
+
+::: {.content-hidden when-format="pdf"}
+<figure>
+    <img src="images/rixpress_dag.png"
+         alt="Derivations are coloured by programming language."></img>
+    <figcaption>Derivations are coloured by programming language.</figcaption>
+</figure>
+:::
+
+::: {.content-visible when-format="pdf"}
+```{r, echo = F, out.width="400px"}
+#| fig-cap: "Derivations are coloured by programming language."
+knitr::include_graphics("images/rixpress_dag.png")
+```
+:::
+
+Finally, you can also use `rxp_visnetwork()` (which requires the `{visNetwork}`
+package). This opens an interactive JavaScript visualization in your browser,
+allowing you to zoom into and explore different parts of your pipeline.
 
 ### Caching and Incremental Builds
 
