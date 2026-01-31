@@ -396,44 +396,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-rixpress.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  <a href="./06-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-docker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  <a href="./07-rixpress-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-monads.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  <a href="./08-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-testing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  <a href="./09-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-packaging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  <a href="./10-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11-ci.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  <a href="./11-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./12-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -1011,6 +1017,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><strong>Start working</strong>: Open the folder in Positron (which will load the environment via <code>direnv</code>), or run <code>nix-shell</code> followed by <code>rstudio</code> if you set <code>ide = "rstudio"</code>.</p></li>
 </ol>
 <p>That’s it. Your project is now reproducible. Anyone with Nix installed can clone your repository, run <code>nix-build</code>, and get the exact same environment you have.</p>
+<p>In the next chapter, we’ll explore <strong>Functional Programming</strong> principles—a foundation you’ll need before we can build pipelines with <code>{rixpress}</code>. After that, we’ll learn how to <strong>test</strong> our code (Chapter 6), and then put everything together in Chapters 7 and 8 where we build complete analytical pipelines.</p>
 
 
 </section>

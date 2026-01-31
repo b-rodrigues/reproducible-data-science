@@ -65,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./06-rixpress.html" rel="next">
+<link href="./06-testing.html" rel="next">
 <link href="./04-rix.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -396,44 +396,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-rixpress.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  <a href="./06-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-docker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  <a href="./07-rixpress-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-monads.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  <a href="./08-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-testing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  <a href="./09-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-packaging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  <a href="./10-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11-ci.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  <a href="./11-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./12-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -824,7 +830,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>slow_sum(<span class="dv">1_000_000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>slow_sum took 0.0175 seconds
+<pre><code>slow_sum took 0.0225 seconds
 499999500000</code></pre>
 </div>
 </div>
@@ -1221,7 +1227,7 @@ $error
 </section>
 <section id="the-limits-of-this-approach" class="level3" data-number="5.6.3">
 <h3 data-number="5.6.3" class="anchored" data-anchor-id="the-limits-of-this-approach"><span class="header-section-number">5.6.3</span> The Limits of This Approach</h3>
-<p>While <code>safely()</code> and decorators help, they are still working around the fundamental impurity of exceptions. The returned <code>None</code> or <code>NA</code> values can propagate silently, causing confusing errors downstream. For a more principled approach, you need <strong>monads</strong>: data structures that explicitly represent success or failure and force you to handle both cases. We will explore this in the chapter on monads, where we introduce <code>{chronicler}</code> for R and <code>talvez</code> for Python.</p>
+<p>While <code>safely()</code> and decorators help, they are still working around the fundamental impurity of exceptions. The returned <code>None</code> or <code>NA</code> values can propagate silently, causing confusing errors downstream. For a more principled approach, you need <strong>monads</strong>: data structures that explicitly represent success or failure and force you to handle both cases. We will explore this in <strong>Chapter 9: Robust Pipelines with Monads</strong>, where we introduce <code>{chronicler}</code> for R and <code>talvez</code> for Python.</p>
 </section>
 </section>
 <section id="when-not-to-use-functional-programming" class="level2" data-number="5.7">
@@ -1245,7 +1251,7 @@ $error
 <li>In Python, treat stateful library objects as values passed between pure functions</li>
 </ul>
 <p>Understanding the distinction between R’s functional heritage and Python’s OOP nature is key to becoming an effective data scientist in either language. By mastering the functional paradigm, you’re building a foundation for code that is robust, easy to review, simple to debug, and truly reproducible.</p>
-<p>In the next chapter, we’ll put these principles into practice with <code>{rixpress}</code>, a package that leverages functional composition and Nix to build fully reproducible, polyglot analytical pipelines.</p>
+<p>But first, in the next chapter, we’ll learn how to <strong>test</strong> these pure functions—a skill that will make your code far more reliable. Then, in Chapters 7 and 8, we’ll put everything into practice with <code>{rixpress}</code>, a package that leverages functional composition and Nix to build fully reproducible, polyglot analytical pipelines.</p>
 
 
 </section>
@@ -1678,8 +1684,8 @@ $error
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./06-rixpress.html" class="pagination-link" aria-label="Building Reproducible Pipelines with rixpress">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./06-testing.html" class="pagination-link" aria-label="Professional Workflows: Testing and Git">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
