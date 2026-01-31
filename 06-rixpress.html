@@ -1984,15 +1984,55 @@ If your terminal supports it, derivation names are coloured according to the cho
 </section>
 <section id="using-rixpress-in-ci" class="level3" data-number="6.9.3">
 <h3 data-number="6.9.3" class="anchored" data-anchor-id="using-rixpress-in-ci"><span class="header-section-number">6.9.3</span> Using rixpress in CI</h3>
-<p>For CI/CD or sharing between machines:</p>
+<p>Running <code>{rixpress}</code> pipelines in Continuous Integration is straightforward. The <code>rxp_ga()</code> function generates a complete GitHub Actions workflow file that handles everything automatically.</p>
+<p>To set up CI for your pipeline, simply run:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Export build products to a tarball</span></span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_export_artifacts</span>()</span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Import on another machine before building</span></span>
-<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_import_artifacts</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_ga</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>This speeds up continuous integration by avoiding unnecessary rebuilds.</p>
+<p>This creates a <code>.github/workflows/</code> directory with a workflow file that runs your pipeline on every push or pull request.</p>
+<p>The generated workflow performs these steps:</p>
+<ol type="1">
+<li><p><strong>Restore cached artifacts</strong>: If previous run artifacts exist, they are restored using <code>rxp_import_artifacts()</code> to avoid recomputing unchanged derivations.</p></li>
+<li><p><strong>Install Nix</strong>: The deterministic Nix installer is used to set up Nix on the runner.</p></li>
+<li><p><strong>Build the environment</strong>: Your <code>default.nix</code> environment is built, with the <code>rstats-on-nix</code> cache enabled to speed up R package builds.</p></li>
+<li><p><strong>Generate the pipeline</strong>: Your <code>gen-pipeline.R</code> script is executed.</p></li>
+<li><p><strong>Visualise the DAG</strong>: Since there’s no graphical interface in CI, the workflow uses <code>stacked-dag</code> (a Haskell tool) to print a textual representation of the pipeline.</p></li>
+<li><p><strong>Build the pipeline</strong>: <code>rxp_make()</code> executes, building any derivations that aren’t already cached.</p></li>
+<li><p><strong>Archive artifacts</strong>: Build outputs are exported using <code>rxp_export_artifacts()</code> and pushed to a <code>rixpress-runs</code> branch for reuse in subsequent runs.</p></li>
+</ol>
+<p>In an interactive session, you would use <code>rxp_ggdag()</code> or <code>rxp_visnetwork()</code> to visualise your pipeline. In CI, the workflow uses <code>stacked-dag</code> to produce a text-based DAG:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Check DAG if dag.dot exists and show it if yes</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    if [ -f _rixpress/dag.dot ]; then</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>      nix-shell --quiet -p haskellPackages.stacked-dag \</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>        --run "stacked-dag dot _rixpress/dag.dot"</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>    else</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>      echo "dag.dot not found"</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>    fi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When <code>rxp_ga()</code> is called, it automatically invokes <code>rxp_dag_for_ci()</code> to generate the required <code>.dot</code> file. The output looks like this:</p>
+<figure class="figure">
+<img src="https://raw.githubusercontent.com/ropensci/rixpress/refs/heads/main/vignettes/stacked-dag.png" alt="Text representation of the DAG in CI." class="figure-img">
+<figcaption>
+Text representation of the DAG in CI.
+</figcaption>
+</figure>
+<section id="manual-artifact-management" class="level4" data-number="6.9.3.1">
+<h4 data-number="6.9.3.1" class="anchored" data-anchor-id="manual-artifact-management"><span class="header-section-number">6.9.3.1</span> Manual Artifact Management</h4>
+<p>For custom CI setups or sharing artifacts between machines, you can use the export and import functions directly:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Export all build outputs to a .nar archive</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_export_artifacts</span>()</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="co"># On another machine or CI run, import before building</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_import_artifacts</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>By default, artifacts are saved to <code>_rixpress/pipeline_outputs.nar</code>. You can specify a different path:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_export_artifacts</span>(<span class="at">archive_file =</span> <span class="st">"my_outputs.nar"</span>)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_import_artifacts</span>(<span class="at">archive_file =</span> <span class="st">"my_outputs.nar"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This approach dramatically speeds up CI by leveraging Nix’s content-addressed storage: if an artifact’s hash matches what’s already in the Nix store, it’s instantly available without rebuilding.</p>
+</section>
 </section>
 <section id="more-examples" class="level3" data-number="6.9.4">
 <h3 data-number="6.9.4" class="anchored" data-anchor-id="more-examples"><span class="header-section-number">6.9.4</span> More Examples</h3>
