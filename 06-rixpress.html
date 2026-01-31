@@ -465,35 +465,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#defining-the-environment" id="toc-defining-the-environment" class="nav-link" data-scroll-target="#defining-the-environment"><span class="header-section-number">6.3.2</span> Defining the environment</a></li>
   <li><a href="#defining-the-pipeline" id="toc-defining-the-pipeline" class="nav-link" data-scroll-target="#defining-the-pipeline"><span class="header-section-number">6.3.3</span> Defining the pipeline</a></li>
   </ul></li>
-  <li><a href="#core-functions" id="toc-core-functions" class="nav-link" data-scroll-target="#core-functions"><span class="header-section-number">6.4</span> Core Functions</a>
+  <li><a href="#real-world-examples" id="toc-real-world-examples" class="nav-link" data-scroll-target="#real-world-examples"><span class="header-section-number">6.4</span> Real-World Examples</a>
   <ul class="collapse">
-  <li><a href="#defining-derivations" id="toc-defining-derivations" class="nav-link" data-scroll-target="#defining-derivations"><span class="header-section-number">6.4.1</span> Defining derivations</a></li>
-  <li><a href="#building-the-pipeline" id="toc-building-the-pipeline" class="nav-link" data-scroll-target="#building-the-pipeline"><span class="header-section-number">6.4.2</span> Building the pipeline</a></li>
-  <li><a href="#inspecting-outputs" id="toc-inspecting-outputs" class="nav-link" data-scroll-target="#inspecting-outputs"><span class="header-section-number">6.4.3</span> Inspecting outputs</a></li>
-  <li><a href="#visualising-the-pipeline" id="toc-visualising-the-pipeline" class="nav-link" data-scroll-target="#visualising-the-pipeline"><span class="header-section-number">6.4.4</span> Visualising the pipeline</a></li>
+  <li><a href="#example-1-reading-many-input-files" id="toc-example-1-reading-many-input-files" class="nav-link" data-scroll-target="#example-1-reading-many-input-files"><span class="header-section-number">6.4.1</span> Example 1: Reading Many Input Files</a></li>
+  <li><a href="#example-2-machine-learning-with-xgboost" id="toc-example-2-machine-learning-with-xgboost" class="nav-link" data-scroll-target="#example-2-machine-learning-with-xgboost"><span class="header-section-number">6.4.2</span> Example 2: Machine Learning with XGBoost</a></li>
+  <li><a href="#example-3-simple-pythonrquarto-workflow" id="toc-example-3-simple-pythonrquarto-workflow" class="nav-link" data-scroll-target="#example-3-simple-pythonrquarto-workflow"><span class="header-section-number">6.4.3</span> Example 3: Simple Python→R→Quarto Workflow</a></li>
   </ul></li>
-  <li><a href="#organizing-large-projects-with-sub-pipelines" id="toc-organizing-large-projects-with-sub-pipelines" class="nav-link" data-scroll-target="#organizing-large-projects-with-sub-pipelines"><span class="header-section-number">6.5</span> Organizing Large Projects with Sub-Pipelines</a>
+  <li><a href="#working-with-pipelines" id="toc-working-with-pipelines" class="nav-link" data-scroll-target="#working-with-pipelines"><span class="header-section-number">6.5</span> Working with Pipelines</a>
   <ul class="collapse">
-  <li><a href="#visualising-sub-pipelines" id="toc-visualising-sub-pipelines" class="nav-link" data-scroll-target="#visualising-sub-pipelines"><span class="header-section-number">6.5.1</span> Visualising Sub-Pipelines</a></li>
+  <li><a href="#building-the-pipeline" id="toc-building-the-pipeline" class="nav-link" data-scroll-target="#building-the-pipeline"><span class="header-section-number">6.5.1</span> Building the pipeline</a></li>
+  <li><a href="#inspecting-outputs" id="toc-inspecting-outputs" class="nav-link" data-scroll-target="#inspecting-outputs"><span class="header-section-number">6.5.2</span> Inspecting outputs</a></li>
+  <li><a href="#visualising-the-pipeline" id="toc-visualising-the-pipeline" class="nav-link" data-scroll-target="#visualising-the-pipeline"><span class="header-section-number">6.5.3</span> Visualising the pipeline</a></li>
+  <li><a href="#caching-and-incremental-builds" id="toc-caching-and-incremental-builds" class="nav-link" data-scroll-target="#caching-and-incremental-builds"><span class="header-section-number">6.5.4</span> Caching and Incremental Builds</a></li>
+  <li><a href="#build-logs-and-debugging" id="toc-build-logs-and-debugging" class="nav-link" data-scroll-target="#build-logs-and-debugging"><span class="header-section-number">6.5.5</span> Build Logs and Debugging</a></li>
+  <li><a href="#running-someone-elses-pipeline" id="toc-running-someone-elses-pipeline" class="nav-link" data-scroll-target="#running-someone-elses-pipeline"><span class="header-section-number">6.5.6</span> Running Someone Else’s Pipeline</a></li>
+  <li><a href="#exporting-and-importing-artifacts" id="toc-exporting-and-importing-artifacts" class="nav-link" data-scroll-target="#exporting-and-importing-artifacts"><span class="header-section-number">6.5.7</span> Exporting and Importing Artifacts</a></li>
   </ul></li>
-  <li><a href="#polyglot-pipelines" id="toc-polyglot-pipelines" class="nav-link" data-scroll-target="#polyglot-pipelines"><span class="header-section-number">6.6</span> Polyglot Pipelines</a>
+  <li><a href="#organizing-large-projects-with-sub-pipelines" id="toc-organizing-large-projects-with-sub-pipelines" class="nav-link" data-scroll-target="#organizing-large-projects-with-sub-pipelines"><span class="header-section-number">6.6</span> Organizing Large Projects with Sub-Pipelines</a>
   <ul class="collapse">
-  <li><a href="#transferring-data-between-python-and-r" id="toc-transferring-data-between-python-and-r" class="nav-link" data-scroll-target="#transferring-data-between-python-and-r"><span class="header-section-number">6.6.1</span> Transferring data between Python and R</a></li>
+  <li><a href="#visualising-sub-pipelines" id="toc-visualising-sub-pipelines" class="nav-link" data-scroll-target="#visualising-sub-pipelines"><span class="header-section-number">6.6.1</span> Visualising Sub-Pipelines</a></li>
   </ul></li>
-  <li><a href="#complete-polyglot-pipeline-walkthrough" id="toc-complete-polyglot-pipeline-walkthrough" class="nav-link" data-scroll-target="#complete-polyglot-pipeline-walkthrough"><span class="header-section-number">6.7</span> Complete polyglot pipeline walkthrough</a></li>
-  <li><a href="#caching-and-incremental-builds" id="toc-caching-and-incremental-builds" class="nav-link" data-scroll-target="#caching-and-incremental-builds"><span class="header-section-number">6.8</span> Caching and Incremental Builds</a></li>
-  <li><a href="#build-logs-and-debugging" id="toc-build-logs-and-debugging" class="nav-link" data-scroll-target="#build-logs-and-debugging"><span class="header-section-number">6.9</span> Build Logs and Debugging</a></li>
-  <li><a href="#ryxpress-the-python-interface" id="toc-ryxpress-the-python-interface" class="nav-link" data-scroll-target="#ryxpress-the-python-interface"><span class="header-section-number">6.10</span> ryxpress: The Python Interface</a></li>
-  <li><a href="#running-someone-elses-pipeline" id="toc-running-someone-elses-pipeline" class="nav-link" data-scroll-target="#running-someone-elses-pipeline"><span class="header-section-number">6.11</span> Running Someone Else’s Pipeline</a></li>
-  <li><a href="#exporting-and-importing-artifacts" id="toc-exporting-and-importing-artifacts" class="nav-link" data-scroll-target="#exporting-and-importing-artifacts"><span class="header-section-number">6.12</span> Exporting and Importing Artifacts</a></li>
-  <li><a href="#real-world-examples" id="toc-real-world-examples" class="nav-link" data-scroll-target="#real-world-examples"><span class="header-section-number">6.13</span> Real-World Examples</a>
+  <li><a href="#polyglot-pipelines" id="toc-polyglot-pipelines" class="nav-link" data-scroll-target="#polyglot-pipelines"><span class="header-section-number">6.7</span> Polyglot Pipelines</a>
   <ul class="collapse">
-  <li><a href="#example-1-machine-learning-with-xgboost" id="toc-example-1-machine-learning-with-xgboost" class="nav-link" data-scroll-target="#example-1-machine-learning-with-xgboost"><span class="header-section-number">6.13.1</span> Example 1: Machine Learning with XGBoost</a></li>
-  <li><a href="#example-2-reading-many-input-files" id="toc-example-2-reading-many-input-files" class="nav-link" data-scroll-target="#example-2-reading-many-input-files"><span class="header-section-number">6.13.2</span> Example 2: Reading Many Input Files</a></li>
-  <li><a href="#example-3-full-pythonrquarto-workflow" id="toc-example-3-full-pythonrquarto-workflow" class="nav-link" data-scroll-target="#example-3-full-pythonrquarto-workflow"><span class="header-section-number">6.13.3</span> Example 3: Full Python→R→Quarto Workflow</a></li>
-  <li><a href="#more-examples" id="toc-more-examples" class="nav-link" data-scroll-target="#more-examples"><span class="header-section-number">6.13.4</span> More Examples</a></li>
+  <li><a href="#transferring-data-between-python-and-r" id="toc-transferring-data-between-python-and-r" class="nav-link" data-scroll-target="#transferring-data-between-python-and-r"><span class="header-section-number">6.7.1</span> Transferring data between Python and R</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6.14</span> Summary</a></li>
+  <li><a href="#advanced-topics" id="toc-advanced-topics" class="nav-link" data-scroll-target="#advanced-topics"><span class="header-section-number">6.8</span> Advanced Topics</a>
+  <ul class="collapse">
+  <li><a href="#complete-polyglot-pipeline-walkthrough" id="toc-complete-polyglot-pipeline-walkthrough" class="nav-link" data-scroll-target="#complete-polyglot-pipeline-walkthrough"><span class="header-section-number">6.8.1</span> Complete Polyglot Pipeline Walkthrough</a></li>
+  <li><a href="#ryxpress-the-python-interface" id="toc-ryxpress-the-python-interface" class="nav-link" data-scroll-target="#ryxpress-the-python-interface"><span class="header-section-number">6.8.2</span> ryxpress: The Python Interface</a></li>
+  <li><a href="#more-examples" id="toc-more-examples" class="nav-link" data-scroll-target="#more-examples"><span class="header-section-number">6.8.3</span> More Examples</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6.9</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/06-rixpress.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -529,7 +531,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The original solution, dating back to the 1970s, is <strong><code>make</code></strong>. Created by Stuart Feldman at Bell Labs in 1976, <code>make</code> reads a <code>Makefile</code> that describes the dependency graph of a project. If you change the code that generates <code>plot.png</code>, <code>make</code> is smart enough to only re-run the steps needed to rebuild the plot and the final report.</p>
 <p>The strength of these tools is their language-agnosticism, but their weaknesses are twofold:</p>
 <ol type="1">
-<li><strong>File-centric</strong>: You must manually handle all I/O. Your first script saves <code>data.csv</code>, your second loads it. This adds boilerplate and surfaces for error.</li>
+<li><strong>File-centric</strong>: You must manually handle all I/O. Your first script saves <code>data.csv</code>, your second loads it. This adds boilerplate and creates surfaces for error.</li>
 <li><strong>Environment-agnostic</strong>: They track files but know nothing about the <em>software environment</em> needed to create those files.</li>
 </ol>
 <p>This is where R’s <strong><code>{targets}</code></strong> package shines. It tracks dependencies between <strong>R objects directly</strong>, automatically handling serialisation. But <code>{targets}</code> operates within a single R session; for polyglot pipelines, you must manually coordinate via <code>{reticulate}</code>.</p>
@@ -554,18 +556,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">OUTPUT_DIR</span> <span class="ch">=</span><span class="st"> output</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dv">$(OUTPUT_DIR)/predictions.csv:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">DATA_DIR</span><span class="ch">)</span><span class="dt">/raw.csv scripts/train_model.py</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="er">    </span>python scripts/train_model.py <span class="ch">$(</span><span class="dt">DATA_DIR</span><span class="ch">)</span>/raw.csv <span class="ch">$@</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>python scripts/train_model.py <span class="ch">$(</span><span class="dt">DATA_DIR</span><span class="ch">)</span>/raw.csv <span class="ch">$@</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="dv">$(OUTPUT_DIR)/plot.png:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">OUTPUT_DIR</span><span class="ch">)</span><span class="dt">/predictions.csv scripts/visualise.R</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="er">    </span>Rscript scripts/visualise.R <span class="ch">$&lt;</span> <span class="ch">$@</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>Rscript scripts/visualise.R <span class="ch">$&lt;</span> <span class="ch">$@</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="dv">$(OUTPUT_DIR)/report.html:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">OUTPUT_DIR</span><span class="ch">)</span><span class="dt">/plot.png report.qmd</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="er">    </span>quarto render report.qmd -o <span class="ch">$@</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>quarto render report.qmd -o <span class="ch">$@</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="dv">all:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">OUTPUT_DIR</span><span class="ch">)</span><span class="dt">/report.html</span></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="dv">clean:</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="er">    </span>rm -rf <span class="ch">$(</span><span class="dt">OUTPUT_DIR</span><span class="ch">)</span>/*</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>rm -rf <span class="ch">$(</span><span class="dt">OUTPUT_DIR</span><span class="ch">)</span>/*</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This looks clean, but notice the procedural boilerplate required in each script. Your <code>train_model.py</code> must parse command-line arguments and handle file I/O:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scripts/train_model.py</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
@@ -726,6 +728,45 @@ Getting LLM assistance with <code>{rixpress}</code> and <code>ryxpress</code>
 <li>Visualise and inspect the DAG; selectively read, load, or copy outputs</li>
 <li>Automatic caching: only rebuild what changed</li>
 </ul>
+<p><code>{rixpress}</code> provides several functions to define pipeline steps:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>rxp_r()</code></td>
+<td>Run R code</td>
+</tr>
+<tr class="even">
+<td><code>rxp_r_file()</code></td>
+<td>Read a file using R</td>
+</tr>
+<tr class="odd">
+<td><code>rxp_py()</code></td>
+<td>Run Python code</td>
+</tr>
+<tr class="even">
+<td><code>rxp_py_file()</code></td>
+<td>Read a file using Python</td>
+</tr>
+<tr class="odd">
+<td><code>rxp_qmd()</code></td>
+<td>Render a Quarto document</td>
+</tr>
+<tr class="even">
+<td><code>rxp_py2r()</code></td>
+<td>Convert Python object to R using reticulate</td>
+</tr>
+<tr class="odd">
+<td><code>rxp_r2py()</code></td>
+<td>Convert R object to Python using reticulate</td>
+</tr>
+</tbody>
+</table>
 <p>Here is what a basic pipeline looks like:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
@@ -760,7 +801,7 @@ Getting LLM assistance with <code>{rixpress}</code> and <code>ryxpress</code>
 <section id="initialising-a-project" class="level3" data-number="6.3.1">
 <h3 data-number="6.3.1" class="anchored" data-anchor-id="initialising-a-project"><span class="header-section-number">6.3.1</span> Initialising a project</h3>
 <p>If you’re starting fresh, you can bootstrap a project using a temporary shell:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">--expr</span> <span class="st">"</span><span class="va">$(</span><span class="ex">curl</span> <span class="at">-sl</span> https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/default.nix<span class="va">)</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">-p</span> R rPackages.rix rPackages.rixpress</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Once inside, start R and run:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rixpress<span class="sc">::</span><span class="fu">rxp_init</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -819,96 +860,278 @@ Getting LLM assistance with <code>{rixpress}</code> and <code>ryxpress</code>
 <p>In an interactive session, you can use <code>rxp_read()</code>, <code>rxp_load()</code> to read or load artifacts into the R session respectively and <code>rxp_trace()</code> to check the lineage of an artifact. This way, you can also work interactively with <code>{rixpress}</code>: add derivations one by one and incrementally build the pipeline. If you change previous derivations or functions that affect them, you don’t need to worry about re-running past steps—these will be executed automatically since they’ve changed!</p>
 </section>
 </section>
-<section id="core-functions" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="core-functions"><span class="header-section-number">6.4</span> Core Functions</h2>
-<section id="defining-derivations" class="level3" data-number="6.4.1">
-<h3 data-number="6.4.1" class="anchored" data-anchor-id="defining-derivations"><span class="header-section-number">6.4.1</span> Defining derivations</h3>
-<p><code>{rixpress}</code> provides several functions to define pipeline steps:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Function</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>rxp_r()</code></td>
-<td>Run R code</td>
-</tr>
-<tr class="even">
-<td><code>rxp_r_file()</code></td>
-<td>Read a file using R</td>
-</tr>
-<tr class="odd">
-<td><code>rxp_py()</code></td>
-<td>Run Python code</td>
-</tr>
-<tr class="even">
-<td><code>rxp_py_file()</code></td>
-<td>Read a file using Python</td>
-</tr>
-<tr class="odd">
-<td><code>rxp_qmd()</code></td>
-<td>Render a Quarto document</td>
-</tr>
-<tr class="even">
-<td><code>rxp_py2r()</code></td>
-<td>Convert Python object to R using reticulate</td>
-</tr>
-<tr class="odd">
-<td><code>rxp_r2py()</code></td>
-<td>Convert R object to Python using reticulate</td>
-</tr>
-</tbody>
-</table>
+<section id="real-world-examples" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="real-world-examples"><span class="header-section-number">6.4</span> Real-World Examples</h2>
+<p>The <a href="https://github.com/b-rodrigues/rixpress_demos">rixpress_demos</a> repository contains many complete examples. Here are a few practical patterns to get you started.</p>
+<section id="example-1-reading-many-input-files" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="example-1-reading-many-input-files"><span class="header-section-number">6.4.1</span> Example 1: Reading Many Input Files</h3>
+<p>When you have multiple CSV files in a directory:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># R approach: read all files at once</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r_file</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_r,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="st">"data"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">read_function =</span> \(x) {</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>      readr<span class="sc">::</span><span class="fu">read_delim</span>(<span class="fu">list.files</span>(x, <span class="at">full.names =</span> <span class="cn">TRUE</span>), <span class="at">delim =</span> <span class="st">"|"</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Python approach: custom function</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py_file</span>(</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_py,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="st">"data"</span>,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">read_function =</span> <span class="st">"read_many_csvs"</span>,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.py"</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> head_mtcars,</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"mtcars_py.head()"</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The key insight: <code>rxp_r_file()</code> and <code>rxp_py_file()</code> can point to a directory, and your <code>read_function</code> handles the logic.</p>
 </section>
-<section id="building-the-pipeline" class="level3" data-number="6.4.2">
-<h3 data-number="6.4.2" class="anchored" data-anchor-id="building-the-pipeline"><span class="header-section-number">6.4.2</span> Building the pipeline</h3>
+<section id="example-2-machine-learning-with-xgboost" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="example-2-machine-learning-with-xgboost"><span class="header-section-number">6.4.2</span> Example 2: Machine Learning with XGBoost</h3>
+<p>This pipeline trains an XGBoost classifier in Python, then passes predictions to R for evaluation with <code>{yardstick}</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Load data as NumPy array</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py_file</span>(</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> dataset_np,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="st">"data/pima-indians-diabetes.csv"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">read_function =</span> <span class="st">"lambda x: loadtxt(x, delimiter=',')"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Split features and target</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> X, <span class="at">expr =</span> <span class="st">"dataset_np[:,0:8]"</span>),</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> Y, <span class="at">expr =</span> <span class="st">"dataset_np[:,8]"</span>),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Train/test split</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> splits,</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"train_test_split(X, Y, test_size=0.33, random_state=7)"</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract splits</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> X_train, <span class="at">expr =</span> <span class="st">"splits[0]"</span>),</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> X_test, <span class="at">expr =</span> <span class="st">"splits[1]"</span>),</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> y_train, <span class="at">expr =</span> <span class="st">"splits[2]"</span>),</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> y_test, <span class="at">expr =</span> <span class="st">"splits[3]"</span>),</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Train XGBoost model</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> model,</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"XGBClassifier(use_label_encoder=False, eval_metric='logloss').fit(X_train, y_train)"</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make predictions</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> y_pred, <span class="at">expr =</span> <span class="st">"model.predict(X_test)"</span>),</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Export predictions to CSV for R</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> combined_df,</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"DataFrame({'truth': y_test, 'estimate': y_pred})"</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> combined_csv,</span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"combined_df"</span>,</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.py"</span>,</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">encoder =</span> <span class="st">"write_to_csv"</span></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute confusion matrix in R</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>    combined_factor,</span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">mutate</span>(combined_csv, <span class="fu">across</span>(<span class="fu">everything</span>(), factor)),</span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">decoder =</span> <span class="st">"read.csv"</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> confusion_matrix,</span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> yardstick<span class="sc">::</span><span class="fu">conf_mat</span>(combined_factor, truth, estimate)</span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust Python imports</span></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a><span class="fu">adjust_import</span>(<span class="st">"import numpy"</span>, <span class="st">"from numpy import array, loadtxt"</span>)</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a><span class="fu">adjust_import</span>(<span class="st">"import xgboost"</span>, <span class="st">"from xgboost import XGBClassifier"</span>)</span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a><span class="fu">adjust_import</span>(<span class="st">"import sklearn"</span>, <span class="st">"from sklearn.model_selection import train_test_split"</span>)</span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a><span class="fu">add_import</span>(<span class="st">"from pandas import DataFrame"</span>, <span class="st">"default.nix"</span>)</span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_make</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This demonstrates:</p>
+<ul>
+<li>Python-heavy computation with XGBoost</li>
+<li>Custom serialization via <code>encoder</code>/<code>decoder</code></li>
+<li>Adjusting Python imports with <code>adjust_import()</code> and <code>add_import()</code></li>
+<li>Passing results to R for evaluation</li>
+</ul>
+</section>
+<section id="example-3-simple-pythonrquarto-workflow" class="level3" data-number="6.4.3">
+<h3 data-number="6.4.3" class="anchored" data-anchor-id="example-3-simple-pythonrquarto-workflow"><span class="header-section-number">6.4.3</span> Example 3: Simple Python→R→Quarto Workflow</h3>
+<p>A complete pipeline that bounces data between languages and renders a report:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Read with Python polars</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py_file</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_pl,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="st">"data/mtcars.csv"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">read_function =</span> <span class="st">"lambda x: polars.read_csv(x, separator='|')"</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter in Python, convert to pandas for reticulate</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_pl_am,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"mtcars_pl.filter(polars.col('am') == 1).to_pandas()"</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to R</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py2r</span>(<span class="at">name =</span> mtcars_am, <span class="at">expr =</span> mtcars_pl_am),</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Process in R</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_head,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">my_head</span>(mtcars_am),</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.R"</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Back to Python</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r2py</span>(<span class="at">name =</span> mtcars_head_py, <span class="at">expr =</span> mtcars_head),</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># More Python processing</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> mtcars_tail_py, <span class="at">expr =</span> <span class="st">"mtcars_head_py.tail()"</span>),</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Back to R</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py2r</span>(<span class="at">name =</span> mtcars_tail, <span class="at">expr =</span> mtcars_tail_py),</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Final R step</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(<span class="at">name =</span> mtcars_mpg, <span class="at">expr =</span> dplyr<span class="sc">::</span><span class="fu">select</span>(mtcars_tail, mpg)),</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Render Quarto document</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_qmd</span>(</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> page,</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">qmd_file =</span> <span class="st">"my_doc/page.qmd"</span>,</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">additional_files =</span> <span class="fu">c</span>(<span class="st">"my_doc/content.qmd"</span>, <span class="st">"my_doc/images"</span>)</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note the <code>additional_files</code> argument for <code>rxp_qmd()</code>: this includes child documents and images that the main Quarto file needs.</p>
+</section>
+</section>
+<section id="working-with-pipelines" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="working-with-pipelines"><span class="header-section-number">6.5</span> Working with Pipelines</h2>
+<section id="building-the-pipeline" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="building-the-pipeline"><span class="header-section-number">6.5.1</span> Building the pipeline</h3>
 <p>You can build the pipeline in two steps:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate pipeline.nix only (don't build)</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the pipeline</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_make</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate pipeline.nix only (don't build)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the pipeline</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_make</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Or in a single step with <code>rxp_populate(build = TRUE)</code>. Once you’ve built the pipeline, you can inspect the results.</p>
 </section>
-<section id="inspecting-outputs" class="level3" data-number="6.4.3">
-<h3 data-number="6.4.3" class="anchored" data-anchor-id="inspecting-outputs"><span class="header-section-number">6.4.3</span> Inspecting outputs</h3>
+<section id="inspecting-outputs" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="inspecting-outputs"><span class="header-section-number">6.5.2</span> Inspecting outputs</h3>
 <p>Because outputs live in <code>/nix/store/</code>, <code>{rixpress}</code> provides helpers:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List all built artifacts</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_inspect</span>()</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read an artifact into R</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">rxp_read</span>(<span class="st">"mtcars_head"</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an artifact into the global environment</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_load</span>(<span class="st">"mtcars_head"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List all built artifacts</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_inspect</span>()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read an artifact into R</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_read</span>(<span class="st">"mtcars_head"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an artifact into the global environment</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_load</span>(<span class="st">"mtcars_head"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>It is important to understand that all the artifacts are stored in the <code>/nix/store/</code>. So if you want to save the outputs somewhere else, you need to use <code>rxp_copy()</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_copy</span>(<span class="st">"clean_data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This will copy the <code>clean_data</code> artifacts into the current working directory.</p>
-<p>If you call <code>rxp_copy()</code> without arguments, every artifact will be copied over.</p>
+<p>It is important to understand that all artifacts are stored in the <code>/nix/store/</code>. So if you want to save the outputs somewhere else, you need to use <code>rxp_copy()</code>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_copy</span>(<span class="st">"clean_data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will copy the <code>clean_data</code> artifacts into the current working directory. If you call <code>rxp_copy()</code> without arguments, every artifact will be copied over.</p>
 </section>
-<section id="visualising-the-pipeline" class="level3" data-number="6.4.4">
-<h3 data-number="6.4.4" class="anchored" data-anchor-id="visualising-the-pipeline"><span class="header-section-number">6.4.4</span> Visualising the pipeline</h3>
+<section id="visualising-the-pipeline" class="level3" data-number="6.5.3">
+<h3 data-number="6.5.3" class="anchored" data-anchor-id="visualising-the-pipeline"><span class="header-section-number">6.5.3</span> Visualising the pipeline</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Static DAG plot</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_ggdag</span>()</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Interactive network</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_visnetwork</span>()</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Text-based trace</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_trace</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Static DAG plot</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_ggdag</span>()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Interactive network</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_visnetwork</span>()</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Text-based trace</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_trace</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+<section id="caching-and-incremental-builds" class="level3" data-number="6.5.4">
+<h3 data-number="6.5.4" class="anchored" data-anchor-id="caching-and-incremental-builds"><span class="header-section-number">6.5.4</span> Caching and Incremental Builds</h3>
+<p>One of the most powerful features of using Nix for pipelines is automatic caching. Because Nix tracks all inputs to each derivation, it knows exactly what needs to be rebuilt when something changes.</p>
+<p>Try this:</p>
+<ol type="1">
+<li>Build your pipeline with <code>rxp_make()</code></li>
+<li>Change one step in your pipeline</li>
+<li>Run <code>rxp_make()</code> again</li>
+</ol>
+<p>Nix will detect that unchanged steps are already cached and instantly reuse them. It only rebuilds the steps affected by your change.</p>
 </section>
-<section id="organizing-large-projects-with-sub-pipelines" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="organizing-large-projects-with-sub-pipelines"><span class="header-section-number">6.5</span> Organizing Large Projects with Sub-Pipelines</h2>
+<section id="build-logs-and-debugging" class="level3" data-number="6.5.5">
+<h3 data-number="6.5.5" class="anchored" data-anchor-id="build-logs-and-debugging"><span class="header-section-number">6.5.5</span> Build Logs and Debugging</h3>
+<p>Every time you run <code>rxp_populate()</code>, a timestamped log is saved in the <code>_rixpress/</code> directory. This is like having a Git history for your pipeline’s <em>outputs</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List all past builds</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_list_logs</span>()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load artifact from current build</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>new_result <span class="ot">&lt;-</span> <span class="fu">rxp_read</span>(<span class="st">"mtcars_head"</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load artifact from previous build</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>old_result <span class="ot">&lt;-</span> <span class="fu">rxp_read</span>(<span class="st">"mtcars_head"</span>, <span class="at">which_log =</span> <span class="st">"z9y8x"</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare them</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(new_result, old_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is incredibly powerful for debugging and validation. You can go back in time to inspect any output from any previous pipeline run.</p>
+</section>
+<section id="running-someone-elses-pipeline" class="level3" data-number="6.5.6">
+<h3 data-number="6.5.6" class="anchored" data-anchor-id="running-someone-elses-pipeline"><span class="header-section-number">6.5.6</span> Running Someone Else’s Pipeline</h3>
+<p>The ultimate test of reproducibility: can someone else run your pipeline?</p>
+<p>With a Nix-based workflow, they need only:</p>
+<ol type="1">
+<li><code>git clone</code> your repository</li>
+<li>Run <code>nix-build &amp;&amp; nix-shell</code></li>
+<li>Run <code>source("gen-pipeline.R")</code> or <code>rxp_make()</code></li>
+</ol>
+<p>That’s it. Nix reads your <code>default.nix</code> and <code>pipeline.nix</code> files and builds the <em>exact</em> same environment and data product, bit-for-bit.</p>
+</section>
+<section id="exporting-and-importing-artifacts" class="level3" data-number="6.5.7">
+<h3 data-number="6.5.7" class="anchored" data-anchor-id="exporting-and-importing-artifacts"><span class="header-section-number">6.5.7</span> Exporting and Importing Artifacts</h3>
+<p>For CI/CD or sharing between machines:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Export build products to a tarball</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_export_artifacts</span>()</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Import on another machine before building</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_import_artifacts</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This speeds up continuous integration by avoiding unnecessary rebuilds.</p>
+</section>
+</section>
+<section id="organizing-large-projects-with-sub-pipelines" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="organizing-large-projects-with-sub-pipelines"><span class="header-section-number">6.6</span> Organizing Large Projects with Sub-Pipelines</h2>
 <p>As pipelines grow, a single <code>gen-pipeline.R</code> file can become difficult to manage. Consider the typical data science project:</p>
 <ul>
 <li>Data extraction and cleaning (ETL)</li>
@@ -937,15 +1160,24 @@ Getting LLM assistance with <code>{rixpress}</code> and <code>ryxpress</code>
     └── 03_reporting.R    # Reporting sub-pipeline</code></pre>
 <p>Each sub-pipeline file returns a list of derivations:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data Preparation Sub-Pipeline</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pipelines/01_data_prep.R</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(<span class="at">name =</span> raw_mtcars, <span class="at">expr =</span> mtcars),</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(<span class="at">name =</span> clean_mtcars, <span class="at">expr =</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(raw_mtcars, am <span class="sc">==</span> <span class="dv">1</span>)),</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(<span class="at">name =</span> selected_mtcars, <span class="at">expr =</span> dplyr<span class="sc">::</span><span class="fu">select</span>(clean_mtcars, mpg, cyl, hp, wt))</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data Preparation Sub-Pipeline</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pipelines/01_data_prep.R</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> raw_mtcars,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> mtcars</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> clean_mtcars,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(raw_mtcars, am <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> selected_mtcars,</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> dplyr<span class="sc">::</span><span class="fu">select</span>(clean_mtcars, mpg, cyl, hp, wt)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>rxp_pipeline()</code> function takes:</p>
 <ul>
@@ -955,39 +1187,51 @@ Getting LLM assistance with <code>{rixpress}</code> and <code>ryxpress</code>
 </ul>
 <p>The second sub-pipeline:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis Sub-Pipeline</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pipelines/02_analysis.R</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(<span class="at">name =</span> summary_stats, <span class="at">expr =</span> <span class="fu">summary</span>(selected_mtcars)),</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(<span class="at">name =</span> mpg_model, <span class="at">expr =</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> selected_mtcars)),</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(<span class="at">name =</span> model_coefs, <span class="at">expr =</span> <span class="fu">coef</span>(mpg_model))</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis Sub-Pipeline</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pipelines/02_analysis.R</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> summary_stats,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">summary</span>(selected_mtcars)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mpg_model,</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> selected_mtcars)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> model_coefs,</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">coef</span>(mpg_model),</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The master script becomes very clean, as <code>rxp_pipeline</code> handles sourcing the files:</p>
+<p>The master script becomes very clean, as <code>rxp_pipeline()</code> handles sourcing the files:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gen-pipeline.R</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create named pipelines with colours by pointing to the files</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>pipe_data_prep <span class="ot">&lt;-</span> <span class="fu">rxp_pipeline</span>(</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">"Data Preparation"</span>,</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">"pipelines/01_data_prep.R"</span>,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="st">"#E69F00"</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>pipe_analysis <span class="ot">&lt;-</span> <span class="fu">rxp_pipeline</span>(</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">"Statistical Analysis"</span>,</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">"pipelines/02_analysis.R"</span>,</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="st">"#56B4E9"</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Build combined pipeline</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_populate</span>(<span class="fu">list</span>(pipe_data_prep, pipe_analysis), <span class="at">project_path =</span> <span class="st">"."</span>, <span class="at">build =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gen-pipeline.R</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create named pipelines with colours by pointing to the files</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>pipe_data_prep <span class="ot">&lt;-</span> <span class="fu">rxp_pipeline</span>(</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">"Data Preparation"</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">"pipelines/01_data_prep.R"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="st">"#E69F00"</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>pipe_analysis <span class="ot">&lt;-</span> <span class="fu">rxp_pipeline</span>(</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">"Statistical Analysis"</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">"pipelines/02_analysis.R"</span>,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="st">"#56B4E9"</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Build combined pipeline</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_populate</span>(</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(pipe_data_prep, pipe_analysis),</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">build =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="visualising-sub-pipelines" class="level3" data-number="6.5.1">
-<h3 data-number="6.5.1" class="anchored" data-anchor-id="visualising-sub-pipelines"><span class="header-section-number">6.5.1</span> Visualising Sub-Pipelines</h3>
+<section id="visualising-sub-pipelines" class="level3" data-number="6.6.1">
+<h3 data-number="6.6.1" class="anchored" data-anchor-id="visualising-sub-pipelines"><span class="header-section-number">6.6.1</span> Visualising Sub-Pipelines</h3>
 <p>When sub-pipelines are defined, visualisation tools use pipeline colours:</p>
 <ol type="1">
 <li><strong>Interactive Network</strong> (<code>rxp_visnetwork()</code>) and <strong>Static DAG</strong> (<code>rxp_ggdag()</code>) both use a dual-encoding approach:
@@ -1013,14 +1257,14 @@ If your terminal supports it, derivation names are coloured according to the cho
 </figure>
 <p>It is also possible to not highlight sub-pipelines by using the <code>colour_by</code> argument (allows you to switch between colouring the pipeline, or by derivation type):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_ggdag</span>(<span class="at">colour_by =</span> <span class="st">"pipeline"</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_ggdag</span>(<span class="at">colour_by =</span> <span class="st">"type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_ggdag</span>(<span class="at">colour_by =</span> <span class="st">"pipeline"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_ggdag</span>(<span class="at">colour_by =</span> <span class="st">"type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="polyglot-pipelines" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="polyglot-pipelines"><span class="header-section-number">6.6</span> Polyglot Pipelines</h2>
+<section id="polyglot-pipelines" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="polyglot-pipelines"><span class="header-section-number">6.7</span> Polyglot Pipelines</h2>
 <p>One of <code>{rixpress}</code>’s strengths is seamlessly mixing languages. Here’s a pipeline that reads data with Python’s <code>polars</code>, processes it with R’s <code>dplyr</code>, and renders a Quarto report.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1038,100 +1282,102 @@ Polyglot Development Is Now Cheap
 </div>
 <p>Open <code>gen-env.R</code> and define the tools your pipeline needs:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2026-01-26"</span>,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"chronicler"</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dplyr"</span>,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"igraph"</span>,</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"quarto"</span>,</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"reticulate"</span>,</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rix"</span>,</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rixpress"</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.14"</span>,</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"biocframe"</span>,</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"numpy"</span>,</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">"phart"</span>,</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>      <span class="st">"polars"</span>,</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">"pyarrow"</span>,</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">"rds2py"</span>,</span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">"ryxpress"</span></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2026-01-26"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"chronicler"</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dplyr"</span>,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"igraph"</span>,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"quarto"</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"reticulate"</span>,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rix"</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rixpress"</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.14"</span>,</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"biocframe"</span>,</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"numpy"</span>,</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">"phart"</span>,</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>      <span class="st">"polars"</span>,</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">"pyarrow"</span>,</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">"rds2py"</span>,</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">"ryxpress"</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The Python packages <code>biocframe</code>, <code>phart</code>, and <code>rds2py</code> are optional but highly recommended when working with <code>ryxpress</code>. <code>biocframe</code> enables direct transfer to <code>polars</code> or Bioconductor DataFrames, bypassing the need for <code>pandas</code>. <code>rds2py</code> (also from the BiocPy project) allows Python to read <code>.rds</code> files, R’s native binary format. Together, these packages ensure seamless interoperability between your R and Python steps. <code>phart</code> is a nice little package that allows you to visualise pipelines from a Python interpreter prompt: not as sexy as R’s <code>{ggdag}</code> but it gets the job done!</p>
-<section id="transferring-data-between-python-and-r" class="level3" data-number="6.6.1">
-<h3 data-number="6.6.1" class="anchored" data-anchor-id="transferring-data-between-python-and-r"><span class="header-section-number">6.6.1</span> Transferring data between Python and R</h3>
+<section id="transferring-data-between-python-and-r" class="level3" data-number="6.7.1">
+<h3 data-number="6.7.1" class="anchored" data-anchor-id="transferring-data-between-python-and-r"><span class="header-section-number">6.7.1</span> Transferring data between Python and R</h3>
 <p>The <code>rxp_py2r()</code> and <code>rxp_r2py()</code> functions use <code>{reticulate}</code> to convert objects between languages:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_py2r</span>(</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> mtcars_r,</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> mtcars_py</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_py2r</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> mtcars_r,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> mtcars_py</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>However, <code>{reticulate}</code> conversions can sometimes be fragile or behave unexpectedly with complex objects. For robust production pipelines, I recommend using the <code>encoder</code> and <code>decoder</code> arguments to explicitly serialize data to intermediary formats like CSV, JSON, or Apache Arrow (Parquet/Feather).</p>
 <p>You can define a custom encoder in Python and a decoder in R:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python step: serialize to JSON</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_py</span>(</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> mtcars_json,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="st">"mtcars_pl.filter(polars.col('am') == 1)"</span>,</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">user_functions =</span> <span class="st">"functions.py"</span>,</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">encoder =</span> <span class="st">"serialize_to_json"</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># R step: deserialize from JSON</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_r</span>(</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> mtcars_head,</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="fu">my_head</span>(mtcars_json),</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">user_functions =</span> <span class="st">"functions.R"</span>,</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">decoder =</span> <span class="st">"jsonlite::fromJSON"</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python step: serialize to JSON</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_py</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> mtcars_json,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="st">"mtcars_pl.filter(polars.col('am') == 1)"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">user_functions =</span> <span class="st">"functions.py"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">encoder =</span> <span class="st">"serialize_to_json"</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co"># R step: deserialize from JSON</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_r</span>(</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> mtcars_head,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="fu">my_head</span>(mtcars_json),</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">user_functions =</span> <span class="st">"functions.R"</span>,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">decoder =</span> <span class="st">"jsonlite::fromJSON"</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The Python <code>serialize_to_json</code> function would be defined in <code>functions.py</code>:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> serialize_to_json(pl_df, path):</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(path, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>        f.write(pl_df.write_json())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> serialize_to_json(pl_df, path):</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(path, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>        f.write(pl_df.write_json())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>For larger datasets, Apache Arrow is ideal because it allows zero-copy reads and is supported natively by <code>polars</code>, <code>pandas</code>, and R’s <code>{arrow}</code> package.</p>
 <p>Here is how you would transfer data from Python to R:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_py</span>(</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> processed_data,</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="st">"prepare_features(raw_data)"</span>,</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">user_functions =</span> <span class="st">"functions.py"</span>,</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">encoder =</span> <span class="st">"save_arrow"</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>),</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_r</span>(</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> analysis_results,</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="st">"run_analysis(processed_data)"</span>,</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">user_functions =</span> <span class="st">"functions.R"</span>,</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">decoder =</span> <span class="st">"arrow::read_feather"</span></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_py</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> processed_data,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="st">"prepare_features(raw_data)"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">user_functions =</span> <span class="st">"functions.py"</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">encoder =</span> <span class="st">"save_arrow"</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_r</span>(</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> analysis_results,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="st">"run_analysis(processed_data)"</span>,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">user_functions =</span> <span class="st">"functions.R"</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">decoder =</span> <span class="st">"arrow::read_feather"</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The Python <code>save_arrow</code> encoder function:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_arrow(df: pd.DataFrame, path: <span class="bu">str</span>):</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Encoder function to save a pandas DataFrame to an Arrow file."""</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    feather.write_feather(df, path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_arrow(df: pd.DataFrame, path: <span class="bu">str</span>):</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Encoder function to save a pandas DataFrame to an Arrow file."""</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    feather.write_feather(df, path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Both <code>encoder</code> and <code>decoder</code> functions must accept the object as the first argument and the file path as the second argument. This pattern works for any serialization format supported by your languages of choice.</p>
 </section>
 </section>
-<section id="complete-polyglot-pipeline-walkthrough" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="complete-polyglot-pipeline-walkthrough"><span class="header-section-number">6.7</span> Complete polyglot pipeline walkthrough</h2>
+<section id="advanced-topics" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="advanced-topics"><span class="header-section-number">6.8</span> Advanced Topics</h2>
+<section id="complete-polyglot-pipeline-walkthrough" class="level3" data-number="6.8.1">
+<h3 data-number="6.8.1" class="anchored" data-anchor-id="complete-polyglot-pipeline-walkthrough"><span class="header-section-number">6.8.1</span> Complete Polyglot Pipeline Walkthrough</h3>
 <p>You can find the complete code source to this example over <a href="https://github.com/b-rodrigues/rixpress_demos/tree/master/rbc">here</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
-<p>For this polyglot pipeline, I use three programming languages: Julia to simulate synthetic data from a macroeconomic model, Python to train a machine learning model and R to visualize the results. Let me make it clear, though, that scientifically speaking, this is nonsensical: this is merely an example to showcase how to setup a complete end-to-end project with <code>{rixpress}</code>.</p>
-<p>The model I use is the foundational Real Business Cycle (RBC) model. The theory and log-linearized equations used in the Julia script are taken directly from the excellent lecture slides by Bianca De Paoli.</p>
+<p>For this polyglot pipeline, I use three programming languages: Julia to simulate synthetic data from a macroeconomic model, Python to train a machine learning model and R to visualize the results. Let me make it clear, though, that scientifically speaking, this is nonsensical: this is merely an example to showcase how to setup a complete end-to-end project with <code>{rixpress}</code>.</p>
+<p>The model I use is the foundational Real Business Cycle (RBC) model. The theory and log-linearized equations used in the Julia script are taken directly from the excellent lecture slides by Bianca De Paoli.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1147,233 +1393,203 @@ Source Attribution
 </div>
 </div>
 <p>First, we need the actual execution environment. Thanks to the <code>{rix}</code> package we can declaratively define a <code>default.nix</code> file. This file locks down the exact versions of R, Julia, Python, and all their respective packages, ensuring the pipeline runs identically today, tomorrow, or on any machine with Nix installed.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Environment Definition with {rix}"</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This script defines the polyglot environment our pipeline will run in.</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the complete execution environment</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Pin the environment to a specific date to ensure that all package</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># versions are resolved as they were on this day.</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-10-14"</span>,</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. R Packages</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We need packages for plotting, data manipulation, and reading arrow files.</span></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ggplot2"</span>,</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dplyr"</span>,</span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"arrow"</span>,</span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rix"</span>,</span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rixpress"</span></span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Julia Configuration</span></span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We specify the Julia version and the list of packages needed</span></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># for our manual RBC model simulation.</span></span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">jl_conf =</span> <span class="fu">list</span>(</span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">jl_version =</span> <span class="st">"lts"</span>,</span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">jl_pkgs =</span> <span class="fu">c</span>(</span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Distributions"</span>, <span class="co"># For creating random shocks</span></span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>      <span class="st">"DataFrames"</span>, <span class="co"># For structuring the output</span></span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Arrow"</span>, <span class="co"># For saving the data in a cross-language format</span></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Random"</span></span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Python Configuration</span></span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We specify the Python version and the packages needed for the</span></span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># machine learning step.</span></span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
-<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.13"</span>,</span>
-<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(</span>
-<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>      <span class="st">"pandas"</span>,</span>
-<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">"scikit-learn"</span>,</span>
-<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>      <span class="st">"xgboost"</span>,</span>
-<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">"pyarrow"</span></span>
-<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We set the IDE to 'none' for a minimal environment. You could change</span></span>
-<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>  <span class="co"># this to "rstudio" if you prefer to work interactively in RStudio.</span></span>
-<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Define the project path and allow overwriting the default.nix file.</span></span>
-<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb28-54"><a href="#cb28-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
-<span id="cb28-55"><a href="#cb28-55" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Environment Definition with {rix}"</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This script defines the polyglot environment our pipeline will run in.</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the complete execution environment</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Pin the environment to a specific date to ensure that all package</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># versions are resolved as they were on this day.</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-10-14"</span>,</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. R Packages</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We need packages for plotting, data manipulation, and reading arrow files.</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ggplot2"</span>,</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dplyr"</span>,</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"arrow"</span>,</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rix"</span>,</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rixpress"</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Julia Configuration</span></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We specify the Julia version and the list of packages needed</span></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># for our manual RBC model simulation.</span></span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">jl_conf =</span> <span class="fu">list</span>(</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">jl_version =</span> <span class="st">"lts"</span>,</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">jl_pkgs =</span> <span class="fu">c</span>(</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Distributions"</span>, <span class="co"># For creating random shocks</span></span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>      <span class="st">"DataFrames"</span>, <span class="co"># For structuring the output</span></span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Arrow"</span>, <span class="co"># For saving the data in a cross-language format</span></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Random"</span></span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Python Configuration</span></span>
+<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We specify the Python version and the packages needed for the</span></span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># machine learning step.</span></span>
+<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
+<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.13"</span>,</span>
+<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(</span>
+<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a>      <span class="st">"pandas"</span>,</span>
+<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">"scikit-learn"</span>,</span>
+<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a>      <span class="st">"xgboost"</span>,</span>
+<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">"pyarrow"</span></span>
+<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb33-47"><a href="#cb33-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-48"><a href="#cb33-48" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We set the IDE to 'none' for a minimal environment. You could change</span></span>
+<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a>  <span class="co"># this to "rstudio" if you prefer to work interactively in RStudio.</span></span>
+<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-52"><a href="#cb33-52" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Define the project path and allow overwriting the default.nix file.</span></span>
+<span id="cb33-53"><a href="#cb33-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb33-54"><a href="#cb33-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb33-55"><a href="#cb33-55" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Assuming we are working on a system that has Nix installed, we can “drop” into a temporary Nix shell with R and <code>{rix}</code> available:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">--expr</span> <span class="st">"</span><span class="va">$(</span><span class="ex">curl</span> <span class="at">-sl</span> https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/default.nix<span class="va">)</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">--expr</span> <span class="st">"</span><span class="va">$(</span><span class="ex">curl</span> <span class="at">-sl</span> https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/default.nix<span class="va">)</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Once the shell is ready, start R (by simply typing <code>R</code>) and run <code>source("gen-env.R")</code> to generate the adequate <code>default.nix</code> file (or even easier, just <code>Rscript gen-env.R</code>). This is the environment that we can use to work interactively with the code while developing, and in which the pipeline will be executed.</p>
 <p>We then need some dedicated scripts with our code. This Julia script contains a pure function that simulates the RBC model and returns a DataFrame. The code is a direct implementation of the state-space solution derived from the equations in the aforementioned lecture and is saved under <code>functions/functions.jl</code>. I don’t show the scripts contents here, as it is quite long, so look for it in the link from before.</p>
 <p>At the end of the script, I create a wrapper around <code>Arrow.write()</code> called <code>arrow_write()</code> to serialize the generated data frame into an Arrow file.</p>
 <p>While developing, it is possible to start the Julia interpreter and test things and see if they work. Or you could even start by writing the first lines of <code>gen-pipeline.R</code> like so:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 0: Define RBC Model Parameters as Derivations</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This makes the parameters an explicit part of the pipeline.</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Changing a parameter will cause downstream steps to rebuild.</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(alpha, <span class="fl">0.3</span>), <span class="co"># Capital's share of income</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(beta, <span class="dv">1</span> <span class="sc">/</span> <span class="fl">1.01</span>), <span class="co"># Discount factor</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(delta, <span class="fl">0.025</span>), <span class="co"># Depreciation rate</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(rho, <span class="fl">0.95</span>), <span class="co"># Technology shock persistence</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(sigma, <span class="fl">1.0</span>), <span class="co"># Risk aversion (log-utility)</span></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(sigma_z, <span class="fl">0.01</span>), <span class="co"># Technology shock standard deviation</span></span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 1: Julia - Simulate a Real Business Cycle (RBC) model.</span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This derivation runs our Julia script to generate the source data.</span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(</span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> simulated_rbc_data,</span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"simulate_rbc_model(alpha, beta, delta, rho, sigma, sigma_z)"</span>,</span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.jl"</span>, <span class="co"># The file containing the function</span></span>
-<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">encoder =</span> <span class="st">"arrow_write"</span> <span class="co"># The function to use for saving the output</span></span>
-<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>(</span>
-<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">build =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="dv">1</span></span>
-<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 0: Define RBC Model Parameters as Derivations</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This makes the parameters an explicit part of the pipeline.</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Changing a parameter will cause downstream steps to rebuild.</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(alpha, <span class="fl">0.3</span>), <span class="co"># Capital's share of income</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(beta, <span class="dv">1</span> <span class="sc">/</span> <span class="fl">1.01</span>), <span class="co"># Discount factor</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(delta, <span class="fl">0.025</span>), <span class="co"># Depreciation rate</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(rho, <span class="fl">0.95</span>), <span class="co"># Technology shock persistence</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(sigma, <span class="fl">1.0</span>), <span class="co"># Risk aversion (log-utility)</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(sigma_z, <span class="fl">0.01</span>), <span class="co"># Technology shock standard deviation</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 1: Julia - Simulate a Real Business Cycle (RBC) model.</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This derivation runs our Julia script to generate the source data.</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_jl</span>(</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> simulated_rbc_data,</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"simulate_rbc_model(alpha, beta, delta, rho, sigma, sigma_z)"</span>,</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.jl"</span>, <span class="co"># The file containing the function</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">encoder =</span> <span class="st">"arrow_write"</span> <span class="co"># The function to use for saving the output</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>(</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">build =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="dv">1</span></span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Start an R session, and run <code>source("gen-pipeline.R")</code>. This will cause the model to be simulated. Now, to inspect the data, you can use <code>rxp_read()</code>: by default, <code>rxp_read()</code> will try to find the adequate function to read the data and present it to you. This works for common R and Python objects. But in this case, the generated data is an Arrow data file, so <code>rxp_read()</code>, not knowing how to read it, will simply return the path to the file in the Nix store. We can pass this file to the adequate reader.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_read</span>(<span class="st">"simulated_rbc_data"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  arrow<span class="sc">::</span><span class="fu">read_feather</span>() <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_read</span>(<span class="st">"simulated_rbc_data"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  arrow<span class="sc">::</span><span class="fu">read_feather</span>() <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now that we are happy that our Julia code works, we can move on to the Python step, by writing a dedicated Python script, <code>functions/functions.py</code>.</p>
 <p>This Python script defines a function to perform our machine learning task. It takes the DataFrame from the Julia step, trains an XGBoost model to predict next-quarter’s output, and returns a new DataFrame containing the predictions. Of course, we could have simply used the RBC model itself for the predictions, but again, this is a toy example.</p>
 <p>The Python script contains several little functions to make the code as modular as possible. I don’t show the script here, as it is quite long, but just as for the Julia script, I write a wrapper around <code>feather.write_feather()</code> to serialize the data into an Arrow file and pass it finally to R. Just as before, it is possible to start a Python interpreter as defined in the <code>default.nix</code> file and use to test and debug, or to add derivations to <code>gen-pipeline.R</code>, rebuild the pipeline and check the outputs:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... the julia steps from before ...,</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 2.1: Python - Prepare features (lagging data)</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> processed_data,</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"prepare_features(simulated_rbc_data)"</span>,</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.py"</span>,</span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Decode the Arrow file from Julia into a pandas DataFrame</span></span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">decoder =</span> <span class="st">"feather.read_feather"</span></span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Note: No encoder needed here. {rixpress} will use pickle by default</span></span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to pass the DataFrame between Python steps.</span></span>
-<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 2.2: Python - Split data into training and testing sets</span></span>
-<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> X_train,</span>
-<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"get_X_train(processed_data)"</span>,</span>
-<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.py"</span></span>
-<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... more Python steps as needed ...</span></span>
-<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a><span class="er">)</span> <span class="sc">|&gt;</span></span>
-<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>(</span>
-<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">build =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="dv">1</span></span>
-<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Arrow is used to pass data from Julia to Python, but then from Python to Python, pickle is used. Finally, we can continue by passing data further down to R. Once again, I recommend writing a dedicated script with your functions that you need and save it in <code>functions/functions.R</code>. The <code>gen-pipeline.R</code> script would look something like this:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... the julia steps from before ...,</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... Python steps ...</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 2.5: Python - Format final results for R</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> predictions,</span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"format_results(y_test, model_predictions)"</span>,</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.py"</span>,</span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We need an encoder here to save the final DataFrame as an Arrow file</span></span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># so the R step can read it.</span></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">encoder =</span> <span class="st">"save_arrow"</span></span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 3: R - Visualize the predictions from the Python model.</span></span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This final derivation depends on the output of the Python step.</span></span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> output_plot,</span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">plot_predictions</span>(predictions), <span class="co"># The function to call from functions.R</span></span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.R"</span>,</span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Specify how to load the upstream data (from Python) into R.</span></span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">decoder =</span> arrow<span class="sc">::</span>read_feather</span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 4: Quarto - Compile the final report.</span></span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_qmd</span>(</span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> final_report,</span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">additional_files =</span> <span class="st">"_rixpress"</span>,</span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">qmd_file =</span> <span class="st">"readme.qmd"</span></span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>(</span>
-<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">build =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="dv">1</span></span>
-<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... the julia steps from before ...,</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 2.1: Python - Prepare features (lagging data)</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> processed_data,</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"prepare_features(simulated_rbc_data)"</span>,</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.py"</span>,</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Decode the Arrow file from Julia into a pandas DataFrame</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">decoder =</span> <span class="st">"feather.read_feather"</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Note: No encoder needed here. {rixpress} will use pickle by default</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to pass the DataFrame between Python steps.</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 2.2: Python - Split data into training and testing sets</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> X_train,</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"get_X_train(processed_data)"</span>,</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.py"</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... more Python steps as needed ...</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>(</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">build =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="dv">1</span></span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Arrow is used to pass data from Julia to Python, but then from Python to Python, pickle is used. Finally, we can continue by passing data further down to R. Once again, I recommend writing a dedicated script with your functions that you need and save it in <code>functions/functions.R</code>. The <code>gen-pipeline.R</code> script would look something like this:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... the julia steps from before ...,</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... Python steps ...,</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 2.5: Python - Format final results for R</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> predictions,</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"format_results(y_test, model_predictions)"</span>,</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.py"</span>,</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We need an encoder here to save the final DataFrame as an Arrow file</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># so the R step can read it.</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">encoder =</span> <span class="st">"save_arrow"</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 3: R - Visualize the predictions from the Python model.</span></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This final derivation depends on the output of the Python step.</span></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> output_plot,</span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">plot_predictions</span>(predictions), <span class="co"># The function to call from functions.R</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions/functions.R"</span>,</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Specify how to load the upstream data (from Python) into R.</span></span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">decoder =</span> arrow<span class="sc">::</span>read_feather</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># STEP 4: Quarto - Compile the final report.</span></span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_qmd</span>(</span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> final_report,</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">additional_files =</span> <span class="st">"_rixpress"</span>,</span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">qmd_file =</span> <span class="st">"readme.qmd"</span></span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>(</span>
+<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">build =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="dv">1</span></span>
+<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>To view the plot in an interactive session, you can use <code>rxp_read()</code> again:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_read</span>(<span class="st">"output_plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_read</span>(<span class="st">"output_plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>To run the pipeline, start the environment by simply typing <code>nix-shell</code> in the terminal, which will use the environment as defined in the <code>default.nix</code> and run <code>source("gen-pipeline.R")</code>. If there are issues, setting the <code>verbose</code> argument of <code>rxp_populate()</code> to <code>1</code> is helpful to see the full error logs.</p>
 </section>
-<section id="caching-and-incremental-builds" class="level2" data-number="6.8">
-<h2 data-number="6.8" class="anchored" data-anchor-id="caching-and-incremental-builds"><span class="header-section-number">6.8</span> Caching and Incremental Builds</h2>
-<p>One of the most powerful features of using Nix for pipelines is automatic caching. Because Nix tracks all inputs to each derivation, it knows exactly what needs to be rebuilt when something changes.</p>
-<p>Try this:</p>
-<ol type="1">
-<li>Build your pipeline with <code>rxp_make()</code></li>
-<li>Change one step in your pipeline</li>
-<li>Run <code>rxp_make()</code> again</li>
-</ol>
-<p>Nix will detect that unchanged steps are already cached and instantly reuse them. It only rebuilds the steps affected by your change.</p>
-</section>
-<section id="build-logs-and-debugging" class="level2" data-number="6.9">
-<h2 data-number="6.9" class="anchored" data-anchor-id="build-logs-and-debugging"><span class="header-section-number">6.9</span> Build Logs and Debugging</h2>
-<p>Every time you run <code>rxp_populate()</code>, a timestamped log is saved in the <code>_rixpress/</code> directory. This is like having a Git history for your pipeline’s <em>outputs</em>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List all past builds</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_list_logs</span>()</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load artifact from current build</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>new_result <span class="ot">&lt;-</span> <span class="fu">rxp_read</span>(<span class="st">"mtcars_head"</span>)</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load artifact from previous build</span></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>old_result <span class="ot">&lt;-</span> <span class="fu">rxp_read</span>(<span class="st">"mtcars_head"</span>, <span class="at">which_log =</span> <span class="st">"z9y8x"</span>)</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare them</span></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(new_result, old_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This is incredibly powerful for debugging and validation. You can go back in time to inspect any output from any previous pipeline run.</p>
-</section>
-<section id="ryxpress-the-python-interface" class="level2" data-number="6.10">
-<h2 data-number="6.10" class="anchored" data-anchor-id="ryxpress-the-python-interface"><span class="header-section-number">6.10</span> ryxpress: The Python Interface</h2>
+<section id="ryxpress-the-python-interface" class="level3" data-number="6.8.2">
+<h3 data-number="6.8.2" class="anchored" data-anchor-id="ryxpress-the-python-interface"><span class="header-section-number">6.8.2</span> ryxpress: The Python Interface</h3>
 <p>If you prefer working in Python, <code>ryxpress</code> provides the same functionality. You still define your pipeline in R (since that’s where <code>{rixpress}</code> runs), but you can build and inspect artifacts from Python.</p>
 <p>To set up an environment with <code>ryxpress</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-10-14"</span>,</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"rixpress"</span>),</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.13"</span>,</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(<span class="st">"ryxpress"</span>, <span class="st">"rds2py"</span>, <span class="st">"biocframe"</span>, <span class="st">"pandas"</span>)</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-10-14"</span>,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"rixpress"</span>),</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.13"</span>,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(<span class="st">"ryxpress"</span>, <span class="st">"rds2py"</span>, <span class="st">"biocframe"</span>, <span class="st">"pandas"</span>)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then from Python:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ryxpress <span class="im">import</span> rxp_make, rxp_inspect, rxp_load</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the pipeline</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>rxp_make()</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect artifacts</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>rxp_inspect()</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an artifact</span></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>rxp_load(<span class="st">"mtcars_head"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ryxpress <span class="im">import</span> rxp_make, rxp_inspect, rxp_load</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the pipeline</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>rxp_make()</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect artifacts</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>rxp_inspect()</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an artifact</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>rxp_load(<span class="st">"mtcars_head"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><code>ryxpress</code> handles the conversion automatically:</p>
 <ul>
 <li>Tries <code>pickle.load</code> first</li>
@@ -1381,203 +1597,8 @@ Source Attribution
 <li>Returns file paths for complex outputs</li>
 </ul>
 </section>
-<section id="running-someone-elses-pipeline" class="level2" data-number="6.11">
-<h2 data-number="6.11" class="anchored" data-anchor-id="running-someone-elses-pipeline"><span class="header-section-number">6.11</span> Running Someone Else’s Pipeline</h2>
-<p>The ultimate test of reproducibility: can someone else run your pipeline?</p>
-<p>With a Nix-based workflow, they need only:</p>
-<ol type="1">
-<li><code>git clone</code> your repository</li>
-<li>Run <code>nix-build &amp;&amp; nix-shell</code></li>
-<li>Run <code>source("gen-pipeline.R")</code> or <code>rxp_make()</code></li>
-</ol>
-<p>That’s it. Nix reads your <code>default.nix</code> and <code>pipeline.nix</code> files and builds the <em>exact</em> same environment and data product, bit-for-bit.</p>
-</section>
-<section id="exporting-and-importing-artifacts" class="level2" data-number="6.12">
-<h2 data-number="6.12" class="anchored" data-anchor-id="exporting-and-importing-artifacts"><span class="header-section-number">6.12</span> Exporting and Importing Artifacts</h2>
-<p>For CI/CD or sharing between machines:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Export build products to a tarball</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_export_artifacts</span>()</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Import on another machine before building</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_import_artifacts</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This speeds up continuous integration by avoiding unnecessary rebuilds.</p>
-</section>
-<section id="real-world-examples" class="level2" data-number="6.13">
-<h2 data-number="6.13" class="anchored" data-anchor-id="real-world-examples"><span class="header-section-number">6.13</span> Real-World Examples</h2>
-<p>The <a href="https://github.com/b-rodrigues/rixpress_demos">rixpress_demos</a> repository contains many complete examples. Here are a few patterns worth studying.</p>
-<section id="example-1-machine-learning-with-xgboost" class="level3" data-number="6.13.1">
-<h3 data-number="6.13.1" class="anchored" data-anchor-id="example-1-machine-learning-with-xgboost"><span class="header-section-number">6.13.1</span> Example 1: Machine Learning with XGBoost</h3>
-<p>This pipeline trains an XGBoost classifier in Python, then passes predictions to R for evaluation with <code>{yardstick}</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Load data as NumPy array</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py_file</span>(</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> dataset_np,</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="st">"data/pima-indians-diabetes.csv"</span>,</span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">read_function =</span> <span class="st">"lambda x: loadtxt(x, delimiter=',')"</span></span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Split features and target</span></span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> X, <span class="at">expr =</span> <span class="st">"dataset_np[:,0:8]"</span>),</span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> Y, <span class="at">expr =</span> <span class="st">"dataset_np[:,8]"</span>),</span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Train/test split</span></span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> splits,</span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"train_test_split(X, Y, test_size=0.33, random_state=7)"</span></span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract splits</span></span>
-<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> X_train, <span class="at">expr =</span> <span class="st">"splits[0]"</span>),</span>
-<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> X_test, <span class="at">expr =</span> <span class="st">"splits[1]"</span>),</span>
-<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> y_train, <span class="at">expr =</span> <span class="st">"splits[2]"</span>),</span>
-<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> y_test, <span class="at">expr =</span> <span class="st">"splits[3]"</span>),</span>
-<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Train XGBoost model</span></span>
-<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> model,</span>
-<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"XGBClassifier(use_label_encoder=False, eval_metric='logloss').fit(X_train, y_train)"</span></span>
-<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make predictions</span></span>
-<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> y_pred, <span class="at">expr =</span> <span class="st">"model.predict(X_test)"</span>),</span>
-<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Export predictions to CSV for R</span></span>
-<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> combined_df,</span>
-<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"DataFrame({'truth': y_test, 'estimate': y_pred})"</span></span>
-<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> combined_csv,</span>
-<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"combined_df"</span>,</span>
-<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.py"</span>,</span>
-<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">encoder =</span> <span class="st">"write_to_csv"</span></span>
-<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute confusion matrix in R</span></span>
-<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
-<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a>    combined_factor,</span>
-<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">mutate</span>(combined_csv, <span class="fu">across</span>(<span class="fu">everything</span>(), factor)),</span>
-<span id="cb39-54"><a href="#cb39-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">decoder =</span> <span class="st">"read.csv"</span></span>
-<span id="cb39-55"><a href="#cb39-55" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb39-56"><a href="#cb39-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-57"><a href="#cb39-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
-<span id="cb39-58"><a href="#cb39-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> confusion_matrix,</span>
-<span id="cb39-59"><a href="#cb39-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> yardstick<span class="sc">::</span><span class="fu">conf_mat</span>(combined_factor, truth, estimate)</span>
-<span id="cb39-60"><a href="#cb39-60" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb39-61"><a href="#cb39-61" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-64"><a href="#cb39-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust Python imports</span></span>
-<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a><span class="fu">adjust_import</span>(<span class="st">"import numpy"</span>, <span class="st">"from numpy import array, loadtxt"</span>)</span>
-<span id="cb39-66"><a href="#cb39-66" aria-hidden="true" tabindex="-1"></a><span class="fu">adjust_import</span>(<span class="st">"import xgboost"</span>, <span class="st">"from xgboost import XGBClassifier"</span>)</span>
-<span id="cb39-67"><a href="#cb39-67" aria-hidden="true" tabindex="-1"></a><span class="fu">adjust_import</span>(<span class="st">"import sklearn"</span>, <span class="st">"from sklearn.model_selection import train_test_split"</span>)</span>
-<span id="cb39-68"><a href="#cb39-68" aria-hidden="true" tabindex="-1"></a><span class="fu">add_import</span>(<span class="st">"from pandas import DataFrame"</span>, <span class="st">"default.nix"</span>)</span>
-<span id="cb39-69"><a href="#cb39-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-70"><a href="#cb39-70" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_make</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This demonstrates:</p>
-<ul>
-<li>Python-heavy computation with XGBoost</li>
-<li>Custom serialization via <code>encoder</code>/<code>decoder</code></li>
-<li>Adjusting Python imports with <code>adjust_import()</code> and <code>add_import()</code></li>
-<li>Passing results to R for evaluation</li>
-</ul>
-</section>
-<section id="example-2-reading-many-input-files" class="level3" data-number="6.13.2">
-<h3 data-number="6.13.2" class="anchored" data-anchor-id="example-2-reading-many-input-files"><span class="header-section-number">6.13.2</span> Example 2: Reading Many Input Files</h3>
-<p>When you have multiple CSV files in a directory:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># R approach: read all files at once</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r_file</span>(</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_r,</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="st">"data"</span>,</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">read_function =</span> \(x) {</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>      readr<span class="sc">::</span><span class="fu">read_delim</span>(<span class="fu">list.files</span>(x, <span class="at">full.names =</span> <span class="cn">TRUE</span>), <span class="at">delim =</span> <span class="st">"|"</span>)</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Python approach: custom function</span></span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py_file</span>(</span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_py,</span>
-<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="st">"data"</span>,</span>
-<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">read_function =</span> <span class="st">"read_many_csvs"</span>,</span>
-<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.py"</span></span>
-<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> head_mtcars,</span>
-<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"mtcars_py.head()"</span></span>
-<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>The key insight: <code>rxp_r_file()</code> and <code>rxp_py_file()</code> can point to a directory, and your <code>read_function</code> handles the logic.</p>
-</section>
-<section id="example-3-full-pythonrquarto-workflow" class="level3" data-number="6.13.3">
-<h3 data-number="6.13.3" class="anchored" data-anchor-id="example-3-full-pythonrquarto-workflow"><span class="header-section-number">6.13.3</span> Example 3: Full Python→R→Quarto Workflow</h3>
-<p>A complete pipeline that bounces data between languages and renders a report:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Read with Python polars</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py_file</span>(</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_pl,</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="st">"data/mtcars.csv"</span>,</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">read_function =</span> <span class="st">"lambda x: polars.read_csv(x, separator='|')"</span></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter in Python, convert to pandas for reticulate</span></span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_pl_am,</span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"mtcars_pl.filter(polars.col('am') == 1).to_pandas()"</span></span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to R</span></span>
-<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py2r</span>(<span class="at">name =</span> mtcars_am, <span class="at">expr =</span> mtcars_pl_am),</span>
-<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Process in R</span></span>
-<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
-<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> mtcars_head,</span>
-<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">my_head</span>(mtcars_am),</span>
-<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.R"</span></span>
-<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Back to Python</span></span>
-<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r2py</span>(<span class="at">name =</span> mtcars_head_py, <span class="at">expr =</span> mtcars_head),</span>
-<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># More Python processing</span></span>
-<span id="cb41-31"><a href="#cb41-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(<span class="at">name =</span> mtcars_tail_py, <span class="at">expr =</span> <span class="st">"mtcars_head_py.tail()"</span>),</span>
-<span id="cb41-32"><a href="#cb41-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-33"><a href="#cb41-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Back to R</span></span>
-<span id="cb41-34"><a href="#cb41-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py2r</span>(<span class="at">name =</span> mtcars_tail, <span class="at">expr =</span> mtcars_tail_py),</span>
-<span id="cb41-35"><a href="#cb41-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-36"><a href="#cb41-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Final R step</span></span>
-<span id="cb41-37"><a href="#cb41-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(<span class="at">name =</span> mtcars_mpg, <span class="at">expr =</span> dplyr<span class="sc">::</span><span class="fu">select</span>(mtcars_tail, mpg)),</span>
-<span id="cb41-38"><a href="#cb41-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-39"><a href="#cb41-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Render Quarto document</span></span>
-<span id="cb41-40"><a href="#cb41-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_qmd</span>(</span>
-<span id="cb41-41"><a href="#cb41-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> page,</span>
-<span id="cb41-42"><a href="#cb41-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">qmd_file =</span> <span class="st">"my_doc/page.qmd"</span>,</span>
-<span id="cb41-43"><a href="#cb41-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">additional_files =</span> <span class="fu">c</span>(<span class="st">"my_doc/content.qmd"</span>, <span class="st">"my_doc/images"</span>)</span>
-<span id="cb41-44"><a href="#cb41-44" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb41-45"><a href="#cb41-45" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb41-46"><a href="#cb41-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Note the <code>additional_files</code> argument for <code>rxp_qmd()</code>: this includes child documents and images that the main Quarto file needs.</p>
-</section>
-<section id="more-examples" class="level3" data-number="6.13.4">
-<h3 data-number="6.13.4" class="anchored" data-anchor-id="more-examples"><span class="header-section-number">6.13.4</span> More Examples</h3>
+<section id="more-examples" class="level3" data-number="6.8.3">
+<h3 data-number="6.8.3" class="anchored" data-anchor-id="more-examples"><span class="header-section-number">6.8.3</span> More Examples</h3>
 <p>The <a href="https://github.com/b-rodrigues/rixpress_demos">rixpress_demos</a> repository includes:</p>
 <ul>
 <li><strong>jl_example</strong>: Using Julia in pipelines</li>
@@ -1588,8 +1609,8 @@ Source Attribution
 </ul>
 </section>
 </section>
-<section id="summary" class="level2" data-number="6.14">
-<h2 data-number="6.14" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.14</span> Summary</h2>
+<section id="summary" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.9</span> Summary</h2>
 <p><code>{rixpress}</code> unifies environment management and workflow orchestration:</p>
 <ul>
 <li><strong>Define</strong> pipelines with <code>rxp_*()</code> functions in familiar R syntax</li>
