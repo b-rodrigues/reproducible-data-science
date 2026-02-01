@@ -9,6 +9,57 @@ Monads might sound abstract, but they solve concrete problems involving **Loggin
 By the end of this chapter, you'll know how to integrate `{chronicler}` and 
 `cronista` into your pipelines for more robust, observable data workflows.
 
+## Why Do We Need Logging?
+
+When you build data pipelines, things inevitably go wrong. A dataset might have
+unexpected missing values. A computation might produce NaN. A join might drop
+more rows than expected. When these issues occur, the first question is always:
+**where did it happen?**
+
+Consider a simple pipeline:
+
+```{r}
+#| eval: false
+result <- raw_data |>
+  clean_data() |>
+  filter_outliers() |>
+  compute_stats() |>
+  generate_report()
+```
+
+If `result` is wrong or the pipeline crashes, you need to figure out which step
+failed. A way to do this is to add print statements:
+
+```{r}
+#| eval: false
+result <- raw_data |>
+  clean_data() |>
+  { print("clean_data done"); . }() |>
+  filter_outliers() |>
+  { print("filter_outliers done"); . }() |>
+  compute_stats() |>
+  { print("compute_stats done"); . }() |>
+  generate_report()
+```
+
+This works, but it's ugly and mixes logging logic with business logic. You have
+to remember to remove these print statements before sharing your code. Worse,
+if you want to capture *what* went into each step or *how long* it took, you
+end up with even more boilerplate.
+
+::: {.callout-note}
+## Nix Error Messages
+
+When using `{rixpress}`, Nix does report errors during builds, but the messages
+can be hard to read—especially if the error happens deep in your pipeline or
+involves R/Python stack traces mixed with Nix output. Having explicit logging
+in your functions makes debugging much easier because you get clear, structured
+information about what happened at each step.
+:::
+
+What if your functions could automatically log themselves without any changes
+to their core logic?
+
 ## The Problem: Decorated Functions Don't Compose
 
 Suppose you want your functions to provide logs. You might rewrite `sqrt()` like 
