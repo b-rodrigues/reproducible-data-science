@@ -6,7 +6,7 @@ engine: jupyter
 book:
   title: "Reproducible Polyglot Data Science"
   author: "Bruno Rodrigues"
-  date: "2026-01-11"
+  date: "2026-02-01"
   search: true
   repo-url: "https://github.com/b-rodrigues/reproducible-data-science"
   repo-actions: [edit, issue]
@@ -43,7 +43,7 @@ format:
     lang:
       en-GB
     date:
-      "2026-01-11"
+      "2026-02-01"
     css:
       epub.css
   html:
