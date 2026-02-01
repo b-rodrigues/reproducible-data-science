@@ -7,7 +7,7 @@ layer of robustness: **monads**.
 Monads might sound abstract, but they solve concrete problems involving **Logging** (tracing what each step does without cluttering your functions), **Error handling** (letting failures propagate gracefully instead of crashing), and **Composition** (keeping functions composable even when they need to do "extra" work).
 
 By the end of this chapter, you'll know how to integrate `{chronicler}` and 
-`talvez` into your pipelines for more robust, observable data workflows.
+`cronista` into your pipelines for more robust, observable data workflows.
 
 ## The Problem: Decorated Functions Don't Compose
 
@@ -344,58 +344,71 @@ r_sqrt("not a number")
 When `Nothing` is passed to a decorated function, it immediately returns 
 `Nothing`, the error propagates through the pipeline without crashing.
 
-## Monads in Python: talvez
+## Monads in Python: cronista
 
-The same concepts exist in Python. The `talvez` package provides a Maybe monad:
+The same concepts exist in Python. The `cronista` package (Python equivalent of 
+`{chronicler}`) provides the same `record()` decorator and logging capabilities:
 
 ```python
-from talvez import maybe, just
+from cronista import record, read_log, unveil
+import math
 
-@maybe()
-def parse_int(s: str) -> int:
-    return int(s)
+# Decorate functions
+r_sqrt = record(math.sqrt)
+r_exp = record(math.exp)
 
-@maybe(ensure=lambda x: x != 0)
-def reciprocal(n: int) -> float:
-    return 1 / n
+@record()
+def compute_mean(values):
+    return sum(values) / len(values)
 
-# Successful computation
+# Compose them
 result = (
-    parse_int("25")
-      .bind(reciprocal)
-      .fmap(lambda x: x * 100)
+    r_sqrt(16)
+      .bind_record(r_exp)
 )
-print(result)            # Just(4.0)
-print(result.get_or(-1)) # 4.0
 
-# Failed computation
-bad = (
-    parse_int("not a number")
-      .bind(reciprocal)
-      .fmap(lambda x: x * 100)
-)
-print(bad)  # Nothing
+# View the result
+print(unveil(result, "value"))  # 54.59815...
+
+# View the log
+print(read_log(result, style="pretty"))
+#> OK `sqrt` at 2025-01-31 12:00:00 (0.001s)
+#> OK `exp` at 2025-01-31 12:00:00 (0.001s)
+#> Total: 0.002 secs
+```
+
+When a computation fails, cronista captures the error as `Nothing`:
+
+```python
+@record()
+def divide_by_zero():
+    return 1 / 0
+
+result = divide_by_zero()
+print(result.is_ok())  # False (this is a Nothing)
+print(read_log(result, style="errors-only"))
+#> NOK `divide_by_zero` — ZeroDivisionError: division by zero
 ```
 
 ::: {.callout-tip}
-## Getting LLM assistance with `talvez`
+## Getting LLM assistance with cronista
 
 Just like with `{chronicler}`, you can use `pkgctx` to help your LLM understand
-`talvez`. The repository includes a `.pkgctx.yaml` file, or you can generate
-one:
+`cronista`:
 
 ```bash
-nix run github:b-rodrigues/pkgctx -- python github:b-rodrigues/talvez > talvez.pkgctx.yaml
+nix run github:b-rodrigues/pkgctx -- python github:b-rodrigues/cronista > cronista.pkgctx.yaml
 ```
 
 This is particularly useful for learning how to chain monadic operations in
 Python correctly.
 :::
 
-The key operations are:
+The key operations mirror chronicler:
 
-- `fmap(fn)`: Apply a pure function to the value inside the monad
-- `bind(fn)`: Apply a function that itself returns a monad
+- `record(fn)`: Decorate a function to return a Chronicle
+- `.bind_record(rfn)`: Chain with another recorded function
+- `read_log(c)`: View the operation log
 
 ## Building Robust Pipelines
 
@@ -506,34 +519,27 @@ list(
 The `{rixpress}` derivation caches the result while `{chronicler}` provides 
 logging and error handling within the step.
 
-## Python Integration with talvez
+## Python Integration with cronista
 
-The same pattern works in Python pipelines:
+The same pattern works in Python pipelines using cronista:
 
 ```python
 # functions.py
-from talvez import maybe, chain, just
+from cronista import record
 
-@maybe()
-def basic_cleaning(df):
-    return df.dropna().reset_index(drop=True)
-
-@maybe()
-def recodings(df):
-    df['category'] = df['category'].map(category_mapping)
-    return df
-
-@maybe()
-def filter_arrivals(df):
-    return df[df['tra_meas'] == 'Arrivals']
+# Decorate your functions
+r_basic_cleaning = record(lambda df: df.dropna().reset_index(drop=True))
+r_recodings = record(lambda df: df.assign(
+    category=df["category"].map(category_mapping)
+))
+r_filter_arrivals = record(lambda df: df[df["tra_meas"] == "Arrivals"])
 
 def process_data(raw_df):
-    """Returns Just(result) or Nothing with error handling."""
-    return chain(
-        just(raw_df),
-        basic_cleaning,
-        recodings,
-        filter_arrivals
+    """Chain operations with bind_record for logging and error handling."""
+    return (
+        r_basic_cleaning(raw_df)
+          .bind_record(r_recodings)
+          .bind_record(r_filter_arrivals)
     )
 ```
 
@@ -786,7 +792,6 @@ Monads add a layer of robustness to your pipelines. In this chapter, we covered:
 
 - **chronicler** (`record()`, `bind_record()`): Logging and error handling for R
 - **cronista** (`record()`, `bind_record()`): The Python equivalent with full logs
-- **talvez** (`@maybe()`, `bind()`, `chain()`): Pure Maybe monad for Python
 - **Just/Nothing**: Graceful failure propagation without crashes
 - **Integration with rixpress**: Monads within pipeline steps for observability
 
