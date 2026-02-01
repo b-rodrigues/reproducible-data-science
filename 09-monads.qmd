@@ -631,6 +631,144 @@ These laws ensure that monadic code behaves predictably—you can refactor bind
 chains without changing semantics, and you can trust that composition works as
 expected.
 
+## Detecting Silent Failures in Pipelines
+
+Here's the catch: when you use chronicler or cronista functions in a rixpress 
+pipeline, **Nix builds never fail**. Even when a computation produces `Nothing`, 
+it's still a valid object that gets serialized successfully.
+
+Consider this pipeline:
+
+```{r}
+#| eval: false
+library(rixpress)
+
+list(
+  rxp_r(
+    name = result,
+    expr = r_sqrt(-1),  # This produces Nothing, not an error!
+    user_functions = "functions.R"
+  )
+) |> rxp_populate(build = FALSE)
+```
+
+When you run `rxp_make()`, the build succeeds! But `result` contains `Nothing`, 
+meaning the computation actually failed. Without checking, you might think your 
+pipeline worked perfectly.
+
+### Automatic Chronicle Checking
+
+When `{chronicler}` is available, `rxp_make()` automatically checks pipeline 
+outputs for `Nothing` values after a successful build:
+
+```{r}
+#| eval: false
+rxp_make()
+#> Build successful! Run `rxp_inspect()` for a summary.
+#> ...
+#> 
+#> This pipeline uses {chronicler}. Here is a summary of chronicle results:
+#> Chronicle status:
+#> ✓ filtered_mtcars (chronicle: OK)
+#> ✓ mtcars_mpg (chronicle: OK)
+#> ✓ mean_mpg (chronicle: OK)
+#> ✗ sqrt_of_negative (chronicle: NOTHING)
+#>     Failed: sqrt
+#>     Message: NaNs produced
+#> ✗ downstream_of_nothing (chronicle: NOTHING)
+#> 
+#> Summary: 3 success, 0 with warnings, 2 nothing
+#> Warning: 2 derivation(s) contain Nothing values!
+```
+
+You can also check manually at any time:
+
+```{r}
+#| eval: false
+rxp_check_chronicles()
+```
+
+Chronicles can be in one of three states:
+
+| Symbol | State | Meaning |
+|--------|-------|---------|
+| ✓ | **Success** | `Just` value, no warnings or errors |
+| ⚠ | **Warning** | `Just` value, but warnings were captured |
+| ✗ | **Nothing** | Failed computation, errors captured |
+
+### Python: cronista + ryxpress
+
+The same pattern works in Python with `cronista` (the Python equivalent of 
+chronicler) and `ryxpress`:
+
+```{r}
+#| eval: false
+# gen-pipeline.R using Python functions
+list(
+  rxp_py(
+    name = sqrt_result,
+    expr = "r_sqrt(16)",            # Success: Just(4.0)
+    user_functions = "functions.py"
+  ),
+  
+  rxp_py(
+    name = div_by_zero,
+    expr = "divide_by_zero()",      # Failure: Nothing
+    user_functions = "functions.py"
+  )
+) |> rxp_populate(build = FALSE)
+```
+
+Where `functions.py` uses cronista's `record()`:
+
+```python
+# functions.py
+import math
+from cronista import record
+
+r_sqrt = record(math.sqrt)
+
+@record()
+def divide_by_zero():
+    return 1 / 0  # This error is captured, not raised
+```
+
+After building, use ryxpress to check for Nothing values:
+
+```python
+from ryxpress import rxp_check_chronicles
+
+rxp_check_chronicles()
+#> Chronicle status:
+#> ✓ sqrt_result (chronicle: OK)
+#> ✗ div_by_zero (chronicle: NOTHING)
+#>     Failed: divide_by_zero
+#>     Message: ZeroDivisionError: division by zero
+```
+
+Reading a chronicle with Nothing automatically warns you:
+
+```python
+from ryxpress import rxp_read
+
+result = rxp_read("div_by_zero")
+#> UserWarning: Derivation 'div_by_zero' contains a chronicle with Nothing value!
+#> Use cronista.read_log() on this object for details.
+```
+
+::: {.callout-tip}
+## Getting LLM assistance with cronista
+
+Just like with the R packages, you can generate context for your LLM:
+
+```bash
+nix run github:b-rodrigues/pkgctx -- python github:b-rodrigues/cronista > cronista.pkgctx.yaml
+```
+
+This helps your LLM understand how to use `record()`, `bind_record()`, 
+and `read_log()` in Python.
+:::
+
 ## Summary
 
 Monads add a layer of robustness to your pipelines. In this chapter, we covered:
@@ -647,7 +785,8 @@ Monads add a layer of robustness to your pipelines. In this chapter, we covered:
 **Practical Tools:**
 
 - **chronicler** (`record()`, `bind_record()`): Logging and error handling for R
-- **talvez** (`@maybe()`, `bind()`, `chain()`): Error handling for Python
+- **cronista** (`record()`, `bind_record()`): The Python equivalent with full logs
+- **talvez** (`@maybe()`, `bind()`, `chain()`): Pure Maybe monad for Python
 - **Just/Nothing**: Graceful failure propagation without crashes
 - **Integration with rixpress**: Monads within pipeline steps for observability
 
@@ -655,9 +794,11 @@ Combined with `{rixpress}`:
 
 - Nix provides **hermetic, cached execution**
 - Monads provide **logging and error handling**
+- `rxp_check_chronicles()` **detects silent failures** in your pipeline
 - Together they give you **robust, reproducible, observable pipelines**
 
 This completes our code quality toolkit: environments (Nix), functional code
 (FP), testing, pipelines (rixpress), and robustness (monads). In the next
 chapter, we'll learn how to distribute our work with Docker, followed by
 packaging and continuous integration.
+
