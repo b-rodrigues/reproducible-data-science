@@ -3,9 +3,9 @@
 ## Introduction
 
 Nix is a package manager that can be installed on your computer, regardless of
-the operating system. If you are familiar with the Ubuntu Linux distribution,
-you have likely used `apt-get` to install software. On macOS, you may have used
-`homebrew` for similar purposes. Nix functions in a comparable way but has many
+the operating system (but requires WSL2 on Windows). If you are familiar with
+the Ubuntu Linux distribution, you have likely used `apt-get` to install software. 
+On macOS, you may have used `homebrew` for similar purposes. Nix functions in a comparable way but has many
 advantages over classic package managers, as it focuses on reproducible builds
 and downloads packages from `nixpkgs`, [currently the largest software
 repository](https://repology.org/repositories/graphs)^[https://repology.org/repositories/graphs].
