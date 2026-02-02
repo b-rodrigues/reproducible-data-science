@@ -531,7 +531,7 @@ window.Quarto = {
 
 <section id="introduction" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2.1</span> Introduction</h2>
-<p>Nix is a package manager that can be installed on your computer, regardless of the operating system. If you are familiar with the Ubuntu Linux distribution, you have likely used <code>apt-get</code> to install software. On macOS, you may have used <code>homebrew</code> for similar purposes. Nix functions in a comparable way but has many advantages over classic package managers, as it focuses on reproducible builds and downloads packages from <code>nixpkgs</code>, <a href="https://repology.org/repositories/graphs">currently the largest software repository</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>Nix is a package manager that can be installed on your computer, regardless of the operating system (but requires WSL2 on Windows). If you are familiar with the Ubuntu Linux distribution, you have likely used <code>apt-get</code> to install software. On macOS, you may have used <code>homebrew</code> for similar purposes. Nix functions in a comparable way but has many advantages over classic package managers, as it focuses on reproducible builds and downloads packages from <code>nixpkgs</code>, <a href="https://repology.org/repositories/graphs">currently the largest software repository</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <p>In this chapter, we will explore the critical need for environment reproducibility in modern workflows. We will see why ad-hoc tools often fail, and how Nix’s declarative approach and “component closures” provide a robust solution. We will also cover the core concepts of Nix—derivations, the store, and hermetic builds—that make this possible.</p>
 </section>
 <section id="why-reproducibility-why-nix" class="level2" data-number="2.2">
@@ -545,7 +545,7 @@ window.Quarto = {
 <li>Ensure all necessary system dependencies are installed (for example, a working Java installation for the <code>{rJava}</code> R package on Linux).</li>
 <li>Ensure you can install all of this on the hardware you have on hand.</li>
 </ul>
-<p>But in practice, one or most of these bullet points are missing from projects. The goal of this course is to learn how to fulfil all the requirements to build reproducible projects.</p>
+<p>But in practice, one or most of these bullet points are missing from projects. Our goal is to learn how to fulfil all the requirements to build reproducible projects.</p>
 <p>The current consensus for tackling the first three points is often a mixture of tools: Docker for system dependencies, <code>{renv}</code> or <code>uv</code> for package management, and tools like the R installation manager (<code>rig</code>) for language versions. As for the last point, hardware architecture, the only way out is to be able to compile the software for the target platform. This involves a lot of moving parts and requires significant knowledge to get right.</p>
 </section>
 <section id="problems-with-ad-hoc-tools" class="level3" data-number="2.2.2">
