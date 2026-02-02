@@ -62,7 +62,7 @@ Do not use your operating system's package manager to install Nix. Instead,
 simply open a terminal and run the following line (on Windows, run this inside
 WSL, and after the prerequisites listed above):
 
-```{sh parsermd-chunk-1, eval = FALSE}
+```bash
 curl --proto '=https' --tlsv1.2 -sSf \
   -L https://install.determinate.systems/nix | \
   sh -s -- install
