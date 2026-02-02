@@ -31,8 +31,7 @@ things:
 -   Ensure you can install all of this on the hardware you have on hand.
 
 But in practice, one or most of these bullet points are missing from projects.
-The goal of this course is to learn how to fulfil all the requirements to
-build reproducible projects.
+Our goal is to learn how to fulfil all the requirements to build reproducible projects.
 
 The current consensus for tackling the first three points is often a mixture of
 tools: Docker for system dependencies, `{renv}` or `uv` for package management,
