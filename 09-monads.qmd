@@ -605,89 +605,6 @@ rxp_py(
 )
 ```
 
-## The Monadic Laws
-
-For the mathematically curious, monads must satisfy three laws. While you don't
-need to know these to *use* monads effectively, understanding them helps you
-verify that an implementation is correct.
-
-### First Law: Left Identity
-
-Passing a value to `return`/`unit` and then binding it to a function `f` is the
-same as applying `f` directly to the value:
-
-```{r}
-#| eval: false
-library(chronicler)
-
-a <- as_chronicle(10)  # as_chronicle is chronicler's "return/unit"
-r_sqrt <- record(sqrt)
-
-# These should give the same result:
-bind_record(a, r_sqrt)$value
-#> [1] 3.162278
-
-r_sqrt(10)$value
-#> [1] 3.162278
-```
-
-### Second Law: Right Identity
-
-Binding a monadic value to `return`/`unit` returns the original value unchanged:
-
-```{r}
-#| eval: false
-a <- as_chronicle(10)
-
-# Binding to as_chronicle should return the same value:
-bind_record(a, as_chronicle)$value
-#> [1] 10
-
-a$value
-#> [1] 10
-```
-
-### Third Law: Associativity
-
-The order of binding operations doesn't matter—applying functions successively
-or composing them first gives the same result:
-
-```{r}
-#| eval: false
-a <- as_chronicle(10)
-
-r_sqrt <- record(sqrt)
-r_exp <- record(exp)
-
-# Method 1: Chain binds sequentially
-result1 <- bind_record(a, r_sqrt) |>
-  bind_record(r_exp)
-
-# Method 2: Compose binds, then apply
-composed_fn <- \(x) bind_record(x, r_sqrt) |> bind_record(r_exp)
-result2 <- composed_fn(a)
-
-# These should be equal:
-result1$value
-#> [1] 6.494743
-
-result2$value
-#> [1] 6.494743
-```
-
-::: {.callout-note}
-## A Note on Logs
-
-In `{chronicler}`, the *logs* between these equivalent expressions may differ
-slightly (since they record different paths through the code), but the
-*values* will always be identical. This is the important property for
-computational correctness.
-:::
-
-These laws ensure that monadic code behaves predictably—you can refactor bind
-chains without changing semantics, and you can trust that composition works as
-expected.
-
 ## Detecting Silent Failures in Pipelines
 
 Here's the catch: when you use chronicler or cronista functions in a rixpress 
@@ -858,3 +775,85 @@ This completes our code quality toolkit: environments (Nix), functional code
 chapter, we'll learn how to distribute our work with Docker, followed by
 packaging and continuous integration.
 
+## Appendix: The Monadic Laws
+
+For the mathematically curious, monads must satisfy three laws. While you don't
+need to know these to *use* monads effectively, understanding them helps you
+verify that an implementation is correct.
+
+### First Law: Left Identity
+
+Passing a value to `return`/`unit` and then binding it to a function `f` is the
+same as applying `f` directly to the value:
+
+```{r}
+#| eval: false
+library(chronicler)
+
+a <- as_chronicle(10)  # as_chronicle is chronicler's "return/unit"
+r_sqrt <- record(sqrt)
+
+# These should give the same result:
+bind_record(a, r_sqrt)$value
+#> [1] 3.162278
+
+r_sqrt(10)$value
+#> [1] 3.162278
+```
+
+### Second Law: Right Identity
+
+Binding a monadic value to `return`/`unit` returns the original value unchanged:
+
+```{r}
+#| eval: false
+a <- as_chronicle(10)
+
+# Binding to as_chronicle should return the same value:
+bind_record(a, as_chronicle)$value
+#> [1] 10
+
+a$value
+#> [1] 10
+```
+
+### Third Law: Associativity
+
+The order of binding operations doesn't matter—applying functions successively
+or composing them first gives the same result:
+
+```{r}
+#| eval: false
+a <- as_chronicle(10)
+
+r_sqrt <- record(sqrt)
+r_exp <- record(exp)
+
+# Method 1: Chain binds sequentially
+result1 <- bind_record(a, r_sqrt) |>
+  bind_record(r_exp)
+
+# Method 2: Compose binds, then apply
+composed_fn <- \(x) bind_record(x, r_sqrt) |> bind_record(r_exp)
+result2 <- composed_fn(a)
+
+# These should be equal:
+result1$value
+#> [1] 6.494743
+
+result2$value
+#> [1] 6.494743
+```
+
+::: {.callout-note}
+## A Note on Logs
+
+In `{chronicler}`, the *logs* between these equivalent expressions may differ
+slightly (since they record different paths through the code), but the
+*values* will always be identical. This is the important property for
+computational correctness.
+:::
+
+These laws ensure that monadic code behaves predictably—you can refactor bind
+chains without changing semantics, and you can trust that composition works as
+expected.
