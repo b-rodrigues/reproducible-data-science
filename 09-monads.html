@@ -470,18 +470,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#building-robust-pipelines" id="toc-building-robust-pipelines" class="nav-link" data-scroll-target="#building-robust-pipelines"><span class="header-section-number">9.10</span> Building Robust Pipelines</a></li>
   <li><a href="#integrating-with-rixpress" id="toc-integrating-with-rixpress" class="nav-link" data-scroll-target="#integrating-with-rixpress"><span class="header-section-number">9.11</span> Integrating with rixpress</a></li>
   <li><a href="#python-integration-with-cronista" id="toc-python-integration-with-cronista" class="nav-link" data-scroll-target="#python-integration-with-cronista"><span class="header-section-number">9.12</span> Python Integration with cronista</a></li>
-  <li><a href="#the-monadic-laws" id="toc-the-monadic-laws" class="nav-link" data-scroll-target="#the-monadic-laws"><span class="header-section-number">9.13</span> The Monadic Laws</a>
+  <li><a href="#detecting-silent-failures-in-pipelines" id="toc-detecting-silent-failures-in-pipelines" class="nav-link" data-scroll-target="#detecting-silent-failures-in-pipelines"><span class="header-section-number">9.13</span> Detecting Silent Failures in Pipelines</a>
   <ul class="collapse">
-  <li><a href="#first-law-left-identity" id="toc-first-law-left-identity" class="nav-link" data-scroll-target="#first-law-left-identity"><span class="header-section-number">9.13.1</span> First Law: Left Identity</a></li>
-  <li><a href="#second-law-right-identity" id="toc-second-law-right-identity" class="nav-link" data-scroll-target="#second-law-right-identity"><span class="header-section-number">9.13.2</span> Second Law: Right Identity</a></li>
-  <li><a href="#third-law-associativity" id="toc-third-law-associativity" class="nav-link" data-scroll-target="#third-law-associativity"><span class="header-section-number">9.13.3</span> Third Law: Associativity</a></li>
+  <li><a href="#automatic-chronicle-checking" id="toc-automatic-chronicle-checking" class="nav-link" data-scroll-target="#automatic-chronicle-checking"><span class="header-section-number">9.13.1</span> Automatic Chronicle Checking</a></li>
+  <li><a href="#python-cronista-ryxpress" id="toc-python-cronista-ryxpress" class="nav-link" data-scroll-target="#python-cronista-ryxpress"><span class="header-section-number">9.13.2</span> Python: cronista + ryxpress</a></li>
   </ul></li>
-  <li><a href="#detecting-silent-failures-in-pipelines" id="toc-detecting-silent-failures-in-pipelines" class="nav-link" data-scroll-target="#detecting-silent-failures-in-pipelines"><span class="header-section-number">9.14</span> Detecting Silent Failures in Pipelines</a>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">9.14</span> Summary</a></li>
+  <li><a href="#appendix-the-monadic-laws" id="toc-appendix-the-monadic-laws" class="nav-link" data-scroll-target="#appendix-the-monadic-laws"><span class="header-section-number">9.15</span> Appendix: The Monadic Laws</a>
   <ul class="collapse">
-  <li><a href="#automatic-chronicle-checking" id="toc-automatic-chronicle-checking" class="nav-link" data-scroll-target="#automatic-chronicle-checking"><span class="header-section-number">9.14.1</span> Automatic Chronicle Checking</a></li>
-  <li><a href="#python-cronista-ryxpress" id="toc-python-cronista-ryxpress" class="nav-link" data-scroll-target="#python-cronista-ryxpress"><span class="header-section-number">9.14.2</span> Python: cronista + ryxpress</a></li>
+  <li><a href="#first-law-left-identity" id="toc-first-law-left-identity" class="nav-link" data-scroll-target="#first-law-left-identity"><span class="header-section-number">9.15.1</span> First Law: Left Identity</a></li>
+  <li><a href="#second-law-right-identity" id="toc-second-law-right-identity" class="nav-link" data-scroll-target="#second-law-right-identity"><span class="header-section-number">9.15.2</span> Second Law: Right Identity</a></li>
+  <li><a href="#third-law-associativity" id="toc-third-law-associativity" class="nav-link" data-scroll-target="#third-law-associativity"><span class="header-section-number">9.15.3</span> Third Law: Associativity</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">9.15</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/09-monads.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -1000,120 +1000,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="the-monadic-laws" class="level2" data-number="9.13">
-<h2 data-number="9.13" class="anchored" data-anchor-id="the-monadic-laws"><span class="header-section-number">9.13</span> The Monadic Laws</h2>
-<p>For the mathematically curious, monads must satisfy three laws. While you don’t need to know these to <em>use</em> monads effectively, understanding them helps you verify that an implementation is correct.</p>
-<section id="first-law-left-identity" class="level3" data-number="9.13.1">
-<h3 data-number="9.13.1" class="anchored" data-anchor-id="first-law-left-identity"><span class="header-section-number">9.13.1</span> First Law: Left Identity</h3>
-<p>Passing a value to <code>return</code>/<code>unit</code> and then binding it to a function <code>f</code> is the same as applying <code>f</code> directly to the value:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(chronicler)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">as_chronicle</span>(<span class="dv">10</span>)  <span class="co"># as_chronicle is chronicler's "return/unit"</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>r_sqrt <span class="ot">&lt;-</span> <span class="fu">record</span>(sqrt)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># These should give the same result:</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_record</span>(a, r_sqrt)<span class="sc">$</span>value</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.162278</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">r_sqrt</span>(<span class="dv">10</span>)<span class="sc">$</span>value</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.162278</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="second-law-right-identity" class="level3" data-number="9.13.2">
-<h3 data-number="9.13.2" class="anchored" data-anchor-id="second-law-right-identity"><span class="header-section-number">9.13.2</span> Second Law: Right Identity</h3>
-<p>Binding a monadic value to <code>return</code>/<code>unit</code> returns the original value unchanged:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">as_chronicle</span>(<span class="dv">10</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Binding to as_chronicle should return the same value:</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_record</span>(a, as_chronicle)<span class="sc">$</span>value</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>a<span class="sc">$</span>value</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="third-law-associativity" class="level3" data-number="9.13.3">
-<h3 data-number="9.13.3" class="anchored" data-anchor-id="third-law-associativity"><span class="header-section-number">9.13.3</span> Third Law: Associativity</h3>
-<p>The order of binding operations doesn’t matter—applying functions successively or composing them first gives the same result:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">as_chronicle</span>(<span class="dv">10</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>r_sqrt <span class="ot">&lt;-</span> <span class="fu">record</span>(sqrt)</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>r_exp <span class="ot">&lt;-</span> <span class="fu">record</span>(exp)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 1: Chain binds sequentially</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span> <span class="fu">bind_record</span>(a, r_sqrt) <span class="sc">|&gt;</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_exp)</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 2: Compose binds, then apply</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>composed_fn <span class="ot">&lt;-</span> \(x) <span class="fu">bind_record</span>(x, r_sqrt) <span class="sc">|&gt;</span> <span class="fu">bind_record</span>(r_exp)</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">composed_fn</span>(a)</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># These should be equal:</span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>result1<span class="sc">$</span>value</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.494743</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>result2<span class="sc">$</span>value</span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.494743</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>A Note on Logs
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>In <code>{chronicler}</code>, the <em>logs</em> between these equivalent expressions may differ slightly (since they record different paths through the code), but the <em>values</em> will always be identical. This is the important property for computational correctness.</p>
-</div>
-</div>
-<p>These laws ensure that monadic code behaves predictably—you can refactor bind chains without changing semantics, and you can trust that composition works as expected.</p>
-</section>
-</section>
-<section id="detecting-silent-failures-in-pipelines" class="level2" data-number="9.14">
-<h2 data-number="9.14" class="anchored" data-anchor-id="detecting-silent-failures-in-pipelines"><span class="header-section-number">9.14</span> Detecting Silent Failures in Pipelines</h2>
+<section id="detecting-silent-failures-in-pipelines" class="level2" data-number="9.13">
+<h2 data-number="9.13" class="anchored" data-anchor-id="detecting-silent-failures-in-pipelines"><span class="header-section-number">9.13</span> Detecting Silent Failures in Pipelines</h2>
 <p>Here’s the catch: when you use chronicler or cronista functions in a rixpress pipeline, <strong>Nix builds never fail</strong>. Even when a computation produces <code>Nothing</code>, it’s still a valid object that gets serialized successfully.</p>
 <p>Consider this pipeline:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> result,</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">r_sqrt</span>(<span class="sc">-</span><span class="dv">1</span>),  <span class="co"># This produces Nothing, not an error!</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.R"</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_r</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> result,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="fu">r_sqrt</span>(<span class="sc">-</span><span class="dv">1</span>),  <span class="co"># This produces Nothing, not an error!</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.R"</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>When you run <code>rxp_make()</code>, the build succeeds! But <code>result</code> contains <code>Nothing</code>, meaning the computation actually failed. Without checking, you might think your pipeline worked perfectly.</p>
-<section id="automatic-chronicle-checking" class="level3" data-number="9.14.1">
-<h3 data-number="9.14.1" class="anchored" data-anchor-id="automatic-chronicle-checking"><span class="header-section-number">9.14.1</span> Automatic Chronicle Checking</h3>
+<section id="automatic-chronicle-checking" class="level3" data-number="9.13.1">
+<h3 data-number="9.13.1" class="anchored" data-anchor-id="automatic-chronicle-checking"><span class="header-section-number">9.13.1</span> Automatic Chronicle Checking</h3>
 <p>When <code>{chronicler}</code> is available, <code>rxp_make()</code> automatically checks pipeline outputs for <code>Nothing</code> values after a successful build:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_make</span>()</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Build successful! Run `rxp_inspect()` for a summary.</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ...</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; This pipeline uses {chronicler}. Here is a summary of chronicle results:</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chronicle status:</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✓ filtered_mtcars (chronicle: OK)</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✓ mtcars_mpg (chronicle: OK)</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✓ mean_mpg (chronicle: OK)</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✗ sqrt_of_negative (chronicle: NOTHING)</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Failed: sqrt</span></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Message: NaNs produced</span></span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✗ downstream_of_nothing (chronicle: NOTHING)</span></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Summary: 3 success, 0 with warnings, 2 nothing</span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: 2 derivation(s) contain Nothing values!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_make</span>()</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Build successful! Run `rxp_inspect()` for a summary.</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ...</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; This pipeline uses {chronicler}. Here is a summary of chronicle results:</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chronicle status:</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✓ filtered_mtcars (chronicle: OK)</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✓ mtcars_mpg (chronicle: OK)</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✓ mean_mpg (chronicle: OK)</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✗ sqrt_of_negative (chronicle: NOTHING)</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Failed: sqrt</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Message: NaNs produced</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✗ downstream_of_nothing (chronicle: NOTHING)</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Summary: 3 success, 0 with warnings, 2 nothing</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: 2 derivation(s) contain Nothing values!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>You can also check manually at any time:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_check_chronicles</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_check_chronicles</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Chronicles can be in one of three states:</p>
 <table class="caption-top table">
@@ -1143,50 +1069,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="python-cronista-ryxpress" class="level3" data-number="9.14.2">
-<h3 data-number="9.14.2" class="anchored" data-anchor-id="python-cronista-ryxpress"><span class="header-section-number">9.14.2</span> Python: cronista + ryxpress</h3>
+<section id="python-cronista-ryxpress" class="level3" data-number="9.13.2">
+<h3 data-number="9.13.2" class="anchored" data-anchor-id="python-cronista-ryxpress"><span class="header-section-number">9.13.2</span> Python: cronista + ryxpress</h3>
 <p>The same pattern works in Python with <code>cronista</code> (the Python equivalent of chronicler) and <code>ryxpress</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gen-pipeline.R using Python functions</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> sqrt_result,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"r_sqrt(16)"</span>,            <span class="co"># Success: Just(4.0)</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.py"</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> div_by_zero,</span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"divide_by_zero()"</span>,      <span class="co"># Failure: Nothing</span></span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.py"</span></span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gen-pipeline.R using Python functions</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> sqrt_result,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"r_sqrt(16)"</span>,            <span class="co"># Success: Just(4.0)</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.py"</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_py</span>(</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> div_by_zero,</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">expr =</span> <span class="st">"divide_by_zero()"</span>,      <span class="co"># Failure: Nothing</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">user_functions =</span> <span class="st">"functions.py"</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Where <code>functions.py</code> uses cronista’s <code>record()</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># functions.py</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cronista <span class="im">import</span> record</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>r_sqrt <span class="op">=</span> record(math.sqrt)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="at">@record</span>()</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> divide_by_zero():</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> <span class="dv">0</span>  <span class="co"># This error is captured, not raised</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># functions.py</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cronista <span class="im">import</span> record</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>r_sqrt <span class="op">=</span> record(math.sqrt)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="at">@record</span>()</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> divide_by_zero():</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> <span class="dv">0</span>  <span class="co"># This error is captured, not raised</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>After building, use ryxpress to check for Nothing values:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ryxpress <span class="im">import</span> rxp_check_chronicles</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>rxp_check_chronicles()</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chronicle status:</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✓ sqrt_result (chronicle: OK)</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✗ div_by_zero (chronicle: NOTHING)</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Failed: divide_by_zero</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Message: ZeroDivisionError: division by zero</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ryxpress <span class="im">import</span> rxp_check_chronicles</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>rxp_check_chronicles()</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chronicle status:</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✓ sqrt_result (chronicle: OK)</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✗ div_by_zero (chronicle: NOTHING)</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Failed: divide_by_zero</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Message: ZeroDivisionError: division by zero</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Reading a chronicle with Nothing automatically warns you:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ryxpress <span class="im">import</span> rxp_read</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> rxp_read(<span class="st">"div_by_zero"</span>)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; UserWarning: Derivation 'div_by_zero' contains a chronicle with Nothing value!</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Use cronista.read_log() on this object for details.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ryxpress <span class="im">import</span> rxp_read</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> rxp_read(<span class="st">"div_by_zero"</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; UserWarning: Derivation 'div_by_zero' contains a chronicle with Nothing value!</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Use cronista.read_log() on this object for details.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1198,14 +1124,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <p>Just like with the R packages, you can generate context for your LLM:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> run github:b-rodrigues/pkgctx <span class="at">--</span> python github:b-rodrigues/cronista <span class="op">&gt;</span> cronista.pkgctx.yaml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> run github:b-rodrigues/pkgctx <span class="at">--</span> python github:b-rodrigues/cronista <span class="op">&gt;</span> cronista.pkgctx.yaml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This helps your LLM understand how to use <code>record()</code>, <code>bind_record()</code>, and <code>read_log()</code> in Python.</p>
 </div>
 </div>
 </section>
 </section>
-<section id="summary" class="level2" data-number="9.15">
-<h2 data-number="9.15" class="anchored" data-anchor-id="summary"><span class="header-section-number">9.15</span> Summary</h2>
+<section id="summary" class="level2" data-number="9.14">
+<h2 data-number="9.14" class="anchored" data-anchor-id="summary"><span class="header-section-number">9.14</span> Summary</h2>
 <p>Monads add a layer of robustness to your pipelines. In this chapter, we covered:</p>
 <p><strong>Core Concepts:</strong></p>
 <ul>
@@ -1230,8 +1156,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Together they give you <strong>robust, reproducible, observable pipelines</strong></li>
 </ul>
 <p>This completes our code quality toolkit: environments (Nix), functional code (FP), testing, pipelines (rixpress), and robustness (monads). In the next chapter, we’ll learn how to distribute our work with Docker, followed by packaging and continuous integration.</p>
+</section>
+<section id="appendix-the-monadic-laws" class="level2" data-number="9.15">
+<h2 data-number="9.15" class="anchored" data-anchor-id="appendix-the-monadic-laws"><span class="header-section-number">9.15</span> Appendix: The Monadic Laws</h2>
+<p>For the mathematically curious, monads must satisfy three laws. While you don’t need to know these to <em>use</em> monads effectively, understanding them helps you verify that an implementation is correct.</p>
+<section id="first-law-left-identity" class="level3" data-number="9.15.1">
+<h3 data-number="9.15.1" class="anchored" data-anchor-id="first-law-left-identity"><span class="header-section-number">9.15.1</span> First Law: Left Identity</h3>
+<p>Passing a value to <code>return</code>/<code>unit</code> and then binding it to a function <code>f</code> is the same as applying <code>f</code> directly to the value:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(chronicler)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">as_chronicle</span>(<span class="dv">10</span>)  <span class="co"># as_chronicle is chronicler's "return/unit"</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>r_sqrt <span class="ot">&lt;-</span> <span class="fu">record</span>(sqrt)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co"># These should give the same result:</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_record</span>(a, r_sqrt)<span class="sc">$</span>value</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.162278</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="fu">r_sqrt</span>(<span class="dv">10</span>)<span class="sc">$</span>value</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.162278</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="second-law-right-identity" class="level3" data-number="9.15.2">
+<h3 data-number="9.15.2" class="anchored" data-anchor-id="second-law-right-identity"><span class="header-section-number">9.15.2</span> Second Law: Right Identity</h3>
+<p>Binding a monadic value to <code>return</code>/<code>unit</code> returns the original value unchanged:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">as_chronicle</span>(<span class="dv">10</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Binding to as_chronicle should return the same value:</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_record</span>(a, as_chronicle)<span class="sc">$</span>value</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>a<span class="sc">$</span>value</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="third-law-associativity" class="level3" data-number="9.15.3">
+<h3 data-number="9.15.3" class="anchored" data-anchor-id="third-law-associativity"><span class="header-section-number">9.15.3</span> Third Law: Associativity</h3>
+<p>The order of binding operations doesn’t matter—applying functions successively or composing them first gives the same result:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">as_chronicle</span>(<span class="dv">10</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>r_sqrt <span class="ot">&lt;-</span> <span class="fu">record</span>(sqrt)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>r_exp <span class="ot">&lt;-</span> <span class="fu">record</span>(exp)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 1: Chain binds sequentially</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span> <span class="fu">bind_record</span>(a, r_sqrt) <span class="sc">|&gt;</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_record</span>(r_exp)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Method 2: Compose binds, then apply</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>composed_fn <span class="ot">&lt;-</span> \(x) <span class="fu">bind_record</span>(x, r_sqrt) <span class="sc">|&gt;</span> <span class="fu">bind_record</span>(r_exp)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">composed_fn</span>(a)</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="co"># These should be equal:</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>result1<span class="sc">$</span>value</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.494743</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>result2<span class="sc">$</span>value</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.494743</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>A Note on Logs
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In <code>{chronicler}</code>, the <em>logs</em> between these equivalent expressions may differ slightly (since they record different paths through the code), but the <em>values</em> will always be identical. This is the important property for computational correctness.</p>
+</div>
+</div>
+<p>These laws ensure that monadic code behaves predictably—you can refactor bind chains without changing semantics, and you can trust that composition works as expected.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
