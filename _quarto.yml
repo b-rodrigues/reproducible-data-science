@@ -1,6 +1,9 @@
 project:
   type: book
 
+filters:
+  - tlang
+
 engine: jupyter
 
 book:

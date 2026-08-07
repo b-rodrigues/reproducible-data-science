@@ -407,3 +407,8 @@ reproducible packages, and T—which brings it all together into a clean,
 declarative pipeline.
 
 Let's dive in!
+
+```{t}
+#| label: demo-t-chunk
+"Hello from T!"
+```
