@@ -13,40 +13,20 @@ vice versa. This is understandable: even though both are high-level scripting
 languages, and an R user could likely read and understand Python code (and vice
 versa), it is still a pain in the loins to set up another language just to run a
 few lines of code. Now, with LLMs, you can have a model generate the code, and
-depending on what you're doing, it's likely to be correct. However, setting up
+depending on what you're doing, it's very likely to be correct. However, setting up
 another language is still quite annoying. This is where Nix comes in. Nix makes
 adding another language to a project extremely simple.
 
-Even though tools like `{rix}`, `{rixpress}`, and Docker might be new to you, you
-can become productive with them very quickly by leveraging LLMs. The key is to
-provide the LLM with the right context. I have built a tool called
-[pkgctx](https://github.com/b-rodrigues/pkgctx)^[https://github.com/b-rodrigues/pkgctx]
-that extracts structured, compact API specifications from R or Python packages
-for use in LLMs, minimising tokens while maximising context. Each of the
-repositories for these tools—`{rix}`, `{rixpress}` (R), and `rixpress` (Python)—contains
-a `.pkgctx.yaml` file that you can feed to an LLM to help it understand the
-package's API. With this context, the LLM can assist you in writing correct code
-using these tools, even if you've never used them before.
+You can now use several languages for a project: if you’re a Python user, you now
+can use R’s `{ggplot2}` quite easily by simply adding R and `{ggplot2}` to your
+project using Nix. However, in a way, this is just moving goalposts: as annoying
+as it was to set up R and `{ggplot2}`, and no matter how easily Nix solves this,
+now you need to set up Nix and get familiar with it!
 
-You can run `pkgctx` directly without installing it, thanks to Nix:
-
-```bash
-# Extract context for an R package from CRAN
-nix run github:b-rodrigues/pkgctx -- r dplyr > dplyr.pkgctx.yaml
-
-# Extract context for an R package from GitHub
-nix run github:b-rodrigues/pkgctx -- r github:ropensci/rix > rix.pkgctx.yaml
-
-# Extract context for a Python package from PyPI
-nix run github:b-rodrigues/pkgctx -- python requests > requests.pkgctx.yaml
-```
-
-I encourage you to do the same for the packages you use in your analyses. By
-generating context files using `pkgctx`, you enable LLMs to help you write code
-more efficiently and correctly. This is especially useful for packages with
-complex APIs or for packages you don't use frequently. Simply generate the
-context file once and include it in your project repository—or feed it to your
-LLM whenever you need assistance with that package.
+But thankfully we live in AI age, and LLMs can be quite helpful here. My goal is
+for you to not have to have to worry (too much) about setting up projects
+and making them reproducible thanks to LLMs and a new programming language
+made specifically for setting up reproducible pipelines, T.
 
 ## Who is this book for?
 
@@ -88,7 +68,7 @@ is to turn your messy code into a RAP, or you do it yourself. The second option
 is by far the most common. The issue, as stated above, is that most of us simply
 don't do it. We are always in a rush to get to the results and don't think about
 making the process reproducible, because we assume it takes extra time that is
-better spent on the analysis itself. This is a misconception, for two reasons.
+better spent on the analysis itself. This is a misconception, for three reasons.
 
 The first is that employing the techniques we will discuss in this book won't
 actually take much time. As you will see, they are not things you "add on top
@@ -105,6 +85,9 @@ SQL query in a script somewhere to ensure consistency. But what about more
 complex analyses? Is keeping the script enough? It is a good start, of course,
 but very often, there is no single script, or a script for each step of the
 analysis is missing.
+
+The third reason is that we actually can offload so much of this to LLMs that
+there truly is no reason not to do it.
 
 I've seen this play out many times in many different organisations. It's that
 time of the year again, and a report needs to be written. Ten people are
