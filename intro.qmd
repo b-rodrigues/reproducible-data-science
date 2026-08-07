@@ -23,10 +23,10 @@ project using Nix. However, in a way, this is just moving the goalposts: as anno
 as it was to set up R and `{ggplot2}`, and no matter how effortlessly Nix solves this,
 now you need to set up Nix and get familiar with it!
 
-But thankfully we live in the AI age, and LLMs can be quite helpful here. My goal is
-for you not to have to worry (too much) about setting up projects
-and making them reproducible, thanks to LLMs and T—a new programming language
-made specifically for setting up reproducible pipelines.
+But thankfully we live in the AI age, and LLMs can be quite helpful here. To make this
+even easier, we can combine Nix with T—a domain-specific language (DSL) designed
+specifically for building reproducible pipelines. My goal is for you not to have to
+worry (too much) about project setup, letting LLMs and T handle the heavy lifting.
 
 ## Who is this book for?
 
@@ -89,8 +89,9 @@ analysis is missing.
 The third reason is that we can actually offload so much of this to LLMs that
 there truly is no reason not to do it.
 
-I've seen this play out many times in many different organisations. It's that
-time of the year again, and a report needs to be written. Ten people are
+Of course, building a RAP is not just a technical challenge; it is also an
+organisational one. I've seen this play out many times in many different
+organisations. It's that time of the year again, and a report needs to be written. Ten people are
 involved, and just gathering the data is already complicated. Some get their
 data from Word documents attached to emails, some from a website, some from a
 PDF report from another department. I remember a story a senior manager at my
@@ -400,8 +401,9 @@ Okay, this might all seem incredibly complicated. How on earth are we supposed t
 manage all these risks and balance the immediate need for results with the
 future need to rerun an old project? And what if rerunning it is never needed?
 
-As you shall see, this is not as difficult as it sounds, thanks to Nix and the
+As you shall see, this is not as difficult as it sounds, thanks to Nix, the
 tireless efforts of the `nixpkgs` maintainers who work to build truly
-reproducible packages.
+reproducible packages, and T—which brings it all together into a clean,
+declarative pipeline.
 
 Let's dive in!

@@ -8,3 +8,9 @@ result
 /index_files/
 /site_libs/
 /*.tex
+/*.html
+/*.pdf
+/*.epub
+/*.aux
+/*.log
+/*.toc
