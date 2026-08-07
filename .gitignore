@@ -2,3 +2,9 @@
 /packages/
 .direnv
 result
+
+**/*.quarto_ipynb
+/_book/
+/index_files/
+/site_libs/
+/*.tex

@@ -17,16 +17,16 @@ depending on what you're doing, it's very likely to be correct. However, setting
 another language is still quite annoying. This is where Nix comes in. Nix makes
 adding another language to a project extremely simple.
 
-You can now use several languages for a project: if you’re a Python user, you now
-can use R’s `{ggplot2}` quite easily by simply adding R and `{ggplot2}` to your
-project using Nix. However, in a way, this is just moving goalposts: as annoying
-as it was to set up R and `{ggplot2}`, and no matter how easily Nix solves this,
+You can now use several languages for a project: if you’re a Python user, you
+can now use R’s `{ggplot2}` quite easily by simply adding R and `{ggplot2}` to your
+project using Nix. However, in a way, this is just moving the goalposts: as annoying
+as it was to set up R and `{ggplot2}`, and no matter how effortlessly Nix solves this,
 now you need to set up Nix and get familiar with it!
 
-But thankfully we live in AI age, and LLMs can be quite helpful here. My goal is
-for you to not have to have to worry (too much) about setting up projects
-and making them reproducible thanks to LLMs and a new programming language
-made specifically for setting up reproducible pipelines, T.
+But thankfully we live in the AI age, and LLMs can be quite helpful here. My goal is
+for you not to have to worry (too much) about setting up projects
+and making them reproducible, thanks to LLMs and T—a new programming language
+made specifically for setting up reproducible pipelines.
 
 ## Who is this book for?
 
@@ -51,7 +51,7 @@ Julia to a project and use it effectively if you need to.
 The aim of this book is to make the process of analysing data as reliable,
 retraceable, and reproducible as possible, and to do this by design. This means
 that once you're done with the analysis, you're done. You don't want to spend
-time, which you often don't have anyway, to rewrite or refactor an analysis to
+time, which you often don't have anyway, rewriting or refactoring an analysis to
 make it reproducible after the fact. We both know this is not going to happen.
 Once an analysis is finished, it's on to the next one. If you need to rerun an
 older analysis (for example, because the data has been updated), you'll simply
@@ -86,7 +86,7 @@ complex analyses? Is keeping the script enough? It is a good start, of course,
 but very often, there is no single script, or a script for each step of the
 analysis is missing.
 
-The third reason is that we actually can offload so much of this to LLMs that
+The third reason is that we can actually offload so much of this to LLMs that
 there truly is no reason not to do it.
 
 I've seen this play out many times in many different organisations. It's that
@@ -104,7 +104,7 @@ answer? "Well, we could send them the data in any format they want, but they've
 asked for the tables in a PDF."
 
 So the first, and probably most important, lesson here is: when starting to
-build a RAP, make sure you talk with all the people involved.
+build a RAP, make sure you talk to all the people involved.
 
 ## Prerequisites
 
@@ -124,13 +124,13 @@ line, you might need to brush up on the basics. Don't worry, though; this isn't
 a book about the intricacies of the Unix command line. The commands I'll show
 you will be straightforward and directly applicable to the task at hand.
 
-This means however that if you are using Windows, first of all, why? and second
-of all, you will have to set up Windows Subsystem for Linux. This is because
+This means, however, that if you are using Windows—first of all, why? and second
+of all—you will have to set up Windows Subsystem for Linux (WSL). This is because
 there is no native Nix implementation for Windows, and so we need to run the
 Linux version through WSL. Don't worry though, it's not that hard, and you can
-then use an IDE from Windows to work with the environments managed by Nix, in a
-very seamless way (but seriously, consider, if you can, switching to Linux. How
-can you tolerate ads (ADS!) in the start menu).
+then use an IDE from Windows to work with the environments managed by Nix in a
+seamless way. (But seriously, if you can, consider switching to Linux—how can
+you tolerate ads (ADS!) in the Start menu?).
 
 Ideally, you should be comfortable with either R or Python. This book will
 assume that you have been using at least one of these languages for some
@@ -145,7 +145,7 @@ is for it to be executed by a machine, automatically, without any human
 intervention. This is the second lesson of building RAPs: there should be no
 human intervention needed to get the outputs once the RAP has started. If you
 achieve this, then your workflow is likely reproducible, or can at least be made
-so much more easily than if it requires special manipulation by a human
+so much more easily than if it required special manipulation by a human
 somewhere in the loop.
 
 ## What actually is reproducibility?
@@ -165,7 +165,7 @@ workflow.
 Is your code open? Good. Or is it at least available to others in your
 organisation, in a way that they could re-execute it if needed? Also good.
 
-But is it code written in a proprietary program, like STATA, SAS, or MATLAB?
+But is your code written in a proprietary program, like STATA, SAS, or MATLAB?
 Then your project is not reproducible. It doesn't matter if the code is
 well-documented, well-written, and available on a version control system. The
 project is simply not reproducible. Why?
@@ -196,7 +196,7 @@ knitr::include_graphics("images/matlab_old_version.png")
 ```
 :::
 
-And if you're running old code written for version, say, R2008a, there's no
+And if you're running old code written for, say, version R2008a, there's no
 guarantee that it will produce the exact same results on version R2025a. That's
 without even mentioning the toolboxes (if you're not familiar with them, they're
 MATLAB's equivalent of packages or libraries). These evolve as well, and there's
@@ -204,7 +204,7 @@ no guarantee that you can purchase older versions. It's also likely that newer
 toolboxes cannot even run on older versions of MATLAB.
 
 Let me be clear: what I'm describing here for MATLAB could also be said for any
-other proprietary programs still commonly (and unfortunately) used in research
+other proprietary program still commonly (and unfortunately) used in research
 and statistics, like STATA, SAS, or SPSS. Even if some of these vendors provide
 ways to run older versions of their software, the fact that you have to rely on
 them for this is a barrier to reproducibility. There is no guarantee they will
@@ -227,7 +227,7 @@ deemed "solved," I would not be surprised to see a similar shift.
 
 ### Hidden dependencies can hinder reproducibility
 
-Then there's another problem. Let's suppose you've written a thoroughly tested
+Then there's another problem. Let me suppose you've written a thoroughly tested
 and documented workflow and made it available on GitHub (and let's even assume
 the data is freely available and the paper is open access). Or, if you're in the
 private sector, you've done all of the above, but the workflow is only available
@@ -252,7 +252,7 @@ operating system to deal with this issue.
 ### The requirements of a RAP
 
 So where does that leave us? For a project to be truly reproducible, it has to
-respect the following points:
+satisfy the following requirements:
 
 -   Source code must be available and thoroughly tested and documented (which is
     why we will be using Git and GitHub).
@@ -290,7 +290,7 @@ Let's take one step back. We live in the real world, where constraints outside
 of our control can make it impossible to build a true RAP. Sometimes we need to
 settle for something that might not be perfect, but is the next best thing.
 
-In what follows, let's assume the code is tested and documented, so we will only
+In what follows, let me assume the code is tested and documented, so we will only
 discuss the pipeline's execution.
 
 The *least* reproducible pipeline would be something that works, but only on
@@ -328,7 +328,7 @@ a language, or not run at all. If you've been using Python for some time, you
 certainly remember the switch from Python 2 to Python 3. Who knows, the switch
 to Python 4 might be just as painful!
 
-The take-away message is that relying on the language itself being stable over
+The takeaway message is that relying on the language itself being stable over
 time is not a sufficient condition for reproducibility. We have to set up our
 code in a way that is *explicitly* reproducible by dealing with the versions of
 the language itself.
@@ -348,7 +348,7 @@ By "reproducibility is on a continuum," I mean that you can set up your project
 to take none, one, two, three, four, or all of the preceding items into
 consideration.
 
-This is not a novel, or new idea. @peng2011 already discussed this concept but
+This is not a novel or new idea. @peng2011 already discussed this concept but
 named it the *reproducibility spectrum*:
 
 ::: {.content-hidden when-format="pdf"}
@@ -381,7 +381,7 @@ dependencies outside of your control. Relying on pre-compiled binaries is not
 future-proof, which is another reason why open-source tools are a hard
 requirement for reproducibility.
 
-For you Windows users, don't think that the preceding paragraph does not concern
+For Windows users, don't think that the preceding paragraph does not concern
 you. It is very likely that Microsoft will push for OEM manufacturers to build
 more ARM-based computers in the future. There is already an ARM version of
 Windows, and I believe Microsoft will continue to support it. This is because
@@ -396,7 +396,7 @@ due to energy and licensing costs. Here again, if you want to run your
 historical code, you'll have to compile old packages and programming language
 versions from source.
 
-Ok, this might all seem incredibly complicated. How on earth are we supposed to
+Okay, this might all seem incredibly complicated. How on earth are we supposed to
 manage all these risks and balance the immediate need for results with the
 future need to rerun an old project? And what if rerunning it is never needed?
 
