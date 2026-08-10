@@ -64,56 +64,101 @@ WSL, and after the prerequisites listed above):
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf \
-  -L https://install.determinate.systems/nix | \
-  sh -s -- install
+    -L https://install.determinate.systems/nix | \
+    sh -s -- install --no-confirm --extra-conf "
+trusted-users = root $USER
+substituters = https://cache.nixos.org https://rstats-on-nix.cachix.org
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= rstats-on-nix.cachix.org-1:vdiiVgocg6WeJrODIqdprZRUrhi1JzhBnXv7aWI6+F0="
 ```
 
-Just follow the instructions on screen, and in no time Nix will be available
-on your machine!
+This single command installs Nix and configures everything T needs:
 
-## Configuring the Cache
+- **`--no-confirm`** runs the installer non-interactively, so you don't have to answer any prompts.
+- **`--extra-conf`** injects configuration directly into your Nix config during installation. The three settings it applies are:
+  - **`trusted-users = root $USER`** — Marks your user as a trusted Nix user. This is required for binary caches and certain Nix operations to work without permission errors.
+  - **`substituters = ...`** — Tells Nix to fetch pre-built packages from the NixOS cache and the `rstats-on-nix` Cachix cache (used by T for R and Python packages), avoiding long builds from source.
+  - **`trusted-public-keys = ...`** — The cryptographic keys Nix uses to verify the authenticity of packages from those caches.
 
-Next, install the `cachix` client and configure the `rstats-on-nix` cache: this
-will install binary versions of many R packages which will speed up the building
-process of environments:
+Because the installer handles all of this in one step, there are no manual post-install configuration steps
+when using the Determinate Systems installer. If you installed Nix through other means, follow along below.
+
+## Already Have Nix?
+
+If you installed Nix through a method other than the Determinate Systems installer (e.g., the [official Nix installer](https://nixos.org/download/), Homebrew, your Linux distribution's package manager, or you're on NixOS), 
+you need to manually configure two more things.
+
+### Step 1: Add yourself as a trusted user
+
+T uses binary caches that require your user to be in the `trusted-users` list. 
+Without this, you'll get "ignoring untrusted substituter" errors.
+
+If you’re on NixOS, add this to your `/etc/nixos/configuration.nix`:
+
+```nix
+nix.settings.trusted-users = [ "root" "your-username" ];
+```
+
+Then rebuild:
 
 ```bash
-nix-env -iA cachix -f https://cachix.org/api/v1/install
+sudo nixos-rebuild switch
 ```
 
-then use the cache:
+On non-NixOS Linux, WSL or macOS, edit `/etc/nix/nix.conf`:
 
 ```bash
-cachix use rstats-on-nix
+# Add your username to the trusted-users line
+# If the line exists, append your username to it:
+sudo sed -i 's/^trusted-users = .*/& your-username/' /etc/nix/nix.conf
+
+# Or if no trusted-users line exists, add one:
+echo "trusted-users = root $(whoami)" | sudo tee -a /etc/nix/nix.conf
 ```
 
-You only need to do this once per machine you want to use `{rix}` on. Many
-thanks to [Cachix](https://www.cachix.org/) for sponsoring the `rstats-on-nix`
-cache!
-
-If you get this warning when trying to install software with Nix:
-
-```
-warning: ignoring the client-specified setting 'trusted-public-keys', because it is a restricted setting and you are not a trusted user
-warning: ignoring untrusted substituter 'https://rstats-on-nix.cachix.org', you are not a trusted user.
-Run `man nix.conf` for more information on the `substituters` configuration option.
-warning: ignoring the client-specified setting 'trusted-public-keys', because it is a restricted setting and you are not a trusted user
-```
-
-Then this means that configuration was not successful. You need to add your user
-to `/etc/nix/nix.custom.conf`:
+Then restart the Nix daemon:
 
 ```bash
-sudo nano /etc/nix/nix.custom.conf
+# Linux (systemd)
+sudo systemctl restart nix-daemon
+
+# macOS (launchd)
+sudo launchctl kickstart -k system/org.nixos.nix-daemon
 ```
 
-then simply add this line in the file:
+### Step 2: Add the binary cache
 
-```
-trusted-users = root YOURUSERNAME
+T relies on pre-built R and Python packages from the `rstats-on-nix` Cachix cache. 
+Without this cache, `nix develop` will try to build everything from source, which can take a very long time.
+
+On NixOS, add this to your `/etc/nixos/configuration.nix`:
+
+```nix
+nix.settings = {
+  substituters = [
+    "https://cache.nixos.org"
+    "https://rstats-on-nix.cachix.org"
+  ];
+  trustedPublicKeys = [
+    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    "rstats-on-nix.cachix.org-1:vdiiVgocg6WeJrODIqdprZRUrhi1JzhBnXv7aWI6+F0="
+  ];
+};
 ```
 
-where `YOURUSERNAME` is your current login user name.
+Then rebuild:
+
+```bash
+sudo nixos-rebuild switch
+```
+
+On non-NixOS Linux, WSL or macOS, add these lines to `/etc/nix/nix.conf`:
+
+```bash
+echo "substituters = https://cache.nixos.org https://rstats-on-nix.cachix.org" | sudo tee -a /etc/nix/nix.conf
+echo "trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= rstats-on-nix.cachix.org-1:vdiiVgocg6WeJrODIqdprZRUrhi1JzhBnXv7aWI6+F0=" | sudo tee -a /etc/nix/nix.conf
+```
+
+Then restart the Nix daemon (same commands as above).
 
 ## Verifying installation with Temporary Shells
 
