@@ -316,8 +316,9 @@ LLM-generated test, you can verify that the expected output is correct and that
 the test covers the right cases. This makes tests uniquely suited to the "trust
 but verify" workflow that AI-assisted development demands.
 
-In the next chapter, we will start building reproducible pipelines with
-`{rixpress}`, putting our tested functions to work.
+In the next chapter, we will start building deeper T pipelines, putting our
+tested functions and scripts to work in real polyglot analyses.
+
 
 ## Part 2: Advanced Version Control
 
@@ -458,14 +459,211 @@ This forces you to be the reviewer. It prevents "accidental" AI hallucinations
 This workflow ensures you maintain full control over your codebase while
 benefiting from LLM assistance.
 
+## Part 3: Testing T Pipelines with Testcraft
+
+The R and Python testing we have just covered handles the code *inside* your
+nodes. But what about the pipeline itself? Does it have the right structure? Do
+nodes depend on each other in the right order? Does the data flowing between
+nodes have the right shape after a build?
+
+T has a built-in testing system for this: the **testcraft** package and the
+`t test` CLI command.
+
+### The `t test` Command
+
+When you initialise a T project with `t init`, the project gets a `tests/`
+directory alongside `src/`. Any `.t` file in `tests/` whose name starts with
+`test-` is automatically discovered and run by:
+
+```bash
+t test
+```
+
+This is the T equivalent of `pytest` or `testthat::test_dir()`. Each test file
+is a T script that builds a pipeline (or reads from an already-built one),
+makes assertions using `expect_*` functions, and fails loudly if any assertion
+does not hold.
+
+### The `expect_*` Primitives
+
+Testcraft's `expect_*` functions return a typed `Expect` value—`Expect_pass`,
+`Expect_stop`, or `Expect_hold`—rather than a bare boolean. This matters
+because when you wrap one in `assert()`, a failure gives you a rich diagnostic
+message instead of a generic `AssertionError: false`:
+
+```t
+-- Bare assert: not very helpful on failure
+assert(nrow(df) == 4)          -- AssertionError: expression evaluated to false
+
+-- expect_*: tells you exactly what went wrong
+assert(expect_nrow(df, 4))     -- AssertionError: expected 4 rows, got 7
+assert(expect_colnames(df, ["id", "val"]))
+  -- AssertionError: column mismatch: got ["id", "score"], expected ["id", "val"]
+```
+
+The core expectations you will use most often:
+
+| Function | What it checks |
+|:---------|:---------------|
+| `expect_equal(actual, expected)` | Deep equality with tolerance for floats |
+| `expect_nrow(df, n)` | DataFrame has exactly `n` rows |
+| `expect_ncol(df, n)` | DataFrame has exactly `n` columns |
+| `expect_colnames(df, names)` | Column names match exactly (order-sensitive) |
+| `expect_has_colnames(df, names)` | DataFrame contains *at least* these columns |
+| `expect_no_na(df, col)` | No NA values in `col` |
+| `expect_type(x, "Int")` | Value has the expected type |
+| `expect_error(expr)` | Expression produces an Error value |
+| `expect_gt/gte/lt/lte(a, b)` | Numeric comparisons |
+| `expect_between(x, lo, hi)` | Value falls within bounds |
+| `expect_unique(x)` | All elements are distinct |
+| `expect_match(str, pattern)` | String matches a regex |
+
+### Testing Node Outputs
+
+The typical pattern is: build the pipeline, read each node with `read_node()`,
+then assert on the result. Here is a complete test file for the GLM pipeline
+from the previous chapter:
+
+```t
+-- tests/test-glm-pipeline.t
+import stats
+import dataframe
+
+p = pipeline {
+  data_node = node(
+    command = <{
+      data.frame(
+        x = c(1.0, 2.0, 3.0, 4.0, 5.0),
+        y = c(0L, 0L, 1L, 1L, 1L)
+      )
+    }>,
+    runtime = R,
+    serializer = ^ipc
+  )
+  model_node = node(
+    command = <{
+      data_node$y <- as.factor(data_node$y)
+      glm(y ~ x, data = data_node, family = binomial(link = "logit"))
+    }>,
+    runtime = R,
+    serializer = ^pmml,
+    deserializer = ^ipc
+  )
+}
+
+build_pipeline(p)
+
+-- Test node outputs
+data = read_node(p.data_node)
+assert(expect_nrow(data, 5))
+assert(expect_colnames(data, ["x", "y"]))
+assert(expect_no_na(data, "x"))
+
+model = read_node(p.model_node)
+assert(expect_type(model, "Model"))
+
+print("✓ glm pipeline: all assertions passed")
+```
+
+### Testing the Pipeline Structure
+
+Testcraft also provides expectations that operate directly on the pipeline DAG,
+before or after building. These are unique to T and have no equivalent in
+testthat or pytest: they test the *structure* of the computation, not just the
+outputs.
+
+```t
+-- Check that p is a valid Pipeline value
+assert(expect_pipeline(p))
+
+-- Check that the pipeline contains exactly these nodes
+assert(expect_nodes(p, ["data_node", "model_node"]))
+
+-- Check that model_node depends on data_node
+assert(expect_dependency(p, "data_node", "model_node"))
+
+-- Check runtimes and serializers are correctly set
+assert(expect_runtime(p, "model_node", "R"))
+assert(expect_serializer(p, "model_node", ^pmml))
+assert(expect_deserializer(p, "model_node", ^ipc))
+
+-- Check that model_node was actually built successfully
+assert(expect_computed(p.model_node))
+```
+
+These structural tests are most valuable as a guard against refactoring
+accidents. If you reorganise the pipeline and accidentally break a dependency,
+`expect_dependency` will catch it immediately, before any downstream output
+has a chance to silently produce wrong results.
+
+### The Fixture-Chain Pattern
+
+For more complex test suites, T supports composing pipelines with `chain()` and
+`parallel()`. The pattern is to separate data-producing nodes from
+assertion nodes, and compose them into a combined pipeline:
+
+```t
+-- A fixture pipeline produces the base data
+fixture = pipeline {
+  data = node(
+    command = read_csv("tests/data/sample.csv"),
+    serializer = ^csv
+  )
+}
+
+-- A test pipeline consumes and transforms it, then checks the result
+test_filter = pipeline {
+  filtered = node(
+    command = data |> filter($score >= 88),
+    serializer = ^csv,
+    deserializer = ^csv
+  )
+  -- A dedicated "check" node whose output is a Dict of assertion results
+  check_filter = node(
+    command = [
+      nrow_check:    assert(expect_nrow(filtered, 2)),
+      colnames_check: assert(expect_colnames(filtered, ["name", "score", "grade"]))
+    ],
+    serializer = ^json,
+    deserializer = ^csv
+  )
+}
+
+-- chain() wires fixture.data into test_filter;
+-- parallel() allows multiple independent test pipelines to run from the same fixture
+combined = chain(fixture, parallel(test_filter))
+build_pipeline(combined)
+```
+
+The `check_filter` node serializes its result as JSON: a named Dict where each
+key is the name of an assertion and each value is `true` on success or an
+`Error` on failure. This makes test results inspectable and diffable, not just
+pass/fail.
+
+### Summary of Testing Levels
+
+In a well-tested T project, you will have tests at three levels:
+
+| Level | Where | Tool | What it catches |
+|:------|:------|:-----|:----------------|
+| Function | `tests/testthat/` or `tests/test_*.py` | `{testthat}`, `pytest` | Bugs in the R/Python helper functions used inside nodes |
+| Node output | `tests/test-*.t` | `t test` + `expect_*` | Wrong data shapes, unexpected NAs, bad column names after a build |
+| Pipeline structure | `tests/test-*.t` | `t test` + `expect_pipeline/nodes/dependency` | Broken DAG structure, wrong runtimes, serializer mismatches |
+
+These three layers complement each other. Function tests are fast and cheap to
+write. Node output tests catch integration bugs that only appear when R and
+Python code runs inside a Nix sandbox. Pipeline structure tests catch
+architectural regressions when the pipeline definition is refactored.
+
 ## Summary
 
-In this chapter, we covered the safety protocols of professional software
-engineering:
+In this chapter, we covered the safety protocols of professional data science
+with T:
 
-1.  Unit tests prove your code works and protect you from regressions.
-2.  Git workflows (Trunk-Based Development, Rebasing) keep your collaboration
-    clean and history linear.
-3.  Code review (via Interactive Staging) is your primary defence against
-    AI-generated bugs.
-
+1. **Unit tests** (R's `{testthat}`, Python's `pytest`) prove that the helper
+   functions living inside your nodes work correctly in isolation.
+2. **Git workflows** (Trunk-Based Development, rebasing, interactive staging)
+   keep collaboration clean and protect you from AI-generated regressions.
+3. **Testcraft** (`t test`, `expect_*`) tests T pipelines at two levels: node
+   outputs (does the data look right after a build?) and pipeline structure
+   (does the DAG have the right shape, runtimes, and serializers?).
