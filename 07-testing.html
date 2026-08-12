@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; Professional Workflows: Testing and Git – Reproducible Polyglot Data Science</title>
+<title>7&nbsp; Professional Workflows: Testing and Git – Reproducible Polyglot Data Science</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./07-rixpress-basics.html" rel="next">
-<link href="./05-fp.html" rel="prev">
+<link href="./08-rixpress-basics.html" rel="next">
+<link href="./06-fp.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-testing.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-testing.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -392,56 +392,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-fp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
+  <a href="./05-first-pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-testing.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  <a href="./06-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-rixpress-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  <a href="./07-testing.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  <a href="./08-rixpress-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-monads.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  <a href="./09-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-docker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  <a href="./10-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11-packaging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  <a href="./11-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-ci.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  <a href="./12-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13-conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./13-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -460,32 +466,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">6.1</span> Introduction</a></li>
-  <li><a href="#part-1-unit-testing" id="toc-part-1-unit-testing" class="nav-link" data-scroll-target="#part-1-unit-testing"><span class="header-section-number">6.2</span> Part 1: Unit Testing</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">7.1</span> Introduction</a></li>
+  <li><a href="#part-1-unit-testing" id="toc-part-1-unit-testing" class="nav-link" data-scroll-target="#part-1-unit-testing"><span class="header-section-number">7.2</span> Part 1: Unit Testing</a>
   <ul class="collapse">
-  <li><a href="#the-philosophy-of-a-good-unit-test" id="toc-the-philosophy-of-a-good-unit-test" class="nav-link" data-scroll-target="#the-philosophy-of-a-good-unit-test"><span class="header-section-number">6.2.1</span> The Philosophy of a Good Unit Test</a></li>
-  <li><a href="#unit-testing-in-practice" id="toc-unit-testing-in-practice" class="nav-link" data-scroll-target="#unit-testing-in-practice"><span class="header-section-number">6.2.2</span> Unit Testing in Practice</a></li>
-  <li><a href="#testing-as-a-design-tool" id="toc-testing-as-a-design-tool" class="nav-link" data-scroll-target="#testing-as-a-design-tool"><span class="header-section-number">6.2.3</span> Testing as a Design Tool</a></li>
-  <li><a href="#the-modern-data-scientists-role-reviewer-and-ai-collaborator" id="toc-the-modern-data-scientists-role-reviewer-and-ai-collaborator" class="nav-link" data-scroll-target="#the-modern-data-scientists-role-reviewer-and-ai-collaborator"><span class="header-section-number">6.2.4</span> The Modern Data Scientist’s Role: Reviewer and AI Collaborator</a></li>
+  <li><a href="#the-philosophy-of-a-good-unit-test" id="toc-the-philosophy-of-a-good-unit-test" class="nav-link" data-scroll-target="#the-philosophy-of-a-good-unit-test"><span class="header-section-number">7.2.1</span> The Philosophy of a Good Unit Test</a></li>
+  <li><a href="#unit-testing-in-practice" id="toc-unit-testing-in-practice" class="nav-link" data-scroll-target="#unit-testing-in-practice"><span class="header-section-number">7.2.2</span> Unit Testing in Practice</a></li>
+  <li><a href="#testing-as-a-design-tool" id="toc-testing-as-a-design-tool" class="nav-link" data-scroll-target="#testing-as-a-design-tool"><span class="header-section-number">7.2.3</span> Testing as a Design Tool</a></li>
+  <li><a href="#the-modern-data-scientists-role-reviewer-and-ai-collaborator" id="toc-the-modern-data-scientists-role-reviewer-and-ai-collaborator" class="nav-link" data-scroll-target="#the-modern-data-scientists-role-reviewer-and-ai-collaborator"><span class="header-section-number">7.2.4</span> The Modern Data Scientist’s Role: Reviewer and AI Collaborator</a></li>
   </ul></li>
-  <li><a href="#part-2-advanced-version-control" id="toc-part-2-advanced-version-control" class="nav-link" data-scroll-target="#part-2-advanced-version-control"><span class="header-section-number">6.3</span> Part 2: Advanced Version Control</a>
+  <li><a href="#part-2-advanced-version-control" id="toc-part-2-advanced-version-control" class="nav-link" data-scroll-target="#part-2-advanced-version-control"><span class="header-section-number">7.3</span> Part 2: Advanced Version Control</a>
   <ul class="collapse">
-  <li><a href="#a-better-way-to-collaborate-trunk-based-development" id="toc-a-better-way-to-collaborate-trunk-based-development" class="nav-link" data-scroll-target="#a-better-way-to-collaborate-trunk-based-development"><span class="header-section-number">6.3.1</span> A Better Way to Collaborate: Trunk-Based Development</a></li>
-  <li><a href="#collaborative-hygiene-rebase-vs.-merge" id="toc-collaborative-hygiene-rebase-vs.-merge" class="nav-link" data-scroll-target="#collaborative-hygiene-rebase-vs.-merge"><span class="header-section-number">6.3.2</span> Collaborative Hygiene: Rebase vs.&nbsp;Merge</a></li>
-  <li><a href="#working-with-llms-and-git-managing-ai-generated-changes" id="toc-working-with-llms-and-git-managing-ai-generated-changes" class="nav-link" data-scroll-target="#working-with-llms-and-git-managing-ai-generated-changes"><span class="header-section-number">6.3.3</span> Working with LLMs and Git: Managing AI-Generated Changes</a></li>
+  <li><a href="#a-better-way-to-collaborate-trunk-based-development" id="toc-a-better-way-to-collaborate-trunk-based-development" class="nav-link" data-scroll-target="#a-better-way-to-collaborate-trunk-based-development"><span class="header-section-number">7.3.1</span> A Better Way to Collaborate: Trunk-Based Development</a></li>
+  <li><a href="#collaborative-hygiene-rebase-vs.-merge" id="toc-collaborative-hygiene-rebase-vs.-merge" class="nav-link" data-scroll-target="#collaborative-hygiene-rebase-vs.-merge"><span class="header-section-number">7.3.2</span> Collaborative Hygiene: Rebase vs.&nbsp;Merge</a></li>
+  <li><a href="#working-with-llms-and-git-managing-ai-generated-changes" id="toc-working-with-llms-and-git-managing-ai-generated-changes" class="nav-link" data-scroll-target="#working-with-llms-and-git-managing-ai-generated-changes"><span class="header-section-number">7.3.3</span> Working with LLMs and Git: Managing AI-Generated Changes</a></li>
   </ul></li>
-  <li><a href="#part-3-testing-t-pipelines-with-testcraft" id="toc-part-3-testing-t-pipelines-with-testcraft" class="nav-link" data-scroll-target="#part-3-testing-t-pipelines-with-testcraft"><span class="header-section-number">6.4</span> Part 3: Testing T Pipelines with Testcraft</a>
+  <li><a href="#part-3-testing-t-pipelines-with-testcraft" id="toc-part-3-testing-t-pipelines-with-testcraft" class="nav-link" data-scroll-target="#part-3-testing-t-pipelines-with-testcraft"><span class="header-section-number">7.4</span> Part 3: Testing T Pipelines with Testcraft</a>
   <ul class="collapse">
-  <li><a href="#the-t-test-command" id="toc-the-t-test-command" class="nav-link" data-scroll-target="#the-t-test-command"><span class="header-section-number">6.4.1</span> The <code>t test</code> Command</a></li>
-  <li><a href="#the-expect_-primitives" id="toc-the-expect_-primitives" class="nav-link" data-scroll-target="#the-expect_-primitives"><span class="header-section-number">6.4.2</span> The <code>expect_*</code> Primitives</a></li>
-  <li><a href="#testing-node-outputs" id="toc-testing-node-outputs" class="nav-link" data-scroll-target="#testing-node-outputs"><span class="header-section-number">6.4.3</span> Testing Node Outputs</a></li>
-  <li><a href="#testing-the-pipeline-structure" id="toc-testing-the-pipeline-structure" class="nav-link" data-scroll-target="#testing-the-pipeline-structure"><span class="header-section-number">6.4.4</span> Testing the Pipeline Structure</a></li>
-  <li><a href="#the-fixture-chain-pattern" id="toc-the-fixture-chain-pattern" class="nav-link" data-scroll-target="#the-fixture-chain-pattern"><span class="header-section-number">6.4.5</span> The Fixture-Chain Pattern</a></li>
-  <li><a href="#summary-of-testing-levels" id="toc-summary-of-testing-levels" class="nav-link" data-scroll-target="#summary-of-testing-levels"><span class="header-section-number">6.4.6</span> Summary of Testing Levels</a></li>
+  <li><a href="#the-t-test-command" id="toc-the-t-test-command" class="nav-link" data-scroll-target="#the-t-test-command"><span class="header-section-number">7.4.1</span> The <code>t test</code> Command</a></li>
+  <li><a href="#the-expect_-primitives" id="toc-the-expect_-primitives" class="nav-link" data-scroll-target="#the-expect_-primitives"><span class="header-section-number">7.4.2</span> The <code>expect_*</code> Primitives</a></li>
+  <li><a href="#testing-node-outputs" id="toc-testing-node-outputs" class="nav-link" data-scroll-target="#testing-node-outputs"><span class="header-section-number">7.4.3</span> Testing Node Outputs</a></li>
+  <li><a href="#testing-the-pipeline-structure" id="toc-testing-the-pipeline-structure" class="nav-link" data-scroll-target="#testing-the-pipeline-structure"><span class="header-section-number">7.4.4</span> Testing the Pipeline Structure</a></li>
+  <li><a href="#the-fixture-chain-pattern" id="toc-the-fixture-chain-pattern" class="nav-link" data-scroll-target="#the-fixture-chain-pattern"><span class="header-section-number">7.4.5</span> The Fixture-Chain Pattern</a></li>
+  <li><a href="#summary-of-testing-levels" id="toc-summary-of-testing-levels" class="nav-link" data-scroll-target="#summary-of-testing-levels"><span class="header-section-number">7.4.6</span> Summary of Testing Levels</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6.5</span> Summary</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">7.5</span> Summary</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/06-testing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/07-testing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -493,7 +499,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></h1>
 </div>
 
 
@@ -510,19 +516,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">6.1</span> Introduction</h2>
+<section id="introduction" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">7.1</span> Introduction</h2>
 <p>In the previous chapter, we learned that pure functions—those with no side effects and deterministic outputs—are the building blocks of reliable code. Small, testable functions are the foundation of reproducible pipelines.</p>
 <p>But how do we <em>prove</em> that our functions actually do what we claim they do? And how do we manage the complexity of collaborating with others (and with AI) without breaking everything?</p>
 <p>This brings us to two final, crucial questions: how do we prove that our functions actually do what we claim they do? And how do we manage the complexity of collaborating with others (and with AI) without breaking everything?</p>
 <p>This chapter addresses both questions by introducing unit testing and advanced Git workflows. You will learn what unit tests are and why they are essential for reliable data analysis, how to write and run them in both R (with <code>{testthat}</code>) and Python (with <code>pytest</code>), and how to use LLMs to accelerate test writing while embracing your role as a code reviewer. We will also cover professional Git techniques like Trunk-Based Development and interactive staging, which are especially valuable when managing code generated by AI assistants.</p>
 </section>
-<section id="part-1-unit-testing" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="part-1-unit-testing"><span class="header-section-number">6.2</span> Part 1: Unit Testing</h2>
+<section id="part-1-unit-testing" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="part-1-unit-testing"><span class="header-section-number">7.2</span> Part 1: Unit Testing</h2>
 <p>The answer to “how do we prove it works?” is unit testing. A unit test is a piece of code whose sole job is to check that another piece of code, a “unit”, works correctly. In our functional world, the “unit” is almost always a single function. This is why we spent so much time on FP in the previous chapter. Small, pure functions are not just easy to reason about; they are incredibly easy to test.</p>
 <p>Writing tests is your contract with your collaborators and your future self. It’s a formal promise that your function, <code>calculate_mean_mpg()</code>, given a specific input, will always produce a specific, correct output. It’s the safety net that catches bugs before they make it into your final analysis and the tool that gives you the confidence to refactor and improve your code without breaking it.</p>
-<section id="the-philosophy-of-a-good-unit-test" class="level3" data-number="6.2.1">
-<h3 data-number="6.2.1" class="anchored" data-anchor-id="the-philosophy-of-a-good-unit-test"><span class="header-section-number">6.2.1</span> The Philosophy of a Good Unit Test</h3>
+<section id="the-philosophy-of-a-good-unit-test" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="the-philosophy-of-a-good-unit-test"><span class="header-section-number">7.2.1</span> The Philosophy of a Good Unit Test</h3>
 <p>So, what should we test? Writing good tests is a skill, but it revolves around answering a few key questions about your function. For any function you write, you should have tests that cover:</p>
 <ul>
 <li>The “Happy Path”: does the function return the expected, correct value for a typical, valid input?</li>
@@ -531,8 +537,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Writing tests forces you to think through these scenarios, and in doing so, almost always leads you to write more robust and well-designed functions.</p>
 </section>
-<section id="unit-testing-in-practice" class="level3" data-number="6.2.2">
-<h3 data-number="6.2.2" class="anchored" data-anchor-id="unit-testing-in-practice"><span class="header-section-number">6.2.2</span> Unit Testing in Practice</h3>
+<section id="unit-testing-in-practice" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="unit-testing-in-practice"><span class="header-section-number">7.2.2</span> Unit Testing in Practice</h3>
 <p>Let’s imagine we’ve written a simple helper function to normalise a numeric vector (i.e., scale it to have a mean of 0 and a standard deviation of 1). We’ll save this in a file named <code>utils.R</code> or <code>utils.py</code>.</p>
 <p>R version (<code>utils.R</code>):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>normalize_vector <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
@@ -544,8 +550,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> normalize_vector(x):</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (x <span class="op">-</span> np.nanmean(x)) <span class="op">/</span> np.nanstd(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now, let’s write tests for it.</p>
-<section id="testing-in-r-with-testthat" class="level4" data-number="6.2.2.1">
-<h4 data-number="6.2.2.1" class="anchored" data-anchor-id="testing-in-r-with-testthat"><span class="header-section-number">6.2.2.1</span> Testing in R with <code>{testthat}</code></h4>
+<section id="testing-in-r-with-testthat" class="level4" data-number="7.2.2.1">
+<h4 data-number="7.2.2.1" class="anchored" data-anchor-id="testing-in-r-with-testthat"><span class="header-section-number">7.2.2.1</span> Testing in R with <code>{testthat}</code></h4>
 <p>In R, the standard for unit testing is the <code>{testthat}</code> package. The convention is to create a <code>tests/testthat/</code> directory in your project, and for a script <code>utils.R</code>, you would create a test file named <code>test-utils.R</code>.</p>
 <p>Inside <code>test-utils.R</code>, we use the <code>test_that()</code> function to group related expectations.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In file: tests/testthat/test-utils.R</span></span>
@@ -578,8 +584,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>expect_equal()</code> function checks for near-exact equality. <code>{testthat}</code> has many other <code>expect_*()</code> functions, like <code>expect_error()</code> to check that a function fails correctly, or <code>expect_warning()</code> to check for warnings.</p>
 </section>
-<section id="testing-in-python-with-pytest" class="level4" data-number="6.2.2.2">
-<h4 data-number="6.2.2.2" class="anchored" data-anchor-id="testing-in-python-with-pytest"><span class="header-section-number">6.2.2.2</span> Testing in Python with <code>pytest</code></h4>
+<section id="testing-in-python-with-pytest" class="level4" data-number="7.2.2.2">
+<h4 data-number="7.2.2.2" class="anchored" data-anchor-id="testing-in-python-with-pytest"><span class="header-section-number">7.2.2.2</span> Testing in Python with <code>pytest</code></h4>
 <p>In Python, the de facto standard is <code>pytest</code>. It’s incredibly simple and powerful. The convention is to create a <code>tests/</code> directory, and your test files should be named <code>test_*.py</code>. Inside, you just write functions whose names start with <code>test_</code> and use Python’s standard <code>assert</code> keyword.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In file: tests/test_utils.py</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -646,8 +652,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You don’t encounter this issue in R and understanding why reveals how valuable unit tests can be. (Hint: how does the implementation of the <code>sd</code> function, which computes the standard deviation, differ between R and NumPy?)</p>
 </section>
 </section>
-<section id="testing-as-a-design-tool" class="level3" data-number="6.2.3">
-<h3 data-number="6.2.3" class="anchored" data-anchor-id="testing-as-a-design-tool"><span class="header-section-number">6.2.3</span> Testing as a Design Tool</h3>
+<section id="testing-as-a-design-tool" class="level3" data-number="7.2.3">
+<h3 data-number="7.2.3" class="anchored" data-anchor-id="testing-as-a-design-tool"><span class="header-section-number">7.2.3</span> Testing as a Design Tool</h3>
 <p>Testing can also help you with programming, by thinking about edge cases. For example, what happens if we try to normalise a vector where all the elements are the same?</p>
 <p>Let’s write a test for this edge case first.</p>
 <p><code>pytest</code> version:</p>
@@ -671,11 +677,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> (x <span class="op">-</span> np.nanmean(x)) <span class="op">/</span> std_dev</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now, if we run <code>pytest</code> again, our new test will pass. We used testing not just to verify our code, but to actively make it more robust and thoughtful.</p>
 </section>
-<section id="the-modern-data-scientists-role-reviewer-and-ai-collaborator" class="level3" data-number="6.2.4">
-<h3 data-number="6.2.4" class="anchored" data-anchor-id="the-modern-data-scientists-role-reviewer-and-ai-collaborator"><span class="header-section-number">6.2.4</span> The Modern Data Scientist’s Role: Reviewer and AI Collaborator</h3>
+<section id="the-modern-data-scientists-role-reviewer-and-ai-collaborator" class="level3" data-number="7.2.4">
+<h3 data-number="7.2.4" class="anchored" data-anchor-id="the-modern-data-scientists-role-reviewer-and-ai-collaborator"><span class="header-section-number">7.2.4</span> The Modern Data Scientist’s Role: Reviewer and AI Collaborator</h3>
 <p>In the past, writing tests was often seen as a chore. Today, LLMs make this process very easy.</p>
-<section id="using-llms-to-write-tests" class="level4" data-number="6.2.4.1">
-<h4 data-number="6.2.4.1" class="anchored" data-anchor-id="using-llms-to-write-tests"><span class="header-section-number">6.2.4.1</span> Using LLMs to Write Tests</h4>
+<section id="using-llms-to-write-tests" class="level4" data-number="7.2.4.1">
+<h4 data-number="7.2.4.1" class="anchored" data-anchor-id="using-llms-to-write-tests"><span class="header-section-number">7.2.4.1</span> Using LLMs to Write Tests</h4>
 <p>LLMs are fantastic at writing unit tests. They are good at handling boilerplate code and <em>thinking</em> of edge cases. You can provide your function to an LLM and give it a prompt like this:</p>
 <blockquote class="blockquote">
 <p>“Here is my Python function <code>normalize_vector</code>. Please write three <code>pytest</code> unit tests for it. Include a test for the happy path with a simple array, a test for an array containing <code>np.nan</code>, and a test for the edge case where all elements in the array are identical.”</p>
@@ -710,20 +716,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 </section>
-<section id="part-2-advanced-version-control" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="part-2-advanced-version-control"><span class="header-section-number">6.3</span> Part 2: Advanced Version Control</h2>
+<section id="part-2-advanced-version-control" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="part-2-advanced-version-control"><span class="header-section-number">7.3</span> Part 2: Advanced Version Control</h2>
 <p>I assume you already know the basics of Git: <code>clone</code>, <code>add</code>, <code>commit</code>, and <code>push</code>. If you don’t, there are countless tutorials available, and I highly recommend you check one out and then come back to this.</p>
 <p>In this section, we will focus on the techniques that separate the “I submit code via Dropbox” novice from the professional data scientist: Trunk-Based Development and managing AI-generated code.</p>
-<section id="a-better-way-to-collaborate-trunk-based-development" class="level3" data-number="6.3.1">
-<h3 data-number="6.3.1" class="anchored" data-anchor-id="a-better-way-to-collaborate-trunk-based-development"><span class="header-section-number">6.3.1</span> A Better Way to Collaborate: Trunk-Based Development</h3>
+<section id="a-better-way-to-collaborate-trunk-based-development" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="a-better-way-to-collaborate-trunk-based-development"><span class="header-section-number">7.3.1</span> A Better Way to Collaborate: Trunk-Based Development</h3>
 <p>A common mistake for new teams is to use branches to add new features, and then let these feature branches live for a very long time. A data scientist might create a branch called <code>feature-big-analysis</code>, work on it for three weeks, and then try to merge it back into <code>main</code>. The result is often what’s called “merge hell”: <code>main</code> has changed so much in three weeks that merging the branch back in creates dozens of conflicts and is a painful, stressful process.</p>
 <p>To avoid this, many professional teams use a workflow called Trunk-Based Development (TBD). The philosophy is simple but powerful:</p>
 <blockquote class="blockquote">
 <p>All developers integrate their work back into the main branch (the “trunk”) as frequently as possible, at least once a day.</p>
 </blockquote>
 <p>This means that feature branches are incredibly short-lived. Instead of a single, massive feature branch that takes weeks, you create many tiny branches that each take a few hours or a day at most.</p>
-<section id="how-to-work-with-short-lived-branches" class="level4" data-number="6.3.1.1">
-<h4 data-number="6.3.1.1" class="anchored" data-anchor-id="how-to-work-with-short-lived-branches"><span class="header-section-number">6.3.1.1</span> How to Work with Short-Lived Branches</h4>
+<section id="how-to-work-with-short-lived-branches" class="level4" data-number="7.3.1.1">
+<h4 data-number="7.3.1.1" class="anchored" data-anchor-id="how-to-work-with-short-lived-branches"><span class="header-section-number">7.3.1.1</span> How to Work with Short-Lived Branches</h4>
 <p>But how can you merge something back into <code>main</code> if the feature isn’t finished? The <code>main</code> branch must always be stable and runnable. You can’t merge broken code.</p>
 <p>The first way to solve this issue is to use feature flags.</p>
 <p>A feature flag is just a simple variable (like a <code>TRUE</code>/<code>FALSE</code> switch) that lets you turn a new, unfinished part of the code on or off. This allows you to merge the code into <code>main</code> while keeping it “off” until it’s ready.</p>
@@ -744,8 +750,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>With this <code>if</code> block, you can safely merge your changes into <code>main</code>. The new code is there, but it won’t execute and won’t break the existing analysis. Other developers can pull your changes and won’t even notice. Once you’ve finished the feature in subsequent small commits, the final change is just to flip the switch: <code>use_new_scatterplot &lt;- TRUE</code>.</p>
 </section>
 </section>
-<section id="collaborative-hygiene-rebase-vs.-merge" class="level3" data-number="6.3.2">
-<h3 data-number="6.3.2" class="anchored" data-anchor-id="collaborative-hygiene-rebase-vs.-merge"><span class="header-section-number">6.3.2</span> Collaborative Hygiene: Rebase vs.&nbsp;Merge</h3>
+<section id="collaborative-hygiene-rebase-vs.-merge" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="collaborative-hygiene-rebase-vs.-merge"><span class="header-section-number">7.3.2</span> Collaborative Hygiene: Rebase vs.&nbsp;Merge</h3>
 <p>When you and a colleague both work on <code>main</code>, your histories can diverge. When you <code>git pull</code>, Git behaves in two ways:</p>
 <ol type="1">
 <li>Merge (Default): creates a “merge commit” that ties the histories together. This results in a messy, non-linear history graph if done frequently.</li>
@@ -755,11 +761,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> pull.rebase true</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now, when you <code>git pull</code>, your local changes will stay at the “tip” of the history, keeping the log clean.</p>
 </section>
-<section id="working-with-llms-and-git-managing-ai-generated-changes" class="level3" data-number="6.3.3">
-<h3 data-number="6.3.3" class="anchored" data-anchor-id="working-with-llms-and-git-managing-ai-generated-changes"><span class="header-section-number">6.3.3</span> Working with LLMs and Git: Managing AI-Generated Changes</h3>
+<section id="working-with-llms-and-git-managing-ai-generated-changes" class="level3" data-number="7.3.3">
+<h3 data-number="7.3.3" class="anchored" data-anchor-id="working-with-llms-and-git-managing-ai-generated-changes"><span class="header-section-number">7.3.3</span> Working with LLMs and Git: Managing AI-Generated Changes</h3>
 <p>When working with LLMs like GitHub Copilot, it’s crucial to review changes carefully before committing them. Git provides a powerful tool for this: interactive staging.</p>
-<section id="interactive-staging-accepting-changes-chunk-by-chunk" class="level4" data-number="6.3.3.1">
-<h4 data-number="6.3.3.1" class="anchored" data-anchor-id="interactive-staging-accepting-changes-chunk-by-chunk"><span class="header-section-number">6.3.3.1</span> Interactive Staging: Accepting changes chunk by chunk</h4>
+<section id="interactive-staging-accepting-changes-chunk-by-chunk" class="level4" data-number="7.3.3.1">
+<h4 data-number="7.3.3.1" class="anchored" data-anchor-id="interactive-staging-accepting-changes-chunk-by-chunk"><span class="header-section-number">7.3.3.1</span> Interactive Staging: Accepting changes chunk by chunk</h4>
 <p>Git’s interactive staging feature (<code>git add -p</code>) is perfect for reviewing LLM changes. Instead of blindly adding all changes with <code>git add .</code>, <code>git add -p</code> lets you review each “hunk” (chunk of changes) individually.</p>
 <p>Suppose an LLM refactored your Python script. You run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-p</span> analysis.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -779,8 +785,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>This forces you to be the reviewer. It prevents “accidental” AI hallucinations (like deleting a critical import) from slipping into your repository.</p>
 </section>
-<section id="example-llm-workflow" class="level4" data-number="6.3.3.2">
-<h4 data-number="6.3.3.2" class="anchored" data-anchor-id="example-llm-workflow"><span class="header-section-number">6.3.3.2</span> Example LLM Workflow</h4>
+<section id="example-llm-workflow" class="level4" data-number="7.3.3.2">
+<h4 data-number="7.3.3.2" class="anchored" data-anchor-id="example-llm-workflow"><span class="header-section-number">7.3.3.2</span> Example LLM Workflow</h4>
 <ol type="1">
 <li>Save state: <code>git commit -m "Working state before LLM"</code></li>
 <li>Prompt LLM: “Please refactor this function to be more efficient.”</li>
@@ -793,18 +799,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 </section>
-<section id="part-3-testing-t-pipelines-with-testcraft" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="part-3-testing-t-pipelines-with-testcraft"><span class="header-section-number">6.4</span> Part 3: Testing T Pipelines with Testcraft</h2>
+<section id="part-3-testing-t-pipelines-with-testcraft" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="part-3-testing-t-pipelines-with-testcraft"><span class="header-section-number">7.4</span> Part 3: Testing T Pipelines with Testcraft</h2>
 <p>The R and Python testing we have just covered handles the code <em>inside</em> your nodes. But what about the pipeline itself? Does it have the right structure? Do nodes depend on each other in the right order? Does the data flowing between nodes have the right shape after a build?</p>
 <p>T has a built-in testing system for this: the <strong>testcraft</strong> package and the <code>t test</code> CLI command.</p>
-<section id="the-t-test-command" class="level3" data-number="6.4.1">
-<h3 data-number="6.4.1" class="anchored" data-anchor-id="the-t-test-command"><span class="header-section-number">6.4.1</span> The <code>t test</code> Command</h3>
+<section id="the-t-test-command" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="the-t-test-command"><span class="header-section-number">7.4.1</span> The <code>t test</code> Command</h3>
 <p>When you initialise a T project with <code>t init</code>, the project gets a <code>tests/</code> directory alongside <code>src/</code>. Any <code>.t</code> file in <code>tests/</code> whose name starts with <code>test-</code> is automatically discovered and run by:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is the T equivalent of <code>pytest</code> or <code>testthat::test_dir()</code>. Each test file is a T script that builds a pipeline (or reads from an already-built one), makes assertions using <code>expect_*</code> functions, and fails loudly if any assertion does not hold.</p>
 </section>
-<section id="the-expect_-primitives" class="level3" data-number="6.4.2">
-<h3 data-number="6.4.2" class="anchored" data-anchor-id="the-expect_-primitives"><span class="header-section-number">6.4.2</span> The <code>expect_*</code> Primitives</h3>
+<section id="the-expect_-primitives" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="the-expect_-primitives"><span class="header-section-number">7.4.2</span> The <code>expect_*</code> Primitives</h3>
 <p>Testcraft’s <code>expect_*</code> functions return a typed <code>Expect</code> value—<code>Expect_pass</code>, <code>Expect_stop</code>, or <code>Expect_hold</code>—rather than a bare boolean. This matters because when you wrap one in <code>assert()</code>, a failure gives you a rich diagnostic message instead of a generic <code>AssertionError: false</code>:</p>
 <pre class="t"><code>-- Bare assert: not very helpful on failure
 assert(nrow(df) == 4)          -- AssertionError: expression evaluated to false
@@ -879,8 +885,8 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 </tbody>
 </table>
 </section>
-<section id="testing-node-outputs" class="level3" data-number="6.4.3">
-<h3 data-number="6.4.3" class="anchored" data-anchor-id="testing-node-outputs"><span class="header-section-number">6.4.3</span> Testing Node Outputs</h3>
+<section id="testing-node-outputs" class="level3" data-number="7.4.3">
+<h3 data-number="7.4.3" class="anchored" data-anchor-id="testing-node-outputs"><span class="header-section-number">7.4.3</span> Testing Node Outputs</h3>
 <p>The typical pattern is: build the pipeline, read each node with <code>read_node()</code>, then assert on the result. Here is a complete test file for the GLM pipeline from the previous chapter:</p>
 <pre class="t"><code>-- tests/test-glm-pipeline.t
 import stats
@@ -923,8 +929,8 @@ print("✓ glm pipeline: all assertions passed")</code></pre>
 <pre class="text t-error"><code>T execution failed:
 Error running t (error code 1): &lt;no output&gt;</code></pre>
 </section>
-<section id="testing-the-pipeline-structure" class="level3" data-number="6.4.4">
-<h3 data-number="6.4.4" class="anchored" data-anchor-id="testing-the-pipeline-structure"><span class="header-section-number">6.4.4</span> Testing the Pipeline Structure</h3>
+<section id="testing-the-pipeline-structure" class="level3" data-number="7.4.4">
+<h3 data-number="7.4.4" class="anchored" data-anchor-id="testing-the-pipeline-structure"><span class="header-section-number">7.4.4</span> Testing the Pipeline Structure</h3>
 <p>Testcraft also provides expectations that operate directly on the pipeline DAG, before or after building. These are unique to T and have no equivalent in testthat or pytest: they test the <em>structure</em> of the computation, not just the outputs.</p>
 <pre class="t"><code>-- Check that p is a valid Pipeline value
 assert(expect_pipeline(p))
@@ -946,8 +952,8 @@ assert(expect_computed(p.model_node))</code></pre>
 Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>These structural tests are most valuable as a guard against refactoring accidents. If you reorganise the pipeline and accidentally break a dependency, <code>expect_dependency</code> will catch it immediately, before any downstream output has a chance to silently produce wrong results.</p>
 </section>
-<section id="the-fixture-chain-pattern" class="level3" data-number="6.4.5">
-<h3 data-number="6.4.5" class="anchored" data-anchor-id="the-fixture-chain-pattern"><span class="header-section-number">6.4.5</span> The Fixture-Chain Pattern</h3>
+<section id="the-fixture-chain-pattern" class="level3" data-number="7.4.5">
+<h3 data-number="7.4.5" class="anchored" data-anchor-id="the-fixture-chain-pattern"><span class="header-section-number">7.4.5</span> The Fixture-Chain Pattern</h3>
 <p>For more complex test suites, T supports composing pipelines with <code>chain()</code> and <code>parallel()</code>. The pattern is to separate data-producing nodes from assertion nodes, and compose them into a combined pipeline:</p>
 <pre class="t"><code>-- A fixture pipeline produces the base data
 fixture = pipeline {
@@ -983,8 +989,8 @@ build_pipeline(combined)</code></pre>
 Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>The <code>check_filter</code> node serializes its result as JSON: a named Dict where each key is the name of an assertion and each value is <code>true</code> on success or an <code>Error</code> on failure. This makes test results inspectable and diffable, not just pass/fail.</p>
 </section>
-<section id="summary-of-testing-levels" class="level3" data-number="6.4.6">
-<h3 data-number="6.4.6" class="anchored" data-anchor-id="summary-of-testing-levels"><span class="header-section-number">6.4.6</span> Summary of Testing Levels</h3>
+<section id="summary-of-testing-levels" class="level3" data-number="7.4.6">
+<h3 data-number="7.4.6" class="anchored" data-anchor-id="summary-of-testing-levels"><span class="header-section-number">7.4.6</span> Summary of Testing Levels</h3>
 <p>In a well-tested T project, you will have tests at three levels:</p>
 <table class="caption-top table">
 <colgroup>
@@ -1025,8 +1031,8 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>These three layers complement each other. Function tests are fast and cheap to write. Node output tests catch integration bugs that only appear when R and Python code runs inside a Nix sandbox. Pipeline structure tests catch architectural regressions when the pipeline definition is refactored.</p>
 </section>
 </section>
-<section id="summary" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.5</span> Summary</h2>
+<section id="summary" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">7.5</span> Summary</h2>
 <p>In this chapter, we covered the safety protocols of professional data science with T:</p>
 <ol type="1">
 <li><strong>Unit tests</strong> (R’s <code>{testthat}</code>, Python’s <code>pytest</code>) prove that the helper functions living inside your nodes work correctly in isolation.</li>
@@ -1453,13 +1459,13 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./05-fp.html" class="pagination-link" aria-label="Pipelines as Function Composition">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span>
+      <a href="./06-fp.html" class="pagination-link" aria-label="Pipelines as Function Composition">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./07-rixpress-basics.html" class="pagination-link" aria-label="Building Reproducible Pipelines with rixpress">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./08-rixpress-basics.html" class="pagination-link" aria-label="Building Reproducible Pipelines with rixpress">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1468,4 +1474,4 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/06-testing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/07-testing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

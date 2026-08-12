@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; Building Reproducible Pipelines with rixpress – Reproducible Polyglot Data Science</title>
+<title>8&nbsp; Building Reproducible Pipelines with rixpress – Reproducible Polyglot Data Science</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./08-rixpress-advanced.html" rel="next">
-<link href="./06-testing.html" rel="prev">
+<link href="./09-rixpress-advanced.html" rel="next">
+<link href="./07-testing.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-rixpress-basics.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-rixpress-basics.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -392,56 +392,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-fp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
+  <a href="./05-first-pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-testing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  <a href="./06-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-rixpress-basics.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  <a href="./07-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  <a href="./08-rixpress-basics.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-monads.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  <a href="./09-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-docker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  <a href="./10-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11-packaging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  <a href="./11-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-ci.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  <a href="./12-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13-conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./13-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -460,35 +466,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction-from-scripts-and-notebooks-to-pipelines" id="toc-introduction-from-scripts-and-notebooks-to-pipelines" class="nav-link active" data-scroll-target="#introduction-from-scripts-and-notebooks-to-pipelines"><span class="header-section-number">7.1</span> Introduction: From Scripts and Notebooks to Pipelines</a>
+  <li><a href="#introduction-from-scripts-and-notebooks-to-pipelines" id="toc-introduction-from-scripts-and-notebooks-to-pipelines" class="nav-link active" data-scroll-target="#introduction-from-scripts-and-notebooks-to-pipelines"><span class="header-section-number">8.1</span> Introduction: From Scripts and Notebooks to Pipelines</a>
   <ul class="collapse">
-  <li><a href="#the-evolution-of-build-automation" id="toc-the-evolution-of-build-automation" class="nav-link" data-scroll-target="#the-evolution-of-build-automation"><span class="header-section-number">7.1.1</span> The Evolution of Build Automation</a></li>
-  <li><a href="#the-separation-problem" id="toc-the-separation-problem" class="nav-link" data-scroll-target="#the-separation-problem"><span class="header-section-number">7.1.2</span> The Separation Problem</a></li>
-  <li><a href="#the-imperative-approach-make-docker" id="toc-the-imperative-approach-make-docker" class="nav-link" data-scroll-target="#the-imperative-approach-make-docker"><span class="header-section-number">7.1.3</span> The Imperative Approach: Make + Docker</a></li>
-  <li><a href="#rixpress-unified-orchestration" id="toc-rixpress-unified-orchestration" class="nav-link" data-scroll-target="#rixpress-unified-orchestration"><span class="header-section-number">7.1.4</span> rixpress: Unified Orchestration</a></li>
+  <li><a href="#the-evolution-of-build-automation" id="toc-the-evolution-of-build-automation" class="nav-link" data-scroll-target="#the-evolution-of-build-automation"><span class="header-section-number">8.1.1</span> The Evolution of Build Automation</a></li>
+  <li><a href="#the-separation-problem" id="toc-the-separation-problem" class="nav-link" data-scroll-target="#the-separation-problem"><span class="header-section-number">8.1.2</span> The Separation Problem</a></li>
+  <li><a href="#the-imperative-approach-make-docker" id="toc-the-imperative-approach-make-docker" class="nav-link" data-scroll-target="#the-imperative-approach-make-docker"><span class="header-section-number">8.1.3</span> The Imperative Approach: Make + Docker</a></li>
+  <li><a href="#rixpress-unified-orchestration" id="toc-rixpress-unified-orchestration" class="nav-link" data-scroll-target="#rixpress-unified-orchestration"><span class="header-section-number">8.1.4</span> rixpress: Unified Orchestration</a></li>
   </ul></li>
-  <li><a href="#what-is-rixpress" id="toc-what-is-rixpress" class="nav-link" data-scroll-target="#what-is-rixpress"><span class="header-section-number">7.2</span> What is rixpress?</a></li>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">7.3</span> Getting Started</a>
+  <li><a href="#what-is-rixpress" id="toc-what-is-rixpress" class="nav-link" data-scroll-target="#what-is-rixpress"><span class="header-section-number">8.2</span> What is rixpress?</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">8.3</span> Getting Started</a>
   <ul class="collapse">
-  <li><a href="#initialising-a-project" id="toc-initialising-a-project" class="nav-link" data-scroll-target="#initialising-a-project"><span class="header-section-number">7.3.1</span> Initialising a project</a></li>
-  <li><a href="#defining-the-environment" id="toc-defining-the-environment" class="nav-link" data-scroll-target="#defining-the-environment"><span class="header-section-number">7.3.2</span> Defining the environment</a></li>
-  <li><a href="#defining-the-pipeline" id="toc-defining-the-pipeline" class="nav-link" data-scroll-target="#defining-the-pipeline"><span class="header-section-number">7.3.3</span> Defining the pipeline</a></li>
+  <li><a href="#initialising-a-project" id="toc-initialising-a-project" class="nav-link" data-scroll-target="#initialising-a-project"><span class="header-section-number">8.3.1</span> Initialising a project</a></li>
+  <li><a href="#defining-the-environment" id="toc-defining-the-environment" class="nav-link" data-scroll-target="#defining-the-environment"><span class="header-section-number">8.3.2</span> Defining the environment</a></li>
+  <li><a href="#defining-the-pipeline" id="toc-defining-the-pipeline" class="nav-link" data-scroll-target="#defining-the-pipeline"><span class="header-section-number">8.3.3</span> Defining the pipeline</a></li>
   </ul></li>
-  <li><a href="#real-world-examples" id="toc-real-world-examples" class="nav-link" data-scroll-target="#real-world-examples"><span class="header-section-number">7.4</span> Real-World Examples</a>
+  <li><a href="#real-world-examples" id="toc-real-world-examples" class="nav-link" data-scroll-target="#real-world-examples"><span class="header-section-number">8.4</span> Real-World Examples</a>
   <ul class="collapse">
-  <li><a href="#example-1-reading-many-input-files" id="toc-example-1-reading-many-input-files" class="nav-link" data-scroll-target="#example-1-reading-many-input-files"><span class="header-section-number">7.4.1</span> Example 1: Reading Many Input Files</a></li>
-  <li><a href="#example-2-machine-learning-with-xgboost" id="toc-example-2-machine-learning-with-xgboost" class="nav-link" data-scroll-target="#example-2-machine-learning-with-xgboost"><span class="header-section-number">7.4.2</span> Example 2: Machine Learning with XGBoost</a></li>
-  <li><a href="#example-3-simple-pythonrquarto-workflow" id="toc-example-3-simple-pythonrquarto-workflow" class="nav-link" data-scroll-target="#example-3-simple-pythonrquarto-workflow"><span class="header-section-number">7.4.3</span> Example 3: Simple Python→R→Quarto Workflow</a></li>
+  <li><a href="#example-1-reading-many-input-files" id="toc-example-1-reading-many-input-files" class="nav-link" data-scroll-target="#example-1-reading-many-input-files"><span class="header-section-number">8.4.1</span> Example 1: Reading Many Input Files</a></li>
+  <li><a href="#example-2-machine-learning-with-xgboost" id="toc-example-2-machine-learning-with-xgboost" class="nav-link" data-scroll-target="#example-2-machine-learning-with-xgboost"><span class="header-section-number">8.4.2</span> Example 2: Machine Learning with XGBoost</a></li>
+  <li><a href="#example-3-simple-pythonrquarto-workflow" id="toc-example-3-simple-pythonrquarto-workflow" class="nav-link" data-scroll-target="#example-3-simple-pythonrquarto-workflow"><span class="header-section-number">8.4.3</span> Example 3: Simple Python→R→Quarto Workflow</a></li>
   </ul></li>
-  <li><a href="#working-with-pipelines" id="toc-working-with-pipelines" class="nav-link" data-scroll-target="#working-with-pipelines"><span class="header-section-number">7.5</span> Working with Pipelines</a>
+  <li><a href="#working-with-pipelines" id="toc-working-with-pipelines" class="nav-link" data-scroll-target="#working-with-pipelines"><span class="header-section-number">8.5</span> Working with Pipelines</a>
   <ul class="collapse">
-  <li><a href="#building-the-pipeline" id="toc-building-the-pipeline" class="nav-link" data-scroll-target="#building-the-pipeline"><span class="header-section-number">7.5.1</span> Building the pipeline</a></li>
-  <li><a href="#inspecting-outputs" id="toc-inspecting-outputs" class="nav-link" data-scroll-target="#inspecting-outputs"><span class="header-section-number">7.5.2</span> Inspecting outputs</a></li>
-  <li><a href="#visualising-the-pipeline" id="toc-visualising-the-pipeline" class="nav-link" data-scroll-target="#visualising-the-pipeline"><span class="header-section-number">7.5.3</span> Visualising the pipeline</a></li>
-  <li><a href="#caching-incremental-builds-and-build-logs" id="toc-caching-incremental-builds-and-build-logs" class="nav-link" data-scroll-target="#caching-incremental-builds-and-build-logs"><span class="header-section-number">7.5.4</span> Caching, Incremental Builds and Build Logs</a></li>
+  <li><a href="#building-the-pipeline" id="toc-building-the-pipeline" class="nav-link" data-scroll-target="#building-the-pipeline"><span class="header-section-number">8.5.1</span> Building the pipeline</a></li>
+  <li><a href="#inspecting-outputs" id="toc-inspecting-outputs" class="nav-link" data-scroll-target="#inspecting-outputs"><span class="header-section-number">8.5.2</span> Inspecting outputs</a></li>
+  <li><a href="#visualising-the-pipeline" id="toc-visualising-the-pipeline" class="nav-link" data-scroll-target="#visualising-the-pipeline"><span class="header-section-number">8.5.3</span> Visualising the pipeline</a></li>
+  <li><a href="#caching-incremental-builds-and-build-logs" id="toc-caching-incremental-builds-and-build-logs" class="nav-link" data-scroll-target="#caching-incremental-builds-and-build-logs"><span class="header-section-number">8.5.4</span> Caching, Incremental Builds and Build Logs</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/07-rixpress-basics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/08-rixpress-basics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -496,7 +502,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></h1>
 </div>
 
 
@@ -513,12 +519,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction-from-scripts-and-notebooks-to-pipelines" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="introduction-from-scripts-and-notebooks-to-pipelines"><span class="header-section-number">7.1</span> Introduction: From Scripts and Notebooks to Pipelines</h2>
+<section id="introduction-from-scripts-and-notebooks-to-pipelines" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="introduction-from-scripts-and-notebooks-to-pipelines"><span class="header-section-number">8.1</span> Introduction: From Scripts and Notebooks to Pipelines</h2>
 <p>With reproducible environments (Nix, <code>{rix}</code>), functional code (Chapter 5), and testing skills (Chapter 6) in hand, we’re now ready to orchestrate complete analytical pipelines. But there’s one more piece to the puzzle: <strong>orchestration</strong>.</p>
 <p>How do we take our collection of functions and data files and run them in the correct order to produce our final data product? This problem of managing computational workflows is not new, and a whole category of <strong>build automation tools</strong> has been created to solve it.</p>
-<section id="the-evolution-of-build-automation" class="level3" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="the-evolution-of-build-automation"><span class="header-section-number">7.1.1</span> The Evolution of Build Automation</h3>
+<section id="the-evolution-of-build-automation" class="level3" data-number="8.1.1">
+<h3 data-number="8.1.1" class="anchored" data-anchor-id="the-evolution-of-build-automation"><span class="header-section-number">8.1.1</span> The Evolution of Build Automation</h3>
 <p>The original solution, dating back to the 1970s, is <strong><code>make</code></strong>. Created by Stuart Feldman at Bell Labs in 1976, <code>make</code> reads a <code>Makefile</code> that describes the dependency graph of a project. If you change the code that generates <code>plot.png</code>, <code>make</code> is smart enough to only re-run the steps needed to rebuild the plot and the final report.</p>
 <p>The strength of these tools is their language-agnosticism, but their weaknesses are twofold:</p>
 <ol type="1">
@@ -527,13 +533,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>This is where R’s <strong><code>{targets}</code></strong> package shines. It tracks dependencies between <strong>R objects directly</strong>, automatically handling serialisation. But <code>{targets}</code> operates within a single R session; for polyglot pipelines, you must manually coordinate via <code>{reticulate}</code>.</p>
 </section>
-<section id="the-separation-problem" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="the-separation-problem"><span class="header-section-number">7.1.2</span> The Separation Problem</h3>
+<section id="the-separation-problem" class="level3" data-number="8.1.2">
+<h3 data-number="8.1.2" class="anchored" data-anchor-id="the-separation-problem"><span class="header-section-number">8.1.2</span> The Separation Problem</h3>
 <p>All these tools (from <code>make</code> to <code>{targets}</code> to Airflow) separate workflow management from environment management. You use one tool to run the pipeline and another (Docker, <code>{renv}</code>) to set up the software.</p>
 <p>This separation creates friction. Running <code>{targets}</code> inside Docker ensures reproducibility, but forces the entire pipeline into one monolithic environment. What if your Python step requires TensorFlow 2.15 but your R step needs reticulate with Python 3.9? You’re stuck.</p>
 </section>
-<section id="the-imperative-approach-make-docker" class="level3" data-number="7.1.3">
-<h3 data-number="7.1.3" class="anchored" data-anchor-id="the-imperative-approach-make-docker"><span class="header-section-number">7.1.3</span> The Imperative Approach: Make + Docker</h3>
+<section id="the-imperative-approach-make-docker" class="level3" data-number="8.1.3">
+<h3 data-number="8.1.3" class="anchored" data-anchor-id="the-imperative-approach-make-docker"><span class="header-section-number">8.1.3</span> The Imperative Approach: Make + Docker</h3>
 <p>To illustrate this, consider the traditional setup for a polyglot pipeline. You’d need:</p>
 <ol type="1">
 <li>A <code>Dockerfile</code> to set up the environment</li>
@@ -594,8 +600,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(output_path, plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The scientific logic is buried under file I/O scaffolding. And the environment? That’s a separate 100+ line <code>Dockerfile</code> you must maintain.</p>
 </section>
-<section id="rixpress-unified-orchestration" class="level3" data-number="7.1.4">
-<h3 data-number="7.1.4" class="anchored" data-anchor-id="rixpress-unified-orchestration"><span class="header-section-number">7.1.4</span> rixpress: Unified Orchestration</h3>
+<section id="rixpress-unified-orchestration" class="level3" data-number="8.1.4">
+<h3 data-number="8.1.4" class="anchored" data-anchor-id="rixpress-unified-orchestration"><span class="header-section-number">8.1.4</span> rixpress: Unified Orchestration</h3>
 <p>This brings us to a key insight: a reproducible pipeline should be nothing more than a <strong>composition of pure functions</strong>, each with explicit inputs and outputs, no hidden state, and no reliance on execution order beyond what the data dependencies require.</p>
 <p><strong><code>{rixpress}</code></strong> solves this by using Nix not just as a package manager, but as the build automation engine itself. Each pipeline step is a <strong>Nix derivation</strong>: a hermetically sealed build unit.</p>
 <p>Compare the same pipeline in <code>{rixpress}</code>:</p>
@@ -708,8 +714,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="what-is-rixpress" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="what-is-rixpress"><span class="header-section-number">7.2</span> What is rixpress?</h2>
+<section id="what-is-rixpress" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="what-is-rixpress"><span class="header-section-number">8.2</span> What is rixpress?</h2>
 <p><code>{rixpress}</code> streamlines creation of <em>micropipelines</em> (small-to-medium, single-machine analytic pipelines) by expressing a pipeline in idiomatic R while delegating build orchestration to the Nix build system.</p>
 <p>Key features:</p>
 <ul>
@@ -787,10 +793,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rxp_populate</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="getting-started" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">7.3</span> Getting Started</h2>
-<section id="initialising-a-project" class="level3" data-number="7.3.1">
-<h3 data-number="7.3.1" class="anchored" data-anchor-id="initialising-a-project"><span class="header-section-number">7.3.1</span> Initialising a project</h3>
+<section id="getting-started" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">8.3</span> Getting Started</h2>
+<section id="initialising-a-project" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="initialising-a-project"><span class="header-section-number">8.3.1</span> Initialising a project</h3>
 <p>If you’re starting fresh, you can bootstrap a project using a temporary shell:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span> <span class="at">-p</span> R rPackages.rix rPackages.rixpress</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Once inside, start R and run:</p>
@@ -803,8 +809,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong><code>gen-pipeline.R</code></strong>: Where you define your pipeline with <code>{rixpress}</code></li>
 </ul>
 </section>
-<section id="defining-the-environment" class="level3" data-number="7.3.2">
-<h3 data-number="7.3.2" class="anchored" data-anchor-id="defining-the-environment"><span class="header-section-number">7.3.2</span> Defining the environment</h3>
+<section id="defining-the-environment" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="defining-the-environment"><span class="header-section-number">8.3.2</span> Defining the environment</h3>
 <p>Open <code>gen-env.R</code> and define the tools your pipeline needs:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
@@ -821,8 +827,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-shell</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="defining-the-pipeline" class="level3" data-number="7.3.3">
-<h3 data-number="7.3.3" class="anchored" data-anchor-id="defining-the-pipeline"><span class="header-section-number">7.3.3</span> Defining the pipeline</h3>
+<section id="defining-the-pipeline" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="defining-the-pipeline"><span class="header-section-number">8.3.3</span> Defining the pipeline</h3>
 <p>Open <code>gen-pipeline.R</code> and define your pipeline:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
@@ -851,11 +857,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In an interactive session, you can use <code>rxp_read()</code>, <code>rxp_load()</code> to read or load artifacts into the R session respectively and <code>rxp_trace()</code> to check the lineage of an artifact. This way, you can also work interactively with <code>{rixpress}</code>: add derivations one by one and incrementally build the pipeline. If you change previous derivations or functions that affect them, you don’t need to worry about re-running past steps—these will be executed automatically since they’ve changed!</p>
 </section>
 </section>
-<section id="real-world-examples" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="real-world-examples"><span class="header-section-number">7.4</span> Real-World Examples</h2>
+<section id="real-world-examples" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="real-world-examples"><span class="header-section-number">8.4</span> Real-World Examples</h2>
 <p>The <a href="https://github.com/b-rodrigues/rixpress_demos">rixpress_demos</a> repository contains many complete examples. Here are a few practical patterns to get you started.</p>
-<section id="example-1-reading-many-input-files" class="level3" data-number="7.4.1">
-<h3 data-number="7.4.1" class="anchored" data-anchor-id="example-1-reading-many-input-files"><span class="header-section-number">7.4.1</span> Example 1: Reading Many Input Files</h3>
+<section id="example-1-reading-many-input-files" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="example-1-reading-many-input-files"><span class="header-section-number">8.4.1</span> Example 1: Reading Many Input Files</h3>
 <p>When you have multiple CSV files in a directory:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
@@ -887,8 +893,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The key insight: <code>rxp_r_file()</code> and <code>rxp_py_file()</code> can point to a directory, and your <code>read_function</code> handles the logic.</p>
 </section>
-<section id="example-2-machine-learning-with-xgboost" class="level3" data-number="7.4.2">
-<h3 data-number="7.4.2" class="anchored" data-anchor-id="example-2-machine-learning-with-xgboost"><span class="header-section-number">7.4.2</span> Example 2: Machine Learning with XGBoost</h3>
+<section id="example-2-machine-learning-with-xgboost" class="level3" data-number="8.4.2">
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="example-2-machine-learning-with-xgboost"><span class="header-section-number">8.4.2</span> Example 2: Machine Learning with XGBoost</h3>
 <p>This pipeline trains an XGBoost classifier in Python, then passes predictions to R for evaluation with <code>{yardstick}</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
@@ -970,8 +976,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Passing results to R for evaluation</li>
 </ul>
 </section>
-<section id="example-3-simple-pythonrquarto-workflow" class="level3" data-number="7.4.3">
-<h3 data-number="7.4.3" class="anchored" data-anchor-id="example-3-simple-pythonrquarto-workflow"><span class="header-section-number">7.4.3</span> Example 3: Simple Python→R→Quarto Workflow</h3>
+<section id="example-3-simple-pythonrquarto-workflow" class="level3" data-number="8.4.3">
+<h3 data-number="8.4.3" class="anchored" data-anchor-id="example-3-simple-pythonrquarto-workflow"><span class="header-section-number">8.4.3</span> Example 3: Simple Python→R→Quarto Workflow</h3>
 <p>A complete pipeline that bounces data between languages and renders a report:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
@@ -1024,10 +1030,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Note the <code>additional_files</code> argument for <code>rxp_qmd()</code>: this includes child documents and images that the main Quarto file needs.</p>
 </section>
 </section>
-<section id="working-with-pipelines" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="working-with-pipelines"><span class="header-section-number">7.5</span> Working with Pipelines</h2>
-<section id="building-the-pipeline" class="level3" data-number="7.5.1">
-<h3 data-number="7.5.1" class="anchored" data-anchor-id="building-the-pipeline"><span class="header-section-number">7.5.1</span> Building the pipeline</h3>
+<section id="working-with-pipelines" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="working-with-pipelines"><span class="header-section-number">8.5</span> Working with Pipelines</h2>
+<section id="building-the-pipeline" class="level3" data-number="8.5.1">
+<h3 data-number="8.5.1" class="anchored" data-anchor-id="building-the-pipeline"><span class="header-section-number">8.5.1</span> Building the pipeline</h3>
 <p>You can build the pipeline in two steps:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate pipeline.nix only (don't build)</span></span>
@@ -1038,8 +1044,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Or in a single step with <code>rxp_populate(build = TRUE)</code>. Once you’ve built the pipeline, you can inspect the results.</p>
 </section>
-<section id="inspecting-outputs" class="level3" data-number="7.5.2">
-<h3 data-number="7.5.2" class="anchored" data-anchor-id="inspecting-outputs"><span class="header-section-number">7.5.2</span> Inspecting outputs</h3>
+<section id="inspecting-outputs" class="level3" data-number="8.5.2">
+<h3 data-number="8.5.2" class="anchored" data-anchor-id="inspecting-outputs"><span class="header-section-number">8.5.2</span> Inspecting outputs</h3>
 <p>Because outputs live in <code>/nix/store/</code>, <code>{rixpress}</code> provides helpers:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List all built artifacts</span></span>
@@ -1067,8 +1073,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The <code>keep_since</code> argument lets you preserve recent builds while cleaning up older ones. This is particularly useful on shared machines or CI runners where disk space is limited.</p>
 </section>
-<section id="visualising-the-pipeline" class="level3" data-number="7.5.3">
-<h3 data-number="7.5.3" class="anchored" data-anchor-id="visualising-the-pipeline"><span class="header-section-number">7.5.3</span> Visualising the pipeline</h3>
+<section id="visualising-the-pipeline" class="level3" data-number="8.5.3">
+<h3 data-number="8.5.3" class="anchored" data-anchor-id="visualising-the-pipeline"><span class="header-section-number">8.5.3</span> Visualising the pipeline</h3>
 <p>There are three ways to visualise pipelines. The first is to look at the <em>trace</em> of a derivation or of the full pipeline. This is similar to a genealogy tree. You can start by running <code>rxp_inspect()</code> to double check how the derivation names are written:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_inspect</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>derivation build_success</span>
@@ -1152,8 +1158,8 @@ Derivations are coloured by programming language.
 </figure>
 <p>Finally, you can also use <code>rxp_visnetwork()</code> (which requires the <code>{visNetwork}</code> package). This opens an interactive JavaScript visualization in your browser, allowing you to zoom into and explore different parts of your pipeline.</p>
 </section>
-<section id="caching-incremental-builds-and-build-logs" class="level3" data-number="7.5.4">
-<h3 data-number="7.5.4" class="anchored" data-anchor-id="caching-incremental-builds-and-build-logs"><span class="header-section-number">7.5.4</span> Caching, Incremental Builds and Build Logs</h3>
+<section id="caching-incremental-builds-and-build-logs" class="level3" data-number="8.5.4">
+<h3 data-number="8.5.4" class="anchored" data-anchor-id="caching-incremental-builds-and-build-logs"><span class="header-section-number">8.5.4</span> Caching, Incremental Builds and Build Logs</h3>
 <p>One of the most powerful features of using Nix for pipelines is automatic caching. Because Nix tracks all inputs to each derivation, it knows exactly what needs to be rebuilt when something changes.</p>
 <p>Try this:</p>
 <ol type="1">
@@ -1618,13 +1624,13 @@ Derivations are coloured by programming language.
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-testing.html" class="pagination-link" aria-label="Professional Workflows: Testing and Git">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span>
+      <a href="./07-testing.html" class="pagination-link" aria-label="Professional Workflows: Testing and Git">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./08-rixpress-advanced.html" class="pagination-link" aria-label="Advanced Pipeline Patterns">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./09-rixpress-advanced.html" class="pagination-link" aria-label="Advanced Pipeline Patterns">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1633,4 +1639,4 @@ Derivations are coloured by programming language.
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/07-rixpress-basics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/08-rixpress-basics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

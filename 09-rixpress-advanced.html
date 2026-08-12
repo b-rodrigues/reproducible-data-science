@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Advanced Pipeline Patterns – Reproducible Polyglot Data Science</title>
+<title>9&nbsp; Advanced Pipeline Patterns – Reproducible Polyglot Data Science</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./09-monads.html" rel="next">
-<link href="./07-rixpress-basics.html" rel="prev">
+<link href="./10-monads.html" rel="next">
+<link href="./08-rixpress-basics.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-rixpress-advanced.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-rixpress-advanced.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -392,56 +392,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-fp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
+  <a href="./05-first-pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-testing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  <a href="./06-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-rixpress-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  <a href="./07-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-rixpress-advanced.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  <a href="./08-rixpress-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-monads.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  <a href="./09-rixpress-advanced.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-docker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  <a href="./10-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11-packaging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  <a href="./11-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-ci.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  <a href="./12-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13-conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./13-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -460,32 +466,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#troubleshooting-and-common-issues" id="toc-troubleshooting-and-common-issues" class="nav-link active" data-scroll-target="#troubleshooting-and-common-issues"><span class="header-section-number">8.1</span> Troubleshooting and Common Issues</a>
+  <li><a href="#troubleshooting-and-common-issues" id="toc-troubleshooting-and-common-issues" class="nav-link active" data-scroll-target="#troubleshooting-and-common-issues"><span class="header-section-number">9.1</span> Troubleshooting and Common Issues</a>
   <ul class="collapse">
-  <li><a href="#understanding-build-output" id="toc-understanding-build-output" class="nav-link" data-scroll-target="#understanding-build-output"><span class="header-section-number">8.1.1</span> Understanding Build Output</a></li>
-  <li><a href="#common-errors-and-solutions" id="toc-common-errors-and-solutions" class="nav-link" data-scroll-target="#common-errors-and-solutions"><span class="header-section-number">8.1.2</span> Common Errors and Solutions</a></li>
-  <li><a href="#debugging-strategies" id="toc-debugging-strategies" class="nav-link" data-scroll-target="#debugging-strategies"><span class="header-section-number">8.1.3</span> Debugging Strategies</a></li>
-  <li><a href="#quick-reference-error-solution" id="toc-quick-reference-error-solution" class="nav-link" data-scroll-target="#quick-reference-error-solution"><span class="header-section-number">8.1.4</span> Quick Reference: Error → Solution</a></li>
+  <li><a href="#understanding-build-output" id="toc-understanding-build-output" class="nav-link" data-scroll-target="#understanding-build-output"><span class="header-section-number">9.1.1</span> Understanding Build Output</a></li>
+  <li><a href="#common-errors-and-solutions" id="toc-common-errors-and-solutions" class="nav-link" data-scroll-target="#common-errors-and-solutions"><span class="header-section-number">9.1.2</span> Common Errors and Solutions</a></li>
+  <li><a href="#debugging-strategies" id="toc-debugging-strategies" class="nav-link" data-scroll-target="#debugging-strategies"><span class="header-section-number">9.1.3</span> Debugging Strategies</a></li>
+  <li><a href="#quick-reference-error-solution" id="toc-quick-reference-error-solution" class="nav-link" data-scroll-target="#quick-reference-error-solution"><span class="header-section-number">9.1.4</span> Quick Reference: Error → Solution</a></li>
   </ul></li>
-  <li><a href="#organizing-large-projects-with-sub-pipelines" id="toc-organizing-large-projects-with-sub-pipelines" class="nav-link" data-scroll-target="#organizing-large-projects-with-sub-pipelines"><span class="header-section-number">8.2</span> Organizing Large Projects with Sub-Pipelines</a>
+  <li><a href="#organizing-large-projects-with-sub-pipelines" id="toc-organizing-large-projects-with-sub-pipelines" class="nav-link" data-scroll-target="#organizing-large-projects-with-sub-pipelines"><span class="header-section-number">9.2</span> Organizing Large Projects with Sub-Pipelines</a>
   <ul class="collapse">
-  <li><a href="#visualising-sub-pipelines" id="toc-visualising-sub-pipelines" class="nav-link" data-scroll-target="#visualising-sub-pipelines"><span class="header-section-number">8.2.1</span> Visualising Sub-Pipelines</a></li>
+  <li><a href="#visualising-sub-pipelines" id="toc-visualising-sub-pipelines" class="nav-link" data-scroll-target="#visualising-sub-pipelines"><span class="header-section-number">9.2.1</span> Visualising Sub-Pipelines</a></li>
   </ul></li>
-  <li><a href="#polyglot-pipelines" id="toc-polyglot-pipelines" class="nav-link" data-scroll-target="#polyglot-pipelines"><span class="header-section-number">8.3</span> Polyglot Pipelines</a>
+  <li><a href="#polyglot-pipelines" id="toc-polyglot-pipelines" class="nav-link" data-scroll-target="#polyglot-pipelines"><span class="header-section-number">9.3</span> Polyglot Pipelines</a>
   <ul class="collapse">
-  <li><a href="#transferring-data-between-python-and-r" id="toc-transferring-data-between-python-and-r" class="nav-link" data-scroll-target="#transferring-data-between-python-and-r"><span class="header-section-number">8.3.1</span> Transferring data between Python and R</a></li>
+  <li><a href="#transferring-data-between-python-and-r" id="toc-transferring-data-between-python-and-r" class="nav-link" data-scroll-target="#transferring-data-between-python-and-r"><span class="header-section-number">9.3.1</span> Transferring data between Python and R</a></li>
   </ul></li>
-  <li><a href="#advanced-topics" id="toc-advanced-topics" class="nav-link" data-scroll-target="#advanced-topics"><span class="header-section-number">8.4</span> Advanced Topics</a>
+  <li><a href="#advanced-topics" id="toc-advanced-topics" class="nav-link" data-scroll-target="#advanced-topics"><span class="header-section-number">9.4</span> Advanced Topics</a>
   <ul class="collapse">
-  <li><a href="#complete-polyglot-pipeline-walkthrough" id="toc-complete-polyglot-pipeline-walkthrough" class="nav-link" data-scroll-target="#complete-polyglot-pipeline-walkthrough"><span class="header-section-number">8.4.1</span> Complete Polyglot Pipeline Walkthrough</a></li>
-  <li><a href="#ryxpress-the-python-interface" id="toc-ryxpress-the-python-interface" class="nav-link" data-scroll-target="#ryxpress-the-python-interface"><span class="header-section-number">8.4.2</span> ryxpress: The Python Interface</a></li>
-  <li><a href="#using-rixpress-in-ci" id="toc-using-rixpress-in-ci" class="nav-link" data-scroll-target="#using-rixpress-in-ci"><span class="header-section-number">8.4.3</span> Using rixpress in CI</a></li>
-  <li><a href="#more-examples" id="toc-more-examples" class="nav-link" data-scroll-target="#more-examples"><span class="header-section-number">8.4.4</span> More Examples</a></li>
+  <li><a href="#complete-polyglot-pipeline-walkthrough" id="toc-complete-polyglot-pipeline-walkthrough" class="nav-link" data-scroll-target="#complete-polyglot-pipeline-walkthrough"><span class="header-section-number">9.4.1</span> Complete Polyglot Pipeline Walkthrough</a></li>
+  <li><a href="#ryxpress-the-python-interface" id="toc-ryxpress-the-python-interface" class="nav-link" data-scroll-target="#ryxpress-the-python-interface"><span class="header-section-number">9.4.2</span> ryxpress: The Python Interface</a></li>
+  <li><a href="#using-rixpress-in-ci" id="toc-using-rixpress-in-ci" class="nav-link" data-scroll-target="#using-rixpress-in-ci"><span class="header-section-number">9.4.3</span> Using rixpress in CI</a></li>
+  <li><a href="#more-examples" id="toc-more-examples" class="nav-link" data-scroll-target="#more-examples"><span class="header-section-number">9.4.4</span> More Examples</a></li>
   </ul></li>
-  <li><a href="#caveats-consequences-of-hermetic-builds" id="toc-caveats-consequences-of-hermetic-builds" class="nav-link" data-scroll-target="#caveats-consequences-of-hermetic-builds"><span class="header-section-number">8.5</span> Caveats: Consequences of Hermetic Builds</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">8.6</span> Summary</a></li>
+  <li><a href="#caveats-consequences-of-hermetic-builds" id="toc-caveats-consequences-of-hermetic-builds" class="nav-link" data-scroll-target="#caveats-consequences-of-hermetic-builds"><span class="header-section-number">9.5</span> Caveats: Consequences of Hermetic Builds</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">9.6</span> Summary</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/08-rixpress-advanced.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/09-rixpress-advanced.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -493,7 +499,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></h1>
 </div>
 
 
@@ -511,11 +517,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>In the previous chapter, we learned the fundamentals of <code>{rixpress}</code>: defining derivations, building pipelines, and inspecting outputs. Now we’ll explore advanced patterns for larger, more complex projects—including troubleshooting, sub-pipelines for organisation, polyglot workflows, and CI integration.</p>
-<section id="troubleshooting-and-common-issues" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="troubleshooting-and-common-issues"><span class="header-section-number">8.1</span> Troubleshooting and Common Issues</h2>
+<section id="troubleshooting-and-common-issues" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="troubleshooting-and-common-issues"><span class="header-section-number">9.1</span> Troubleshooting and Common Issues</h2>
 <p>When working with <code>{rixpress}</code>, you will inevitably encounter build failures. Understanding how to read Nix error messages and debug your pipelines is essential for productive development. This section covers the most common issues and how to resolve them.</p>
-<section id="understanding-build-output" class="level3" data-number="8.1.1">
-<h3 data-number="8.1.1" class="anchored" data-anchor-id="understanding-build-output"><span class="header-section-number">8.1.1</span> Understanding Build Output</h3>
+<section id="understanding-build-output" class="level3" data-number="9.1.1">
+<h3 data-number="9.1.1" class="anchored" data-anchor-id="understanding-build-output"><span class="header-section-number">9.1.1</span> Understanding Build Output</h3>
 <p>The <code>verbose</code> argument in <code>rxp_populate()</code> and <code>rxp_make()</code> controls how much information you see during builds:</p>
 <table class="caption-top table">
 <thead>
@@ -555,10 +561,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="common-errors-and-solutions" class="level3" data-number="8.1.2">
-<h3 data-number="8.1.2" class="anchored" data-anchor-id="common-errors-and-solutions"><span class="header-section-number">8.1.2</span> Common Errors and Solutions</h3>
-<section id="r-syntax-errors" class="level4" data-number="8.1.2.1">
-<h4 data-number="8.1.2.1" class="anchored" data-anchor-id="r-syntax-errors"><span class="header-section-number">8.1.2.1</span> R Syntax Errors</h4>
+<section id="common-errors-and-solutions" class="level3" data-number="9.1.2">
+<h3 data-number="9.1.2" class="anchored" data-anchor-id="common-errors-and-solutions"><span class="header-section-number">9.1.2</span> Common Errors and Solutions</h3>
+<section id="r-syntax-errors" class="level4" data-number="9.1.2.1">
+<h4 data-number="9.1.2.1" class="anchored" data-anchor-id="r-syntax-errors"><span class="header-section-number">9.1.2.1</span> R Syntax Errors</h4>
 <p><strong>Symptom</strong>: Build fails immediately with an R parse error before any Nix activity.</p>
 <p><strong>Example</strong>: Missing a comma between derivations in <code>gen-pipeline.R</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
@@ -592,8 +598,8 @@ Execution halted</code></pre>
 </div>
 <hr>
 </section>
-<section id="missing-function-errors" class="level4" data-number="8.1.2.2">
-<h4 data-number="8.1.2.2" class="anchored" data-anchor-id="missing-function-errors"><span class="header-section-number">8.1.2.2</span> Missing Function Errors</h4>
+<section id="missing-function-errors" class="level4" data-number="9.1.2.2">
+<h4 data-number="9.1.2.2" class="anchored" data-anchor-id="missing-function-errors"><span class="header-section-number">9.1.2.2</span> Missing Function Errors</h4>
 <p><strong>Symptom</strong>: The build starts but a derivation fails with “could not find function”.</p>
 <p><strong>Example</strong>: Typo in a function name:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_r</span>(</span>
@@ -619,8 +625,8 @@ error: Cannot build '/nix/store/...-output_plot.drv'.
 </ol>
 <hr>
 </section>
-<section id="python-import-errors" class="level4" data-number="8.1.2.3">
-<h4 data-number="8.1.2.3" class="anchored" data-anchor-id="python-import-errors"><span class="header-section-number">8.1.2.3</span> Python Import Errors</h4>
+<section id="python-import-errors" class="level4" data-number="9.1.2.3">
+<h4 data-number="9.1.2.3" class="anchored" data-anchor-id="python-import-errors"><span class="header-section-number">9.1.2.3</span> Python Import Errors</h4>
 <p><strong>Symptom</strong>: Python derivation fails with <code>ModuleNotFoundError</code>.</p>
 <p><strong>Example</strong>: Using a package not listed in your <code>default.nix</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In functions.py</span></span>
@@ -653,8 +659,8 @@ ModuleNotFoundError: No module named 'nonexistent_module'</code></pre>
 </ol>
 <hr>
 </section>
-<section id="decoderencoder-mismatches" class="level4" data-number="8.1.2.4">
-<h4 data-number="8.1.2.4" class="anchored" data-anchor-id="decoderencoder-mismatches"><span class="header-section-number">8.1.2.4</span> Decoder/Encoder Mismatches</h4>
+<section id="decoderencoder-mismatches" class="level4" data-number="9.1.2.4">
+<h4 data-number="9.1.2.4" class="anchored" data-anchor-id="decoderencoder-mismatches"><span class="header-section-number">9.1.2.4</span> Decoder/Encoder Mismatches</h4>
 <p><strong>Symptom</strong>: A derivation fails when trying to read data from an upstream step.</p>
 <p><strong>Example</strong>: Using <code>readRDS</code> to read an Arrow file:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_r</span>(</span>
@@ -703,18 +709,18 @@ Execution halted</code></pre>
 <hr>
 </section>
 </section>
-<section id="debugging-strategies" class="level3" data-number="8.1.3">
-<h3 data-number="8.1.3" class="anchored" data-anchor-id="debugging-strategies"><span class="header-section-number">8.1.3</span> Debugging Strategies</h3>
-<section id="enable-verbose-output" class="level4" data-number="8.1.3.1">
-<h4 data-number="8.1.3.1" class="anchored" data-anchor-id="enable-verbose-output"><span class="header-section-number">8.1.3.1</span> 1. Enable Verbose Output</h4>
+<section id="debugging-strategies" class="level3" data-number="9.1.3">
+<h3 data-number="9.1.3" class="anchored" data-anchor-id="debugging-strategies"><span class="header-section-number">9.1.3</span> Debugging Strategies</h3>
+<section id="enable-verbose-output" class="level4" data-number="9.1.3.1">
+<h4 data-number="9.1.3.1" class="anchored" data-anchor-id="enable-verbose-output"><span class="header-section-number">9.1.3.1</span> 1. Enable Verbose Output</h4>
 <p>Always start debugging with <code>verbose = 1</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_make</span>(<span class="at">verbose =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This shows you exactly which derivation failed and the actual error message from R, Python, or Julia.</p>
 </section>
-<section id="inspect-build-results" class="level4" data-number="8.1.3.2">
-<h4 data-number="8.1.3.2" class="anchored" data-anchor-id="inspect-build-results"><span class="header-section-number">8.1.3.2</span> 2. Inspect Build Results</h4>
+<section id="inspect-build-results" class="level4" data-number="9.1.3.2">
+<h4 data-number="9.1.3.2" class="anchored" data-anchor-id="inspect-build-results"><span class="header-section-number">9.1.3.2</span> 2. Inspect Build Results</h4>
 <p>Use <code>rxp_inspect()</code> to see the status of all derivations:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_inspect</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -725,8 +731,8 @@ Execution halted</code></pre>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(results, <span class="sc">!</span>build_success)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="test-functions-interactively-first" class="level4" data-number="8.1.3.3">
-<h4 data-number="8.1.3.3" class="anchored" data-anchor-id="test-functions-interactively-first"><span class="header-section-number">8.1.3.3</span> 3. Test Functions Interactively First</h4>
+<section id="test-functions-interactively-first" class="level4" data-number="9.1.3.3">
+<h4 data-number="9.1.3.3" class="anchored" data-anchor-id="test-functions-interactively-first"><span class="header-section-number">9.1.3.3</span> 3. Test Functions Interactively First</h4>
 <p>Before adding a function to your pipeline, test it in an interactive R or Python session within the Nix shell:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In R</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions/functions.R"</span>)</span>
@@ -738,8 +744,8 @@ Execution halted</code></pre>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> feather.read_feather(<span class="st">"path/to/test/data.arrow"</span>)</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>prepare_features(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="check-intermediate-outputs" class="level4" data-number="8.1.3.4">
-<h4 data-number="8.1.3.4" class="anchored" data-anchor-id="check-intermediate-outputs"><span class="header-section-number">8.1.3.4</span> 4. Check Intermediate Outputs</h4>
+<section id="check-intermediate-outputs" class="level4" data-number="9.1.3.4">
+<h4 data-number="9.1.3.4" class="anchored" data-anchor-id="check-intermediate-outputs"><span class="header-section-number">9.1.3.4</span> 4. Check Intermediate Outputs</h4>
 <p>Use <code>rxp_read()</code> to inspect the output of any successful derivation:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What does the upstream data look like?</span></span>
@@ -748,16 +754,16 @@ Execution halted</code></pre>
 </div>
 <p>This helps you understand what format the data is in and whether your decoder/encoder is appropriate.</p>
 </section>
-<section id="view-full-nix-logs" class="level4" data-number="8.1.3.5">
-<h4 data-number="8.1.3.5" class="anchored" data-anchor-id="view-full-nix-logs"><span class="header-section-number">8.1.3.5</span> 5. View Full Nix Logs</h4>
+<section id="view-full-nix-logs" class="level4" data-number="9.1.3.5">
+<h4 data-number="9.1.3.5" class="anchored" data-anchor-id="view-full-nix-logs"><span class="header-section-number">9.1.3.5</span> 5. View Full Nix Logs</h4>
 <p>For complex failures, Nix provides the full build log:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> log /nix/store/...-derivation_name.drv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The path is shown in the error output. This gives you the complete stdout/stderr from the failed build.</p>
 <hr>
 </section>
 </section>
-<section id="quick-reference-error-solution" class="level3" data-number="8.1.4">
-<h3 data-number="8.1.4" class="anchored" data-anchor-id="quick-reference-error-solution"><span class="header-section-number">8.1.4</span> Quick Reference: Error → Solution</h3>
+<section id="quick-reference-error-solution" class="level3" data-number="9.1.4">
+<h3 data-number="9.1.4" class="anchored" data-anchor-id="quick-reference-error-solution"><span class="header-section-number">9.1.4</span> Quick Reference: Error → Solution</h3>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 36%">
@@ -824,8 +830,8 @@ Execution halted</code></pre>
 </div>
 </section>
 </section>
-<section id="organizing-large-projects-with-sub-pipelines" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="organizing-large-projects-with-sub-pipelines"><span class="header-section-number">8.2</span> Organizing Large Projects with Sub-Pipelines</h2>
+<section id="organizing-large-projects-with-sub-pipelines" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="organizing-large-projects-with-sub-pipelines"><span class="header-section-number">9.2</span> Organizing Large Projects with Sub-Pipelines</h2>
 <p>As pipelines grow, a single <code>gen-pipeline.R</code> file can become difficult to manage. Consider the typical data science project:</p>
 <ul>
 <li>Data extraction and cleaning (ETL)</li>
@@ -924,8 +930,8 @@ Execution halted</code></pre>
 <span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
 <span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">build =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="visualising-sub-pipelines" class="level3" data-number="8.2.1">
-<h3 data-number="8.2.1" class="anchored" data-anchor-id="visualising-sub-pipelines"><span class="header-section-number">8.2.1</span> Visualising Sub-Pipelines</h3>
+<section id="visualising-sub-pipelines" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="visualising-sub-pipelines"><span class="header-section-number">9.2.1</span> Visualising Sub-Pipelines</h3>
 <p>When sub-pipelines are defined, visualisation tools use pipeline colours:</p>
 <ol type="1">
 <li><strong>Interactive Network</strong> (<code>rxp_visnetwork()</code>) and <strong>Static DAG</strong> (<code>rxp_ggdag()</code>) both use a dual-encoding approach:
@@ -957,8 +963,8 @@ If your terminal supports it, derivation names are coloured according to the cho
 </div>
 </section>
 </section>
-<section id="polyglot-pipelines" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="polyglot-pipelines"><span class="header-section-number">8.3</span> Polyglot Pipelines</h2>
+<section id="polyglot-pipelines" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="polyglot-pipelines"><span class="header-section-number">9.3</span> Polyglot Pipelines</h2>
 <p>One of <code>{rixpress}</code>’s strengths is seamlessly mixing languages. Here’s a pipeline that reads data with Python’s <code>polars</code>, processes it with R’s <code>dplyr</code>, and renders a Quarto report.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1007,8 +1013,8 @@ If your terminal supports it, derivation names are coloured according to the cho
 <span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The Python packages <code>biocframe</code>, <code>phart</code>, and <code>rds2py</code> are optional but highly recommended when working with <code>ryxpress</code>. <code>biocframe</code> enables direct transfer to <code>polars</code> or Bioconductor DataFrames, bypassing the need for <code>pandas</code>. <code>rds2py</code> (also from the BiocPy project) allows Python to read <code>.rds</code> files, R’s native binary format. Together, these packages ensure seamless interoperability between your R and Python steps. <code>phart</code> is a nice little package that allows you to visualise pipelines from a Python interpreter prompt: not as sexy as R’s <code>{ggdag}</code> but it gets the job done!</p>
-<section id="transferring-data-between-python-and-r" class="level3" data-number="8.3.1">
-<h3 data-number="8.3.1" class="anchored" data-anchor-id="transferring-data-between-python-and-r"><span class="header-section-number">8.3.1</span> Transferring data between Python and R</h3>
+<section id="transferring-data-between-python-and-r" class="level3" data-number="9.3.1">
+<h3 data-number="9.3.1" class="anchored" data-anchor-id="transferring-data-between-python-and-r"><span class="header-section-number">9.3.1</span> Transferring data between Python and R</h3>
 <p>The <code>rxp_py2r()</code> and <code>rxp_r2py()</code> functions use <code>{reticulate}</code> to convert objects between languages:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_py2r</span>(</span>
@@ -1065,10 +1071,10 @@ If your terminal supports it, derivation names are coloured according to the cho
 <p>Both <code>encoder</code> and <code>decoder</code> functions must accept the object as the first argument and the file path as the second argument. This pattern works for any serialization format supported by your languages of choice.</p>
 </section>
 </section>
-<section id="advanced-topics" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="advanced-topics"><span class="header-section-number">8.4</span> Advanced Topics</h2>
-<section id="complete-polyglot-pipeline-walkthrough" class="level3" data-number="8.4.1">
-<h3 data-number="8.4.1" class="anchored" data-anchor-id="complete-polyglot-pipeline-walkthrough"><span class="header-section-number">8.4.1</span> Complete Polyglot Pipeline Walkthrough</h3>
+<section id="advanced-topics" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="advanced-topics"><span class="header-section-number">9.4</span> Advanced Topics</h2>
+<section id="complete-polyglot-pipeline-walkthrough" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="complete-polyglot-pipeline-walkthrough"><span class="header-section-number">9.4.1</span> Complete Polyglot Pipeline Walkthrough</h3>
 <p>You can find the complete code source to this example over <a href="https://github.com/b-rodrigues/rixpress_demos/tree/master/rbc">here</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <p>For this polyglot pipeline, I use three programming languages: Julia to simulate synthetic data from a macroeconomic model, Python to train a machine learning model and R to visualize the results. Let me make it clear, though, that scientifically speaking, this is nonsensical: this is merely an example to showcase how to setup a complete end-to-end project with <code>{rixpress}</code>.</p>
 <p>The model I use is the foundational Real Business Cycle (RBC) model. The theory and log-linearized equations used in the Julia script are taken directly from the excellent lecture slides by Bianca De Paoli.</p>
@@ -1256,8 +1262,8 @@ If your terminal supports it, derivation names are coloured according to the cho
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_read</span>(<span class="st">"output_plot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>To run the pipeline, start the environment by simply typing <code>nix-shell</code> in the terminal, which will use the environment as defined in the <code>default.nix</code> and run <code>source("gen-pipeline.R")</code>. If there are issues, setting the <code>verbose</code> argument of <code>rxp_populate()</code> to <code>1</code> is helpful to see the full error logs.</p>
 </section>
-<section id="ryxpress-the-python-interface" class="level3" data-number="8.4.2">
-<h3 data-number="8.4.2" class="anchored" data-anchor-id="ryxpress-the-python-interface"><span class="header-section-number">8.4.2</span> ryxpress: The Python Interface</h3>
+<section id="ryxpress-the-python-interface" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="ryxpress-the-python-interface"><span class="header-section-number">9.4.2</span> ryxpress: The Python Interface</h3>
 <p>If you prefer working in Python, <code>ryxpress</code> provides the same functionality. You still define your pipeline in R (since that’s where <code>{rixpress}</code> runs), but you can build and inspect artifacts from Python.</p>
 <p>To set up an environment with <code>ryxpress</code>:</p>
 <div class="cell">
@@ -1291,8 +1297,8 @@ If your terminal supports it, derivation names are coloured according to the cho
 <li>Returns file paths for complex outputs</li>
 </ul>
 </section>
-<section id="using-rixpress-in-ci" class="level3" data-number="8.4.3">
-<h3 data-number="8.4.3" class="anchored" data-anchor-id="using-rixpress-in-ci"><span class="header-section-number">8.4.3</span> Using rixpress in CI</h3>
+<section id="using-rixpress-in-ci" class="level3" data-number="9.4.3">
+<h3 data-number="9.4.3" class="anchored" data-anchor-id="using-rixpress-in-ci"><span class="header-section-number">9.4.3</span> Using rixpress in CI</h3>
 <p>Running <code>{rixpress}</code> pipelines in Continuous Integration is straightforward. The <code>rxp_ga()</code> function generates a complete GitHub Actions workflow file that handles everything automatically.</p>
 <p>To set up CI for your pipeline, simply run:</p>
 <div class="cell">
@@ -1325,8 +1331,8 @@ If your terminal supports it, derivation names are coloured according to the cho
 Text representation of the DAG in CI.
 </figcaption>
 </figure>
-<section id="manual-artifact-management" class="level4" data-number="8.4.3.1">
-<h4 data-number="8.4.3.1" class="anchored" data-anchor-id="manual-artifact-management"><span class="header-section-number">8.4.3.1</span> Manual Artifact Management</h4>
+<section id="manual-artifact-management" class="level4" data-number="9.4.3.1">
+<h4 data-number="9.4.3.1" class="anchored" data-anchor-id="manual-artifact-management"><span class="header-section-number">9.4.3.1</span> Manual Artifact Management</h4>
 <p>For custom CI setups or sharing artifacts between machines, you can use the export and import functions directly:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Export all build outputs to a .nar archive</span></span>
@@ -1343,8 +1349,8 @@ Text representation of the DAG in CI.
 <p>This approach dramatically speeds up CI by leveraging Nix’s content-addressed storage: if an artifact’s hash matches what’s already in the Nix store, it’s instantly available without rebuilding.</p>
 </section>
 </section>
-<section id="more-examples" class="level3" data-number="8.4.4">
-<h3 data-number="8.4.4" class="anchored" data-anchor-id="more-examples"><span class="header-section-number">8.4.4</span> More Examples</h3>
+<section id="more-examples" class="level3" data-number="9.4.4">
+<h3 data-number="9.4.4" class="anchored" data-anchor-id="more-examples"><span class="header-section-number">9.4.4</span> More Examples</h3>
 <p>The <a href="https://github.com/b-rodrigues/rixpress_demos">rixpress_demos</a> repository includes:</p>
 <ul>
 <li><strong>jl_example</strong>: Using Julia in pipelines</li>
@@ -1355,8 +1361,8 @@ Text representation of the DAG in CI.
 </ul>
 </section>
 </section>
-<section id="caveats-consequences-of-hermetic-builds" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="caveats-consequences-of-hermetic-builds"><span class="header-section-number">8.5</span> Caveats: Consequences of Hermetic Builds</h2>
+<section id="caveats-consequences-of-hermetic-builds" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="caveats-consequences-of-hermetic-builds"><span class="header-section-number">9.5</span> Caveats: Consequences of Hermetic Builds</h2>
 <p>Nix derivations are <em>hermetic</em>: they run in an isolated sandbox with no network access and a minimal, reproducible filesystem. This design ensures reproducibility but has practical implications:</p>
 <p><strong>No network access during builds.</strong> If your analysis requires downloading data from an API or remote source, this must happen <em>before</em> the pipeline runs. Use <code>rxp_r_file()</code> or <code>rxp_py_file()</code> to read pre-downloaded data, or create a separate script outside the pipeline to fetch data into a <code>data/</code> directory.</p>
 <p><strong>Environment variables must be explicit.</strong> Tools that rely on environment variables (like CmdStan for Bayesian modelling) need these set via the <code>env_var</code> argument. For example, CmdStanR requires pointing to the CmdStan installation:</p>
@@ -1371,8 +1377,8 @@ Text representation of the DAG in CI.
 <p>See <code>vignette("cmdstanr", package = "rixpress")</code> for a complete Bayesian workflow example.</p>
 <p><strong>Paths are relative to the build sandbox.</strong> Files referenced in your code must be explicitly included via <code>additional_files</code> or <code>user_functions</code>. The build environment doesn’t see your working directory—only what you declare.</p>
 </section>
-<section id="summary" class="level2" data-number="8.6">
-<h2 data-number="8.6" class="anchored" data-anchor-id="summary"><span class="header-section-number">8.6</span> Summary</h2>
+<section id="summary" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="summary"><span class="header-section-number">9.6</span> Summary</h2>
 <p><code>{rixpress}</code> unifies environment management and workflow orchestration:</p>
 <ul>
 <li><strong>Define</strong> pipelines with <code>rxp_*()</code> functions in familiar R syntax</li>
@@ -1810,13 +1816,13 @@ Text representation of the DAG in CI.
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./07-rixpress-basics.html" class="pagination-link" aria-label="Building Reproducible Pipelines with rixpress">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span>
+      <a href="./08-rixpress-basics.html" class="pagination-link" aria-label="Building Reproducible Pipelines with rixpress">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./09-monads.html" class="pagination-link" aria-label="Robust Pipelines with Monads">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./10-monads.html" class="pagination-link" aria-label="Robust Pipelines with Monads">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1825,4 +1831,4 @@ Text representation of the DAG in CI.
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/08-rixpress-advanced.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/09-rixpress-advanced.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

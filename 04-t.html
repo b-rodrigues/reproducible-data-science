@@ -68,7 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./05-fp.html" rel="next">
+<link href="./05-first-pipeline.html" rel="next">
 <link href="./03-setup.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -392,56 +392,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-fp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
+  <a href="./05-first-pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-testing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  <a href="./06-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-rixpress-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  <a href="./07-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  <a href="./08-rixpress-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-monads.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  <a href="./09-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-docker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  <a href="./10-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11-packaging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  <a href="./11-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-ci.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  <a href="./12-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13-conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./13-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -480,26 +486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#declaring-dependencies-with-tproject.toml" id="toc-declaring-dependencies-with-tproject.toml" class="nav-link" data-scroll-target="#declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.2</span> Declaring Dependencies with <code>tproject.toml</code></a></li>
   <li><a href="#why-not-to-use-install.packages" id="toc-why-not-to-use-install.packages" class="nav-link" data-scroll-target="#why-not-to-use-install.packages"><span class="header-section-number">4.3.3</span> Why NOT to use <code>install.packages()</code></a></li>
   </ul></li>
-  <li><a href="#writing-t-pipelines" id="toc-writing-t-pipelines" class="nav-link" data-scroll-target="#writing-t-pipelines"><span class="header-section-number">4.4</span> Writing T Pipelines</a>
-  <ul class="collapse">
-  <li><a href="#your-first-pipeline" id="toc-your-first-pipeline" class="nav-link" data-scroll-target="#your-first-pipeline"><span class="header-section-number">4.4.1</span> Your First Pipeline</a></li>
-  <li><a href="#node-wrappers-at-a-glance" id="toc-node-wrappers-at-a-glance" class="nav-link" data-scroll-target="#node-wrappers-at-a-glance"><span class="header-section-number">4.4.2</span> Node Wrappers at a Glance</a></li>
-  <li><a href="#serializers" id="toc-serializers" class="nav-link" data-scroll-target="#serializers"><span class="header-section-number">4.4.3</span> Serializers</a></li>
-  </ul></li>
-  <li><a href="#choosing-a-nixpkgs-date" id="toc-choosing-a-nixpkgs-date" class="nav-link" data-scroll-target="#choosing-a-nixpkgs-date"><span class="header-section-number">4.5</span> Choosing a Nixpkgs Date</a></li>
-  <li><a href="#building-and-running-pipelines" id="toc-building-and-running-pipelines" class="nav-link" data-scroll-target="#building-and-running-pipelines"><span class="header-section-number">4.6</span> Building and Running Pipelines</a>
-  <ul class="collapse">
-  <li><a href="#running-with-t-run" id="toc-running-with-t-run" class="nav-link" data-scroll-target="#running-with-t-run"><span class="header-section-number">4.6.1</span> Running with <code>t run</code></a></li>
-  <li><a href="#checking-before-building" id="toc-checking-before-building" class="nav-link" data-scroll-target="#checking-before-building"><span class="header-section-number">4.6.2</span> Checking before Building</a></li>
-  <li><a href="#the-repl-for-exploration" id="toc-the-repl-for-exploration" class="nav-link" data-scroll-target="#the-repl-for-exploration"><span class="header-section-number">4.6.3</span> The REPL for Exploration</a></li>
-  <li><a href="#inspecting-built-nodes" id="toc-inspecting-built-nodes" class="nav-link" data-scroll-target="#inspecting-built-nodes"><span class="header-section-number">4.6.4</span> Inspecting Built Nodes</a></li>
-  <li><a href="#pure-isolation" id="toc-pure-isolation" class="nav-link" data-scroll-target="#pure-isolation"><span class="header-section-number">4.6.5</span> Pure Isolation</a></li>
-  </ul></li>
-  <li><a href="#a-reproducibility-comparison" id="toc-a-reproducibility-comparison" class="nav-link" data-scroll-target="#a-reproducibility-comparison"><span class="header-section-number">4.7</span> A Reproducibility Comparison</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.8</span> Summary</a>
-  <ul class="collapse">
-  <li><a href="#quick-reference-starting-a-new-project" id="toc-quick-reference-starting-a-new-project" class="nav-link" data-scroll-target="#quick-reference-starting-a-new-project"><span class="header-section-number">4.8.1</span> Quick Reference: Starting a New Project</a></li>
-  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.4</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/04-t.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -681,325 +668,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Instead, add packages to <code>tproject.toml</code> and run <code>t update</code>. Trying to call <code>install.packages()</code> (or equivalent commands for Julia and Python) will raise an error.</p>
 </section>
 </section>
-<section id="writing-t-pipelines" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="writing-t-pipelines"><span class="header-section-number">4.4</span> Writing T Pipelines</h2>
-<p>The heart of T is the <strong>pipeline</strong>. A pipeline is a directed acyclic graph (DAG) of <em>nodes</em>, where each node is a computation (in T, R, Python, Julia, or Shell) whose output can be referenced by other nodes. T handles all the serialization, deserialization, and dependency tracking automatically.</p>
-<section id="your-first-pipeline" class="level3" data-number="4.4.1">
-<h3 data-number="4.4.1" class="anchored" data-anchor-id="your-first-pipeline"><span class="header-section-number">4.4.1</span> Your First Pipeline</h3>
-<p>Here is a simple polyglot pipeline in <code>src/pipeline.t</code>:</p>
-<pre class="t"><code>p = pipeline {
-  -- Load data natively in T
-  data = node(command = read_csv("data/sales.csv", clean_colnames = true))
-
-  -- Train a model in R
-  model_r = rn(
-    command = &lt;{ lm(revenue ~ age, data = data) }&gt;,
-    serializer = ^pmml,
-    deserializer = ^csv
-  )
-
-  -- Score natively in T (no R runtime needed at prediction time)
-  predictions = node(
-    command = data |&gt; mutate($pred = predict(data, model_r)),
-    deserializer = ^pmml
-  )
-}
-
-build_pipeline(p)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
-<p>Let’s unpack this:</p>
-<ul>
-<li><code>node()</code> defines a T-native computation. The <code>command</code> argument is a T expression evaluated in the T runtime.</li>
-<li><code>rn()</code> defines an R node. The command inside <code>&lt;{ ... }&gt;</code> is raw R code, executed in an isolated Nix sandbox with the R packages you declared in <code>tproject.toml</code>.</li>
-<li><code>pyn()</code>, <code>jln()</code>, and <code>shn()</code> similarly define Python, Julia, and Shell nodes.</li>
-<li><code>serializer</code> controls how the node’s output is saved to the Nix store. <code>^pmml</code> serializes an R model to the PMML standard format, which T can then read natively.</li>
-<li><code>build_pipeline(p)</code> materializes the pipeline: T resolves the dependency graph, builds each node in topological order (only rebuilding what has changed), and writes content-addressed artifacts to the Nix store.</li>
-</ul>
-</section>
-<section id="node-wrappers-at-a-glance" class="level3" data-number="4.4.2">
-<h3 data-number="4.4.2" class="anchored" data-anchor-id="node-wrappers-at-a-glance"><span class="header-section-number">4.4.2</span> Node Wrappers at a Glance</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Function</th>
-<th>Runtime</th>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>node()</code></td>
-<td>T native</td>
-<td>Data manipulation, logic, native T operations</td>
-</tr>
-<tr class="even">
-<td><code>rn()</code></td>
-<td>R</td>
-<td>Statistical modelling, tidyverse, Bioconductor</td>
-</tr>
-<tr class="odd">
-<td><code>pyn()</code></td>
-<td>Python</td>
-<td>Machine learning, scikit-learn, PyTorch</td>
-</tr>
-<tr class="even">
-<td><code>jln()</code></td>
-<td>Julia</td>
-<td>High-performance numerics, Flux.jl</td>
-</tr>
-<tr class="odd">
-<td><code>shn()</code></td>
-<td>Shell</td>
-<td>File processing, calling external CLIs</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="serializers" class="level3" data-number="4.4.3">
-<h3 data-number="4.4.3" class="anchored" data-anchor-id="serializers"><span class="header-section-number">4.4.3</span> Serializers</h3>
-<p>Every node in a T pipeline produces an artifact. The <code>serializer</code> argument controls the format of that artifact. T provides a set of first-class serializers identified by the <code>^</code> prefix:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 30%">
-<col style="width: 45%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Serializer</th>
-<th style="text-align: left;">Resulting T Type</th>
-<th style="text-align: left;">Best for</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"><code>^csv</code></td>
-<td style="text-align: left;"><code>DataFrame</code></td>
-<td style="text-align: left;">Tabular data exchange between nodes</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>^ipc</code></td>
-<td style="text-align: left;"><code>DataFrame</code></td>
-<td style="text-align: left;">Fast Arrow IPC hand-off between pipeline nodes</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>^parquet</code></td>
-<td style="text-align: left;"><code>DataFrame</code></td>
-<td style="text-align: left;">Durable storage, archival, external analytics</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>^json</code></td>
-<td style="text-align: left;"><code>Dict</code> / <code>List</code></td>
-<td style="text-align: left;">Structured data interchange</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>^pmml</code></td>
-<td style="text-align: left;"><code>Model</code></td>
-<td style="text-align: left;">R/Python models, native T evaluation</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>^onnx</code></td>
-<td style="text-align: left;"><code>Model</code></td>
-<td style="text-align: left;">Python ML models, portable evaluation</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>^text</code></td>
-<td style="text-align: left;"><code>String</code></td>
-<td style="text-align: left;">Plain text and shell output</td>
-</tr>
-</tbody>
-</table>
-<p>A useful rule of thumb: use <code>^ipc</code> to pass DataFrames <em>between nodes while a pipeline runs</em> (fastest round-trip, uncompressed), and <code>^parquet</code> for anything you <em>persist, ship, or store</em> (compressed, typically 4–10× smaller, compatible with DuckDB, Spark, pandas, etc.). Both work symmetrically across T, R, Python, and Julia.</p>
-<p>When a node in R produces a <code>data.frame</code> and you want to use it in a T or Python node, set <code>serializer = ^ipc</code> or <code>serializer = ^csv</code>. T will handle the conversion automatically.</p>
-</section>
-</section>
-<section id="choosing-a-nixpkgs-date" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="choosing-a-nixpkgs-date"><span class="header-section-number">4.5</span> Choosing a Nixpkgs Date</h2>
-<p>When you run <code>t init</code>, you are prompted for a <strong>Nixpkgs date</strong>. This is analogous to the <code>date</code> argument in <code>rix()</code>. It pins the version of the <code>nixpkgs</code> package collection used by your project, which determines:</p>
-<ul>
-<li>The version of R and Python available in your environment</li>
-<li>The versions of system libraries (GDAL, LAPACK, etc.)</li>
-<li>The versions of any system tools you use</li>
-</ul>
-<p>We strongly recommend using the default Nixpkgs date suggested by the prompt unless you have a specific reason to change it. If you are starting a new project and want the most recent packages, simply accept the default. If you need to reproduce an older analysis, use the Nixpkgs date from the original project’s <code>flake.lock</code>.</p>
-<p>You should only specify a different or more recent date if absolutely necessary for your packages. Changing the date is equivalent to running a system upgrade: it can change package versions and, in rare cases, introduce compatibility issues.</p>
-</section>
-<section id="building-and-running-pipelines" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="building-and-running-pipelines"><span class="header-section-number">4.6</span> Building and Running Pipelines</h2>
-<section id="running-with-t-run" class="level3" data-number="4.6.1">
-<h3 data-number="4.6.1" class="anchored" data-anchor-id="running-with-t-run"><span class="header-section-number">4.6.1</span> Running with <code>t run</code></h3>
-<p>To execute your pipeline end-to-end:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>T will resolve the dependency graph, build each node in a Nix-managed sandbox, and write a timestamped build log. The first run may take longer because Nix fetches or builds packages; subsequent runs are cached at the node level—if a node’s inputs haven’t changed, its result is pulled from the cache instantly.</p>
-</section>
-<section id="checking-before-building" class="level3" data-number="4.6.2">
-<h3 data-number="4.6.2" class="anchored" data-anchor-id="checking-before-building"><span class="header-section-number">4.6.2</span> Checking before Building</h3>
-<p>T provides a fast validation step that catches errors before triggering an expensive Nix build:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> check src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This validates the pipeline’s structure, node references, and schema—in milliseconds. You can also get structured JSON output for machine-readable error handling:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> check <span class="at">--json</span> src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"error_class"</span><span class="fu">:</span> <span class="st">"schema_mismatch"</span><span class="fu">,</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"node"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"summary"</span><span class="fu">,</span> <span class="dt">"lang"</span><span class="fu">:</span> <span class="st">"python"</span> <span class="fu">},</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Column 'mg' not found. Did you mean 'mpg'?"</span><span class="fu">,</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"caused_by"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"clean"</span><span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"suggested_fix"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"kind"</span><span class="fu">:</span> <span class="st">"rename_column"</span><span class="fu">,</span> <span class="dt">"old_name"</span><span class="fu">:</span> <span class="st">"mg"</span><span class="fu">,</span> <span class="dt">"new_name"</span><span class="fu">:</span> <span class="st">"mpg"</span> <span class="fu">}</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The <code>t check</code> / <code>t run</code> loop is the core iterative development cycle in T: check cheaply and often, build only when clean.</p>
-</section>
-<section id="the-repl-for-exploration" class="level3" data-number="4.6.3">
-<h3 data-number="4.6.3" class="anchored" data-anchor-id="the-repl-for-exploration"><span class="header-section-number">4.6.3</span> The REPL for Exploration</h3>
-<p>T also provides an interactive REPL for exploratory data analysis:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>(or simply <code>t</code>).</p>
-<p>Pipelines are not mandatory in the REPL; this is a deliberate design choice intended to support rapid experimentation before computations are promoted into reproducible pipelines. You can also launch R, Python, or Julia REPLs directly from within a T project, inheriting the same pinned environments and project dependencies.</p>
-</section>
-<section id="inspecting-built-nodes" class="level3" data-number="4.6.4">
-<h3 data-number="4.6.4" class="anchored" data-anchor-id="inspecting-built-nodes"><span class="header-section-number">4.6.4</span> Inspecting Built Nodes</h3>
-<p>After a <code>build_pipeline()</code> call, you can inspect the output of any node in the REPL:</p>
-<pre class="t"><code>&gt; read_node(p.model_r)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
-<p>This reads the serialized artifact from the Nix store and loads it back into the T environment. You can also use <code>explain()</code> to inspect the node’s metadata:</p>
-<pre class="t"><code>&gt; explain(p.model_r)
-{
-  `kind`: "computed_node",
-  `name`: "model_r",
-  `runtime`: "R",
-  `path`: "/nix/store/...-model_r/artifact",
-  `serializer`: "pmml",
-  `class`: "lm",
-  `dependencies`: ["data"]
-}</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
-<p>The <code>path</code> field is the “escape hatch”: the absolute path to the node’s output in the Nix store. You can pass this to any external tool or use the companion helper packages for R, Python or Julia which allow you to read T artifacts from within R or Python.</p>
-</section>
-<section id="pure-isolation" class="level3" data-number="4.6.5">
-<h3 data-number="4.6.5" class="anchored" data-anchor-id="pure-isolation"><span class="header-section-number">4.6.5</span> Pure Isolation</h3>
-<p>By default, nodes already run in hermetic Nix sandboxes during <code>build_pipeline</code>. The development shell entered via <code>nix develop</code> is also <em>mostly</em> isolated: you can still access tools and files from outside of it, which is quite helpful. But you really need to keep in mind that tools not managed by Nix are not available from the build sandboxes!</p>
-<p>For maximum isolation of the development shell itself, you can run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop <span class="at">--ignore-environment</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This hides everything not explicitly included in your project environment, including system tools, providing the closest possible approximation to a clean machine.</p>
-<p>This removes all packages that are no longer referenced by any environment.</p>
-</section>
-</section>
-<section id="a-reproducibility-comparison" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="a-reproducibility-comparison"><span class="header-section-number">4.7</span> A Reproducibility Comparison</h2>
-<p>It is worth pausing to compare the approach we are taking in this book with the alternatives, including my own earlier work:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 10%">
-<col style="width: 17%">
-<col style="width: 17%">
-<col style="width: 17%">
-<col style="width: 17%">
-<col style="width: 17%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th style="text-align: center;">Locks language deps</th>
-<th style="text-align: center;">Locks system libraries</th>
-<th style="text-align: center;">Locks the polyglot seam</th>
-<th style="text-align: center;">Enforced at build time</th>
-<th style="text-align: center;">Language-agnostic</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>renv</code> / <code>conda</code></td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">❌</td>
-<td style="text-align: center;">❌</td>
-<td style="text-align: center;">❌</td>
-<td style="text-align: center;">❌</td>
-</tr>
-<tr class="even">
-<td>Docker</td>
-<td style="text-align: center;">⚠️ (if maintained)</td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">⚠️ (one image)</td>
-<td style="text-align: center;">❌</td>
-<td style="text-align: center;">✅</td>
-</tr>
-<tr class="odd">
-<td>Snakemake / <code>targets</code></td>
-<td style="text-align: center;">❌ (delegates to user)</td>
-<td style="text-align: center;">❌</td>
-<td style="text-align: center;">❌</td>
-<td style="text-align: center;">❌</td>
-<td style="text-align: center;">⚠️</td>
-</tr>
-<tr class="even">
-<td><code>{rix}</code> + <code>{rixpress}</code></td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">⚠️ (R-centric)</td>
-<td style="text-align: center;">❌</td>
-<td style="text-align: center;">❌</td>
-</tr>
-<tr class="odd">
-<td><strong>T</strong></td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-<td style="text-align: center;">✅</td>
-</tr>
-</tbody>
-</table>
-<p><code>{rix}</code> and <code>{rixpress}</code> were my earlier attempts at this problem. <code>{rix}</code> solves environment definition for R projects beautifully, and <code>{rixpress}</code> adds a pipeline layer on top. But both are ultimately R packages: you need R to run them, and R is the first-class citizen. <code>{rixpress}</code> did allow you to define Python or Julia nodes, but because it’s an R package, you need to define the pipeline using R syntax. I also built <code>rypress</code>, the Python equivalent of <code>{rixpress}</code>, but in any case you’d always be limited by what either R or Python provide (or don’t provide).</p>
-<p>T resets that assumption entirely. T is not an R package. It is a standalone language that treats every runtime as a first-class node. It also does not just <em>orchestrate</em> environments that something else defines: it <em>is</em> the environment definition system. Your <code>tproject.toml</code> replaces <code>rix()</code>, <code>flake.lock</code> replaces <code>default.nix</code>, and <code>t run</code> replaces <code>nix-build</code> + <code>nix-shell</code>.</p>
-<p>The key advance over <code>{rix}</code> + <code>{rixpress}</code> is that T locks <em>the seam between languages</em>. Each node in a T pipeline runs in its own hermetic Nix sandbox, and T tracks exactly what each node depends on and what it produced. If a Python node consumes the output of an R node, T ensures the R artifact is always up-to-date and that the Python node is rebuilt whenever the R artifact changes. This is enforced by the language itself automatically, not by a CI script or a README instruction you might forget to follow.</p>
-</section>
-<section id="summary" class="level2" data-number="4.8">
-<h2 data-number="4.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.8</span> Summary</h2>
-<p>Let’s step back and recap why we have gone through all this trouble.</p>
+<section id="summary" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.4</span> Summary</h2>
 <p>Traditional tools like <code>{renv}</code> or Python’s <code>venv</code> only capture part of the reproducibility puzzle. They track package versions but not the language version itself, nor system-level dependencies like GDAL or Java. This means your project can still break on a different machine, or even on your own machine after a system update.</p>
 <p>Nix solves this by managing <em>everything</em>: R, Python, all packages, and all system dependencies. T builds on top of Nix to solve the <em>orchestration</em> problem: it provides a language for describing <em>how</em> computations in different runtimes interact, and it enforces reproducibility at every step.</p>
 <p>When you define a pipeline with T, you get a complete, self-contained specification that anyone can use to recreate the exact same results, on any machine, at any point in the future.</p>
-<section id="quick-reference-starting-a-new-project" class="level3" data-number="4.8.1">
-<h3 data-number="4.8.1" class="anchored" data-anchor-id="quick-reference-starting-a-new-project"><span class="header-section-number">4.8.1</span> Quick Reference: Starting a New Project</h3>
-<p>Here is the workflow you will follow for every new project:</p>
-<ol type="1">
-<li><p><strong>Bootstrap T</strong> from a temporary shell:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell <span class="at">--accept-flake-config</span> github:b-rodrigues/tlang</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Scaffold a new project</strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> init <span class="at">--project</span> my-project</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Leave the temporary shell and enter the project environment</strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> my-project</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Declare your dependencies</strong> in <code>tproject.toml</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"dplyr"</span><span class="op">,</span> <span class="st">"ggplot2"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Sync the environment</strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> update</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Write your pipeline</strong> in <code>src/pipeline.t</code>:</p>
-<pre class="t"><code>p = pipeline {
-  data = node(command = read_csv("data/sales.csv"))
-  result = rn(
-    command = &lt;{ summary(data) }&gt;,
-    serializer = ^text,
-    deserializer = ^csv
-  )
-}
-build_pipeline(p)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre></li>
-<li><p><strong>Check and run</strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> check src/pipeline.t</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-</ol>
-<p>That’s it. Your project is now reproducible. Anyone with Nix installed can clone your repository, run <code>nix develop</code>, and get the exact same environment and results you have.</p>
-<p>In the next chapter, we’ll explore <strong>Functional Programming</strong> principles—a foundation you’ll need before we can build more complex pipelines with T. After that, we’ll learn how to <strong>test</strong> our code (Chapter 6), and then put everything together in Chapters 7 and 8 where we build complete analytical pipelines.</p>
+<p>In the next chapter, we will get our hands on the machinery and <strong>build our first pipeline</strong>.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -1423,8 +1099,8 @@ Error running t (error code 1): &lt;no output&gt;</code></pre></li>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./05-fp.html" class="pagination-link" aria-label="Pipelines as Function Composition">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./05-first-pipeline.html" class="pagination-link" aria-label="Your First T Pipeline">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

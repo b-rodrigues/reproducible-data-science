@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>12&nbsp; Continuous Integration with GitHub Actions – Reproducible Polyglot Data Science</title>
+<title>13&nbsp; Continuous Integration with GitHub Actions – Reproducible Polyglot Data Science</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./13-conclusion.html" rel="next">
-<link href="./11-packaging.html" rel="prev">
+<link href="./14-conclusion.html" rel="next">
+<link href="./12-packaging.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./12-ci.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13-ci.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -392,56 +392,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-fp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
+  <a href="./05-first-pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-testing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  <a href="./06-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-rixpress-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  <a href="./07-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  <a href="./08-rixpress-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-monads.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  <a href="./09-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-docker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  <a href="./10-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11-packaging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  <a href="./11-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-ci.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  <a href="./12-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13-conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./13-ci.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -460,26 +466,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">12.1</span> Introduction</a></li>
-  <li><a href="#getting-your-repo-ready-for-github-actions" id="toc-getting-your-repo-ready-for-github-actions" class="nav-link" data-scroll-target="#getting-your-repo-ready-for-github-actions"><span class="header-section-number">12.2</span> Getting your repo ready for Github Actions</a></li>
-  <li><a href="#nix-and-github-actions" id="toc-nix-and-github-actions" class="nav-link" data-scroll-target="#nix-and-github-actions"><span class="header-section-number">12.3</span> Nix and GitHub Actions</a></li>
-  <li><a href="#running-a-dockerized-workflow" id="toc-running-a-dockerized-workflow" class="nav-link" data-scroll-target="#running-a-dockerized-workflow"><span class="header-section-number">12.4</span> Running a dockerized workflow</a></li>
-  <li><a href="#building-a-docker-image-and-pushing-it-to-a-registry" id="toc-building-a-docker-image-and-pushing-it-to-a-registry" class="nav-link" data-scroll-target="#building-a-docker-image-and-pushing-it-to-a-registry"><span class="header-section-number">12.5</span> Building a Docker image and pushing it to a registry</a></li>
-  <li><a href="#running-a-rixpress-pipeline-from-github-actions" id="toc-running-a-rixpress-pipeline-from-github-actions" class="nav-link" data-scroll-target="#running-a-rixpress-pipeline-from-github-actions"><span class="header-section-number">12.6</span> Running a rixpress Pipeline from GitHub Actions</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">13.1</span> Introduction</a></li>
+  <li><a href="#getting-your-repo-ready-for-github-actions" id="toc-getting-your-repo-ready-for-github-actions" class="nav-link" data-scroll-target="#getting-your-repo-ready-for-github-actions"><span class="header-section-number">13.2</span> Getting your repo ready for Github Actions</a></li>
+  <li><a href="#nix-and-github-actions" id="toc-nix-and-github-actions" class="nav-link" data-scroll-target="#nix-and-github-actions"><span class="header-section-number">13.3</span> Nix and GitHub Actions</a></li>
+  <li><a href="#running-a-dockerized-workflow" id="toc-running-a-dockerized-workflow" class="nav-link" data-scroll-target="#running-a-dockerized-workflow"><span class="header-section-number">13.4</span> Running a dockerized workflow</a></li>
+  <li><a href="#building-a-docker-image-and-pushing-it-to-a-registry" id="toc-building-a-docker-image-and-pushing-it-to-a-registry" class="nav-link" data-scroll-target="#building-a-docker-image-and-pushing-it-to-a-registry"><span class="header-section-number">13.5</span> Building a Docker image and pushing it to a registry</a></li>
+  <li><a href="#running-a-rixpress-pipeline-from-github-actions" id="toc-running-a-rixpress-pipeline-from-github-actions" class="nav-link" data-scroll-target="#running-a-rixpress-pipeline-from-github-actions"><span class="header-section-number">13.6</span> Running a rixpress Pipeline from GitHub Actions</a>
   <ul class="collapse">
-  <li><a href="#caching-pipeline-outputs-between-runs" id="toc-caching-pipeline-outputs-between-runs" class="nav-link" data-scroll-target="#caching-pipeline-outputs-between-runs"><span class="header-section-number">12.6.1</span> Caching Pipeline Outputs Between Runs</a></li>
-  <li><a href="#the-easy-way-rxp_ga" id="toc-the-easy-way-rxp_ga" class="nav-link" data-scroll-target="#the-easy-way-rxp_ga"><span class="header-section-number">12.6.2</span> The Easy Way: <code>rxp_ga()</code></a></li>
+  <li><a href="#caching-pipeline-outputs-between-runs" id="toc-caching-pipeline-outputs-between-runs" class="nav-link" data-scroll-target="#caching-pipeline-outputs-between-runs"><span class="header-section-number">13.6.1</span> Caching Pipeline Outputs Between Runs</a></li>
+  <li><a href="#the-easy-way-rxp_ga" id="toc-the-easy-way-rxp_ga" class="nav-link" data-scroll-target="#the-easy-way-rxp_ga"><span class="header-section-number">13.6.2</span> The Easy Way: <code>rxp_ga()</code></a></li>
   </ul></li>
-  <li><a href="#github-actions-without-nix" id="toc-github-actions-without-nix" class="nav-link" data-scroll-target="#github-actions-without-nix"><span class="header-section-number">12.7</span> GitHub Actions without Nix</a></li>
-  <li><a href="#advanced-patterns" id="toc-advanced-patterns" class="nav-link" data-scroll-target="#advanced-patterns"><span class="header-section-number">12.8</span> Advanced patterns</a>
+  <li><a href="#github-actions-without-nix" id="toc-github-actions-without-nix" class="nav-link" data-scroll-target="#github-actions-without-nix"><span class="header-section-number">13.7</span> GitHub Actions without Nix</a></li>
+  <li><a href="#advanced-patterns" id="toc-advanced-patterns" class="nav-link" data-scroll-target="#advanced-patterns"><span class="header-section-number">13.8</span> Advanced patterns</a>
   <ul class="collapse">
-  <li><a href="#caching-with-cachix" id="toc-caching-with-cachix" class="nav-link" data-scroll-target="#caching-with-cachix"><span class="header-section-number">12.8.1</span> Caching with Cachix</a></li>
-  <li><a href="#storing-outputs-in-orphan-branches" id="toc-storing-outputs-in-orphan-branches" class="nav-link" data-scroll-target="#storing-outputs-in-orphan-branches"><span class="header-section-number">12.8.2</span> Storing outputs in orphan branches</a></li>
-  <li><a href="#creating-workflow-summaries" id="toc-creating-workflow-summaries" class="nav-link" data-scroll-target="#creating-workflow-summaries"><span class="header-section-number">12.8.3</span> Creating workflow summaries</a></li>
+  <li><a href="#caching-with-cachix" id="toc-caching-with-cachix" class="nav-link" data-scroll-target="#caching-with-cachix"><span class="header-section-number">13.8.1</span> Caching with Cachix</a></li>
+  <li><a href="#storing-outputs-in-orphan-branches" id="toc-storing-outputs-in-orphan-branches" class="nav-link" data-scroll-target="#storing-outputs-in-orphan-branches"><span class="header-section-number">13.8.2</span> Storing outputs in orphan branches</a></li>
+  <li><a href="#creating-workflow-summaries" id="toc-creating-workflow-summaries" class="nav-link" data-scroll-target="#creating-workflow-summaries"><span class="header-section-number">13.8.3</span> Creating workflow summaries</a></li>
   </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">12.9</span> Conclusion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">13.9</span> Conclusion</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/12-ci.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/13-ci.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -487,7 +493,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></h1>
+<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></h1>
 </div>
 
 
@@ -504,15 +510,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">12.1</span> Introduction</h2>
+<section id="introduction" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">13.1</span> Introduction</h2>
 <p>We are almost at the end of our journey. In the previous chapters, we built reproducible environments with Nix, organised our code into pure functions, added robustness with monads, proved correctness with unit tests, managed our collaboration with Git, and bundled everything into shareable packages. We can now run our pipelines in a 100% reproducible way.</p>
 <p>However, all of this still requires manual steps. And maybe that’s not a problem; if your environment is set up and users only need to drop into a Nix shell and run the pipeline, that’s already a huge improvement. But you should keep in mind that manual steps don’t scale. Imagine you are part of a team that needs to quickly ship products to clients. Several people contribute to the product, and you might need to work on multiple projects in the same day. You and your teammates should be focusing on writing code, not on repetitive tasks like building images or running tests. Ideally, we would want to automate these steps. That is what we are going to learn in this chapter.</p>
 <p>This chapter will introduce you to <strong>Continuous Integration (CI)</strong> with GitHub Actions. You will learn how to set up workflows that automatically run your tests when you push code, how to build Docker images and recover artifacts, and how to run your pipelines directly from GitHub’s servers. Because we’re using Git to trigger all the events and automate the whole pipeline, this approach is sometimes called GitOps.</p>
 <p>You may have heard the term “CI/CD,” where CD stands for Continuous Deployment or Continuous Delivery. We will focus on CI in this chapter. Continuous Deployment (automatically pushing results to a database, dashboard, or API) is highly specific to your organisation and infrastructure. What we cover here, however, gives you the foundation: once your pipeline runs reliably on CI, the “deployment” step is just one more workflow job pointing to wherever your results need to go.</p>
 </section>
-<section id="getting-your-repo-ready-for-github-actions" class="level2" data-number="12.2">
-<h2 data-number="12.2" class="anchored" data-anchor-id="getting-your-repo-ready-for-github-actions"><span class="header-section-number">12.2</span> Getting your repo ready for Github Actions</h2>
+<section id="getting-your-repo-ready-for-github-actions" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="getting-your-repo-ready-for-github-actions"><span class="header-section-number">13.2</span> Getting your repo ready for Github Actions</h2>
 <p>Obviously, you should use a project that is versioned on GitHub. Use the package we’ve developed previously. If you go on its GitHub page, you should see an “Actions” tab on top:</p>
 <div style="text-align:center;">
 <div class="cell">
@@ -553,8 +559,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>      - run: echo "This command is running from an Ubuntu VM each time you push."</code></pre>
 <p>If we take a look at the commit we just pushed, on GitHub, we see this yellow dot next to the commit name. This means that an action is running. We can then take a look at the output of the job, and see that our commands, defined with the <code>run</code> statements in the workflow file, succeeded and echoed what we asked them.</p>
 </section>
-<section id="nix-and-github-actions" class="level2" data-number="12.3">
-<h2 data-number="12.3" class="anchored" data-anchor-id="nix-and-github-actions"><span class="header-section-number">12.3</span> Nix and GitHub Actions</h2>
+<section id="nix-and-github-actions" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="nix-and-github-actions"><span class="header-section-number">13.3</span> Nix and GitHub Actions</h2>
 <p>To set up Nix on GitHub Actions you can use several steps (create a new file called <code>run-tests.yaml</code>):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install Nix</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> cachix/install-nix-action@v31</span></span>
@@ -582,8 +588,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at"> </span><span class="st">"main"</span><span class="at"> </span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will ensure that if someone contributes to your project, you know immediately if what they did breaks tests or not. If it does, ask them to fix the code until tests pass.</p>
 </section>
-<section id="running-a-dockerized-workflow" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="running-a-dockerized-workflow"><span class="header-section-number">12.4</span> Running a dockerized workflow</h2>
+<section id="running-a-dockerized-workflow" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="running-a-dockerized-workflow"><span class="header-section-number">13.4</span> Running a dockerized workflow</h2>
 <p>This next example can be found in <a href="https://github.com/b-rodrigues/dockerized_pipeline_demo">this repository</a>. This example doesn’t use Nix, <code>{rix}</code> nor <code>{rixpress}</code>, but the point here is to show how a Docker container can be executed on GitHub Actions, and artifacts can be recovered. The process is always the same, regardless is inside the Docker image. If you want to follow along, fork this repository.</p>
 <p>This is what our workflow file looks like:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Reproducible pipeline</span></span>
@@ -636,12 +642,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>I’ve added “Dudelange” to the list of communes to plot. Pushing this change to GitHub triggers the action we’ve defined before. The plots (artifacts) get refreshed, and we can download them. Take a look and see that Dudelange was added in the <code>communes.png</code> plot!</p>
 <p>It is also possible to “deploy” the plots directly to another branch, and do much, much more. I just wanted to give you a little taste of Github Actions (and more generally GitOps). The possibilities are virtually limitless, and I still can’t get over the fact that Github Actions is free for public repositories.</p>
 </section>
-<section id="building-a-docker-image-and-pushing-it-to-a-registry" class="level2" data-number="12.5">
-<h2 data-number="12.5" class="anchored" data-anchor-id="building-a-docker-image-and-pushing-it-to-a-registry"><span class="header-section-number">12.5</span> Building a Docker image and pushing it to a registry</h2>
+<section id="building-a-docker-image-and-pushing-it-to-a-registry" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="building-a-docker-image-and-pushing-it-to-a-registry"><span class="header-section-number">13.5</span> Building a Docker image and pushing it to a registry</h2>
 <p>It is also possible to build a Docker image and have it made available on an image registry. You can see how this works on this <a href="https://github.com/b-rodrigues/ga_demo">repository</a>. This images can then be used as a base for other reproducible pipelines, as in this <a href="https://github.com/b-rodrigues/ga_demo_rap/tree/main">repository</a>. Why do this? Well because of “separation of concerns”. You could have a repository which builds in image containing your development environment: this could be an image with a specific version of R and R packages built with Nix. And then have as many repositories as projects that run pipelines using that development environment image as a basis. Simply add the project-specific packages that you need for each project.</p>
 </section>
-<section id="running-a-rixpress-pipeline-from-github-actions" class="level2" data-number="12.6">
-<h2 data-number="12.6" class="anchored" data-anchor-id="running-a-rixpress-pipeline-from-github-actions"><span class="header-section-number">12.6</span> Running a rixpress Pipeline from GitHub Actions</h2>
+<section id="running-a-rixpress-pipeline-from-github-actions" class="level2" data-number="13.6">
+<h2 data-number="13.6" class="anchored" data-anchor-id="running-a-rixpress-pipeline-from-github-actions"><span class="header-section-number">13.6</span> Running a rixpress Pipeline from GitHub Actions</h2>
 <p>With Nix and <code>{rixpress}</code>, running your pipeline directly on GitHub Actions is straightforward. Because Nix handles all dependencies reproducibly, you don’t need Docker as an intermediary. The <a href="https://github.com/b-rodrigues/rixpress_demos">rixpress_demos</a> repository contains several complete examples; here we will walk through the key steps.</p>
 <p>The workflow triggers on pushes and pull requests to <code>main</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
@@ -673,8 +679,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Show result</span></span>
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    nix-shell --quiet --run "Rscript -e 'rixpress::rxp_read(\"confusion_matrix\")'"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="caching-pipeline-outputs-between-runs" class="level3" data-number="12.6.1">
-<h3 data-number="12.6.1" class="anchored" data-anchor-id="caching-pipeline-outputs-between-runs"><span class="header-section-number">12.6.1</span> Caching Pipeline Outputs Between Runs</h3>
+<section id="caching-pipeline-outputs-between-runs" class="level3" data-number="13.6.1">
+<h3 data-number="13.6.1" class="anchored" data-anchor-id="caching-pipeline-outputs-between-runs"><span class="header-section-number">13.6.1</span> Caching Pipeline Outputs Between Runs</h3>
 <p>While Nix caches derivations, CI runners are ephemeral: each run starts fresh. To avoid rebuilding the entire pipeline every time, <code>{rixpress}</code> provides <code>rxp_export_artifacts()</code> and <code>rxp_import_artifacts()</code> to persist outputs between runs.</p>
 <p>Before building, check if cached outputs exist and import them:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Import cached outputs if available</span></span>
@@ -705,16 +711,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    fi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This pattern ensures that only changed derivations are rebuilt on subsequent runs. The <code>.nar</code> file format is Nix’s archive format and contains all the built outputs.</p>
 </section>
-<section id="the-easy-way-rxp_ga" class="level3" data-number="12.6.2">
-<h3 data-number="12.6.2" class="anchored" data-anchor-id="the-easy-way-rxp_ga"><span class="header-section-number">12.6.2</span> The Easy Way: <code>rxp_ga()</code></h3>
+<section id="the-easy-way-rxp_ga" class="level3" data-number="13.6.2">
+<h3 data-number="13.6.2" class="anchored" data-anchor-id="the-easy-way-rxp_ga"><span class="header-section-number">13.6.2</span> The Easy Way: <code>rxp_ga()</code></h3>
 <p>If the above seems like a lot of boilerplate, <code>{rixpress}</code> provides a helper function that generates a complete GitHub Actions workflow for you:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>rixpress<span class="sc">::</span><span class="fu">rxp_ga</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This creates a <code>.github/workflows/run-rxp-pipeline.yaml</code> file that handles everything: installing Nix, setting up Cachix, generating the environment and pipeline, importing and exporting artifacts, and storing them in a dedicated <code>rixpress-runs</code> orphan branch. Using an orphan branch keeps your main branch clean while persisting the cached outputs between runs.</p>
 <p>For most projects, running <code>rxp_ga()</code> once and committing the generated workflow file is all you need to get your pipeline running on CI.</p>
 </section>
 </section>
-<section id="github-actions-without-nix" class="level2" data-number="12.7">
-<h2 data-number="12.7" class="anchored" data-anchor-id="github-actions-without-nix"><span class="header-section-number">12.7</span> GitHub Actions without Nix</h2>
+<section id="github-actions-without-nix" class="level2" data-number="13.7">
+<h2 data-number="13.7" class="anchored" data-anchor-id="github-actions-without-nix"><span class="header-section-number">13.7</span> GitHub Actions without Nix</h2>
 <p>If you’re not using Nix, you’ll have to set up GitHub Actions manually. Suppose you have a package project and want to run unit tests on each push. See for example the <code>{myPackage}</code> package, in particular <a href="https://github.com/b-rodrigues/myPackage/blob/main/.github/workflows/rcmdcheck.yaml">this file</a>. This action runs on each push and pull request on Windows, Ubuntu and macOS:</p>
 <pre><code>on:
   push:
@@ -741,11 +747,11 @@ jobs:
 <p>Check out the workflow results to see how the package could be improved <a href="https://github.com/b-rodrigues/myPackage/actions/runs/12348361696">here</a>.</p>
 <p>Here again, using Nix simplifies this process immensely. Look at this workflow file from <code>{rix}</code>’s repository <a href="https://github.com/ropensci/rix/blob/main/.github/workflows/tests-r-via-nix.yaml">here</a>. Setting up the environment is much easier, as is running the actual test suite.</p>
 </section>
-<section id="advanced-patterns" class="level2" data-number="12.8">
-<h2 data-number="12.8" class="anchored" data-anchor-id="advanced-patterns"><span class="header-section-number">12.8</span> Advanced patterns</h2>
+<section id="advanced-patterns" class="level2" data-number="13.8">
+<h2 data-number="13.8" class="anchored" data-anchor-id="advanced-patterns"><span class="header-section-number">13.8</span> Advanced patterns</h2>
 <p>Now that you understand the basics, let’s look at some more advanced patterns that will make your CI workflows more efficient and informative.</p>
-<section id="caching-with-cachix" class="level3" data-number="12.8.1">
-<h3 data-number="12.8.1" class="anchored" data-anchor-id="caching-with-cachix"><span class="header-section-number">12.8.1</span> Caching with Cachix</h3>
+<section id="caching-with-cachix" class="level3" data-number="13.8.1">
+<h3 data-number="13.8.1" class="anchored" data-anchor-id="caching-with-cachix"><span class="header-section-number">13.8.1</span> Caching with Cachix</h3>
 <p>Building Nix environments from scratch on every CI run can be slow. Cachix solves this by providing a binary cache for your Nix derivations. Once you build something, subsequent runs can download the pre-built binaries instead of rebuilding from source.</p>
 <p>To use Cachix, you first need to create a free account at <a href="https://cachix.org">cachix.org</a> and create a cache. Then, generate an auth token and add it as a secret in your GitHub repository settings (under Settings → Secrets and variables → Actions). Call it something like <code>CACHIX_AUTH</code>.</p>
 <p>Here is a workflow that builds your development environment and pushes the results to your Cachix cache:</p>
@@ -782,8 +788,8 @@ jobs:
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">matrix</span><span class="kw">:</span></span>
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">os</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">ubuntu-latest</span><span class="kw">,</span><span class="at"> macos-latest</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="storing-outputs-in-orphan-branches" class="level3" data-number="12.8.2">
-<h3 data-number="12.8.2" class="anchored" data-anchor-id="storing-outputs-in-orphan-branches"><span class="header-section-number">12.8.2</span> Storing outputs in orphan branches</h3>
+<section id="storing-outputs-in-orphan-branches" class="level3" data-number="13.8.2">
+<h3 data-number="13.8.2" class="anchored" data-anchor-id="storing-outputs-in-orphan-branches"><span class="header-section-number">13.8.2</span> Storing outputs in orphan branches</h3>
 <p>When running a pipeline on CI, you often want to keep the outputs (plots, data, reports) without committing them to your main branch. A clean solution is to store them in an orphan branch. An orphan branch has no commit history and is completely separate from your main code.</p>
 <p>Here is the pattern:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Check if outputs branch exists</span></span>
@@ -815,8 +821,8 @@ jobs:
 <span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>    git push origin pipeline-outputs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This pattern first checks if the branch exists using <code>git ls-remote</code>. If not, it creates an orphan branch. Then it uses <code>git worktree</code> to work with both branches simultaneously, copies the outputs, and pushes them. The <code>{rix}</code> and <code>{rixpress}</code> packages use this pattern to store pipeline outputs between runs.</p>
 </section>
-<section id="creating-workflow-summaries" class="level3" data-number="12.8.3">
-<h3 data-number="12.8.3" class="anchored" data-anchor-id="creating-workflow-summaries"><span class="header-section-number">12.8.3</span> Creating workflow summaries</h3>
+<section id="creating-workflow-summaries" class="level3" data-number="13.8.3">
+<h3 data-number="13.8.3" class="anchored" data-anchor-id="creating-workflow-summaries"><span class="header-section-number">13.8.3</span> Creating workflow summaries</h3>
 <p>GitHub Actions has a built-in feature for creating rich summaries that appear directly on the workflow run page. You write Markdown to a special file path stored in the <code>GITHUB_STEP_SUMMARY</code> environment variable.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create summary</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
@@ -844,8 +850,8 @@ jobs:
 <p>The summary appears right on the Actions tab, making it easy for collaborators to see what happened without digging through logs.</p>
 </section>
 </section>
-<section id="conclusion" class="level2" data-number="12.9">
-<h2 data-number="12.9" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">12.9</span> Conclusion</h2>
+<section id="conclusion" class="level2" data-number="13.9">
+<h2 data-number="13.9" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">13.9</span> Conclusion</h2>
 <p>This chapter introduced Continuous Integration with GitHub Actions, the final piece of our reproducible workflow.</p>
 <p>Key takeaways:</p>
 <ul>
@@ -1276,13 +1282,13 @@ jobs:
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./11-packaging.html" class="pagination-link" aria-label="A Short Intro to Packaging Your Code in R and Python">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span>
+      <a href="./12-packaging.html" class="pagination-link" aria-label="A Short Intro to Packaging Your Code in R and Python">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./13-conclusion.html" class="pagination-link" aria-label="Conclusion: Adopting Reproducibility in the Real World">
-        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./14-conclusion.html" class="pagination-link" aria-label="Conclusion: Adopting Reproducibility in the Real World">
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1291,4 +1297,4 @@ jobs:
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/12-ci.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/13-ci.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

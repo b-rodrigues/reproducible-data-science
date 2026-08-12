@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Robust Pipelines with Monads – Reproducible Polyglot Data Science</title>
+<title>10&nbsp; Robust Pipelines with Monads – Reproducible Polyglot Data Science</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./10-docker.html" rel="next">
-<link href="./08-rixpress-advanced.html" rel="prev">
+<link href="./11-docker.html" rel="next">
+<link href="./09-rixpress-advanced.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-monads.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10-monads.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -392,56 +392,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-fp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
+  <a href="./05-first-pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-testing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  <a href="./06-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-rixpress-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  <a href="./07-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  <a href="./08-rixpress-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-monads.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  <a href="./09-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-docker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  <a href="./10-monads.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11-packaging.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  <a href="./11-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-ci.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  <a href="./12-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13-conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./13-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -460,32 +466,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#why-do-we-need-logging" id="toc-why-do-we-need-logging" class="nav-link active" data-scroll-target="#why-do-we-need-logging"><span class="header-section-number">9.1</span> Why Do We Need Logging?</a></li>
-  <li><a href="#the-problem-decorated-functions-dont-compose" id="toc-the-problem-decorated-functions-dont-compose" class="nav-link" data-scroll-target="#the-problem-decorated-functions-dont-compose"><span class="header-section-number">9.2</span> The Problem: Decorated Functions Don’t Compose</a></li>
-  <li><a href="#the-solution-function-factories-and-bind" id="toc-the-solution-function-factories-and-bind" class="nav-link" data-scroll-target="#the-solution-function-factories-and-bind"><span class="header-section-number">9.3</span> The Solution: Function Factories and Bind</a></li>
-  <li><a href="#a-deeper-look-the-formal-definition" id="toc-a-deeper-look-the-formal-definition" class="nav-link" data-scroll-target="#a-deeper-look-the-formal-definition"><span class="header-section-number">9.4</span> A Deeper Look: The Formal Definition</a></li>
-  <li><a href="#alternative-perspective-fmap-flatten-and-flatmap" id="toc-alternative-perspective-fmap-flatten-and-flatmap" class="nav-link" data-scroll-target="#alternative-perspective-fmap-flatten-and-flatmap"><span class="header-section-number">9.5</span> Alternative Perspective: fmap, flatten, and flatmap</a></li>
-  <li><a href="#lists-are-monads-too" id="toc-lists-are-monads-too" class="nav-link" data-scroll-target="#lists-are-monads-too"><span class="header-section-number">9.6</span> Lists Are Monads Too</a></li>
-  <li><a href="#the-chronicler-package" id="toc-the-chronicler-package" class="nav-link" data-scroll-target="#the-chronicler-package"><span class="header-section-number">9.7</span> The chronicler Package</a></li>
-  <li><a href="#the-maybe-monad-handling-errors" id="toc-the-maybe-monad-handling-errors" class="nav-link" data-scroll-target="#the-maybe-monad-handling-errors"><span class="header-section-number">9.8</span> The Maybe Monad: Handling Errors</a></li>
-  <li><a href="#monads-in-python-cronista" id="toc-monads-in-python-cronista" class="nav-link" data-scroll-target="#monads-in-python-cronista"><span class="header-section-number">9.9</span> Monads in Python: cronista</a></li>
-  <li><a href="#building-robust-pipelines" id="toc-building-robust-pipelines" class="nav-link" data-scroll-target="#building-robust-pipelines"><span class="header-section-number">9.10</span> Building Robust Pipelines</a></li>
-  <li><a href="#integrating-with-rixpress" id="toc-integrating-with-rixpress" class="nav-link" data-scroll-target="#integrating-with-rixpress"><span class="header-section-number">9.11</span> Integrating with rixpress</a></li>
-  <li><a href="#python-integration-with-cronista" id="toc-python-integration-with-cronista" class="nav-link" data-scroll-target="#python-integration-with-cronista"><span class="header-section-number">9.12</span> Python Integration with cronista</a></li>
-  <li><a href="#detecting-silent-failures-in-pipelines" id="toc-detecting-silent-failures-in-pipelines" class="nav-link" data-scroll-target="#detecting-silent-failures-in-pipelines"><span class="header-section-number">9.13</span> Detecting Silent Failures in Pipelines</a>
+  <li><a href="#why-do-we-need-logging" id="toc-why-do-we-need-logging" class="nav-link active" data-scroll-target="#why-do-we-need-logging"><span class="header-section-number">10.1</span> Why Do We Need Logging?</a></li>
+  <li><a href="#the-problem-decorated-functions-dont-compose" id="toc-the-problem-decorated-functions-dont-compose" class="nav-link" data-scroll-target="#the-problem-decorated-functions-dont-compose"><span class="header-section-number">10.2</span> The Problem: Decorated Functions Don’t Compose</a></li>
+  <li><a href="#the-solution-function-factories-and-bind" id="toc-the-solution-function-factories-and-bind" class="nav-link" data-scroll-target="#the-solution-function-factories-and-bind"><span class="header-section-number">10.3</span> The Solution: Function Factories and Bind</a></li>
+  <li><a href="#a-deeper-look-the-formal-definition" id="toc-a-deeper-look-the-formal-definition" class="nav-link" data-scroll-target="#a-deeper-look-the-formal-definition"><span class="header-section-number">10.4</span> A Deeper Look: The Formal Definition</a></li>
+  <li><a href="#alternative-perspective-fmap-flatten-and-flatmap" id="toc-alternative-perspective-fmap-flatten-and-flatmap" class="nav-link" data-scroll-target="#alternative-perspective-fmap-flatten-and-flatmap"><span class="header-section-number">10.5</span> Alternative Perspective: fmap, flatten, and flatmap</a></li>
+  <li><a href="#lists-are-monads-too" id="toc-lists-are-monads-too" class="nav-link" data-scroll-target="#lists-are-monads-too"><span class="header-section-number">10.6</span> Lists Are Monads Too</a></li>
+  <li><a href="#the-chronicler-package" id="toc-the-chronicler-package" class="nav-link" data-scroll-target="#the-chronicler-package"><span class="header-section-number">10.7</span> The chronicler Package</a></li>
+  <li><a href="#the-maybe-monad-handling-errors" id="toc-the-maybe-monad-handling-errors" class="nav-link" data-scroll-target="#the-maybe-monad-handling-errors"><span class="header-section-number">10.8</span> The Maybe Monad: Handling Errors</a></li>
+  <li><a href="#monads-in-python-cronista" id="toc-monads-in-python-cronista" class="nav-link" data-scroll-target="#monads-in-python-cronista"><span class="header-section-number">10.9</span> Monads in Python: cronista</a></li>
+  <li><a href="#building-robust-pipelines" id="toc-building-robust-pipelines" class="nav-link" data-scroll-target="#building-robust-pipelines"><span class="header-section-number">10.10</span> Building Robust Pipelines</a></li>
+  <li><a href="#integrating-with-rixpress" id="toc-integrating-with-rixpress" class="nav-link" data-scroll-target="#integrating-with-rixpress"><span class="header-section-number">10.11</span> Integrating with rixpress</a></li>
+  <li><a href="#python-integration-with-cronista" id="toc-python-integration-with-cronista" class="nav-link" data-scroll-target="#python-integration-with-cronista"><span class="header-section-number">10.12</span> Python Integration with cronista</a></li>
+  <li><a href="#detecting-silent-failures-in-pipelines" id="toc-detecting-silent-failures-in-pipelines" class="nav-link" data-scroll-target="#detecting-silent-failures-in-pipelines"><span class="header-section-number">10.13</span> Detecting Silent Failures in Pipelines</a>
   <ul class="collapse">
-  <li><a href="#automatic-chronicle-checking" id="toc-automatic-chronicle-checking" class="nav-link" data-scroll-target="#automatic-chronicle-checking"><span class="header-section-number">9.13.1</span> Automatic Chronicle Checking</a></li>
-  <li><a href="#python-cronista-ryxpress" id="toc-python-cronista-ryxpress" class="nav-link" data-scroll-target="#python-cronista-ryxpress"><span class="header-section-number">9.13.2</span> Python: cronista + ryxpress</a></li>
+  <li><a href="#automatic-chronicle-checking" id="toc-automatic-chronicle-checking" class="nav-link" data-scroll-target="#automatic-chronicle-checking"><span class="header-section-number">10.13.1</span> Automatic Chronicle Checking</a></li>
+  <li><a href="#python-cronista-ryxpress" id="toc-python-cronista-ryxpress" class="nav-link" data-scroll-target="#python-cronista-ryxpress"><span class="header-section-number">10.13.2</span> Python: cronista + ryxpress</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">9.14</span> Summary</a></li>
-  <li><a href="#appendix-the-monadic-laws" id="toc-appendix-the-monadic-laws" class="nav-link" data-scroll-target="#appendix-the-monadic-laws"><span class="header-section-number">9.15</span> Appendix: The Monadic Laws</a>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">10.14</span> Summary</a></li>
+  <li><a href="#appendix-the-monadic-laws" id="toc-appendix-the-monadic-laws" class="nav-link" data-scroll-target="#appendix-the-monadic-laws"><span class="header-section-number">10.15</span> Appendix: The Monadic Laws</a>
   <ul class="collapse">
-  <li><a href="#first-law-left-identity" id="toc-first-law-left-identity" class="nav-link" data-scroll-target="#first-law-left-identity"><span class="header-section-number">9.15.1</span> First Law: Left Identity</a></li>
-  <li><a href="#second-law-right-identity" id="toc-second-law-right-identity" class="nav-link" data-scroll-target="#second-law-right-identity"><span class="header-section-number">9.15.2</span> Second Law: Right Identity</a></li>
-  <li><a href="#third-law-associativity" id="toc-third-law-associativity" class="nav-link" data-scroll-target="#third-law-associativity"><span class="header-section-number">9.15.3</span> Third Law: Associativity</a></li>
+  <li><a href="#first-law-left-identity" id="toc-first-law-left-identity" class="nav-link" data-scroll-target="#first-law-left-identity"><span class="header-section-number">10.15.1</span> First Law: Left Identity</a></li>
+  <li><a href="#second-law-right-identity" id="toc-second-law-right-identity" class="nav-link" data-scroll-target="#second-law-right-identity"><span class="header-section-number">10.15.2</span> Second Law: Right Identity</a></li>
+  <li><a href="#third-law-associativity" id="toc-third-law-associativity" class="nav-link" data-scroll-target="#third-law-associativity"><span class="header-section-number">10.15.3</span> Third Law: Associativity</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/09-monads.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/10-monads.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -493,7 +499,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></h1>
 </div>
 
 
@@ -513,8 +519,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In the previous chapters, you learned functional programming fundamentals and how to build reproducible pipelines with <code>{rixpress}</code>. Now we’ll add another layer of robustness: <strong>monads</strong>.</p>
 <p>Monads might sound abstract, but they solve concrete problems involving <strong>Logging</strong> (tracing what each step does without cluttering your functions), <strong>Error handling</strong> (letting failures propagate gracefully instead of crashing), and <strong>Composition</strong> (keeping functions composable even when they need to do “extra” work).</p>
 <p>By the end of this chapter, you’ll know how to integrate <code>{chronicler}</code> and <code>cronista</code> into your pipelines for more robust, observable data workflows.</p>
-<section id="why-do-we-need-logging" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="why-do-we-need-logging"><span class="header-section-number">9.1</span> Why Do We Need Logging?</h2>
+<section id="why-do-we-need-logging" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="why-do-we-need-logging"><span class="header-section-number">10.1</span> Why Do We Need Logging?</h2>
 <p>When you build data pipelines, things inevitably go wrong. A dataset might have unexpected missing values. A computation might produce NaN. A join might drop more rows than expected. When these issues occur, the first question is always: <strong>where did it happen?</strong></p>
 <p>Consider a simple pipeline:</p>
 <div class="cell">
@@ -551,8 +557,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>What if your functions could automatically log themselves without any changes to their core logic?</p>
 </section>
-<section id="the-problem-decorated-functions-dont-compose" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="the-problem-decorated-functions-dont-compose"><span class="header-section-number">9.2</span> The Problem: Decorated Functions Don’t Compose</h2>
+<section id="the-problem-decorated-functions-dont-compose" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="the-problem-decorated-functions-dont-compose"><span class="header-section-number">10.2</span> The Problem: Decorated Functions Don’t Compose</h2>
 <p>Suppose you want your functions to provide logs. You might rewrite <code>sqrt()</code> like this:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>my_sqrt <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">log =</span> <span class="st">""</span>) {</span>
@@ -580,8 +586,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><code>my_log()</code> expects a number, but <code>my_sqrt()</code> returns a list. We’ve broken composition.</p>
 </section>
-<section id="the-solution-function-factories-and-bind" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="the-solution-function-factories-and-bind"><span class="header-section-number">9.3</span> The Solution: Function Factories and Bind</h2>
+<section id="the-solution-function-factories-and-bind" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="the-solution-function-factories-and-bind"><span class="header-section-number">10.3</span> The Solution: Function Factories and Bind</h2>
 <p>A monad provides two things:</p>
 <ol type="1">
 <li><strong>A function factory</strong> that decorates functions so they can provide additional output without rewriting their core logic</li>
@@ -629,8 +635,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>This pattern of a function factory plus <code>bind()</code> is the essence of a monad.</p>
 </section>
-<section id="a-deeper-look-the-formal-definition" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="a-deeper-look-the-formal-definition"><span class="header-section-number">9.4</span> A Deeper Look: The Formal Definition</h2>
+<section id="a-deeper-look-the-formal-definition" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="a-deeper-look-the-formal-definition"><span class="header-section-number">10.4</span> A Deeper Look: The Formal Definition</h2>
 <p>While our function factory approach is practical for R programmers, it’s useful to understand how this relates to the formal definition from Haskell, where monads originate:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode haskell code-with-copy"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Monad</span> m <span class="kw">where</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ot">  (&gt;&gt;=)  ::</span> m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> m b  <span class="co">-- This is bind()</span></span>
@@ -655,8 +661,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>So <code>return</code>/<code>unit</code> is just the <code>identity()</code> function passed through our factory. In a sense, the function factory is even more fundamental than <code>return</code>/<code>unit</code>.</p>
 </section>
-<section id="alternative-perspective-fmap-flatten-and-flatmap" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="alternative-perspective-fmap-flatten-and-flatmap"><span class="header-section-number">9.5</span> Alternative Perspective: fmap, flatten, and flatmap</h2>
+<section id="alternative-perspective-fmap-flatten-and-flatmap" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="alternative-perspective-fmap-flatten-and-flatmap"><span class="header-section-number">10.5</span> Alternative Perspective: fmap, flatten, and flatmap</h2>
 <p>You may sometimes read that monads are objects with a <code>flatmap()</code> method. This is another valid perspective. To understand it, we need two helper functions: <code>fmap()</code> and <code>flatten()</code>.</p>
 <p><strong>fmap()</strong> applies an <em>undecorated</em> function to a monadic value:</p>
 <div class="cell">
@@ -726,8 +732,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>This gives the same result as using <code>bind()</code>. I prefer introducing monads via <code>bind()</code> because it comes naturally as a solution to the composition problem. But in some contexts, thinking in terms of <code>fmap()</code> and <code>flatten()</code> is more intuitive, so it’s good to know both approaches.</p>
 </section>
-<section id="lists-are-monads-too" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="lists-are-monads-too"><span class="header-section-number">9.6</span> Lists Are Monads Too</h2>
+<section id="lists-are-monads-too" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="lists-are-monads-too"><span class="header-section-number">10.6</span> Lists Are Monads Too</h2>
 <p>Here’s a surprising fact: <strong>lists are monads</strong>. We already have all the necessary ingredients in base R and <code>{purrr}</code>:</p>
 <ul>
 <li><code>as.list()</code> is <code>return</code>/<code>unit</code></li>
@@ -752,8 +758,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>This example illustrates that monads are not some exotic concept—they’re a pattern you’ve likely used without knowing it. Every time you use <code>purrr</code> to chain operations over lists, you’re doing monadic programming.</p>
 </section>
-<section id="the-chronicler-package" class="level2" data-number="9.7">
-<h2 data-number="9.7" class="anchored" data-anchor-id="the-chronicler-package"><span class="header-section-number">9.7</span> The chronicler Package</h2>
+<section id="the-chronicler-package" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="the-chronicler-package"><span class="header-section-number">10.7</span> The chronicler Package</h2>
 <p>The <code>{chronicler}</code> package implements this pattern properly for R. It provides:</p>
 <ul>
 <li><code>record()</code>: A function factory that decorates functions</li>
@@ -801,8 +807,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="the-maybe-monad-handling-errors" class="level2" data-number="9.8">
-<h2 data-number="9.8" class="anchored" data-anchor-id="the-maybe-monad-handling-errors"><span class="header-section-number">9.8</span> The Maybe Monad: Handling Errors</h2>
+<section id="the-maybe-monad-handling-errors" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="the-maybe-monad-handling-errors"><span class="header-section-number">10.8</span> The Maybe Monad: Handling Errors</h2>
 <p>Another common monad is <strong>Maybe</strong>, which handles computations that might fail. Instead of crashing, functions return either:</p>
 <ul>
 <li><code>Just(value)</code> if successful</li>
@@ -823,8 +829,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>When <code>Nothing</code> is passed to a decorated function, it immediately returns <code>Nothing</code>, the error propagates through the pipeline without crashing.</p>
 </section>
-<section id="monads-in-python-cronista" class="level2" data-number="9.9">
-<h2 data-number="9.9" class="anchored" data-anchor-id="monads-in-python-cronista"><span class="header-section-number">9.9</span> Monads in Python: cronista</h2>
+<section id="monads-in-python-cronista" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="monads-in-python-cronista"><span class="header-section-number">10.9</span> Monads in Python: cronista</h2>
 <p>The same concepts exist in Python. The <code>cronista</code> package (Python equivalent of <code>{chronicler}</code>) provides the same <code>record()</code> decorator and logging capabilities:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cronista <span class="im">import</span> record, read_log, unveil</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
@@ -882,8 +888,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>read_log(c)</code>: View the operation log</li>
 </ul>
 </section>
-<section id="building-robust-pipelines" class="level2" data-number="9.10">
-<h2 data-number="9.10" class="anchored" data-anchor-id="building-robust-pipelines"><span class="header-section-number">9.10</span> Building Robust Pipelines</h2>
+<section id="building-robust-pipelines" class="level2" data-number="10.10">
+<h2 data-number="10.10" class="anchored" data-anchor-id="building-robust-pipelines"><span class="header-section-number">10.10</span> Building Robust Pipelines</h2>
 <p>The real power of monads becomes apparent when you combine them with pipeline orchestration. Consider a typical data pipeline:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard pipeline - fragile</span></span>
@@ -921,8 +927,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>This pattern transforms a fragile script into a robust, observable pipeline.</p>
 </section>
-<section id="integrating-with-rixpress" class="level2" data-number="9.11">
-<h2 data-number="9.11" class="anchored" data-anchor-id="integrating-with-rixpress"><span class="header-section-number">9.11</span> Integrating with rixpress</h2>
+<section id="integrating-with-rixpress" class="level2" data-number="10.11">
+<h2 data-number="10.11" class="anchored" data-anchor-id="integrating-with-rixpress"><span class="header-section-number">10.11</span> Integrating with rixpress</h2>
 <p>You can combine the power of <code>{chronicler}</code> with <code>{rixpress}</code> for even more robust pipelines. The key insight is that your <code>user_functions</code> can use <code>record()</code> internally:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># functions.R</span></span>
@@ -973,8 +979,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The <code>{rixpress}</code> derivation caches the result while <code>{chronicler}</code> provides logging and error handling within the step.</p>
 </section>
-<section id="python-integration-with-cronista" class="level2" data-number="9.12">
-<h2 data-number="9.12" class="anchored" data-anchor-id="python-integration-with-cronista"><span class="header-section-number">9.12</span> Python Integration with cronista</h2>
+<section id="python-integration-with-cronista" class="level2" data-number="10.12">
+<h2 data-number="10.12" class="anchored" data-anchor-id="python-integration-with-cronista"><span class="header-section-number">10.12</span> Python Integration with cronista</h2>
 <p>The same pattern works in Python pipelines using cronista:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># functions.py</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cronista <span class="im">import</span> record</span>
@@ -1002,8 +1008,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="detecting-silent-failures-in-pipelines" class="level2" data-number="9.13">
-<h2 data-number="9.13" class="anchored" data-anchor-id="detecting-silent-failures-in-pipelines"><span class="header-section-number">9.13</span> Detecting Silent Failures in Pipelines</h2>
+<section id="detecting-silent-failures-in-pipelines" class="level2" data-number="10.13">
+<h2 data-number="10.13" class="anchored" data-anchor-id="detecting-silent-failures-in-pipelines"><span class="header-section-number">10.13</span> Detecting Silent Failures in Pipelines</h2>
 <p>Here’s the catch: when you use chronicler or cronista functions in a rixpress pipeline, <strong>Nix builds never fail</strong>. Even when a computation produces <code>Nothing</code>, it’s still a valid object that gets serialized successfully.</p>
 <p>Consider this pipeline:</p>
 <div class="cell">
@@ -1018,8 +1024,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">rxp_populate</span>(<span class="at">build =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>When you run <code>rxp_make()</code>, the build succeeds! But <code>result</code> contains <code>Nothing</code>, meaning the computation actually failed. Without checking, you might think your pipeline worked perfectly.</p>
-<section id="automatic-chronicle-checking" class="level3" data-number="9.13.1">
-<h3 data-number="9.13.1" class="anchored" data-anchor-id="automatic-chronicle-checking"><span class="header-section-number">9.13.1</span> Automatic Chronicle Checking</h3>
+<section id="automatic-chronicle-checking" class="level3" data-number="10.13.1">
+<h3 data-number="10.13.1" class="anchored" data-anchor-id="automatic-chronicle-checking"><span class="header-section-number">10.13.1</span> Automatic Chronicle Checking</h3>
 <p>When <code>{chronicler}</code> is available, <code>rxp_make()</code> automatically checks pipeline outputs for <code>Nothing</code> values after a successful build:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rxp_make</span>()</span>
@@ -1071,8 +1077,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="python-cronista-ryxpress" class="level3" data-number="9.13.2">
-<h3 data-number="9.13.2" class="anchored" data-anchor-id="python-cronista-ryxpress"><span class="header-section-number">9.13.2</span> Python: cronista + ryxpress</h3>
+<section id="python-cronista-ryxpress" class="level3" data-number="10.13.2">
+<h3 data-number="10.13.2" class="anchored" data-anchor-id="python-cronista-ryxpress"><span class="header-section-number">10.13.2</span> Python: cronista + ryxpress</h3>
 <p>The same pattern works in Python with <code>cronista</code> (the Python equivalent of chronicler) and <code>ryxpress</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gen-pipeline.R using Python functions</span></span>
@@ -1132,8 +1138,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="summary" class="level2" data-number="9.14">
-<h2 data-number="9.14" class="anchored" data-anchor-id="summary"><span class="header-section-number">9.14</span> Summary</h2>
+<section id="summary" class="level2" data-number="10.14">
+<h2 data-number="10.14" class="anchored" data-anchor-id="summary"><span class="header-section-number">10.14</span> Summary</h2>
 <p>Monads add a layer of robustness to your pipelines. In this chapter, we covered:</p>
 <p><strong>Core Concepts:</strong></p>
 <ul>
@@ -1159,11 +1165,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>This completes our code quality toolkit: environments (Nix), functional code (FP), testing, pipelines (rixpress), and robustness (monads). In the next chapter, we’ll learn how to distribute our work with Docker, followed by packaging and continuous integration.</p>
 </section>
-<section id="appendix-the-monadic-laws" class="level2" data-number="9.15">
-<h2 data-number="9.15" class="anchored" data-anchor-id="appendix-the-monadic-laws"><span class="header-section-number">9.15</span> Appendix: The Monadic Laws</h2>
+<section id="appendix-the-monadic-laws" class="level2" data-number="10.15">
+<h2 data-number="10.15" class="anchored" data-anchor-id="appendix-the-monadic-laws"><span class="header-section-number">10.15</span> Appendix: The Monadic Laws</h2>
 <p>For the mathematically curious, monads must satisfy three laws. While you don’t need to know these to <em>use</em> monads effectively, understanding them helps you verify that an implementation is correct.</p>
-<section id="first-law-left-identity" class="level3" data-number="9.15.1">
-<h3 data-number="9.15.1" class="anchored" data-anchor-id="first-law-left-identity"><span class="header-section-number">9.15.1</span> First Law: Left Identity</h3>
+<section id="first-law-left-identity" class="level3" data-number="10.15.1">
+<h3 data-number="10.15.1" class="anchored" data-anchor-id="first-law-left-identity"><span class="header-section-number">10.15.1</span> First Law: Left Identity</h3>
 <p>Passing a value to <code>return</code>/<code>unit</code> and then binding it to a function <code>f</code> is the same as applying <code>f</code> directly to the value:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(chronicler)</span>
@@ -1179,8 +1185,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.162278</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="second-law-right-identity" class="level3" data-number="9.15.2">
-<h3 data-number="9.15.2" class="anchored" data-anchor-id="second-law-right-identity"><span class="header-section-number">9.15.2</span> Second Law: Right Identity</h3>
+<section id="second-law-right-identity" class="level3" data-number="10.15.2">
+<h3 data-number="10.15.2" class="anchored" data-anchor-id="second-law-right-identity"><span class="header-section-number">10.15.2</span> Second Law: Right Identity</h3>
 <p>Binding a monadic value to <code>return</code>/<code>unit</code> returns the original value unchanged:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">as_chronicle</span>(<span class="dv">10</span>)</span>
@@ -1193,8 +1199,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="third-law-associativity" class="level3" data-number="9.15.3">
-<h3 data-number="9.15.3" class="anchored" data-anchor-id="third-law-associativity"><span class="header-section-number">9.15.3</span> Third Law: Associativity</h3>
+<section id="third-law-associativity" class="level3" data-number="10.15.3">
+<h3 data-number="10.15.3" class="anchored" data-anchor-id="third-law-associativity"><span class="header-section-number">10.15.3</span> Third Law: Associativity</h3>
 <p>The order of binding operations doesn’t matter—applying functions successively or composing them first gives the same result:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">as_chronicle</span>(<span class="dv">10</span>)</span>
@@ -1652,13 +1658,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./08-rixpress-advanced.html" class="pagination-link" aria-label="Advanced Pipeline Patterns">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span>
+      <a href="./09-rixpress-advanced.html" class="pagination-link" aria-label="Advanced Pipeline Patterns">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./10-docker.html" class="pagination-link" aria-label="Containerisation With Docker">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./11-docker.html" class="pagination-link" aria-label="Containerisation With Docker">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1667,4 +1673,4 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/09-monads.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/10-monads.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
