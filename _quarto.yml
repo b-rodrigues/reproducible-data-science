@@ -27,8 +27,8 @@ book:
     - 05-first-pipeline.qmd
     - 06-fp.qmd
     - 07-testing.qmd
-    - 08-rixpress-basics.qmd
-    - 09-rixpress-advanced.qmd
+    - 08-pipelines.qmd
+    - 09-pipelines-advanced.qmd
     - 10-monads.qmd
     - 11-docker.qmd
     - 12-packaging.qmd

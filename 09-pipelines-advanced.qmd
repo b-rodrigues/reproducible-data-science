@@ -1,0 +1,857 @@
+# Advanced Pipeline Patterns
+
+By this point you can declare a T pipeline, build it, inspect its outputs, and
+wire it into a CI job. That covers the majority of day-to-day work. This chapter
+goes further: it treats pipelines themselves as data.
+
+In most pipeline tools—`targets`, Snakemake, Airflow—the pipeline *definition*
+is code that runs once, produces a build graph, and is then discarded. The graph
+is an internal implementation detail you cannot touch. T takes a different view.
+A pipeline value is a first-class object you can query, filter, transform, and
+compose using the same functional idioms you apply to any other value. This opens
+up meta-programming patterns that simply are not possible in other tools: running
+only a subgraph, swapping one node's implementation for another, generating
+dozens of branches from a list, or assembling a production pipeline from tested
+sub-components.
+
+We cover these patterns in order of complexity, starting with the simplest
+read-only queries and working up to dynamic branching and composable
+meta-pipelines. All examples build on the project layout introduced in
+[Chapter 8](08-pipelines.qmd).
+
+## Pipelines as Data
+
+The pipeline value you construct inside a `pipeline { ... }` block is an
+ordinary T record. It carries the DAG structure, the node metadata, and enough
+information for T's build engine to emit Nix derivations. Because it is a
+record, all the standard higher-order functions—`filter`, `map`, `fold`,
+`select`—work on it just as they do on any other collection.
+
+This has a practical consequence: you write *pipeline transformations* in the
+same language as the pipeline itself, without shelling out to a separate tool or
+reading a build-graph dump. The chapter illustrates this with a running example:
+a shared ETL pipeline wired to two alternative model pipelines, one linear, one
+a random forest. We will build it up gradually.
+
+```t
+etl = pipeline {
+  raw        = r { read.csv("data/sales.csv") }
+  validated  = r { validate_schema(raw) }
+  cleaned    = r { clean_missing(validated) }
+  features   = r { engineer_features(cleaned) }
+}
+```
+
+Keep this pipeline in mind; we will manipulate it throughout the chapter.
+
+## Querying the DAG
+
+### `pipeline_to_frame`
+
+`pipeline_to_frame(p)` converts a pipeline into a data frame whose rows are
+nodes. The columns are:
+
+| Column          | Type    | What it holds                                           |
+|-----------------|---------|---------------------------------------------------------|
+| `name`          | string  | Node name                                               |
+| `runtime`       | string  | `"r"`, `"python"`, `"julia"`, `"shell"`, `"quarto"`    |
+| `serializer`    | string  | Encoder used when writing the node's output             |
+| `deserializer`  | string  | Decoder used when reading upstream artifacts            |
+| `noop`          | bool    | If `true`, the node is skipped at build time            |
+| `deps`          | list    | Immediate dependency names                              |
+| `depth`         | int     | Distance from any root node                             |
+| `command_type`  | string  | `"expr"`, `"file"`, or `"shell"`                        |
+
+You do not need to memorise those columns; the point is that they are
+queryable with ordinary data-frame operations.
+
+```t
+df = pipeline_to_frame(etl)
+print(df)
+```
+
+```
+name        runtime  serializer   noop  depth
+raw         r        rds          false  0
+validated   r        rds          false  1
+cleaned     r        rds          false  2
+features    r        rds          false  3
+```
+
+From here, any standard filter or select applies directly. To find every Python
+node:
+
+```t
+py_nodes = filter(df, runtime == "python")
+```
+
+To find every node at depth 2 or deeper—useful when you want to know which
+steps are non-trivial downstream work:
+
+```t
+deep_nodes = filter(df, depth >= 2)
+```
+
+### Structural queries
+
+Four functions give you structural information without materialising a full
+frame:
+
+- `pipeline_roots(p)` — nodes with no dependencies (the entry points)
+- `pipeline_leaves(p)` — nodes on which nothing else depends (the outputs)
+- `pipeline_edges(p)` — every `(from, to)` dependency pair as a frame
+- `pipeline_depth(p)` — a named record mapping each node name to its depth
+
+```t
+roots  = pipeline_roots(etl)   -- ["raw"]
+leaves = pipeline_leaves(etl)  -- ["features"]
+edges  = pipeline_edges(etl)
+
+-- edges:
+-- from         to
+-- raw          validated
+-- validated    cleaned
+-- cleaned      features
+```
+
+### Column projection with `select_node`
+
+`select_node` lets you project specific fields using non-standard evaluation
+(the `$field` syntax). It returns a frame restricted to the named columns,
+which is handy when you want to pass a compact summary to a report or a CI log:
+
+```t
+summary = select_node(etl, $name, $runtime, $depth)
+```
+
+::: {.callout-note}
+`select_node` is a read-only view; it does not modify the pipeline. For
+modifications, see `mutate_node` below.
+:::
+
+## Modifying Nodes Surgically
+
+Queries tell you what is in a pipeline. The mutating functions let you change
+it—always producing a *new* pipeline value, leaving the original intact, in
+keeping with T's pervasive immutability.
+
+### `filter_node`
+
+`filter_node(p, pred)` returns a new pipeline containing only the nodes that
+satisfy the predicate. DAG validity is *not* checked until `build_pipeline` is
+called, so you can remove nodes freely and let T report missing-dependency
+errors only when you actually try to build.
+
+```t
+-- Keep only the ETL steps that are not "raw" (already built, skip ingestion)
+no_ingest = filter_node(etl, $name != "raw")
+```
+
+This is the simplest way to produce a lighter pipeline for a fast check run.
+
+### `mutate_node`
+
+`mutate_node(p, pred, field = value)` modifies a field on all nodes matching
+`pred`. Without a predicate, every node is affected.
+
+**Skipping expensive nodes.** Set `$noop = true` to mark a node as a no-op at
+build time. T will resolve the node's output by reading the most recent cached
+artifact instead of rebuilding it, so downstream nodes can still reference it.
+This is the canonical way to skip slow steps during development:
+
+```t
+-- Skip the feature-engineering step while iterating on the model
+fast_etl = mutate_node(etl, $name == "features", $noop = true)
+```
+
+**Swapping runtimes.** You can change the runtime of a node to test whether a
+Python reimplementation of an R step produces the same result:
+
+```t
+-- Run "cleaned" in Python instead of R, without touching anything else
+py_etl = mutate_node(etl, $name == "cleaned", $runtime = "python")
+```
+
+::: {.callout-tip}
+`mutate_node` *replaces* the field entirely. This differs from
+`set_pipeline_global_options`, which *prepends* to option lists. Use
+`mutate_node` when you want a clean override; use `set_pipeline_global_options`
+when you want to augment existing options.
+:::
+
+### `rename_node`
+
+`rename_node(p, old, new)` renames a node and automatically rewires every
+dependency edge that referenced the old name. You do not have to hunt through
+the pipeline looking for references; T handles the rewriting:
+
+```t
+-- Rename "features" to "feature_matrix" for a cleaner downstream API
+etl2 = rename_node(etl, "features", "feature_matrix")
+```
+
+### `swap`
+
+`swap(p, name, new_node)` replaces a node's implementation while keeping all
+its dependency edges intact. The new node inherits the same name and position
+in the DAG; only its command changes. This is the right tool when you want to
+test an alternative algorithm without restructuring the pipeline:
+
+```t
+glm_node = r { glm(target ~ ., data = features, family = gaussian()) }
+
+model_pipeline_glm = swap(model_pipeline, "linear_model", glm_node)
+```
+
+### `rewire`
+
+`rewire(p, name, new_deps)` reroutes a node's dependency edges. The node's
+command stays the same; only *what it reads from* changes. Use it when you want
+to connect the same computation to a different upstream:
+
+```t
+-- Point "linear_model" at "features_v2" instead of "features"
+rewired = rewire(model_pipeline, "linear_model", ["features_v2"])
+```
+
+### A realistic "what-if" workflow
+
+Putting this together: suppose you have a model step that takes twenty minutes
+to run, and you want a quick sanity check that only reruns the feature
+engineering and report steps.
+
+```t
+-- 1. Build the full pipeline once
+res = build_pipeline(full_pipeline)
+
+-- 2. For the next iteration, skip the model and go straight to the report
+fast_check = full_pipeline
+  |> mutate_node($name == "model", $noop = true)
+  |> build_pipeline()
+```
+
+Because T cached the model node on step 1, step 2 reads that cache and
+immediately builds the report. No data is lost; no special configuration is
+required.
+
+## Set Operations
+
+T exposes four set operations on pipeline values. They compose naturally: the
+output of any set operation is itself a pipeline, so you can chain them.
+
+### `union`
+
+`union(p1, p2)` merges two pipelines. If both contain a node with the same
+name, T raises an error at construction time. Use `rename_node` on one of the
+pipelines first if you need to resolve the collision:
+
+```t
+full = union(etl, model_pipeline)
+```
+
+### `difference`
+
+`difference(p, names)` removes the named nodes from the pipeline. This is
+useful when you want to strip out a phase you no longer need:
+
+```t
+-- Remove the ingestion node; data is already validated upstream
+trimmed = difference(etl, ["raw", "validated"])
+```
+
+::: {.callout-note}
+After removing nodes with `difference`, you may be left with leaf nodes that
+have dangling dependencies. Run `prune` (see below) to strip them automatically.
+:::
+
+### `intersect`
+
+`intersect(p1, p2)` keeps only the nodes that appear in *both* pipelines, using
+the definitions from `p1`. This is handy when you want to extract the shared
+core of two related pipelines:
+
+```t
+shared_core = intersect(full_pipeline_v1, full_pipeline_v2)
+```
+
+### `patch`
+
+`patch(p, overrides)` updates existing nodes in `p` using definitions from
+`overrides`, but ignores any node in `overrides` that does not already exist in
+`p`. This is the safe way to apply configuration overrides: new nodes in the
+override pipeline cannot accidentally sneak into the production pipeline.
+
+```t
+-- Override the "cleaned" node without risk of adding unreviewed steps
+prod = patch(prod_pipeline, dev_overrides)
+```
+
+### `prune`
+
+`prune(p)` removes all leaf nodes—nodes that nothing else depends on. It is
+typically used after `difference` to clean up dangling tails:
+
+```t
+-- Remove the report node, then prune anything that became orphaned
+no_report = difference(full_pipeline, ["report"])
+             |> prune()
+```
+
+### A realistic use-case: shared ETL, swapped model
+
+Here is the pattern you will reach for most often in a production setting: a
+shared ETL pipeline assembled once, then forked into two model pipelines that
+differ only in their model node.
+
+```t
+-- Shared ETL (defined once, potentially sourced from its own file)
+etl = pipeline {
+  raw      = r { read.csv("data/sales.csv") }
+  cleaned  = r { clean_missing(raw) }
+  features = r { engineer_features(cleaned) }
+}
+
+-- Linear model pipeline
+linear = pipeline {
+  linear_model = r { lm(target ~ ., data = features) }
+  report       = qmd { "reports/linear.qmd" }
+}
+
+-- Random forest pipeline: same structure, different model node
+rf_node = r { randomForest::randomForest(target ~ ., data = features) }
+rf      = swap(linear, "linear_model", rf_node)
+          |> rename_node("report", "report_rf")
+
+-- Assemble both into one build
+full = union(etl, union(linear, rf))
+res  = build_pipeline(full)
+```
+
+We build one ETL phase and two model branches in a single call. Nix caches
+the ETL outputs and reuses them for both branches.
+
+## DAG-Aware Transformations
+
+The set operations above operate on names. The DAG-aware functions operate on
+*structure*—they follow dependency edges to extract connected subgraphs.
+
+### `upstream_of`
+
+`upstream_of(p, name)` returns a new pipeline containing the named node and
+all of its transitive ancestors:
+
+```t
+-- Everything needed to produce "features", and nothing more
+etl_only = upstream_of(full, "features")
+build_pipeline(etl_only)
+```
+
+### `downstream_of`
+
+`downstream_of(p, name)` returns the named node and everything that directly or
+transitively depends on it:
+
+```t
+-- Re-run the model and every downstream step after changing a hyperparameter
+model_onwards = downstream_of(full, "linear_model")
+build_pipeline(model_onwards)
+```
+
+This is the most common use of DAG-aware transformations: you change a
+parameter, extract everything that is sensitive to that parameter, and rebuild
+only that subgraph.
+
+### `subgraph`
+
+`subgraph(p, names)` returns the full connected component reachable from any of
+the named nodes, traversing both upstream and downstream edges. Use it when you
+want to isolate a middle section of a complex pipeline for testing:
+
+```t
+-- Isolate the cleaning and feature-engineering stages
+mid = subgraph(full, ["cleaned", "features"])
+```
+
+::: {.callout-tip}
+Combine `downstream_of` with `mutate_node` for a surgical rebuild after a
+parameter change: extract the affected subgraph, mark the changed node as
+non-noop (or simply rebuild it), and leave everything upstream cached.
+:::
+
+## Pipeline Composition
+
+So far we have been working with flat pipelines assembled by hand. T provides
+higher-level composition tools for when you want to treat pipelines as modules.
+
+### `chain`
+
+`chain(p1, p2)` wires two pipelines together explicitly: it requires that `p2`
+references at least one node from `p1` by name. This is stricter than `union`
+(which silently accepts unconnected pipelines) and is the right choice when you
+want T to enforce that the wiring is intentional.
+
+```t
+chained = chain(etl, model_pipeline)
+```
+
+If `p2` contains no reference to any node in `p1`, `chain` raises an error at
+construction time.
+
+### The T-stub workaround for cross-runtime chains
+
+T infers inter-node dependencies by scanning the lexical content of each node's
+command. This works well within a single runtime, but when you cross from, say,
+an R pipeline to a Python pipeline, T's lexical analyser may not see the
+dependency because the Python node refers to the upstream R node by a name that
+appears only inside a string.
+
+The idiomatic fix is an *alias stub*: declare an extra node in the Python
+pipeline that simply equates to the upstream name, making the dependency
+explicit to T's scanner:
+
+```t
+model_pipeline = pipeline {
+  -- T-stub: makes "features" visible to the lexical analyser
+  features    = features            -- alias: the ETL node by the same name
+  predictions = py { predict(features) }
+  report      = qmd { "reports/report.qmd" }
+}
+
+chained = chain(etl, model_pipeline)
+```
+
+The stub node costs nothing at build time—T sees it is a no-op alias—but it
+satisfies the dependency declaration that `chain` requires.
+
+### `parallel`
+
+`parallel(p1, p2)` combines two independent pipelines that share no nodes and
+need no wiring. T checks for name collisions and raises an error if it finds
+any:
+
+```t
+report_en  = pipeline { report = qmd { "reports/report_en.qmd" } }
+report_fr  = pipeline { report = qmd { "reports/report_fr.qmd" } }
+
+-- Name collision! Both have a node called "report"
+-- parallel(report_en, report_fr)  -- ERROR
+
+report_fr2 = rename_node(report_fr, "report", "report_fr")
+both       = parallel(report_en, report_fr2)
+```
+
+### `pipeline_of` meta-pipelines
+
+`pipeline_of` lets you compose multiple named pipelines into a higher-order
+DAG, where each sub-pipeline becomes a namespace. Nodes are auto-namespaced
+with the sub-pipeline name as a prefix: a node `summary` inside a sub-pipeline
+called `stats` becomes `stats.summary`. You can build, read, and inspect the
+meta-pipeline exactly as you would a flat pipeline:
+
+```t
+meta = pipeline_of {
+  etl   = etl_pipeline
+  stats = stats_pipeline
+  plots = plots_pipeline
+}
+
+-- Build the whole thing
+res = build_pipeline(meta)
+
+-- Read a namespaced node
+read_node("stats.summary")
+```
+
+::: {.callout-note}
+Dependencies between sub-pipelines still need to be declared. If `stats`
+references `etl.features`, that reference must appear in the node's command—or
+use a T-stub as described above.
+:::
+
+### Pipeline templates via lambdas
+
+Because pipelines are values, you can wrap them in functions to produce
+parameterised templates. This is the T idiom for the factory pattern:
+
+```t
+make_model_pipeline = \(multiplier) pipeline {
+  scaled_features = r { features * multiplier }
+  model           = r { lm(target ~ ., data = scaled_features) }
+  report          = qmd { "reports/model.qmd" }
+}
+
+p1   = make_model_pipeline(1.0)
+p2   = make_model_pipeline(0.5)
+
+both = parallel(p1 |> rename_node("report", "report_1x"),
+                p2 |> rename_node("report", "report_half"))
+```
+
+## Dynamic Branching
+
+Static pipelines describe a fixed graph. Dynamic branching generates nodes at
+build time—one node per element of a list, or one per combination of parameter
+values. The resulting graph can be large, but you declare it concisely.
+
+### `map_pattern`
+
+`map_pattern(name, over, template)` generates one branch per element of `over`,
+instantiating `template` for each element:
+
+```t
+regions = ["north", "south", "east", "west"]
+
+regional_models = map_pattern("region", over = regions, template = \(region) {
+  r { fit_regional_model(features, region) }
+})
+```
+
+T expands this into four nodes (`north`, `south`, `east`, `west`) at
+`build_pipeline` time and builds them in parallel where Nix's `--max-jobs`
+allows it.
+
+### `cross_pattern`
+
+`cross_pattern` generates a Cartesian product—one branch per combination of
+values across multiple lists:
+
+```t
+thetas = [0.5, 1.0, 2.0]
+gammas = [0.1, 0.5, 1.0]
+
+param_sweep = cross_pattern(
+  "params",
+  over     = [thetas, gammas],
+  names    = ["theta", "gamma"],
+  template = \(theta, gamma) {
+    r { fit_model(features, theta = theta, gamma = gamma) }
+  }
+)
+```
+
+This produces nine nodes from a three-by-three grid. The spirograph example in
+the T demos does exactly this: three values of angular frequency crossed with
+three values of petal count produce nine data-generation nodes and nine R-based
+plot nodes, each rendered in parallel:
+
+```t
+-- Nine data nodes x nine plot nodes = 18 Nix derivations, declared in ~10 lines
+spirograph_data = cross_pattern(
+  "spiro",
+  over     = [omegas, petals],
+  names    = ["omega", "petal"],
+  template = \(omega, petal) { py { make_spirograph(omega, petal) } }
+)
+
+spirograph_plots = map_pattern(
+  "plot",
+  over     = pipeline_leaves(spirograph_data),
+  template = \(data_node) { r { plot_spirograph(data_node) } }
+)
+```
+
+### Head, tail, sample, and slice
+
+When a map or cross generates many branches, you often want to prototype on a
+subset. These helpers operate on the *expanded* pipeline:
+
+```t
+first_three = head(param_sweep, 3)
+last_three  = tail(param_sweep, 3)
+random_two  = sample(param_sweep, 2, seed = 42)
+middle      = slice(param_sweep, 4, 6)
+```
+
+Expansion happens at `build_pipeline` time. Until then, `param_sweep` is a
+single lazy pattern value. After building, use `build_log_to_frame` to inspect
+which branches ran and how long each took:
+
+```t
+res = build_pipeline(param_sweep)
+log = build_log_to_frame(res)
+-- log columns: node, status, duration_s, store_path
+filter(log, status == "failed")
+```
+
+::: {.callout-tip}
+During development, use `head(param_sweep, 1)` to prototype your template on a
+single branch before committing to a full grid build.
+:::
+
+## Static Conditionals
+
+Dynamic branching generates nodes from data. Static conditionals *exclude* nodes
+from the pipeline entirely at construction time, based on conditions evaluated
+before any build starts. This is the right tool for environment-specific toggles.
+
+### `node_when`
+
+`node_when(condition, node)` includes `node` in the pipeline only if `condition`
+is truthy. If the condition is falsy, the node is simply absent—it does not
+appear in the DAG at all, and any downstream node that references it will report
+a missing-dependency error (which is the correct behaviour: you should not
+silently skip a node that something else needs).
+
+The idiomatic pattern reads environment variables via `env()`:
+
+```t
+p = pipeline {
+  raw      = r { read.csv("data/sales.csv") }
+  cleaned  = r { clean_missing(raw) }
+  features = r { engineer_features(cleaned) }
+
+  -- Only run the expensive validation step outside CI
+  node_when(env("CI") == "", {
+    deep_validation = r { run_expensive_validation(cleaned) }
+  })
+}
+```
+
+In a CI environment where `CI` is set (GitHub Actions sets it to `"true"`),
+`deep_validation` is simply absent. In a local development shell where `CI` is
+unset (empty string), it is included.
+
+### `node_fork`
+
+`node_fork` is a multi-way branch: it evaluates a list of `(condition, node)`
+pairs and includes the *first* node whose condition is truthy. An optional
+`.default` provides a fallback:
+
+```t
+model_type = env("MODEL")
+
+p = pipeline {
+  features = r { engineer_features(cleaned) }
+
+  node_fork(
+    model_type == "linear", {
+      model = r { lm(target ~ ., data = features) }
+    },
+    model_type == "forest", {
+      model = r { randomForest::randomForest(target ~ ., data = features) }
+    },
+    model_type == "neural", {
+      model = py { train_neural_net(features) }
+    },
+    .default = {
+      model = r { lm(target ~ ., data = features) }
+    }
+  )
+
+  report = qmd { "reports/model.qmd" }
+}
+```
+
+Setting `MODEL=forest` in the shell and running the pipeline will include only
+the random-forest node. The report node references `model` and will build
+against whichever implementation was selected. Adding a new model type requires
+one extra clause in `node_fork`, nothing else.
+
+::: {.callout-note}
+Static conditionals are evaluated at pipeline *construction* time, not at build
+time. `env()` reads the shell environment at the moment you call
+`build_pipeline(p)`. If you change `MODEL` and call `build_pipeline` again in
+the same T session, the pipeline is reconstructed and the new value is picked up.
+:::
+
+## Custom Flakes Per Node
+
+By default, every node in a T pipeline uses the Nix flake specified in
+`tproject.toml`. The packages you list there are installed in every node's
+environment. The *flake* determines which revision of `nixpkgs` those packages
+are drawn from.
+
+The `flake` argument on `node()`, `rn()`, and `pyn()` lets individual nodes use
+a *different* flake entirely:
+
+- **Pin one node to an older `nixpkgs` snapshot** — a legacy model that
+  requires an older version of a C library.
+- **Use a specialist R distribution for one node** — for example,
+  `github:jbedo/rshells` for a node that needs R with specific compile-time
+  options.
+- **Point a node at a local flake** — for a private package not yet in `nixpkgs`.
+
+```t
+p = pipeline {
+  cleaned  = r { clean_missing(raw) }
+  features = r { engineer_features(cleaned) }
+
+  -- Pin a specific nixpkgs snapshot for a legacy Stan model
+  legacy_model = rn(
+    { run_stan_model(features) },
+    flake = "github:NixOS/nixpkgs/nixpkgs-24.05"
+  )
+
+  -- Use a local flake for an internal package
+  internal_report = rn(
+    { render_internal_report(legacy_model) },
+    flake = "path:../internal_flake"
+  )
+}
+```
+
+::: {.callout-note}
+The packages listed in `tproject.toml` still determine *what* is installed in
+every node. The `flake` argument determines *which nixpkgs revision* resolves
+those package names. You can combine per-node flakes with project-wide packages
+freely; T merges them correctly when emitting each derivation.
+:::
+
+A practical guideline: keep the project-wide flake at a recent `nixpkgs` pin
+for everything except nodes with known compatibility constraints, and use
+per-node flakes only where necessary. Overusing per-node flakes makes the build
+harder to reason about.
+
+## Validation
+
+Pipeline construction in T is cheap—values are not built until `build_pipeline`
+is called. But some errors (cycles, missing dependencies, unknown runtimes) are
+structural and can be caught before any Nix derivation is emitted.
+
+### `pipeline_validate`
+
+`pipeline_validate(p)` returns a list of error messages. It *never* throws; if
+the pipeline is valid, it returns an empty list. This makes it suitable for CI
+checks where you want to collect all errors at once:
+
+```t
+errs = pipeline_validate(full_pipeline)
+
+if length(errs) > 0 {
+  for e in errs { print(e) }
+  exit(1)
+}
+```
+
+The validator checks:
+
+- **Cycles** — any circular dependency in the DAG.
+- **Missing dependencies** — a node references a name that is not defined.
+- **Unknown runtimes** — a node declares a runtime T does not recognise.
+- **Cross-runtime deserialiser gaps** — a Python node reads from an R node but
+  no compatible deserialiser is configured.
+- **File existence** — nodes that reference local files check that those files
+  are present at validation time.
+
+### `pipeline_assert`
+
+`pipeline_assert(p)` throws on the *first* error it finds. Use it as a guard at
+the top of a pipeline construction chain when you want to fail fast:
+
+```t
+full_pipeline = chain(etl, model_pipeline)
+                |> pipeline_assert()
+                |> build_pipeline()
+```
+
+If `chain` produces an invalid graph, `pipeline_assert` surfaces the error
+immediately rather than waiting for Nix to fail deep inside a derivation build.
+
+::: {.callout-tip}
+In CI, prefer `pipeline_validate` so that the log shows *all* structural errors
+in one run. In interactive development, prefer `pipeline_assert` so you get a
+fast failure at the exact line where the broken pipeline was constructed.
+:::
+
+`pipeline_cycles(p)` is a narrower variant that returns only cycle-related
+errors—useful when you are debugging a `union` or `chain` that you suspect has
+introduced a circular dependency.
+
+## Handling Ambiguous Dependencies
+
+T infers which nodes depend on which by scanning the lexical content of each
+node's command for names that match other nodes in the pipeline. This heuristic
+works in the vast majority of cases and requires no boilerplate. Two situations
+trip it up.
+
+**First**, comments. T strips comments before scanning, so a node name that
+appears only in a comment is invisible to the analyser:
+
+```t
+-- This will NOT create a dependency on "features":
+model = r {
+  # features is the input (see the data-prep pipeline)
+  lm(target ~ ., data = cleaned_features)
+}
+```
+
+**Second**, shell nodes that read files created by other nodes. The file name is
+a runtime string and the node name never appears in the command text:
+
+```sh
+summarise_outputs = shell {
+  Rscript summarise.R > summary.txt
+}
+```
+
+If `summarise.R` reads a file written by another node, T cannot infer that
+dependency from the shell command text alone.
+
+For both cases, the `deps` argument force-declares dependencies that cannot be
+inferred:
+
+```t
+model = r(
+  { lm(target ~ ., data = cleaned_features) },
+  deps = ["features"]
+)
+
+summarise_outputs = shell(
+  { Rscript summarise.R > summary.txt },
+  deps = ["model_output", "validation_report"]
+)
+```
+
+Declared dependencies are merged with inferred ones. You do not need to
+re-declare dependencies that T already finds; `deps` only adds what would
+otherwise be missing.
+
+::: {.callout-note}
+The `deps` argument is also the right tool when a node's command is generated
+dynamically (for example, via a string built at construction time) and cannot be
+statically scanned. Declaring deps explicitly is always safe; the only cost is a
+small amount of extra annotation.
+:::
+
+## Summary
+
+The patterns in this chapter compose. A real production pipeline might look like
+this:
+
+```t
+-- 1. Assemble the ETL and model sub-pipelines
+etl   = chain(ingest_pipeline, clean_pipeline)
+        |> pipeline_assert()
+
+model = swap(baseline_pipeline, "model", tuned_model_node)
+
+-- 2. For a fast CI run, skip the slow validation and use a cached model
+ci_check = union(etl, model)
+           |> mutate_node($name == "deep_validation", $noop = true)
+           |> downstream_of("feature_matrix")
+
+-- 3. For the full nightly run, build everything including the report
+nightly = union(etl, union(model, report_pipeline))
+
+-- 4. Build whichever is appropriate for this invocation
+target = if env("CI") != "" then ci_check else nightly
+res    = build_pipeline(target)
+log    = build_log_to_frame(res)
+```
+
+This is twelve lines of T that orchestrate conditional skipping, structural
+extraction, alternative implementations, and CI/nightly branching—without a
+single configuration file or wrapper script.
+
+The patterns also stack:
+
+- Use `upstream_of` to extract a subgraph.
+- Use `filter_node` or `mutate_node` to skip or swap nodes within it.
+- Use `cross_pattern` to fan out over a parameter grid.
+- Use `node_fork` to select an implementation based on an environment variable.
+- Validate with `pipeline_validate` before any Nix work begins.
+
+The next chapter covers error handling and monadic pipelines—what to do when a
+node can *fail in an expected way* and you want to propagate that failure
+gracefully rather than aborting the whole build. [Chapter 12](12-packaging.qmd)
+then covers how to package a mature pipeline as a distributable artefact.
