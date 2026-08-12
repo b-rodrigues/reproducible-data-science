@@ -1,0 +1,721 @@
+# Reproducible Development Environments and Pipelines with T
+
+## Introduction
+
+Now that we have Nix installed, and our IDE configured we can actually tackle
+the reproducibility puzzle.
+
+### The Reproducibility Puzzle
+
+Reproducibility in research and data science exists on a continuum. At one end,
+authors might only describe their methods in prose. Moving along the spectrum,
+they might share code, then data, and finally what we call a *computational
+environment*: the complete set of software required to execute an analysis.
+
+Even when researchers share code and data, they rarely specify the full software
+stack: the exact version of R, all package versions, and crucially, the
+system-level dependencies. Yet differences in any of these can lead to divergent
+results from the same code.
+
+Tools like `{renv}` address part of the puzzle: they capture R package versions
+in a lockfile. But `{renv}` does not manage the R version itself (you need `rig`
+for that), and neither handles system libraries. If `{sf}` requires GDAL 3.0 but
+your system has 2.4, `{renv}` can't help. And if your project uses both R and
+Python? Now you're coordinating multiple package managers, each with its own
+configuration.
+
+### Reproducibility Is Not Just About the Environment
+
+Here is a subtlety that most reproducibility tools miss: **reproducing the
+environment is necessary but not sufficient**. The code also has to *run*.
+
+Consider what typically happens. A researcher shares a `renv.lock`, or even a
+Nix expression pinning every dependency to the exact version used. A colleague
+clones the repository, reconstructs the environment perfectly, and... opens the
+project to find a folder full of scripts with no obvious order of execution. Which
+script comes first? Which outputs feed into which inputs? Are there manual steps
+in between? The README might answer some of these questions—or it might not.
+Reproducing the environment got them 80% of the way there, but that last 20% is
+still a puzzle they have to solve by reading someone else's code.
+
+This is the difference between *environment reproducibility* and *computational
+reproducibility*. The former means the same packages are available. The latter
+means the same computation can be re-executed, from raw inputs to final outputs,
+by anyone with access to the code, without prior knowledge of the project.
+
+Computational reproducibility requires something the environment alone cannot
+provide: an explicit description of the *pipeline*. Not prose in a README. Not
+conventions like "always run `01-clean.R` before `02-model.R`". An actual,
+machine-readable graph of computations with explicit dependencies, where running
+one command re-executes the whole analysis in the correct order.
+
+### The Mindset Shift: From Tasks to Rules
+
+There is a deeper point lurking here, one that goes beyond the technical details
+of package managers and lockfiles.
+
+Think about two data scientists on the same team. Both write R or Python.
+Both know their tools. But they have fundamentally different mental models.
+
+The first thinks in **tasks**: *I need to clean this dataset. I need to fit this
+model. I need to produce this report.* He writes a script for each task, runs
+them manually in the right order, and the analysis is done. If someone else needs
+to reproduce it, our friend shares the scripts and a README and hopes for the best.
+
+The second thinks in **rules**: *What are the general rules that govern this
+analysis? What are the inputs? What are the outputs? What depends on what? If the
+data changes, which steps need to re-run? If a colleague on a different machine
+runs this, will he get the same result?* He writes code that describes the
+*system*, not just the individual actions.
+
+This is not a question of technical sophistication. It is a question of mental
+model. The first person sees the computer as a place where tasks happen. The
+second sees the computer as a machine that can be taught to follow rules
+repeatably, consistently, and at scale.
+
+The shift matters enormously for reproducibility. If your analysis is a sequence
+of manual tasks, it is inherently fragile: it depends on you remembering the
+order, running the right scripts, and not making any ad hoc changes along the
+way. If your analysis is a system of explicit rules—a formal description of what
+produces what—then it can be re-executed by anyone (including AI agents), on any
+machine, at any point in the future, with a single command.
+
+This is the insight that motivates the pipeline-first approach in this book.
+Before we even talk about packages and environments, we are asking: *what is the
+structure of this computation?* Making that structure explicit, formal, and
+machine-readable is the only approach that delivers genuine computational
+reproducibility—and, as we will see, it is also the approach that works best
+with AI-assisted development.
+
+### Thinking in Systems in an AI-First World
+
+If the previous section sounded abstract, consider what is happening right now
+to the practice of data science.
+
+AI coding assistants have become genuinely capable. For many routine tasks—data
+cleaning, visualisation, standard modelling—an LLM can write solid R or Python
+code faster than most humans. The cost of *writing* code is collapsing. This
+means the skill of typing correct syntax is becoming less valuable, and the
+skill of knowing *what to ask for* is becoming more valuable.
+
+But here is the catch: knowing what to ask for requires domain knowledge that
+no LLM reliably has. Take a simple example. You are working with time series
+data on prices. Ask an LLM to clean and graph the data, and it will almost
+certainly produce competent code. But will it suggest deflating nominal prices
+to make them comparable across time? Maybe, maybe not. That depends on whether
+the LLM has encountered enough economic methodology in its training data, and
+whether *you* thought to ask. And crucially, will you recognise when the LLM's
+answer is subtly wrong? You don't know what you don't know. And neither does the
+LLM—but unlike you, it won't flag its own blind spots.
+
+This points to a skill that is going to matter more, not less, as AI matures:
+the ability to interrogate and challenge an LLM's output. An AI assistant is
+confident by default. It will produce plausible-sounding analysis regardless of
+whether the underlying reasoning is sound. The person who gets value from it is
+not the one who accepts the first answer, but the one who can ask *"wait, did
+you account for inflation here?"*, or *"why did you choose this model over
+that one?"*, or *"what assumptions are you making about the data generating
+process?"*. That requires knowing enough to ask those questions.
+
+This has an interesting implication for how we should think about expertise.
+The traditional advice has been to specialize: know one language deeply, one
+domain deeply, one tool deeply. That advice was right when expertise was
+expensive to acquire and hard to substitute. But in a world where an LLM can
+write the implementation for you, having some knowledge across many areas may
+become more valuable than deep specialisation in one. A data scientist who knows
+a little economics, a little software engineering, a little domain-specific
+methodology, and can draw on all of it to design and audit what the LLM
+produces, may outperform a narrower specialist who can no longer leverage their
+deep implementation skills because the LLM already has them.
+
+I will close this section with a personal anecdote that I think illustrates the
+point well. Alongside this book, I have been building a Game Boy game—using
+LLMs to write essentially all the code. I know nothing about Game Boy
+development: I do not know the hardware architecture, I have never written a
+line of assembly, and I have certainly never shipped a cartridge. But I
+approached the project exactly as I would approach a data science project.
+
+The first thing I did was set up a reproducible development environment. The
+second was to make the LLM build tooling to *query the game's state
+programmatically*: not just run the game, but interrogate it—what is the
+player's position? What are the active sprites? What is the current game phase?
+With that infrastructure in place, I could instruct the LLM to run test
+scenarios from any point in the game, with any parameters, and get structured
+feedback. The game could be developed and debugged in a principled loop rather
+than by manually playing through it each time.
+
+The result: an actual, running Game Boy game, built by someone who cannot write
+the underlying code. What I contributed was the *systems thinking*: insisting on
+reproducibility, insisting on programmable state inspection, insisting on a
+feedback loop that could be automated. The LLM contributed the implementation.
+Neither of us could have done it alone.
+
+This is the approach that this book is trying to teach for data science. The
+specific tools—T, Nix, R, Python—matter less than the underlying mental model:
+make the structure of your computation explicit, build in the ability to inspect
+and query it at every stage, and create feedback loops that you and your AI
+collaborators can iterate on together.
+
+### Component Closures: The Nix Approach
+
+This is where Nix shines. Nix deploys *component closures*: when you install a
+package, Nix also installs all its dependencies, their dependencies, and so on.
+Think of it like packing for a trip—traditional package managers assume you'll
+find essentials at your destination, while Nix packs everything you need.
+
+As the original Nix paper explains:
+
+> The idea is to always deploy component closures: if we deploy a component,
+> then we must also deploy its dependencies, their dependencies, and so on.
+> Since closures are self-contained, they are the units of complete software
+> deployment.
+
+This means when you install `{sf}` through Nix, you automatically get the
+correct versions of GDAL, GEOS, and PROJ—no manual system configuration needed.
+
+### The Polyglot Challenge
+
+Modern data science is increasingly polyglot. Research shows that data
+scientists use, on average, nearly two programming languages in their work, with
+R and Python being the most common combination. Python dominates machine
+learning, R excels at statistical modelling, and Julia offers high-performance
+numerics. Projects increasingly combine these strengths.
+
+This creates a reproducibility challenge: a project using R, Python, and Quarto
+requires coordinating multiple package managers. Nix solves this by providing a
+unified framework for all languages and system tools. But there is still a
+missing piece: something to *orchestrate* all these moving parts within a single,
+coherent and reproducible workflow.
+
+### Enter T
+
+However, Nix alone has a steep learning curve. Its functional programming
+language can be daunting for researchers focused on their analysis, not system
+administration.
+
+I know this problem well, because I lived it. My first attempt at solving it
+was `{rix}`: an R package that generates Nix expressions from intuitive R
+function calls. You describe *what* you want, and `{rix}` figures out *how* to
+express it in Nix. I then built `{rixpress}` on top of it, an R package for
+defining reproducible, polyglot analytical pipelines. Both packages solved real
+problems—but they were fundamentally R-focused. `{rix}` needed R to run. The
+pipeline syntax of `{rixpress}` was R code. If you worked in Python or Julia
+primarily, you were a second-class citizen.
+
+**T** is what I built next, and it goes far beyond both. T is a
+reproducibility-first domain-specific language (DSL) for polyglot data science.
+It is *not* an R package. It is its own language—with its own runtime, its own
+REPL, and its own ecosystem of packages, built from the ground up to treat R,
+Python, Julia, and Shell as equals. Critically, T does not just *orchestrate*
+environments defined elsewhere: it *is* the environment definition system. Every
+T project is a Nix flake, and T manages the entire stack: language runtimes,
+system dependencies, and pipeline execution under one roof.
+
+T provides a functional, immutable language for constructing composable
+*micropipelines*: first-class, introspectable computation graphs that coordinate
+R, Python, Julia, Quarto, and Shell execution within a unified system. Pipelines
+in T are not configuration artifacts but executable program structures with
+explicit dataflow, typed nodes, and content-addressed outputs. And unlike
+`{rix}`, T makes reproducibility impossible to opt out of: every node in a T
+pipeline runs in its own hermetic Nix sandbox, and every output is
+content-addressed by design. As far as I know, T is literally the first
+reproducibility by design programming language.
+
+The workflow is simple:
+
+1. **Bootstrap** a T project using `t init`
+2. **Declare** your dependencies in `tproject.toml`
+3. **Write** your analysis as a T pipeline in `src/pipeline.t`
+4. **Build** and run with `t run`
+
+This chapter covers everything you need to know to create project-specific,
+reproducible development environments and pipelines for your polyglot data
+science projects.
+
+## Transitioning to Nix-Managed R
+
+Now that Nix is installed, I strongly recommend uninstalling any system-wide R
+installation and removing the packages in your user library (typically found in
+`~/R` on Linux or `~/Library/R` on macOS). From this point forward, let T and
+Nix handle everything. If you are using Windows, you can keep your
+Windows-specific R installation, since Nix will not interfere with it
+(remember, Nix is installed inside WSL and Positron will automatically load Nix
+environments installed in WSL as well).
+
+If you are not ready to take this step, you can still use T: it manages its own
+Nix-sandboxed R environment per project node, so it will not interfere with any
+existing R installation. However, for the cleanest experience and to avoid
+potential subtle conflicts, I recommend fully committing to Nix.
+
+### Bootstrapping T without a local installation
+
+T is distributed exclusively via Nix. You don't need to install it in the
+traditional sense. Instead, you launch a temporary shell that provides the `t`
+executable, use it to scaffold a new project, and then let the project itself
+manage the T version it uses, which is pinned in the project's `flake.lock`.
+
+Running the following line in a terminal will drop you into an ephemeral shell
+with `t` available:
+
+```bash
+nix shell --accept-flake-config github:b-rodrigues/tlang
+```
+
+This gives you a temporary shell with `t` ready to use. From here, you can
+scaffold any new project. For example, navigate to your projects directory and
+initialize a new project:
+
+```bash
+t init --project my-analysis
+```
+
+This creates a new directory `my-analysis/` containing the necessary project
+files. When prompted, you will be asked for basic project information and an
+**AI Agent Context Level** (Small, Medium, Full, or Huge), which generates
+tailored reference documentation for LLMs—more on this in a later chapter.
+
+You can then leave the temporary shell and enter the project's own reproducible
+environment:
+
+```bash
+exit
+cd my-analysis
+nix develop
+```
+
+This enters the project's development shell, which provides the pinned version
+of `t` alongside all declared R, Python, and Julia runtimes. All subsequent
+commands should be run inside this shell.
+
+::: {.callout-tip}
+## Getting LLM assistance with T
+
+T is designed from the ground up for AI-assisted development. When you
+initialize a new T project, two files are automatically generated in the
+project root:
+
+- **`AGENTS.md`**: A project-specific onboarding guide that tells LLMs how to
+  work within your project's architecture.
+- **`T-LANGUAGE-REFERENCE.md`**: A tiered technical reference for the AI to
+  read, tuned to the context level you chose at `t init`.
+
+With these files, any AI agent you pair-program with has immediate access to the
+exact technical context it needs to write correct T pipelines. You can also
+supply additional context by pointing your LLM at the [T documentation
+website](https://tstats-project.org).
+:::
+
+## The T Project
+
+### Project Layout
+
+Every T project has the following directory structure:
+
+```
+my-analysis/
+├── tproject.toml       # Project configuration and dependencies
+├── flake.nix           # Reproducible environment definition
+├── flake.lock          # Locked dependency versions
+├── README.md           # Project overview
+├── AGENTS.md           # Onboarding guide for AI Agents
+├── T-LANGUAGE-REFERENCE.md # Tiered language reference for LLMs
+├── src/
+│   └── pipeline.t      # Your main analysis script
+├── data/               # Place your raw data files here
+├── outputs/            # Output directory for results
+└── tests/              # Unit tests for your analysis
+```
+
+The two most important files are `tproject.toml` and `src/pipeline.t`.
+
+### Declaring Dependencies with `tproject.toml`
+
+T projects are explicit: R, Python, and Julia packages belong in
+`tproject.toml`, not in ad hoc `install.packages()`, `pip install`, or
+`Pkg.add()` calls. Open `tproject.toml` and add the runtime packages you need:
+
+```toml
+[r-dependencies]
+packages = ["dplyr", "ggplot2"]
+
+[py-dependencies]
+version = "python313"
+packages = ["polars", "scikit-learn"]
+
+[jl-dependencies]
+version = "lts"
+packages = ["DataFrames"]
+```
+
+After editing `tproject.toml`, sync the project environment:
+
+```bash
+t update
+```
+
+Then re-enter the development shell so the updated package set is active:
+
+```bash
+exit
+nix develop
+```
+
+This is the equivalent of editing a `rix()` call and running `nix-build` in a
+`{rix}`-based workflow—but T handles all the Nix expression generation for you.
+
+### Why NOT to use `install.packages()`
+
+It's crucial to understand: **never call `install.packages()` from within a T
+project**. Here's why:
+
+1. **Declarative environments**: If you install packages imperatively, your
+   `tproject.toml` no longer matches your actual environment.
+2. **Reproducibility**: The whole point of T's Nix integration is that your
+   environment is fully defined by `tproject.toml` and `flake.lock`. Ad-hoc
+   installations defeat this.
+3. **Isolation**: Packages installed via `install.packages()` go to your user
+   library and can leak into the Nix-managed environment, breaking isolation.
+
+Instead, add packages to `tproject.toml` and run `t update`. Trying to call
+`install.packages()` (or equivalent commands for Julia and Python) will raise
+an error.
+
+## Writing T Pipelines
+
+The heart of T is the **pipeline**. A pipeline is a directed acyclic graph
+(DAG) of *nodes*, where each node is a computation (in T, R, Python, Julia, or
+Shell) whose output can be referenced by other nodes. T handles all the
+serialization, deserialization, and dependency tracking automatically.
+
+### Your First Pipeline
+
+Here is a simple polyglot pipeline in `src/pipeline.t`:
+
+```t
+p = pipeline {
+  -- Load data natively in T
+  data = node(command = read_csv("data/sales.csv", clean_colnames = true))
+
+  -- Train a model in R
+  model_r = rn(
+    command = <{ lm(revenue ~ age, data = data) }>,
+    serializer = ^pmml,
+    deserializer = ^csv
+  )
+
+  -- Score natively in T (no R runtime needed at prediction time)
+  predictions = node(
+    command = data |> mutate($pred = predict(data, model_r)),
+    deserializer = ^pmml
+  )
+}
+
+build_pipeline(p)
+```
+
+Let's unpack this:
+
+- `node()` defines a T-native computation. The `command` argument is a T
+  expression evaluated in the T runtime.
+- `rn()` defines an R node. The command inside `<{ ... }>` is raw R code,
+  executed in an isolated Nix sandbox with the R packages you declared in
+  `tproject.toml`.
+- `pyn()`, `jln()`, and `shn()` similarly define Python, Julia, and Shell nodes.
+- `serializer` controls how the node's output is saved to the Nix store.
+  `^pmml` serializes an R model to the PMML standard format, which T can then
+  read natively.
+- `build_pipeline(p)` materializes the pipeline: T resolves the dependency
+  graph, builds each node in topological order (only rebuilding what has
+  changed), and writes content-addressed artifacts to the Nix store.
+
+### Node Wrappers at a Glance
+
+| Function | Runtime | Use case |
+|----------|---------|----------|
+| `node()` | T native | Data manipulation, logic, native T operations |
+| `rn()` | R | Statistical modelling, tidyverse, Bioconductor |
+| `pyn()` | Python | Machine learning, scikit-learn, PyTorch |
+| `jln()` | Julia | High-performance numerics, Flux.jl |
+| `shn()` | Shell | File processing, calling external CLIs |
+
+### Serializers
+
+Every node in a T pipeline produces an artifact. The `serializer` argument
+controls the format of that artifact. T provides a set of first-class
+serializers identified by the `^` prefix:
+
+| Serializer | Resulting T Type | Best for |
+|:-----------|:-----------------|:---------|
+| `^csv` | `DataFrame` | Tabular data exchange between nodes |
+| `^ipc` | `DataFrame` | Fast Arrow IPC hand-off between pipeline nodes |
+| `^parquet` | `DataFrame` | Durable storage, archival, external analytics |
+| `^json` | `Dict` / `List` | Structured data interchange |
+| `^pmml` | `Model` | R/Python models, native T evaluation |
+| `^onnx` | `Model` | Python ML models, portable evaluation |
+| `^text` | `String` | Plain text and shell output |
+
+A useful rule of thumb: use `^ipc` to pass DataFrames *between nodes while a
+pipeline runs* (fastest round-trip, uncompressed), and `^parquet` for anything
+you *persist, ship, or store* (compressed, typically 4–10× smaller, compatible
+with DuckDB, Spark, pandas, etc.). Both work symmetrically across T, R, Python,
+and Julia.
+
+When a node in R produces a `data.frame` and you want to use it in a T or
+Python node, set `serializer = ^ipc` or `serializer = ^csv`. T will handle
+the conversion automatically.
+
+## Choosing a Nixpkgs Date
+
+When you run `t init`, you are prompted for a **Nixpkgs date**. This is
+analogous to the `date` argument in `rix()`. It pins the version of the
+`nixpkgs` package collection used by your project, which determines:
+
+- The version of R and Python available in your environment
+- The versions of system libraries (GDAL, LAPACK, etc.)
+- The versions of any system tools you use
+
+We strongly recommend using the default Nixpkgs date suggested by the prompt
+unless you have a specific reason to change it. If you are starting a new
+project and want the most recent packages, simply accept the default. If you
+need to reproduce an older analysis, use the Nixpkgs date from the original
+project's `flake.lock`.
+
+You should only specify a different or more recent date if absolutely necessary
+for your packages. Changing the date is equivalent to running a system upgrade:
+it can change package versions and, in rare cases, introduce compatibility
+issues.
+
+## Building and Running Pipelines
+
+### Running with `t run`
+
+To execute your pipeline end-to-end:
+
+```bash
+t run src/pipeline.t
+```
+
+T will resolve the dependency graph, build each node in a Nix-managed sandbox,
+and write a timestamped build log. The first run may take longer because Nix
+fetches or builds packages; subsequent runs are cached at the node level—if a
+node's inputs haven't changed, its result is pulled from the cache instantly.
+
+### Checking before Building
+
+T provides a fast validation step that catches errors before triggering an
+expensive Nix build:
+
+```bash
+t check src/pipeline.t
+```
+
+This validates the pipeline's structure, node references, and schema—in
+milliseconds. You can also get structured JSON output for machine-readable
+error handling:
+
+```bash
+t check --json src/pipeline.t
+```
+
+```json
+{
+  "error_class": "schema_mismatch",
+  "node": { "id": "summary", "lang": "python" },
+  "message": "Column 'mg' not found. Did you mean 'mpg'?",
+  "caused_by": ["clean"],
+  "suggested_fix": { "kind": "rename_column", "old_name": "mg", "new_name": "mpg" }
+}
+```
+
+The `t check` / `t run` loop is the core iterative development cycle in T:
+check cheaply and often, build only when clean.
+
+### The REPL for Exploration
+
+T also provides an interactive REPL for exploratory data analysis:
+
+```bash
+t
+```
+
+(or simply `t`).
+
+Pipelines are not mandatory in the REPL; this is a deliberate design choice
+intended to support rapid experimentation before computations are promoted into
+reproducible pipelines. You can also launch R, Python, or Julia REPLs directly
+from within a T project, inheriting the same pinned environments and project
+dependencies.
+
+### Inspecting Built Nodes
+
+After a `build_pipeline()` call, you can inspect the output of any node in
+the REPL:
+
+```t
+> read_node(p.model_r)
+```
+
+This reads the serialized artifact from the Nix store and loads it back into
+the T environment. You can also use `explain()` to inspect the node's metadata:
+
+```t
+> explain(p.model_r)
+{
+  `kind`: "computed_node",
+  `name`: "model_r",
+  `runtime`: "R",
+  `path`: "/nix/store/...-model_r/artifact",
+  `serializer`: "pmml",
+  `class`: "lm",
+  `dependencies`: ["data"]
+}
+```
+
+The `path` field is the "escape hatch": the absolute path to the node's output
+in the Nix store. You can pass this to any external tool or use the companion
+helper packages for R, Python or Julia which allow you to read T artifacts from
+within R or Python.
+
+### Pure Isolation
+
+By default, nodes already run in hermetic Nix sandboxes during `build_pipeline`.
+The development shell entered via `nix develop` is also *mostly* isolated: you
+can still access tools and files from outside of it, which is quite helpful. But
+you really need to keep in mind that tools not managed by Nix are not available
+from the build sandboxes!
+
+For maximum isolation of the development shell itself, you can run:
+
+```bash
+nix develop --ignore-environment
+```
+
+This hides everything not explicitly included in your project environment,
+including system tools, providing the closest possible approximation to a clean
+machine.
+
+This removes all packages that are no longer referenced by any environment.
+
+## A Reproducibility Comparison
+
+It is worth pausing to compare the approach we are taking in this book with the
+alternatives, including my own earlier work:
+
+|  | Locks language deps | Locks system libraries | Locks the polyglot seam | Enforced at build time | Language-agnostic |
+|---|:---:|:---:|:---:|:---:|:---:|
+| `renv` / `conda` | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Docker | ⚠️ (if maintained) | ✅ | ⚠️ (one image) | ❌ | ✅ |
+| Snakemake / `targets` | ❌ (delegates to user) | ❌ | ❌ | ❌ | ⚠️ |
+| `{rix}` + `{rixpress}` | ✅ | ✅ | ⚠️ (R-centric) | ❌ | ❌ |
+| **T** | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+`{rix}` and `{rixpress}` were my earlier attempts at this problem. `{rix}`
+solves environment definition for R projects beautifully, and `{rixpress}` adds
+a pipeline layer on top. But both are ultimately R packages: you need R to run
+them, and R is the first-class citizen. `{rixpress}` did allow you to define
+Python or Julia nodes, but because it's an R package, you need to define the
+pipeline using R syntax. I also built `rypress`, the Python equivalent of
+`{rixpress}`, but in any case you'd always be limited by what either R or Python
+provide (or don't provide).
+
+T resets that assumption entirely. T is not an R package. It is a standalone
+language that treats every runtime as a first-class node. It also does not just
+*orchestrate* environments that something else defines: it *is* the environment
+definition system. Your `tproject.toml` replaces `rix()`, `flake.lock` replaces
+`default.nix`, and `t run` replaces `nix-build` + `nix-shell`.
+
+The key advance over `{rix}` + `{rixpress}` is that T locks *the seam between
+languages*. Each node in a T pipeline runs in its own hermetic Nix sandbox, and
+T tracks exactly what each node depends on and what it produced. If a Python
+node consumes the output of an R node, T ensures the R artifact is always
+up-to-date and that the Python node is rebuilt whenever the R artifact changes.
+This is enforced by the language itself automatically, not by a CI script or a
+README instruction you might forget to follow.
+
+## Summary
+
+Let's step back and recap why we have gone through all this trouble.
+
+Traditional tools like `{renv}` or Python's `venv` only capture part of the
+reproducibility puzzle. They track package versions but not the language version
+itself, nor system-level dependencies like GDAL or Java. This means your project
+can still break on a different machine, or even on your own machine after a
+system update.
+
+Nix solves this by managing *everything*: R, Python, all packages, and all
+system dependencies. T builds on top of Nix to solve the *orchestration*
+problem: it provides a language for describing *how* computations in different
+runtimes interact, and it enforces reproducibility at every step.
+
+When you define a pipeline with T, you get a complete, self-contained
+specification that anyone can use to recreate the exact same results, on any
+machine, at any point in the future.
+
+### Quick Reference: Starting a New Project
+
+Here is the workflow you will follow for every new project:
+
+1. **Bootstrap T** from a temporary shell:
+
+   ```bash
+   nix shell --accept-flake-config github:b-rodrigues/tlang
+   ```
+
+2. **Scaffold a new project**:
+
+   ```bash
+   t init --project my-project
+   ```
+
+3. **Leave the temporary shell and enter the project environment**:
+
+   ```bash
+   exit
+   cd my-project
+   nix develop
+   ```
+
+4. **Declare your dependencies** in `tproject.toml`:
+
+   ```toml
+   [r-dependencies]
+   packages = ["dplyr", "ggplot2"]
+   ```
+
+5. **Sync the environment**:
+
+   ```bash
+   t update
+   exit
+   nix develop
+   ```
+
+6. **Write your pipeline** in `src/pipeline.t`:
+
+   ```t
+   p = pipeline {
+     data = node(command = read_csv("data/sales.csv"))
+     result = rn(
+       command = <{ summary(data) }>,
+       serializer = ^text,
+       deserializer = ^csv
+     )
+   }
+   build_pipeline(p)
+   ```
+
+7. **Check and run**:
+
+   ```bash
+   t check src/pipeline.t
+   t run src/pipeline.t
+   ```
+
+That's it. Your project is now reproducible. Anyone with Nix installed can clone
+your repository, run `nix develop`, and get the exact same environment and
+results you have.
+
+In the next chapter, we'll explore **Functional Programming** principles—a
+foundation you'll need before we can build more complex pipelines with T. After
+that, we'll learn how to **test** our code (Chapter 6), and then put everything
+together in Chapters 7 and 8 where we build complete analytical pipelines.

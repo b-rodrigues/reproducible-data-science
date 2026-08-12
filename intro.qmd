@@ -367,6 +367,18 @@ knitr::include_graphics("images/repro_spectrum.png")
 ```
 :::
 
+Notice, however, what the spectrum does *not* address: it is concerned entirely
+with the *environment*—whether the same packages and language version are
+available. It says nothing about whether the computation can actually be
+*re-executed*. A project can sit at the far right of Peng's spectrum, with every
+dependency pinned and documented, and still be practically irreproducible because
+nobody can figure out which script to run first, in what order, and with what
+inputs. Environment reproducibility is necessary but not sufficient; you also
+need what we might call *computational reproducibility*: an explicit, runnable
+description of the pipeline itself, not just the software it runs on. We will
+return to this distinction in Chapter 4, where it becomes the central motivation
+for T's mandatory pipeline architecture.
+
 Let me finish this introduction by discussing the last item on the list:
 hardware architecture. In 2020, Apple changed the hardware architecture of their
 computers. Their new machines no longer use Intel CPUs, but instead Apple's own
