@@ -406,8 +406,8 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-rix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Reproducible Development Environments with rix</span></span></a>
+  <a href="./04-t.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Reproducible Development Environments and Pipelines with T</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -620,6 +620,7 @@ A real sentence from a real paper published in <em>THE LANCET Regional Health</e
 The reproducibility spectrum from Peng’s 2011 paper.
 </figcaption>
 </figure>
+<p>Notice, however, what the spectrum does <em>not</em> address: it is concerned entirely with the <em>environment</em>—whether the same packages and language version are available. It says nothing about whether the computation can actually be <em>re-executed</em>. A project can sit at the far right of Peng’s spectrum, with every dependency pinned and documented, and still be practically irreproducible because nobody can figure out which script to run first, in what order, and with what inputs. Environment reproducibility is necessary but not sufficient; you also need what we might call <em>computational reproducibility</em>: an explicit, runnable description of the pipeline itself, not just the software it runs on. We will return to this distinction in Chapter 4, where it becomes the central motivation for T’s mandatory pipeline architecture.</p>
 <p>Let me finish this introduction by discussing the last item on the list: hardware architecture. In 2020, Apple changed the hardware architecture of their computers. Their new machines no longer use Intel CPUs, but instead Apple’s own proprietary architecture (Apple Silicon) based on the ARM specification. Concretely, this means that binary packages built for Intel-based Apple computers cannot run on their new machines, at least not without a compatibility layer. If you have a recent Apple Silicon Mac and need to install old packages to rerun a project (and we will learn how to do this), they need to be compiled to work on Apple Silicon first. While a compatibility layer called Rosetta 2 exists, my point is that you never know what might come in the future. The ability to compile from source is important because it requires the fewest dependencies outside of your control. Relying on pre-compiled binaries is not future-proof, which is another reason why open-source tools are a hard requirement for reproducibility.</p>
 <p>For Windows users, don’t think that the preceding paragraph does not concern you. It is very likely that Microsoft will push for OEM manufacturers to build more ARM-based computers in the future. There is already an ARM version of Windows, and I believe Microsoft will continue to support it. This is because ARM is much more energy-efficient than other architectures, and any manufacturer can build its own ARM CPUs by purchasing a license—a very interesting proposition from a business perspective.</p>
 <p>It is also possible that we will move towards more cloud-based computing, though I think this is less likely than the hardware shift. In that case, it is quite likely that the actual code will be running on Linux servers that are ARM-based, due to energy and licensing costs. Here again, if you want to run your historical code, you’ll have to compile old packages and programming language versions from source.</p>

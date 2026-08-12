@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; Reproducible Development Environments and Pipelines with T – Reproducible Polyglot Data Science</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./05-fp.html" rel="next">
+<link href="./03-setup.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script data-goatcounter="https://brodriguesco-raps-with-python.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<noscript>
+    </noscript></head><body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script><img src="https://brodriguesco-raps-with-python.goatcounter.com/count?p=/test-noscript">
+
+
+
+<link rel="stylesheet" href="epub.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-t.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Reproducible Development Environments and Pipelines with T</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Reproducible Polyglot Data Science</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/b-rodrigues/reproducible-data-science" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Reproducible-Polyglot-Data-Science.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Reproducible-Polyglot-Data-Science.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-nix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Nix Package Manager</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting Up Your Environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-t.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Reproducible Development Environments and Pipelines with T</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Functional Programming</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-rixpress-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building Reproducible Pipelines with rixpress</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-rixpress-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">4.1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#the-reproducibility-puzzle" id="toc-the-reproducibility-puzzle" class="nav-link" data-scroll-target="#the-reproducibility-puzzle"><span class="header-section-number">4.1.1</span> The Reproducibility Puzzle</a></li>
+  <li><a href="#reproducibility-is-not-just-about-the-environment" id="toc-reproducibility-is-not-just-about-the-environment" class="nav-link" data-scroll-target="#reproducibility-is-not-just-about-the-environment"><span class="header-section-number">4.1.2</span> Reproducibility Is Not Just About the Environment</a></li>
+  <li><a href="#the-mindset-shift-from-tasks-to-rules" id="toc-the-mindset-shift-from-tasks-to-rules" class="nav-link" data-scroll-target="#the-mindset-shift-from-tasks-to-rules"><span class="header-section-number">4.1.3</span> The Mindset Shift: From Tasks to Rules</a></li>
+  <li><a href="#thinking-in-systems-in-an-ai-first-world" id="toc-thinking-in-systems-in-an-ai-first-world" class="nav-link" data-scroll-target="#thinking-in-systems-in-an-ai-first-world"><span class="header-section-number">4.1.4</span> Thinking in Systems in an AI-First World</a></li>
+  <li><a href="#component-closures-the-nix-approach" id="toc-component-closures-the-nix-approach" class="nav-link" data-scroll-target="#component-closures-the-nix-approach"><span class="header-section-number">4.1.5</span> Component Closures: The Nix Approach</a></li>
+  <li><a href="#the-polyglot-challenge" id="toc-the-polyglot-challenge" class="nav-link" data-scroll-target="#the-polyglot-challenge"><span class="header-section-number">4.1.6</span> The Polyglot Challenge</a></li>
+  <li><a href="#enter-t" id="toc-enter-t" class="nav-link" data-scroll-target="#enter-t"><span class="header-section-number">4.1.7</span> Enter T</a></li>
+  </ul></li>
+  <li><a href="#transitioning-to-nix-managed-r" id="toc-transitioning-to-nix-managed-r" class="nav-link" data-scroll-target="#transitioning-to-nix-managed-r"><span class="header-section-number">4.2</span> Transitioning to Nix-Managed R</a>
+  <ul class="collapse">
+  <li><a href="#bootstrapping-t-without-a-local-installation" id="toc-bootstrapping-t-without-a-local-installation" class="nav-link" data-scroll-target="#bootstrapping-t-without-a-local-installation"><span class="header-section-number">4.2.1</span> Bootstrapping T without a local installation</a></li>
+  </ul></li>
+  <li><a href="#the-t-project" id="toc-the-t-project" class="nav-link" data-scroll-target="#the-t-project"><span class="header-section-number">4.3</span> The T Project</a>
+  <ul class="collapse">
+  <li><a href="#project-layout" id="toc-project-layout" class="nav-link" data-scroll-target="#project-layout"><span class="header-section-number">4.3.1</span> Project Layout</a></li>
+  <li><a href="#declaring-dependencies-with-tproject.toml" id="toc-declaring-dependencies-with-tproject.toml" class="nav-link" data-scroll-target="#declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.2</span> Declaring Dependencies with <code>tproject.toml</code></a></li>
+  <li><a href="#why-not-to-use-install.packages" id="toc-why-not-to-use-install.packages" class="nav-link" data-scroll-target="#why-not-to-use-install.packages"><span class="header-section-number">4.3.3</span> Why NOT to use <code>install.packages()</code></a></li>
+  </ul></li>
+  <li><a href="#writing-t-pipelines" id="toc-writing-t-pipelines" class="nav-link" data-scroll-target="#writing-t-pipelines"><span class="header-section-number">4.4</span> Writing T Pipelines</a>
+  <ul class="collapse">
+  <li><a href="#your-first-pipeline" id="toc-your-first-pipeline" class="nav-link" data-scroll-target="#your-first-pipeline"><span class="header-section-number">4.4.1</span> Your First Pipeline</a></li>
+  <li><a href="#node-wrappers-at-a-glance" id="toc-node-wrappers-at-a-glance" class="nav-link" data-scroll-target="#node-wrappers-at-a-glance"><span class="header-section-number">4.4.2</span> Node Wrappers at a Glance</a></li>
+  <li><a href="#serializers" id="toc-serializers" class="nav-link" data-scroll-target="#serializers"><span class="header-section-number">4.4.3</span> Serializers</a></li>
+  </ul></li>
+  <li><a href="#choosing-a-nixpkgs-date" id="toc-choosing-a-nixpkgs-date" class="nav-link" data-scroll-target="#choosing-a-nixpkgs-date"><span class="header-section-number">4.5</span> Choosing a Nixpkgs Date</a></li>
+  <li><a href="#building-and-running-pipelines" id="toc-building-and-running-pipelines" class="nav-link" data-scroll-target="#building-and-running-pipelines"><span class="header-section-number">4.6</span> Building and Running Pipelines</a>
+  <ul class="collapse">
+  <li><a href="#running-with-t-run" id="toc-running-with-t-run" class="nav-link" data-scroll-target="#running-with-t-run"><span class="header-section-number">4.6.1</span> Running with <code>t run</code></a></li>
+  <li><a href="#checking-before-building" id="toc-checking-before-building" class="nav-link" data-scroll-target="#checking-before-building"><span class="header-section-number">4.6.2</span> Checking before Building</a></li>
+  <li><a href="#the-repl-for-exploration" id="toc-the-repl-for-exploration" class="nav-link" data-scroll-target="#the-repl-for-exploration"><span class="header-section-number">4.6.3</span> The REPL for Exploration</a></li>
+  <li><a href="#inspecting-built-nodes" id="toc-inspecting-built-nodes" class="nav-link" data-scroll-target="#inspecting-built-nodes"><span class="header-section-number">4.6.4</span> Inspecting Built Nodes</a></li>
+  <li><a href="#pure-isolation" id="toc-pure-isolation" class="nav-link" data-scroll-target="#pure-isolation"><span class="header-section-number">4.6.5</span> Pure Isolation</a></li>
+  </ul></li>
+  <li><a href="#a-reproducibility-comparison" id="toc-a-reproducibility-comparison" class="nav-link" data-scroll-target="#a-reproducibility-comparison"><span class="header-section-number">4.7</span> A Reproducibility Comparison</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.8</span> Summary</a>
+  <ul class="collapse">
+  <li><a href="#quick-reference-starting-a-new-project" id="toc-quick-reference-starting-a-new-project" class="nav-link" data-scroll-target="#quick-reference-starting-a-new-project"><span class="header-section-number">4.8.1</span> Quick Reference: Starting a New Project</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/04-t.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Reproducible Development Environments and Pipelines with T</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
+<p>Now that we have Nix installed, and our IDE configured we can actually tackle the reproducibility puzzle.</p>
+<section id="the-reproducibility-puzzle" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="the-reproducibility-puzzle"><span class="header-section-number">4.1.1</span> The Reproducibility Puzzle</h3>
+<p>Reproducibility in research and data science exists on a continuum. At one end, authors might only describe their methods in prose. Moving along the spectrum, they might share code, then data, and finally what we call a <em>computational environment</em>: the complete set of software required to execute an analysis.</p>
+<p>Even when researchers share code and data, they rarely specify the full software stack: the exact version of R, all package versions, and crucially, the system-level dependencies. Yet differences in any of these can lead to divergent results from the same code.</p>
+<p>Tools like <code>{renv}</code> address part of the puzzle: they capture R package versions in a lockfile. But <code>{renv}</code> does not manage the R version itself (you need <code>rig</code> for that), and neither handles system libraries. If <code>{sf}</code> requires GDAL 3.0 but your system has 2.4, <code>{renv}</code> can’t help. And if your project uses both R and Python? Now you’re coordinating multiple package managers, each with its own configuration.</p>
+</section>
+<section id="reproducibility-is-not-just-about-the-environment" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="reproducibility-is-not-just-about-the-environment"><span class="header-section-number">4.1.2</span> Reproducibility Is Not Just About the Environment</h3>
+<p>Here is a subtlety that most reproducibility tools miss: <strong>reproducing the environment is necessary but not sufficient</strong>. The code also has to <em>run</em>.</p>
+<p>Consider what typically happens. A researcher shares a <code>renv.lock</code>, or even a Nix expression pinning every dependency to the exact version used. A colleague clones the repository, reconstructs the environment perfectly, and… opens the project to find a folder full of scripts with no obvious order of execution. Which script comes first? Which outputs feed into which inputs? Are there manual steps in between? The README might answer some of these questions—or it might not. Reproducing the environment got them 80% of the way there, but that last 20% is still a puzzle they have to solve by reading someone else’s code.</p>
+<p>This is the difference between <em>environment reproducibility</em> and <em>computational reproducibility</em>. The former means the same packages are available. The latter means the same computation can be re-executed, from raw inputs to final outputs, by anyone with access to the code, without prior knowledge of the project.</p>
+<p>Computational reproducibility requires something the environment alone cannot provide: an explicit description of the <em>pipeline</em>. Not prose in a README. Not conventions like “always run <code>01-clean.R</code> before <code>02-model.R</code>”. An actual, machine-readable graph of computations with explicit dependencies, where running one command re-executes the whole analysis in the correct order.</p>
+</section>
+<section id="the-mindset-shift-from-tasks-to-rules" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="the-mindset-shift-from-tasks-to-rules"><span class="header-section-number">4.1.3</span> The Mindset Shift: From Tasks to Rules</h3>
+<p>There is a deeper point lurking here, one that goes beyond the technical details of package managers and lockfiles.</p>
+<p>Think about two data scientists on the same team. Both write R or Python. Both know their tools. But they have fundamentally different mental models.</p>
+<p>The first thinks in <strong>tasks</strong>: <em>I need to clean this dataset. I need to fit this model. I need to produce this report.</em> He writes a script for each task, runs them manually in the right order, and the analysis is done. If someone else needs to reproduce it, our friend shares the scripts and a README and hopes for the best.</p>
+<p>The second thinks in <strong>rules</strong>: <em>What are the general rules that govern this analysis? What are the inputs? What are the outputs? What depends on what? If the data changes, which steps need to re-run? If a colleague on a different machine runs this, will he get the same result?</em> He writes code that describes the <em>system</em>, not just the individual actions.</p>
+<p>This is not a question of technical sophistication. It is a question of mental model. The first person sees the computer as a place where tasks happen. The second sees the computer as a machine that can be taught to follow rules repeatably, consistently, and at scale.</p>
+<p>The shift matters enormously for reproducibility. If your analysis is a sequence of manual tasks, it is inherently fragile: it depends on you remembering the order, running the right scripts, and not making any ad hoc changes along the way. If your analysis is a system of explicit rules—a formal description of what produces what—then it can be re-executed by anyone (including AI agents), on any machine, at any point in the future, with a single command.</p>
+<p>This is the insight that motivates the pipeline-first approach in this book. Before we even talk about packages and environments, we are asking: <em>what is the structure of this computation?</em> Making that structure explicit, formal, and machine-readable is the only approach that delivers genuine computational reproducibility—and, as we will see, it is also the approach that works best with AI-assisted development.</p>
+</section>
+<section id="thinking-in-systems-in-an-ai-first-world" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="thinking-in-systems-in-an-ai-first-world"><span class="header-section-number">4.1.4</span> Thinking in Systems in an AI-First World</h3>
+<p>If the previous section sounded abstract, consider what is happening right now to the practice of data science.</p>
+<p>AI coding assistants have become genuinely capable. For many routine tasks—data cleaning, visualisation, standard modelling—an LLM can write solid R or Python code faster than most humans. The cost of <em>writing</em> code is collapsing. This means the skill of typing correct syntax is becoming less valuable, and the skill of knowing <em>what to ask for</em> is becoming more valuable.</p>
+<p>But here is the catch: knowing what to ask for requires domain knowledge that no LLM reliably has. Take a simple example. You are working with time series data on prices. Ask an LLM to clean and graph the data, and it will almost certainly produce competent code. But will it suggest deflating nominal prices to make them comparable across time? Maybe, maybe not. That depends on whether the LLM has encountered enough economic methodology in its training data, and whether <em>you</em> thought to ask. And crucially, will you recognise when the LLM’s answer is subtly wrong? You don’t know what you don’t know. And neither does the LLM—but unlike you, it won’t flag its own blind spots.</p>
+<p>This points to a skill that is going to matter more, not less, as AI matures: the ability to interrogate and challenge an LLM’s output. An AI assistant is confident by default. It will produce plausible-sounding analysis regardless of whether the underlying reasoning is sound. The person who gets value from it is not the one who accepts the first answer, but the one who can ask <em>“wait, did you account for inflation here?”</em>, or <em>“why did you choose this model over that one?”</em>, or <em>“what assumptions are you making about the data generating process?”</em>. That requires knowing enough to ask those questions.</p>
+<p>This has an interesting implication for how we should think about expertise. The traditional advice has been to specialize: know one language deeply, one domain deeply, one tool deeply. That advice was right when expertise was expensive to acquire and hard to substitute. But in a world where an LLM can write the implementation for you, having some knowledge across many areas may become more valuable than deep specialisation in one. A data scientist who knows a little economics, a little software engineering, a little domain-specific methodology, and can draw on all of it to design and audit what the LLM produces, may outperform a narrower specialist who can no longer leverage their deep implementation skills because the LLM already has them.</p>
+<p>I will close this section with a personal anecdote that I think illustrates the point well. Alongside this book, I have been building a Game Boy game—using LLMs to write essentially all the code. I know nothing about Game Boy development: I do not know the hardware architecture, I have never written a line of assembly, and I have certainly never shipped a cartridge. But I approached the project exactly as I would approach a data science project.</p>
+<p>The first thing I did was set up a reproducible development environment. The second was to make the LLM build tooling to <em>query the game’s state programmatically</em>: not just run the game, but interrogate it—what is the player’s position? What are the active sprites? What is the current game phase? With that infrastructure in place, I could instruct the LLM to run test scenarios from any point in the game, with any parameters, and get structured feedback. The game could be developed and debugged in a principled loop rather than by manually playing through it each time.</p>
+<p>The result: an actual, running Game Boy game, built by someone who cannot write the underlying code. What I contributed was the <em>systems thinking</em>: insisting on reproducibility, insisting on programmable state inspection, insisting on a feedback loop that could be automated. The LLM contributed the implementation. Neither of us could have done it alone.</p>
+<p>This is the approach that this book is trying to teach for data science. The specific tools—T, Nix, R, Python—matter less than the underlying mental model: make the structure of your computation explicit, build in the ability to inspect and query it at every stage, and create feedback loops that you and your AI collaborators can iterate on together.</p>
+</section>
+<section id="component-closures-the-nix-approach" class="level3" data-number="4.1.5">
+<h3 data-number="4.1.5" class="anchored" data-anchor-id="component-closures-the-nix-approach"><span class="header-section-number">4.1.5</span> Component Closures: The Nix Approach</h3>
+<p>This is where Nix shines. Nix deploys <em>component closures</em>: when you install a package, Nix also installs all its dependencies, their dependencies, and so on. Think of it like packing for a trip—traditional package managers assume you’ll find essentials at your destination, while Nix packs everything you need.</p>
+<p>As the original Nix paper explains:</p>
+<blockquote class="blockquote">
+<p>The idea is to always deploy component closures: if we deploy a component, then we must also deploy its dependencies, their dependencies, and so on. Since closures are self-contained, they are the units of complete software deployment.</p>
+</blockquote>
+<p>This means when you install <code>{sf}</code> through Nix, you automatically get the correct versions of GDAL, GEOS, and PROJ—no manual system configuration needed.</p>
+</section>
+<section id="the-polyglot-challenge" class="level3" data-number="4.1.6">
+<h3 data-number="4.1.6" class="anchored" data-anchor-id="the-polyglot-challenge"><span class="header-section-number">4.1.6</span> The Polyglot Challenge</h3>
+<p>Modern data science is increasingly polyglot. Research shows that data scientists use, on average, nearly two programming languages in their work, with R and Python being the most common combination. Python dominates machine learning, R excels at statistical modelling, and Julia offers high-performance numerics. Projects increasingly combine these strengths.</p>
+<p>This creates a reproducibility challenge: a project using R, Python, and Quarto requires coordinating multiple package managers. Nix solves this by providing a unified framework for all languages and system tools. But there is still a missing piece: something to <em>orchestrate</em> all these moving parts within a single, coherent and reproducible workflow.</p>
+</section>
+<section id="enter-t" class="level3" data-number="4.1.7">
+<h3 data-number="4.1.7" class="anchored" data-anchor-id="enter-t"><span class="header-section-number">4.1.7</span> Enter T</h3>
+<p>However, Nix alone has a steep learning curve. Its functional programming language can be daunting for researchers focused on their analysis, not system administration.</p>
+<p>I know this problem well, because I lived it. My first attempt at solving it was <code>{rix}</code>: an R package that generates Nix expressions from intuitive R function calls. You describe <em>what</em> you want, and <code>{rix}</code> figures out <em>how</em> to express it in Nix. I then built <code>{rixpress}</code> on top of it, an R package for defining reproducible, polyglot analytical pipelines. Both packages solved real problems—but they were fundamentally R-focused. <code>{rix}</code> needed R to run. The pipeline syntax of <code>{rixpress}</code> was R code. If you worked in Python or Julia primarily, you were a second-class citizen.</p>
+<p><strong>T</strong> is what I built next, and it goes far beyond both. T is a reproducibility-first domain-specific language (DSL) for polyglot data science. It is <em>not</em> an R package. It is its own language—with its own runtime, its own REPL, and its own ecosystem of packages, built from the ground up to treat R, Python, Julia, and Shell as equals. Critically, T does not just <em>orchestrate</em> environments defined elsewhere: it <em>is</em> the environment definition system. Every T project is a Nix flake, and T manages the entire stack: language runtimes, system dependencies, and pipeline execution under one roof.</p>
+<p>T provides a functional, immutable language for constructing composable <em>micropipelines</em>: first-class, introspectable computation graphs that coordinate R, Python, Julia, Quarto, and Shell execution within a unified system. Pipelines in T are not configuration artifacts but executable program structures with explicit dataflow, typed nodes, and content-addressed outputs. And unlike <code>{rix}</code>, T makes reproducibility impossible to opt out of: every node in a T pipeline runs in its own hermetic Nix sandbox, and every output is content-addressed by design. As far as I know, T is literally the first reproducibility by design programming language.</p>
+<p>The workflow is simple:</p>
+<ol type="1">
+<li><strong>Bootstrap</strong> a T project using <code>t init</code></li>
+<li><strong>Declare</strong> your dependencies in <code>tproject.toml</code></li>
+<li><strong>Write</strong> your analysis as a T pipeline in <code>src/pipeline.t</code></li>
+<li><strong>Build</strong> and run with <code>t run</code></li>
+</ol>
+<p>This chapter covers everything you need to know to create project-specific, reproducible development environments and pipelines for your polyglot data science projects.</p>
+</section>
+</section>
+<section id="transitioning-to-nix-managed-r" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="transitioning-to-nix-managed-r"><span class="header-section-number">4.2</span> Transitioning to Nix-Managed R</h2>
+<p>Now that Nix is installed, I strongly recommend uninstalling any system-wide R installation and removing the packages in your user library (typically found in <code>~/R</code> on Linux or <code>~/Library/R</code> on macOS). From this point forward, let T and Nix handle everything. If you are using Windows, you can keep your Windows-specific R installation, since Nix will not interfere with it (remember, Nix is installed inside WSL and Positron will automatically load Nix environments installed in WSL as well).</p>
+<p>If you are not ready to take this step, you can still use T: it manages its own Nix-sandboxed R environment per project node, so it will not interfere with any existing R installation. However, for the cleanest experience and to avoid potential subtle conflicts, I recommend fully committing to Nix.</p>
+<section id="bootstrapping-t-without-a-local-installation" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="bootstrapping-t-without-a-local-installation"><span class="header-section-number">4.2.1</span> Bootstrapping T without a local installation</h3>
+<p>T is distributed exclusively via Nix. You don’t need to install it in the traditional sense. Instead, you launch a temporary shell that provides the <code>t</code> executable, use it to scaffold a new project, and then let the project itself manage the T version it uses, which is pinned in the project’s <code>flake.lock</code>.</p>
+<p>Running the following line in a terminal will drop you into an ephemeral shell with <code>t</code> available:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell <span class="at">--accept-flake-config</span> github:b-rodrigues/tlang</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This gives you a temporary shell with <code>t</code> ready to use. From here, you can scaffold any new project. For example, navigate to your projects directory and initialize a new project:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> init <span class="at">--project</span> my-analysis</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This creates a new directory <code>my-analysis/</code> containing the necessary project files. When prompted, you will be asked for basic project information and an <strong>AI Agent Context Level</strong> (Small, Medium, Full, or Huge), which generates tailored reference documentation for LLMs—more on this in a later chapter.</p>
+<p>You can then leave the temporary shell and enter the project’s own reproducible environment:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> my-analysis</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This enters the project’s development shell, which provides the pinned version of <code>t</code> alongside all declared R, Python, and Julia runtimes. All subsequent commands should be run inside this shell.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Getting LLM assistance with T
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>T is designed from the ground up for AI-assisted development. When you initialize a new T project, two files are automatically generated in the project root:</p>
+<ul>
+<li><strong><code>AGENTS.md</code></strong>: A project-specific onboarding guide that tells LLMs how to work within your project’s architecture.</li>
+<li><strong><code>T-LANGUAGE-REFERENCE.md</code></strong>: A tiered technical reference for the AI to read, tuned to the context level you chose at <code>t init</code>.</li>
+</ul>
+<p>With these files, any AI agent you pair-program with has immediate access to the exact technical context it needs to write correct T pipelines. You can also supply additional context by pointing your LLM at the <a href="https://tstats-project.org">T documentation website</a>.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="the-t-project" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="the-t-project"><span class="header-section-number">4.3</span> The T Project</h2>
+<section id="project-layout" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="project-layout"><span class="header-section-number">4.3.1</span> Project Layout</h3>
+<p>Every T project has the following directory structure:</p>
+<pre><code>my-analysis/
+├── tproject.toml       # Project configuration and dependencies
+├── flake.nix           # Reproducible environment definition
+├── flake.lock          # Locked dependency versions
+├── README.md           # Project overview
+├── AGENTS.md           # Onboarding guide for AI Agents
+├── T-LANGUAGE-REFERENCE.md # Tiered language reference for LLMs
+├── src/
+│   └── pipeline.t      # Your main analysis script
+├── data/               # Place your raw data files here
+├── outputs/            # Output directory for results
+└── tests/              # Unit tests for your analysis</code></pre>
+<p>The two most important files are <code>tproject.toml</code> and <code>src/pipeline.t</code>.</p>
+</section>
+<section id="declaring-dependencies-with-tproject.toml" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.2</span> Declaring Dependencies with <code>tproject.toml</code></h3>
+<p>T projects are explicit: R, Python, and Julia packages belong in <code>tproject.toml</code>, not in ad hoc <code>install.packages()</code>, <code>pip install</code>, or <code>Pkg.add()</code> calls. Open <code>tproject.toml</code> and add the runtime packages you need:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"dplyr"</span><span class="op">,</span> <span class="st">"ggplot2"</span><span class="op">]</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">[py-dependencies]</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"python313"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"polars"</span><span class="op">,</span> <span class="st">"scikit-learn"</span><span class="op">]</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">[jl-dependencies]</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"lts"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"DataFrames"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>After editing <code>tproject.toml</code>, sync the project environment:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> update</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then re-enter the development shell so the updated package set is active:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is the equivalent of editing a <code>rix()</code> call and running <code>nix-build</code> in a <code>{rix}</code>-based workflow—but T handles all the Nix expression generation for you.</p>
+</section>
+<section id="why-not-to-use-install.packages" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="why-not-to-use-install.packages"><span class="header-section-number">4.3.3</span> Why NOT to use <code>install.packages()</code></h3>
+<p>It’s crucial to understand: <strong>never call <code>install.packages()</code> from within a T project</strong>. Here’s why:</p>
+<ol type="1">
+<li><strong>Declarative environments</strong>: If you install packages imperatively, your <code>tproject.toml</code> no longer matches your actual environment.</li>
+<li><strong>Reproducibility</strong>: The whole point of T’s Nix integration is that your environment is fully defined by <code>tproject.toml</code> and <code>flake.lock</code>. Ad-hoc installations defeat this.</li>
+<li><strong>Isolation</strong>: Packages installed via <code>install.packages()</code> go to your user library and can leak into the Nix-managed environment, breaking isolation.</li>
+</ol>
+<p>Instead, add packages to <code>tproject.toml</code> and run <code>t update</code>. Trying to call <code>install.packages()</code> (or equivalent commands for Julia and Python) will raise an error.</p>
+</section>
+</section>
+<section id="writing-t-pipelines" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="writing-t-pipelines"><span class="header-section-number">4.4</span> Writing T Pipelines</h2>
+<p>The heart of T is the <strong>pipeline</strong>. A pipeline is a directed acyclic graph (DAG) of <em>nodes</em>, where each node is a computation (in T, R, Python, Julia, or Shell) whose output can be referenced by other nodes. T handles all the serialization, deserialization, and dependency tracking automatically.</p>
+<section id="your-first-pipeline" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="your-first-pipeline"><span class="header-section-number">4.4.1</span> Your First Pipeline</h3>
+<p>Here is a simple polyglot pipeline in <code>src/pipeline.t</code>:</p>
+<pre class="t"><code>p = pipeline {
+  -- Load data natively in T
+  data = node(command = read_csv("data/sales.csv", clean_colnames = true))
+
+  -- Train a model in R
+  model_r = rn(
+    command = &lt;{ lm(revenue ~ age, data = data) }&gt;,
+    serializer = ^pmml,
+    deserializer = ^csv
+  )
+
+  -- Score natively in T (no R runtime needed at prediction time)
+  predictions = node(
+    command = data |&gt; mutate($pred = predict(data, model_r)),
+    deserializer = ^pmml
+  )
+}
+
+build_pipeline(p)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Let’s unpack this:</p>
+<ul>
+<li><code>node()</code> defines a T-native computation. The <code>command</code> argument is a T expression evaluated in the T runtime.</li>
+<li><code>rn()</code> defines an R node. The command inside <code>&lt;{ ... }&gt;</code> is raw R code, executed in an isolated Nix sandbox with the R packages you declared in <code>tproject.toml</code>.</li>
+<li><code>pyn()</code>, <code>jln()</code>, and <code>shn()</code> similarly define Python, Julia, and Shell nodes.</li>
+<li><code>serializer</code> controls how the node’s output is saved to the Nix store. <code>^pmml</code> serializes an R model to the PMML standard format, which T can then read natively.</li>
+<li><code>build_pipeline(p)</code> materializes the pipeline: T resolves the dependency graph, builds each node in topological order (only rebuilding what has changed), and writes content-addressed artifacts to the Nix store.</li>
+</ul>
+</section>
+<section id="node-wrappers-at-a-glance" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="node-wrappers-at-a-glance"><span class="header-section-number">4.4.2</span> Node Wrappers at a Glance</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Runtime</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>node()</code></td>
+<td>T native</td>
+<td>Data manipulation, logic, native T operations</td>
+</tr>
+<tr class="even">
+<td><code>rn()</code></td>
+<td>R</td>
+<td>Statistical modelling, tidyverse, Bioconductor</td>
+</tr>
+<tr class="odd">
+<td><code>pyn()</code></td>
+<td>Python</td>
+<td>Machine learning, scikit-learn, PyTorch</td>
+</tr>
+<tr class="even">
+<td><code>jln()</code></td>
+<td>Julia</td>
+<td>High-performance numerics, Flux.jl</td>
+</tr>
+<tr class="odd">
+<td><code>shn()</code></td>
+<td>Shell</td>
+<td>File processing, calling external CLIs</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="serializers" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="serializers"><span class="header-section-number">4.4.3</span> Serializers</h3>
+<p>Every node in a T pipeline produces an artifact. The <code>serializer</code> argument controls the format of that artifact. T provides a set of first-class serializers identified by the <code>^</code> prefix:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 45%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Serializer</th>
+<th style="text-align: left;">Resulting T Type</th>
+<th style="text-align: left;">Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>^csv</code></td>
+<td style="text-align: left;"><code>DataFrame</code></td>
+<td style="text-align: left;">Tabular data exchange between nodes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>^ipc</code></td>
+<td style="text-align: left;"><code>DataFrame</code></td>
+<td style="text-align: left;">Fast Arrow IPC hand-off between pipeline nodes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>^parquet</code></td>
+<td style="text-align: left;"><code>DataFrame</code></td>
+<td style="text-align: left;">Durable storage, archival, external analytics</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>^json</code></td>
+<td style="text-align: left;"><code>Dict</code> / <code>List</code></td>
+<td style="text-align: left;">Structured data interchange</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>^pmml</code></td>
+<td style="text-align: left;"><code>Model</code></td>
+<td style="text-align: left;">R/Python models, native T evaluation</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>^onnx</code></td>
+<td style="text-align: left;"><code>Model</code></td>
+<td style="text-align: left;">Python ML models, portable evaluation</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>^text</code></td>
+<td style="text-align: left;"><code>String</code></td>
+<td style="text-align: left;">Plain text and shell output</td>
+</tr>
+</tbody>
+</table>
+<p>A useful rule of thumb: use <code>^ipc</code> to pass DataFrames <em>between nodes while a pipeline runs</em> (fastest round-trip, uncompressed), and <code>^parquet</code> for anything you <em>persist, ship, or store</em> (compressed, typically 4–10× smaller, compatible with DuckDB, Spark, pandas, etc.). Both work symmetrically across T, R, Python, and Julia.</p>
+<p>When a node in R produces a <code>data.frame</code> and you want to use it in a T or Python node, set <code>serializer = ^ipc</code> or <code>serializer = ^csv</code>. T will handle the conversion automatically.</p>
+</section>
+</section>
+<section id="choosing-a-nixpkgs-date" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="choosing-a-nixpkgs-date"><span class="header-section-number">4.5</span> Choosing a Nixpkgs Date</h2>
+<p>When you run <code>t init</code>, you are prompted for a <strong>Nixpkgs date</strong>. This is analogous to the <code>date</code> argument in <code>rix()</code>. It pins the version of the <code>nixpkgs</code> package collection used by your project, which determines:</p>
+<ul>
+<li>The version of R and Python available in your environment</li>
+<li>The versions of system libraries (GDAL, LAPACK, etc.)</li>
+<li>The versions of any system tools you use</li>
+</ul>
+<p>We strongly recommend using the default Nixpkgs date suggested by the prompt unless you have a specific reason to change it. If you are starting a new project and want the most recent packages, simply accept the default. If you need to reproduce an older analysis, use the Nixpkgs date from the original project’s <code>flake.lock</code>.</p>
+<p>You should only specify a different or more recent date if absolutely necessary for your packages. Changing the date is equivalent to running a system upgrade: it can change package versions and, in rare cases, introduce compatibility issues.</p>
+</section>
+<section id="building-and-running-pipelines" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="building-and-running-pipelines"><span class="header-section-number">4.6</span> Building and Running Pipelines</h2>
+<section id="running-with-t-run" class="level3" data-number="4.6.1">
+<h3 data-number="4.6.1" class="anchored" data-anchor-id="running-with-t-run"><span class="header-section-number">4.6.1</span> Running with <code>t run</code></h3>
+<p>To execute your pipeline end-to-end:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>T will resolve the dependency graph, build each node in a Nix-managed sandbox, and write a timestamped build log. The first run may take longer because Nix fetches or builds packages; subsequent runs are cached at the node level—if a node’s inputs haven’t changed, its result is pulled from the cache instantly.</p>
+</section>
+<section id="checking-before-building" class="level3" data-number="4.6.2">
+<h3 data-number="4.6.2" class="anchored" data-anchor-id="checking-before-building"><span class="header-section-number">4.6.2</span> Checking before Building</h3>
+<p>T provides a fast validation step that catches errors before triggering an expensive Nix build:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> check src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This validates the pipeline’s structure, node references, and schema—in milliseconds. You can also get structured JSON output for machine-readable error handling:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> check <span class="at">--json</span> src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"error_class"</span><span class="fu">:</span> <span class="st">"schema_mismatch"</span><span class="fu">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"node"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"summary"</span><span class="fu">,</span> <span class="dt">"lang"</span><span class="fu">:</span> <span class="st">"python"</span> <span class="fu">},</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Column 'mg' not found. Did you mean 'mpg'?"</span><span class="fu">,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"caused_by"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"clean"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"suggested_fix"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"kind"</span><span class="fu">:</span> <span class="st">"rename_column"</span><span class="fu">,</span> <span class="dt">"old_name"</span><span class="fu">:</span> <span class="st">"mg"</span><span class="fu">,</span> <span class="dt">"new_name"</span><span class="fu">:</span> <span class="st">"mpg"</span> <span class="fu">}</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>t check</code> / <code>t run</code> loop is the core iterative development cycle in T: check cheaply and often, build only when clean.</p>
+</section>
+<section id="the-repl-for-exploration" class="level3" data-number="4.6.3">
+<h3 data-number="4.6.3" class="anchored" data-anchor-id="the-repl-for-exploration"><span class="header-section-number">4.6.3</span> The REPL for Exploration</h3>
+<p>T also provides an interactive REPL for exploratory data analysis:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>(or simply <code>t</code>).</p>
+<p>Pipelines are not mandatory in the REPL; this is a deliberate design choice intended to support rapid experimentation before computations are promoted into reproducible pipelines. You can also launch R, Python, or Julia REPLs directly from within a T project, inheriting the same pinned environments and project dependencies.</p>
+</section>
+<section id="inspecting-built-nodes" class="level3" data-number="4.6.4">
+<h3 data-number="4.6.4" class="anchored" data-anchor-id="inspecting-built-nodes"><span class="header-section-number">4.6.4</span> Inspecting Built Nodes</h3>
+<p>After a <code>build_pipeline()</code> call, you can inspect the output of any node in the REPL:</p>
+<pre class="t"><code>&gt; read_node(p.model_r)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>This reads the serialized artifact from the Nix store and loads it back into the T environment. You can also use <code>explain()</code> to inspect the node’s metadata:</p>
+<pre class="t"><code>&gt; explain(p.model_r)
+{
+  `kind`: "computed_node",
+  `name`: "model_r",
+  `runtime`: "R",
+  `path`: "/nix/store/...-model_r/artifact",
+  `serializer`: "pmml",
+  `class`: "lm",
+  `dependencies`: ["data"]
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>The <code>path</code> field is the “escape hatch”: the absolute path to the node’s output in the Nix store. You can pass this to any external tool or use the companion helper packages for R, Python or Julia which allow you to read T artifacts from within R or Python.</p>
+</section>
+<section id="pure-isolation" class="level3" data-number="4.6.5">
+<h3 data-number="4.6.5" class="anchored" data-anchor-id="pure-isolation"><span class="header-section-number">4.6.5</span> Pure Isolation</h3>
+<p>By default, nodes already run in hermetic Nix sandboxes during <code>build_pipeline</code>. The development shell entered via <code>nix develop</code> is also <em>mostly</em> isolated: you can still access tools and files from outside of it, which is quite helpful. But you really need to keep in mind that tools not managed by Nix are not available from the build sandboxes!</p>
+<p>For maximum isolation of the development shell itself, you can run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop <span class="at">--ignore-environment</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This hides everything not explicitly included in your project environment, including system tools, providing the closest possible approximation to a clean machine.</p>
+<p>This removes all packages that are no longer referenced by any environment.</p>
+</section>
+</section>
+<section id="a-reproducibility-comparison" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="a-reproducibility-comparison"><span class="header-section-number">4.7</span> A Reproducibility Comparison</h2>
+<p>It is worth pausing to compare the approach we are taking in this book with the alternatives, including my own earlier work:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;">Locks language deps</th>
+<th style="text-align: center;">Locks system libraries</th>
+<th style="text-align: center;">Locks the polyglot seam</th>
+<th style="text-align: center;">Enforced at build time</th>
+<th style="text-align: center;">Language-agnostic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>renv</code> / <code>conda</code></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr class="even">
+<td>Docker</td>
+<td style="text-align: center;">⚠️ (if maintained)</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">⚠️ (one image)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr class="odd">
+<td>Snakemake / <code>targets</code></td>
+<td style="text-align: center;">❌ (delegates to user)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">⚠️</td>
+</tr>
+<tr class="even">
+<td><code>{rix}</code> + <code>{rixpress}</code></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">⚠️ (R-centric)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr class="odd">
+<td><strong>T</strong></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+</tbody>
+</table>
+<p><code>{rix}</code> and <code>{rixpress}</code> were my earlier attempts at this problem. <code>{rix}</code> solves environment definition for R projects beautifully, and <code>{rixpress}</code> adds a pipeline layer on top. But both are ultimately R packages: you need R to run them, and R is the first-class citizen. <code>{rixpress}</code> did allow you to define Python or Julia nodes, but because it’s an R package, you need to define the pipeline using R syntax. I also built <code>rypress</code>, the Python equivalent of <code>{rixpress}</code>, but in any case you’d always be limited by what either R or Python provide (or don’t provide).</p>
+<p>T resets that assumption entirely. T is not an R package. It is a standalone language that treats every runtime as a first-class node. It also does not just <em>orchestrate</em> environments that something else defines: it <em>is</em> the environment definition system. Your <code>tproject.toml</code> replaces <code>rix()</code>, <code>flake.lock</code> replaces <code>default.nix</code>, and <code>t run</code> replaces <code>nix-build</code> + <code>nix-shell</code>.</p>
+<p>The key advance over <code>{rix}</code> + <code>{rixpress}</code> is that T locks <em>the seam between languages</em>. Each node in a T pipeline runs in its own hermetic Nix sandbox, and T tracks exactly what each node depends on and what it produced. If a Python node consumes the output of an R node, T ensures the R artifact is always up-to-date and that the Python node is rebuilt whenever the R artifact changes. This is enforced by the language itself automatically, not by a CI script or a README instruction you might forget to follow.</p>
+</section>
+<section id="summary" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.8</span> Summary</h2>
+<p>Let’s step back and recap why we have gone through all this trouble.</p>
+<p>Traditional tools like <code>{renv}</code> or Python’s <code>venv</code> only capture part of the reproducibility puzzle. They track package versions but not the language version itself, nor system-level dependencies like GDAL or Java. This means your project can still break on a different machine, or even on your own machine after a system update.</p>
+<p>Nix solves this by managing <em>everything</em>: R, Python, all packages, and all system dependencies. T builds on top of Nix to solve the <em>orchestration</em> problem: it provides a language for describing <em>how</em> computations in different runtimes interact, and it enforces reproducibility at every step.</p>
+<p>When you define a pipeline with T, you get a complete, self-contained specification that anyone can use to recreate the exact same results, on any machine, at any point in the future.</p>
+<section id="quick-reference-starting-a-new-project" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="quick-reference-starting-a-new-project"><span class="header-section-number">4.8.1</span> Quick Reference: Starting a New Project</h3>
+<p>Here is the workflow you will follow for every new project:</p>
+<ol type="1">
+<li><p><strong>Bootstrap T</strong> from a temporary shell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell <span class="at">--accept-flake-config</span> github:b-rodrigues/tlang</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Scaffold a new project</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> init <span class="at">--project</span> my-project</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Leave the temporary shell and enter the project environment</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> my-project</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Declare your dependencies</strong> in <code>tproject.toml</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"dplyr"</span><span class="op">,</span> <span class="st">"ggplot2"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Sync the environment</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> update</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Write your pipeline</strong> in <code>src/pipeline.t</code>:</p>
+<pre class="t"><code>p = pipeline {
+  data = node(command = read_csv("data/sales.csv"))
+  result = rn(
+    command = &lt;{ summary(data) }&gt;,
+    serializer = ^text,
+    deserializer = ^csv
+  )
+}
+build_pipeline(p)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre></li>
+<li><p><strong>Check and run</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> check src/pipeline.t</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ol>
+<p>That’s it. Your project is now reproducible. Anyone with Nix installed can clone your repository, run <code>nix develop</code>, and get the exact same environment and results you have.</p>
+<p>In the next chapter, we’ll explore <strong>Functional Programming</strong> principles—a foundation you’ll need before we can build more complex pipelines with T. After that, we’ll learn how to <strong>test</strong> our code (Chapter 6), and then put everything together in Chapters 7 and 8 where we build complete analytical pipelines.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03-setup.html" class="pagination-link" aria-label="Setting Up Your Environment">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting Up Your Environment</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./05-fp.html" class="pagination-link" aria-label="Functional Programming">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Functional Programming</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/04-t.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
