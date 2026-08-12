@@ -393,7 +393,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-fp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Functional Programming</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -474,7 +474,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#collaborative-hygiene-rebase-vs.-merge" id="toc-collaborative-hygiene-rebase-vs.-merge" class="nav-link" data-scroll-target="#collaborative-hygiene-rebase-vs.-merge"><span class="header-section-number">6.3.2</span> Collaborative Hygiene: Rebase vs.&nbsp;Merge</a></li>
   <li><a href="#working-with-llms-and-git-managing-ai-generated-changes" id="toc-working-with-llms-and-git-managing-ai-generated-changes" class="nav-link" data-scroll-target="#working-with-llms-and-git-managing-ai-generated-changes"><span class="header-section-number">6.3.3</span> Working with LLMs and Git: Managing AI-Generated Changes</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6.4</span> Summary</a></li>
+  <li><a href="#part-3-testing-t-pipelines-with-testcraft" id="toc-part-3-testing-t-pipelines-with-testcraft" class="nav-link" data-scroll-target="#part-3-testing-t-pipelines-with-testcraft"><span class="header-section-number">6.4</span> Part 3: Testing T Pipelines with Testcraft</a>
+  <ul class="collapse">
+  <li><a href="#the-t-test-command" id="toc-the-t-test-command" class="nav-link" data-scroll-target="#the-t-test-command"><span class="header-section-number">6.4.1</span> The <code>t test</code> Command</a></li>
+  <li><a href="#the-expect_-primitives" id="toc-the-expect_-primitives" class="nav-link" data-scroll-target="#the-expect_-primitives"><span class="header-section-number">6.4.2</span> The <code>expect_*</code> Primitives</a></li>
+  <li><a href="#testing-node-outputs" id="toc-testing-node-outputs" class="nav-link" data-scroll-target="#testing-node-outputs"><span class="header-section-number">6.4.3</span> Testing Node Outputs</a></li>
+  <li><a href="#testing-the-pipeline-structure" id="toc-testing-the-pipeline-structure" class="nav-link" data-scroll-target="#testing-the-pipeline-structure"><span class="header-section-number">6.4.4</span> Testing the Pipeline Structure</a></li>
+  <li><a href="#the-fixture-chain-pattern" id="toc-the-fixture-chain-pattern" class="nav-link" data-scroll-target="#the-fixture-chain-pattern"><span class="header-section-number">6.4.5</span> The Fixture-Chain Pattern</a></li>
+  <li><a href="#summary-of-testing-levels" id="toc-summary-of-testing-levels" class="nav-link" data-scroll-target="#summary-of-testing-levels"><span class="header-section-number">6.4.6</span> Summary of Testing Levels</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6.5</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/06-testing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -697,7 +706,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>“A COMPUTER CAN NEVER BE HELD ACCOUNTABLE THEREFORE A COMPUTER MUST NEVER MAKE A MANAGEMENT DECISION” - IBM Training Manual, 1979.</p>
 <p>This principle is, in my opinion, even more important for tests than for production code. Even before LLMs, we relied on code we didn’t write ourselves. At my first job, my boss insisted that I avoid external packages entirely and rewrite everything from scratch. I ignored her and continued using the packages I trusted. At some point, you have to trust strangers. That was true then, and it is true now, except that “strangers” now includes LLMs and developers who themselves rely heavily on LLMs.</p>
 <p>But here is the key difference: tests are small. Unlike a sprawling codebase, a unit test is short enough to read and understand completely. When you review an LLM-generated test, you can verify that the expected output is correct and that the test covers the right cases. This makes tests uniquely suited to the “trust but verify” workflow that AI-assisted development demands.</p>
-<p>In the next chapter, we will start building reproducible pipelines with <code>{rixpress}</code>, putting our tested functions to work.</p>
+<p>In the next chapter, we will start building deeper T pipelines, putting our tested functions and scripts to work in real polyglot analyses.</p>
 </section>
 </section>
 </section>
@@ -784,13 +793,245 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 </section>
-<section id="summary" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.4</span> Summary</h2>
-<p>In this chapter, we covered the safety protocols of professional software engineering:</p>
+<section id="part-3-testing-t-pipelines-with-testcraft" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="part-3-testing-t-pipelines-with-testcraft"><span class="header-section-number">6.4</span> Part 3: Testing T Pipelines with Testcraft</h2>
+<p>The R and Python testing we have just covered handles the code <em>inside</em> your nodes. But what about the pipeline itself? Does it have the right structure? Do nodes depend on each other in the right order? Does the data flowing between nodes have the right shape after a build?</p>
+<p>T has a built-in testing system for this: the <strong>testcraft</strong> package and the <code>t test</code> CLI command.</p>
+<section id="the-t-test-command" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="the-t-test-command"><span class="header-section-number">6.4.1</span> The <code>t test</code> Command</h3>
+<p>When you initialise a T project with <code>t init</code>, the project gets a <code>tests/</code> directory alongside <code>src/</code>. Any <code>.t</code> file in <code>tests/</code> whose name starts with <code>test-</code> is automatically discovered and run by:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is the T equivalent of <code>pytest</code> or <code>testthat::test_dir()</code>. Each test file is a T script that builds a pipeline (or reads from an already-built one), makes assertions using <code>expect_*</code> functions, and fails loudly if any assertion does not hold.</p>
+</section>
+<section id="the-expect_-primitives" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="the-expect_-primitives"><span class="header-section-number">6.4.2</span> The <code>expect_*</code> Primitives</h3>
+<p>Testcraft’s <code>expect_*</code> functions return a typed <code>Expect</code> value—<code>Expect_pass</code>, <code>Expect_stop</code>, or <code>Expect_hold</code>—rather than a bare boolean. This matters because when you wrap one in <code>assert()</code>, a failure gives you a rich diagnostic message instead of a generic <code>AssertionError: false</code>:</p>
+<pre class="t"><code>-- Bare assert: not very helpful on failure
+assert(nrow(df) == 4)          -- AssertionError: expression evaluated to false
+
+-- expect_*: tells you exactly what went wrong
+assert(expect_nrow(df, 4))     -- AssertionError: expected 4 rows, got 7
+assert(expect_colnames(df, ["id", "val"]))
+  -- AssertionError: column mismatch: got ["id", "score"], expected ["id", "val"]</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>The core expectations you will use most often:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 61%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">What it checks</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>expect_equal(actual, expected)</code></td>
+<td style="text-align: left;">Deep equality with tolerance for floats</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>expect_nrow(df, n)</code></td>
+<td style="text-align: left;">DataFrame has exactly <code>n</code> rows</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>expect_ncol(df, n)</code></td>
+<td style="text-align: left;">DataFrame has exactly <code>n</code> columns</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>expect_colnames(df, names)</code></td>
+<td style="text-align: left;">Column names match exactly (order-sensitive)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>expect_has_colnames(df, names)</code></td>
+<td style="text-align: left;">DataFrame contains <em>at least</em> these columns</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>expect_no_na(df, col)</code></td>
+<td style="text-align: left;">No NA values in <code>col</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>expect_type(x, "Int")</code></td>
+<td style="text-align: left;">Value has the expected type</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>expect_error(expr)</code></td>
+<td style="text-align: left;">Expression produces an Error value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>expect_gt/gte/lt/lte(a, b)</code></td>
+<td style="text-align: left;">Numeric comparisons</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>expect_between(x, lo, hi)</code></td>
+<td style="text-align: left;">Value falls within bounds</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>expect_unique(x)</code></td>
+<td style="text-align: left;">All elements are distinct</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>expect_match(str, pattern)</code></td>
+<td style="text-align: left;">String matches a regex</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="testing-node-outputs" class="level3" data-number="6.4.3">
+<h3 data-number="6.4.3" class="anchored" data-anchor-id="testing-node-outputs"><span class="header-section-number">6.4.3</span> Testing Node Outputs</h3>
+<p>The typical pattern is: build the pipeline, read each node with <code>read_node()</code>, then assert on the result. Here is a complete test file for the GLM pipeline from the previous chapter:</p>
+<pre class="t"><code>-- tests/test-glm-pipeline.t
+import stats
+import dataframe
+
+p = pipeline {
+  data_node = node(
+    command = &lt;{
+      data.frame(
+        x = c(1.0, 2.0, 3.0, 4.0, 5.0),
+        y = c(0L, 0L, 1L, 1L, 1L)
+      )
+    }&gt;,
+    runtime = R,
+    serializer = ^ipc
+  )
+  model_node = node(
+    command = &lt;{
+      data_node$y &lt;- as.factor(data_node$y)
+      glm(y ~ x, data = data_node, family = binomial(link = "logit"))
+    }&gt;,
+    runtime = R,
+    serializer = ^pmml,
+    deserializer = ^ipc
+  )
+}
+
+build_pipeline(p)
+
+-- Test node outputs
+data = read_node(p.data_node)
+assert(expect_nrow(data, 5))
+assert(expect_colnames(data, ["x", "y"]))
+assert(expect_no_na(data, "x"))
+
+model = read_node(p.model_node)
+assert(expect_type(model, "Model"))
+
+print("✓ glm pipeline: all assertions passed")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+</section>
+<section id="testing-the-pipeline-structure" class="level3" data-number="6.4.4">
+<h3 data-number="6.4.4" class="anchored" data-anchor-id="testing-the-pipeline-structure"><span class="header-section-number">6.4.4</span> Testing the Pipeline Structure</h3>
+<p>Testcraft also provides expectations that operate directly on the pipeline DAG, before or after building. These are unique to T and have no equivalent in testthat or pytest: they test the <em>structure</em> of the computation, not just the outputs.</p>
+<pre class="t"><code>-- Check that p is a valid Pipeline value
+assert(expect_pipeline(p))
+
+-- Check that the pipeline contains exactly these nodes
+assert(expect_nodes(p, ["data_node", "model_node"]))
+
+-- Check that model_node depends on data_node
+assert(expect_dependency(p, "data_node", "model_node"))
+
+-- Check runtimes and serializers are correctly set
+assert(expect_runtime(p, "model_node", "R"))
+assert(expect_serializer(p, "model_node", ^pmml))
+assert(expect_deserializer(p, "model_node", ^ipc))
+
+-- Check that model_node was actually built successfully
+assert(expect_computed(p.model_node))</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>These structural tests are most valuable as a guard against refactoring accidents. If you reorganise the pipeline and accidentally break a dependency, <code>expect_dependency</code> will catch it immediately, before any downstream output has a chance to silently produce wrong results.</p>
+</section>
+<section id="the-fixture-chain-pattern" class="level3" data-number="6.4.5">
+<h3 data-number="6.4.5" class="anchored" data-anchor-id="the-fixture-chain-pattern"><span class="header-section-number">6.4.5</span> The Fixture-Chain Pattern</h3>
+<p>For more complex test suites, T supports composing pipelines with <code>chain()</code> and <code>parallel()</code>. The pattern is to separate data-producing nodes from assertion nodes, and compose them into a combined pipeline:</p>
+<pre class="t"><code>-- A fixture pipeline produces the base data
+fixture = pipeline {
+  data = node(
+    command = read_csv("tests/data/sample.csv"),
+    serializer = ^csv
+  )
+}
+
+-- A test pipeline consumes and transforms it, then checks the result
+test_filter = pipeline {
+  filtered = node(
+    command = data |&gt; filter($score &gt;= 88),
+    serializer = ^csv,
+    deserializer = ^csv
+  )
+  -- A dedicated "check" node whose output is a Dict of assertion results
+  check_filter = node(
+    command = [
+      nrow_check:    assert(expect_nrow(filtered, 2)),
+      colnames_check: assert(expect_colnames(filtered, ["name", "score", "grade"]))
+    ],
+    serializer = ^json,
+    deserializer = ^csv
+  )
+}
+
+-- chain() wires fixture.data into test_filter;
+-- parallel() allows multiple independent test pipelines to run from the same fixture
+combined = chain(fixture, parallel(test_filter))
+build_pipeline(combined)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>The <code>check_filter</code> node serializes its result as JSON: a named Dict where each key is the name of an assertion and each value is <code>true</code> on success or an <code>Error</code> on failure. This makes test results inspectable and diffable, not just pass/fail.</p>
+</section>
+<section id="summary-of-testing-levels" class="level3" data-number="6.4.6">
+<h3 data-number="6.4.6" class="anchored" data-anchor-id="summary-of-testing-levels"><span class="header-section-number">6.4.6</span> Summary of Testing Levels</h3>
+<p>In a well-tested T project, you will have tests at three levels:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 16%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Level</th>
+<th style="text-align: left;">Where</th>
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">What it catches</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Function</td>
+<td style="text-align: left;"><code>tests/testthat/</code> or <code>tests/test_*.py</code></td>
+<td style="text-align: left;"><code>{testthat}</code>, <code>pytest</code></td>
+<td style="text-align: left;">Bugs in the R/Python helper functions used inside nodes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Node output</td>
+<td style="text-align: left;"><code>tests/test-*.t</code></td>
+<td style="text-align: left;"><code>t test</code> + <code>expect_*</code></td>
+<td style="text-align: left;">Wrong data shapes, unexpected NAs, bad column names after a build</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pipeline structure</td>
+<td style="text-align: left;"><code>tests/test-*.t</code></td>
+<td style="text-align: left;"><code>t test</code> + <code>expect_pipeline/nodes/dependency</code></td>
+<td style="text-align: left;">Broken DAG structure, wrong runtimes, serializer mismatches</td>
+</tr>
+</tbody>
+</table>
+<p>These three layers complement each other. Function tests are fast and cheap to write. Node output tests catch integration bugs that only appear when R and Python code runs inside a Nix sandbox. Pipeline structure tests catch architectural regressions when the pipeline definition is refactored.</p>
+</section>
+</section>
+<section id="summary" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.5</span> Summary</h2>
+<p>In this chapter, we covered the safety protocols of professional data science with T:</p>
 <ol type="1">
-<li>Unit tests prove your code works and protect you from regressions.</li>
-<li>Git workflows (Trunk-Based Development, Rebasing) keep your collaboration clean and history linear.</li>
-<li>Code review (via Interactive Staging) is your primary defence against AI-generated bugs.</li>
+<li><strong>Unit tests</strong> (R’s <code>{testthat}</code>, Python’s <code>pytest</code>) prove that the helper functions living inside your nodes work correctly in isolation.</li>
+<li><strong>Git workflows</strong> (Trunk-Based Development, rebasing, interactive staging) keep collaboration clean and protect you from AI-generated regressions.</li>
+<li><strong>Testcraft</strong> (<code>t test</code>, <code>expect_*</code>) tests T pipelines at two levels: node outputs (does the data look right after a build?) and pipeline structure (does the DAG have the right shape, runtimes, and serializers?).</li>
 </ol>
 
 
@@ -1212,8 +1453,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./05-fp.html" class="pagination-link" aria-label="Functional Programming">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Functional Programming</span></span>
+      <a href="./05-fp.html" class="pagination-link" aria-label="Pipelines as Function Composition">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
