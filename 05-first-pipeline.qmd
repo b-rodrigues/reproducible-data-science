@@ -1,0 +1,507 @@
+# Your First T Pipeline
+
+## Introduction
+
+In the previous chapter we set up a T project: we bootstrapped T, declared
+dependencies in `tproject.toml`, and entered the project's `nix develop` shell.
+Now it is time to actually build something.
+
+This chapter is deliberately hands-on. We will write a pipeline, build it, break
+it, inspect it, fix it, and extend it. Theory comes later—Chapter 6 explains
+*why* pipelines work the way they do. Here the goal is to get your hands on the
+machinery and get comfortable with the core development loop.
+
+## How a T Pipeline Executes
+
+Before writing code, it helps to understand the five stages every T pipeline goes
+through from declaration to result:
+
+1. **Declare.** You define nodes inside a `pipeline { ... }` block. Each node
+   gets a name, a command, a runtime, and a serializer.
+2. **Analyze.** T scans the DAG: it resolves which node depends on which,
+   detects cycles, and extracts identifier references from foreign-code blocks
+   for dependency tracking.
+3. **Emit.** T generates one Nix derivation per node. Each derivation bundles
+   the right runtime (R, Python, Julia, Quarto, or shell), the packages from
+   `tproject.toml`, and the serializer/deserializer glue code.
+4. **Build.** Nix executes each derivation in a hermetic sandbox. Upstream
+   artifacts are already materialized in the Nix store, so the deserializer
+   reads them in and the serializer writes the node's output—no shared memory,
+   no runtime coupling.
+5. **Read back.** After `build_pipeline(p)` completes, use `read_node(p.name)`
+   to load any node's artifact back into T for inspection.
+
+> **Key insight**: A pipeline is a *declarative build graph*, not a script.
+> Nodes describe *what* to produce, not *when* to compute. T handles the
+> ordering, caching, and reproducibility — the same pipeline produces the same
+> results on any machine.
+
+## The Simplest Possible Pipeline
+
+Open `src/pipeline.t` and write:
+
+```t
+p = pipeline {
+  x = 10
+  y = 20
+  total = x + y
+}
+
+build_pipeline(p)
+```
+
+Run it:
+
+```bash
+t run src/pipeline.t
+```
+
+T resolves the dependency graph (` total` depends on `x` and `y`), builds each
+node, and caches the results. Access any node's value with dot notation in the
+REPL:
+
+```t
+t> p.x      -- 10
+t> p.y      -- 20
+t> p.total  -- 30
+```
+
+The pipeline itself prints as:
+
+```
+Pipeline(3 nodes: [x, y, total])
+```
+
+Note that the order of node declarations does **not** matter. T infers the
+execution order from the data dependencies. You could write `total` before `x`
+and `y` and the result would be identical.
+
+## The Core Development Loop
+
+A productive way to build pipelines is incrementally — start small, build,
+inspect, extend:
+
+```bash
+t check src/pipeline.t   # validate cheaply, catches errors in milliseconds
+t run src/pipeline.t     # build when clean
+```
+
+Inside the REPL (`t` or `t repl`) you can inspect results immediately after a
+build:
+
+```t
+t> read_node(p.total)    -- reads the serialized artifact back from the Nix store
+t> show_plot(p)          -- visualise the DAG
+```
+
+Add a node and rebuild:
+
+```t
+p = pipeline {
+  x     = 10
+  y     = 20
+  total = x + y
+  label = str_sprintf("Sum is %d", total)
+}
+build_pipeline(p)
+```
+
+Because `x`, `y`, and `total` were already built and cached, Nix skips them and
+only computes the new `label` node. Run `build_pipeline(p, dry_run = true)` to
+preview which nodes will be rebuilt versus served from cache before committing to
+a full build.
+
+This **check → build → inspect → extend** loop is the core iterative development
+cycle in T. Get comfortable with it before moving on.
+
+## Node Types: Calling R, Python, and Julia
+
+The power of T is that nodes can run in any runtime. The node wrapper functions
+make this explicit:
+
+| Function | Runtime | Use case |
+|----------|---------|----------|
+| `node()` | T native | Data manipulation, logic, native T operations |
+| `rn()` | R | Statistical modelling, tidyverse, Bioconductor |
+| `pyn()` | Python | Machine learning, scikit-learn, PyTorch |
+| `jln()` | Julia | High-performance numerics, Flux.jl |
+| `shn()` | Shell | File processing, calling external CLIs |
+
+Foreign-language code lives inside `<{ ... }>` raw code blocks, which pass code
+verbatim to the target runtime without T parsing it:
+
+```t
+p = pipeline {
+  -- Load data in T
+  data = read_csv("data/mtcars.csv", separator = "|")
+
+  -- Summarise in R using dplyr
+  summary_r = rn(
+    command   = <{ data |> dplyr::group_by(cyl) |> dplyr::summarize(avg_mpg = mean(mpg)) }>,
+    deserializer = ^ipc,
+    serializer   = ^ipc
+  )
+
+  -- Count groups in Python using pandas
+  counts_py = pyn(
+    command   = <{ summary_r.groupby("cyl").size() }>,
+    deserializer = ^ipc,
+    serializer   = ^json
+  )
+}
+
+build_pipeline(p)
+```
+
+T reads the R node's output (`summary_r`, serialized as `^ipc` Arrow IPC) and
+makes it available inside the Python node's sandbox under the same name.
+Serialization and deserialization happen automatically—you never write glue code
+to convert between R data frames and Python DataFrames.
+
+## Serializers
+
+Every node in a T pipeline produces an artifact. The `serializer` argument
+controls the format of that artifact, and the `deserializer` argument controls
+how an upstream artifact is loaded into the current node's sandbox. Both use the
+`^` prefix:
+
+| Serializer | T Type | Best for |
+|:-----------|:-------|:---------|
+| `^csv` | `DataFrame` | Portable tabular data between nodes |
+| `^ipc` | `DataFrame` | Fast Arrow IPC hand-off between pipeline nodes |
+| `^parquet` | `DataFrame` | Durable storage, archival, external analytics |
+| `^json` | `Dict` / `List` | Structured data interchange |
+| `^pmml` | `Model` | R/Python models, native T evaluation |
+| `^onnx` | `Model` | Python ML models, portable evaluation |
+| `^text` | `String` | Plain text and shell output |
+
+**Rule of thumb**: use `^ipc` to pass DataFrames *between nodes while a pipeline
+runs* (fastest, uncompressed), and `^parquet` for anything you *persist, ship,
+or store* (4–10× smaller, compatible with DuckDB, Spark, pandas, etc.). Both
+work symmetrically across T, R, Python, and Julia.
+
+When no serializer is specified, T picks a sensible default. When you are
+passing a DataFrame from an R node to a Python node, set
+`serializer = ^ipc` on the R node and `deserializer = ^ipc` on the Python node.
+
+## A Complete Worked Example
+
+Let's build a small but complete polyglot pipeline: load data in T, fit a
+logistic regression in R, and read the results back.
+
+First, make sure `tproject.toml` has the R packages we need:
+
+```toml
+[r-dependencies]
+packages = ["dplyr"]
+```
+
+Then run `t update && exit && nix develop` to sync the environment.
+
+Now write the pipeline:
+
+```t
+-- src/pipeline.t
+import stats
+import dataframe
+
+p = pipeline {
+  -- Node 1: load data in T
+  data = node(
+    command    = to_dataframe([
+      x = [1.0, 2.0, 3.0, 4.0, 5.0],
+      y = [0L,  0L,  1L,  1L,  1L]
+    ]),
+    serializer = ^ipc
+  )
+
+  -- Node 2: fit a logistic regression in R
+  model = rn(
+    command = <{
+      data$y <- as.factor(data$y)
+      glm(y ~ x, data = data, family = binomial(link = "logit"))
+    }>,
+    deserializer = ^ipc,
+    serializer   = ^pmml
+  )
+}
+
+build_pipeline(p, verbose = 1)
+
+-- Read results back into T and inspect
+raw   = read_node(p.data)
+fitted = read_node(p.model)
+
+print("Data shape:")
+print(str_sprintf("%d rows × %d cols", nrow(raw), length(colnames(raw))))
+
+print("Model coefficients:")
+print(fitted.coefficients)
+```
+
+Run it:
+
+```bash
+t run src/pipeline.t
+```
+
+You should see the build log, then the data shape and model coefficients printed.
+Try changing the data values and re-running—only the affected nodes rebuild.
+
+## Inspecting the Pipeline
+
+After a build, several tools let you look inside the pipeline from the REPL:
+
+```t
+-- See the full DAG as a table
+pipeline_to_frame(p)
+
+-- See which node depends on which
+pipeline_deps(p)
+
+-- Visualise the dependency graph
+show_plot(p)
+
+-- Deep-dive into a specific node's metadata
+inspect_node(p.model)
+-- Returns: runtime, serializer, path in Nix store, dependencies, warnings
+
+-- Read the raw Nix build log for a node
+read_log("model")
+```
+
+`explain()` gives a quick summary of any node:
+
+```t
+explain(p.model)
+-- {
+--   `kind`: "computed_node",
+--   `name`: "model",
+--   `runtime`: "R",
+--   `path`: "/nix/store/...-model/artifact",
+--   `serializer`: "pmml",
+--   `class`: "glm",
+--   `dependencies`: ["data"]
+-- }
+```
+
+The `path` field is the escape hatch: the absolute path to the node's output in
+the Nix store. You can pass this to any external tool, or use the companion
+helper packages for R or Python to read T artifacts outside of T.
+
+## Comparing Builds with `t diff`
+
+After a build you can compare it against any previous build to see exactly what
+changed:
+
+```bash
+t diff src/pipeline.t
+```
+
+This compares the most recent build against the one before it:
+
+```
+Name          Status    Class_a  Class_b
+data          Unchanged T        T
+model         Changed   T        T
+```
+
+The `Status` column tells you the blast radius of your last edit. `Changed` means
+the node's content-addressed hash is different — the artifact actually changed,
+not just the code. `Added` means a new node. `Removed` means a node was deleted
+from the pipeline definition.
+
+This is more reliable than diffing source code: T diffs *outputs*, not inputs.
+If you refactored a node's code but the result is bit-for-bit identical (e.g.
+you renamed an internal variable), `t diff` shows `Unchanged`. If a small change
+cascaded through several downstream nodes, you see the full chain marked
+`Changed`.
+
+## What `t check` Catches
+
+Before building, `t check` validates the pipeline structure without triggering
+any Nix builds. Validation runs in three tiers, each more expensive than the
+last:
+
+| Tier | Flag | What it checks | Cost |
+|:-----|:-----|:---------------|:-----|
+| 1 | `t check` | Parse, DAG structure, node references, serializer coherence | milliseconds |
+| 2 | `t check --schema` | Column names and types propagated across nodes | milliseconds |
+| 3 | `t check --env` | Nix environment can be built for each node | seconds |
+
+Start with tier 1 and only escalate when you want deeper validation. Tier 2 is
+particularly valuable: it catches column-name typos in downstream nodes *before*
+you pay for a full Nix build:
+
+```bash
+t check --schema src/pipeline.t
+```
+
+Pass `--json` at any tier for structured output that agents and CI scripts can
+consume:
+
+```bash
+t check --json src/pipeline.t
+```
+
+```json
+{
+  "error_class": "schema_mismatch",
+  "node": { "id": "model", "lang": "R" },
+  "message": "Column 'xval' not found. Did you mean 'x'?",
+  "caused_by": ["data"],
+  "suggested_fix": { "kind": "rename_column", "old_name": "xval", "new_name": "x" }
+}
+```
+
+Notice the `suggested_fix` field: when T can infer the correct action, it says
+so explicitly. `t fix` applies these mechanical fixes automatically:
+
+```bash
+t fix --dry-run src/pipeline.t   # preview what would change
+t fix src/pipeline.t             # apply
+```
+
+Always preview before applying: a rename fix changes column references throughout
+the file. The `--dry-run` output shows exactly which lines are affected.
+
+For continuous validation while actively editing, run `t check` in watch mode in
+a separate terminal:
+
+```bash
+t check --watch --schema src/pipeline.t
+```
+
+It re-runs automatically on every file save. Exit codes are consistent and
+scriptable:
+
+| Exit code | Meaning |
+|:----------|:--------|
+| `0` | Clean — no errors |
+| `1` | Structural / DAG problem |
+| `2` | Column / type mismatch |
+| `3` | Nix environment problem |
+
+Make it a habit: **`t check` first, `t run` only when clean.**
+
+
+## Pointing Nodes at External Scripts
+
+You do not have to inline all your code in `<{ ... }>` blocks. The `script`
+argument lets a node point to an external file:
+
+```t
+p = pipeline {
+  data  = node(command = read_csv("data/sales.csv"), serializer = ^ipc)
+  model = rn(script = "src/train.R", deserializer = ^ipc, serializer = ^pmml)
+  report = node(script = "src/report.qmd", runtime = Quarto)
+}
+build_pipeline(p)
+```
+
+The runtime is inferred from the file extension (`.R` → R, `.py` → Python,
+`.jl` → Julia, `.sh` → Shell, `.qmd` → Quarto). T reads the file to extract
+identifier references, so the dependency graph is still built correctly. We will
+return to this in Chapter 6, where we discuss why external script files make your
+analysis code more portable and testable.
+
+## Pairing with an AI Agent
+
+T is designed for AI-assisted development. The `AGENTS.md` and
+`T-LANGUAGE-REFERENCE.md` files that `t init` generates give any LLM the context
+it needs to write correct T pipelines. But the *workflow* matters as much as the
+context.
+
+The core principle: **`t check` is cheap (milliseconds), `t run` is expensive
+(minutes, the first time Nix builds an environment).** An AI agent should iterate
+on `t check` until the pipeline is structurally clean, then trigger `t run` once.
+
+The recommended loop:
+
+```
+1. Agent generates pipeline
+2. Agent runs: t check --json src/pipeline.t
+3. Agent reads diagnostics, fixes errors
+4. Repeat steps 2-3 until exit code 0
+5. Human reviews the pipeline
+6. Agent runs: t run src/pipeline.t
+7. Agent runs: t diff src/pipeline.t  ← confirms what actually changed
+```
+
+When working with an agent, a few things to keep in mind:
+
+**Tell the agent to check before running.** Most agents will do this if you set
+the expectation explicitly: *"Always run `t check --json` and confirm it exits
+with code 0 before running `t run`"*. Without this instruction, agents sometimes
+skip straight to `t run` and waste several minutes on a build that fails
+immediately.
+
+**Ask for `--dry-run` before `t fix`.** When the agent proposes applying a
+`suggested_fix`, ask it to preview first: `t fix --dry-run src/pipeline.t`.
+A rename fix modifies column references throughout the file — mechanical and
+correct, but you should confirm it matches your intent before applying.
+
+**Correct misunderstandings early.** If the agent generates a pipeline that
+misunderstands the goal, fix it before it generates ten more nodes. Regenerating
+two nodes is cheap; regenerating ten is not.
+
+**The diff is your audit trail.** After every `t run`, ask the agent to show you
+`t diff`. If only the nodes you intended to change show `Changed`, everything is
+working as expected. If something you did not touch shows `Changed`, investigate
+before accepting the build.
+
+**Data that needs to be downloaded belongs in `fetchurl`, not in a node.** Build
+sandboxes are hermetic — a Python node cannot call `requests.get()` to pull data
+from the internet. Use `fetchurl(url, sha256 = prefetch(url))` in T to download
+assets before pipeline execution. The agent must understand this constraint;
+mention it when you set up the project.
+
+::: {.callout-tip}
+## Quick reference: agent-facing CLI
+
+| Command | Cost | What it does |
+|:--------|:-----|:-------------|
+| `t check <file>` | ms | Tier 1: structure + DAG |
+| `t check --schema <file>` | ms | + tier 2: column/type propagation |
+| `t check --env <file>` | seconds | + tier 3: Nix env validation |
+| `t check --watch --schema <file>` | ms/save | Continuous validation on file save |
+| `t check --json <file>` | same | Structured JSON output |
+| `t fix --dry-run <file>` | ms | Preview mechanical fixes |
+| `t fix <file>` | ms | Apply mechanical fixes |
+| `t run <file>` | minutes | Execute pipeline (Nix build) |
+| `t run --json <file>` | minutes | Streaming NDJSON events |
+| `t diff <file>` | ms | Compare last two builds |
+:::
+
+
+
+## Summary
+
+The core workflow you will use throughout the rest of this book:
+
+1. **`t check --schema src/pipeline.t`** — validate cheaply, tier 1 + 2, in milliseconds
+2. **`t fix --dry-run` / `t fix`** — apply mechanical fixes suggested by `t check`
+3. **`t run src/pipeline.t`** — build when clean; Nix caches unchanged nodes
+4. **`t diff src/pipeline.t`** — confirm what actually changed after a build
+5. **`read_node(p.name)`** in the REPL — inspect any node's output
+6. **Extend one node at a time** — rebuild only what changed
+
+Key things to remember:
+
+- Node declaration order does not matter; T infers execution order from data
+  dependencies
+- `rn()`, `pyn()`, `jln()`, `shn()` run code in their respective runtimes;
+  `node()` runs native T
+- `<{ ... }>` passes code verbatim to the target runtime without T parsing it
+- Serializers (`^ipc`, `^parquet`, `^pmml`, …) control what the node produces
+  and what downstream nodes receive
+- Use `^ipc` for fast in-pipeline hand-offs; use `^parquet` for durable storage
+- Never call `install.packages()` or `pip install` inside a node — declare
+  everything in `tproject.toml`
+- Data downloads go in `fetchurl()`, not inside node commands — build sandboxes
+  are hermetic and have no network access
+- When pairing with an AI agent: check first, run second, diff always
+
+In the next chapter, we step back and ask *why* pipelines are designed this way,
+connecting T's node model to the ideas of functional programming: pure functions,
+composition, and immutability.

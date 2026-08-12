@@ -24,15 +24,16 @@ book:
     - 02-nix.qmd
     - 03-setup.qmd
     - 04-t.qmd
-    - 05-fp.qmd
-    - 06-testing.qmd
-    - 07-rixpress-basics.qmd
-    - 08-rixpress-advanced.qmd
-    - 09-monads.qmd
-    - 10-docker.qmd
-    - 11-packaging.qmd
-    - 12-ci.qmd
-    - 13-conclusion.qmd
+    - 05-first-pipeline.qmd
+    - 06-fp.qmd
+    - 07-testing.qmd
+    - 08-rixpress-basics.qmd
+    - 09-rixpress-advanced.qmd
+    - 10-monads.qmd
+    - 11-docker.qmd
+    - 12-packaging.qmd
+    - 13-ci.qmd
+    - 14-conclusion.qmd
     - references.qmd
 
   page-navigation: true
