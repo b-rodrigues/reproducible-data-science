@@ -1,922 +1,401 @@
-# Functional Programming
+# Pipelines as Function Composition
 
-In this chapter, we will see why functional programming is crucial for
-reproducible, testable, and collaborative data science. We will compare how to
-write self-contained, "pure" functions in both R and Python, and how to use
-functional concepts like `map`, `filter`, and `reduce` to replace error-prone
-loops. Finally, we will discuss how writing functions makes your code easier to
-review, debug, and even generate with LLMs.
+## Introduction
 
-## Introduction: From Scripts to Functions
+In the previous chapter, we set up a T project and wrote our first pipeline.
+You have seen the syntax: a `pipeline { }` block, nodes defined with `node()`,
+`rn()`, `pyn()`, and so on, a call to `build_pipeline()`, and then
+`read_node()` to inspect results. Now we take a step back and ask: *why* is T
+designed this way? Why mandatory pipelines? Why the restriction that each node
+produces exactly one artifact? Why does the order of node declarations not
+matter?
 
-In the previous chapter, we learned how to create reproducible development
-environments with `{rix}`. We can now ensure everyone has the *exact same
-tools* (R, Python, system libraries) to run our code.
+The answer lies in a body of ideas called **functional programming**. You do not
+need to become a functional programming theorist to use T effectively. But
+understanding the core concepts—purity, composition, immutability—will make you
+a more effective user of T, a better author of the R and Python code that lives
+inside your nodes, and a better collaborator with AI agents. This chapter is
+short by design: it makes one argument, carefully.
 
-We could have stopped there: after all, we have now reproducible environments,
-as many as we need for each of our projects. But having the right tools is only
-half the battle. Now we turn to **writing reproducible code itself**. A common
-way to start a data analysis is by writing a script: a sequence of commands
-executed from top to bottom.
+## The Problem with State
 
-```{r}
-#| eval: false
-# R script example
-library(dplyr)
-data(mtcars)
-heavy_cars <- filter(mtcars, wt > 4)
-mean_mpg_heavy <- mean(heavy_cars$mpg)
-print(mean_mpg_heavy)
+Consider a typical data analysis script:
+
+```r
+# Step 1
+data <- read.csv("sales.csv")
+
+# Step 2
+data <- data[data$revenue > 0, ]
+
+# Step 3
+data$margin <- (data$revenue - data$cost) / data$revenue
+
+# Step 4
+model <- lm(margin ~ region, data = data)
 ```
 
-```{python}
-#| eval: false
-# Python script example
-import pandas as pd
-mtcars = pd.read_csv("mtcars.csv")
-heavy_cars = mtcars[mtcars['wt'] > 4]
-mean_mpg_heavy = heavy_cars['mpg'].mean()
-print(mean_mpg_heavy)
-```
+This script works. But it has a hidden, dangerous property: **state**. Each
+step depends on the variable `data` existing in the global environment at
+exactly the right moment, with exactly the right content. The script can only
+be understood by reading it from top to bottom, in order, in its entirety.
+Rename a variable, reorder two steps, or run a subset of the code, and things
+break—often silently, producing wrong numbers rather than errors.
 
-This works, but it has a hidden, dangerous property: **state**. The script
-relies on an implicit execution order and on variables like `heavy_cars`
-existing in the global environment at the right moment. This makes the code
-surprisingly fragile: rename a variable, reorder a few lines, or run a subset of
-the script, and things silently break, or worse, silently produce wrong answers.
+Now imagine this at scale: dozens of scripts, each hundreds of lines long,
+maintained by multiple people over months. Variables are overwritten, reused,
+and passed around in an unspoken contract of "run these files in *this* order."
+Debugging becomes archaeology. Testing is nearly impossible because there is no
+clear boundary between inputs and outputs. And the entire thing is
+irreproducible by construction: you cannot re-execute step 4 without re-running
+steps 1 through 3 first, and you cannot re-run step 3 without step 2 having
+already modified `data`.
 
-Of course, this is a four-line toy example. Now imagine the reality of
-production data science: dozens of scripts, each hundreds of lines long,
-maintained by multiple people over months or years. Variables are reused,
-overwritten, and passed around in an unspoken contract of "run these files in
-*this* order." Debugging becomes archaeology: you must reconstruct not just what
-the code says, but what the global environment *was* when it ran. Testing is
-nearly impossible, because there is no clear boundary between inputs and
-outputs. And onboarding a new team member? They inherit a minefield.
+This is the root problem that functional programming addresses.
 
-The root problem is **implicit dependencies**. When code depends on global
-state, the dependencies are invisible. A function call like
-`mean(heavy_cars$mpg)` *looks* self-contained, but it secretly relies on a
-hidden precondition: that `heavy_cars` exists, has the expected columns, and was
-computed correctly upstream. If any step in that chain fails silently, the error
-propagates, and may only surface as a mysterious wrong number in a final report,
-weeks later.
+## Pure Functions: The Mathematical Ideal
 
-### The Notebook Problem
+In mathematics, a function has a beautiful property: for a given input, it
+always returns the same output. The function $f(x) = x^2$ does not depend on
+what you calculated before. It does not modify anything outside itself. It takes
+an input and returns a value, every time, guaranteed.
 
-If scripting with state is a crack in the foundation of reproducibility, then
-using computational notebooks is a gaping hole. I will not make many friends in
-the Python community with the following paragraphs, but that's because only
-truth hurts.
+A **pure function** in programming is the same idea:
 
-Notebooks like Jupyter introduce an even more insidious form of state: the cell
-execution order. You can execute cells out of order, meaning the visual layout
-of your code has no relation to how it actually ran. This is a recipe for
-non-reproducible results and a primary cause of the "it worked yesterday, why is
-it broken today?" problem.
+1. It depends *only* on its explicit inputs. No global variables, no shared
+   state, no hidden preconditions.
+2. It produces *only* its return value. No side effects: no modifying variables
+   outside its scope, no writing files as a byproduct, no changing the world in
+   ways the caller cannot see.
 
-In a famous talk from JupyterCon 2018, Joel Grus (a research engineer at the
-Allen Institute for AI) played the contrarian at a conference dedicated to the
-very tool he was criticising.^[[I don't like
-notebooks](https://www.youtube.com/watch?v=7jiPeIFXb6U)] His central thesis is
-that data science code should follow software engineering best practices, and
-Jupyter notebooks actively discourage those practices.
+Compare these two R functions:
 
-His biggest complaint is **hidden state and out-of-order execution**. The state
-of the variables depends on the *execution history*, not the order of the code
-on the screen. You can delete a cell that defined a variable, but that variable
-still exists in memory. This leads to unreproducible results where the code
-works right now (because of hidden state in memory) but will fail if you restart
-the kernel and run top-to-bottom. Worse, it confuses beginners who do not
-understand why their code works one minute and breaks the next.
+```r
+# Impure: secretly depends on a global variable
+threshold <- 0
 
-Notebooks also **discourage modular code**. Because it is difficult to import
-code from one notebook into another, users tend to write massive, monolithic
-scripts, copy and paste the same code blocks into multiple notebooks, and avoid
-creating functions or modules that can be tested and reused.
-
-Then there is the **"works on my machine" problem**. Notebooks often lack clear
-dependency specifications, users hardcode file paths that only exist on their
-specific computer, and reusing someone else's work usually involves manually
-copying and pasting cells, which is error-prone.
-
-Grus also argues that notebooks have **poor tooling compared to IDEs**. Actual
-text editors provide linting (identifying stylistic errors or unused variables),
-type checking, superior autocomplete, and the ability to run unit tests. All of
-these are difficult or impossible in notebooks.
-
-Finally, **version control is a nightmare**. Notebooks are JSON files. If two
-people edit a notebook and try to merge their changes in Git, the diffs are
-unreadable blocks of JSON metadata, and merge conflicts are incredibly difficult
-to resolve. This encourages workflows where people email files back and forth
-rather than using proper version control.
-
-What does Grus suggest instead? Write code in modules (`.py` or `.R` files)
-using a proper editor, write unit tests to ensure the code works, and use
-notebooks *only* for the final step: importing those modules to visualise the
-data or present the results. Ideally, the notebook should contain very little
-logic and mostly just function calls.
-
-This is exactly the approach we will take in this book.
-
-### The Functional Solution
-
-The solution is to embrace a paradigm that minimises state: **Functional
-Programming (FP)**. Instead of a linear script, we structure our code as a
-collection of self-contained, predictable functions.
-
-The power of FP comes from the concept of **purity**, borrowed from mathematics.
-A mathematical function has a beautiful property: for a given input, it always
-returns the same output. `sqrt(4)` is always `2`. Its result doesn't depend on
-what you calculated before or on a random internet connection.
-
-Our Nix environments handle the "right library" problem; purity handles the
-"right logic" problem. Our goal is to write our analysis code with this same
-level of rock-solid predictability.
-
-### FP vs OOP: Transformations vs Actors
-
-To appreciate what FP brings, it helps to contrast it with **Object-Oriented
-Programming (OOP)**, arguably the dominant paradigm in many software systems.
-
-OOP organises computation around *who does what*: a network of objects
-communicating with each other and managing their own internal state. You send a
-message to an object, asking it to perform an action, without needing to know
-how it works internally.
-
-Functional programming, by contrast, organises computation around *how data
-changes*. It replaces a network of interacting objects with a flow of
-transformations: data goes in, data comes out, and nothing else changes in the
-process.
-
-This shift is especially powerful in data science:
-
-- Analyses are naturally expressed as **pipelines of transformations**
-  (cleaning, filtering, aggregating, modelling)
-- Pure functions make results **reproducible**: same inputs always yield same
-  outputs
-- **Immutability** prevents accidental side effects on shared data
-- Because transformations can be composed, tested, and reused independently, FP
-  encourages **modular, maintainable** analysis code
-
-There is also a structural reason why FP fits data science better than OOP. OOP
-excels when you have *many different types of objects*, each with a *small set
-of methods*. A graphical user interface, for example, has buttons, menus,
-windows, and dialogs, each responding to a few actions like `click()` or
-`resize()`. But data science is the opposite: we typically work with *a small
-number of data structures* (data frames, arrays, models) and apply *a large
-number of operations* to them (filtering, grouping, joining, summarising,
-plotting). FP handles this case naturally: adding a new function is trivial,
-while OOP would require modifying every class.
-
-### Why Does This Matter for Data Science?
-
-Adopting a functional style brings massive benefits:
-
-1. **Unit Testing is Now Possible:** You can't easily test a 200-line script.
-   But you *can* easily test a small function that does one thing.
-
-2. **Code Review is Easier:** A Pull Request that just adds or modifies a single
-   function is simple for your collaborators to understand and approve.
-
-3. **Working with LLMs is More Effective:** It's incredibly effective to ask,
-   "Write a Python function that takes a pandas DataFrame and a column name, and
-   returns the mean of that column, handling missing values. Also, write three
-   `pytest` unit tests for it."
-
-4. **Readability:** Well-named functions are self-documenting:
-
-   ```{r}
-   #| eval: false
-   starwars %>%
-     group_by(species) %>%
-     summarize(mean_height = mean(height))
-   ```
-
-   is instantly understandable. The equivalent `for` loop is a puzzle.
-
-## Purity and Side Effects
-
-A **pure function** has two rules:
-
-1. It only depends on its inputs. It doesn't use any "global" variables defined
-   outside the function.
-2. It doesn't change anything outside of its own scope. It doesn't modify a
-   global variable or write a file to disk. This is called having "no side
-   effects."
-
-Consider this "impure" function in Python:
-
-```{python}
-# IMPURE: Relies on a global variable
-discount_rate = 0.10
-
-def calculate_discounted_price(price):
-    return price * (1 - discount_rate)  # What if discount_rate changes?
-
-print(calculate_discounted_price(100))
-
-discount_rate = 0.20  # Someone changes the state
-print(calculate_discounted_price(100))
-```
-
-The pure version passes *all* its dependencies as arguments:
-
-```{python}
-# PURE: All inputs are explicit arguments
-def calculate_discounted_price_pure(price, rate):
-    return price * (1 - rate)
-
-print(calculate_discounted_price_pure(100, 0.10))
-
-print(calculate_discounted_price_pure(100, 0.20))
-```
-
-Now the function is predictable and self-contained.
-
-### Handling "Impure" Operations like Randomness
-
-Some operations, like generating random numbers, are inherently impure. Each
-time you run `rnorm(10)` or `numpy.random.rand(10)`, you get a different result.
-
-The functional approach is not to avoid this, but to *control* it by making the
-source of impurity (the random seed) an explicit input.
-
-In R, the `{withr}` package helps create a temporary, controlled context:
-
-```{r}
-library(withr)
-
-# This function is now pure! For a given seed, the output is always the same.
-pure_rnorm <- function(n, seed) {
-  with_seed(seed, {
-    rnorm(n)
-  })
+filter_positive <- function(data) {
+  data[data$value > threshold, ]  # What is threshold? Who set it? When?
 }
 
-pure_rnorm(n = 5, seed = 123)
-pure_rnorm(n = 5, seed = 123)  # Same result!
-```
-
-In Python, `numpy` provides an object-oriented way to handle this:
-
-```{python}
-import numpy as np
-
-# Create a random number generator instance with a seed
-rng = np.random.default_rng(seed=123)
-print(rng.standard_normal(5))
-
-# If we re-create the same generator, we get the same numbers
-rng2 = np.random.default_rng(seed=123)
-print(rng2.standard_normal(5))
-```
-
-The key is the same: the "state" (the seed) is explicitly managed, not hidden
-globally.
-
-### The OOP Caveat in Python
-
-This introduces a concept from OOP: the `rng` variable is an *object* that
-bundles together data (its internal seed state) and methods
-(`.standard_normal()`). This is **encapsulation**.
-
-This is a double-edged sword for reproducibility. The `rng` object is now a
-stateful entity. If we called `rng.standard_normal(5)` a second time, it would
-produce different numbers because its internal state was mutated.
-
-Core Python libraries like `pandas`, `scikit-learn`, and `matplotlib` are
-fundamentally object-oriented. Our guiding principle must be:
-
-> **Use functions for the flow and logic of your analysis, and treat objects
-> from libraries as values that are passed between these functions.**
-
-Avoid building your own complex classes with hidden state for your data
-pipeline. A pipeline composed of functions (`df2 = clean_data(df1); df3 =
-analyze_data(df2)`) is almost always more transparent than an OOP one
-(`pipeline.load(); pipeline.clean(); pipeline.analyze()`, where `pipeline`
-is an object that keeps mutating after each call of one of its methods).
-
-## Functions: A Refresher and Beyond
-
-You likely already know how to write functions in R and Python. This section
-serves as a quick refresher, but also introduces some concepts you may not have
-encountered: **higher-order functions**, **closures**, and **decorators**.
-
-### The Basics
-
-In R, functions are first-class citizens. You assign them to variables and pass
-them around like any other value:
-
-```{r}
-calculate_ci <- function(x, level = 0.95) {
-  se <- sd(x, na.rm = TRUE) / sqrt(length(x))
-  mean_val <- mean(x, na.rm = TRUE)
-  alpha <- 1 - level
-  lower <- mean_val - qnorm(1 - alpha/2) * se
-  upper <- mean_val + qnorm(1 - alpha/2) * se
-  c(mean = mean_val, lower = lower, upper = upper)
+# Pure: all inputs are explicit
+filter_above <- function(data, threshold) {
+  data[data$value > threshold, ]  # Everything this function needs is right here
 }
 ```
 
-In Python, the `def` keyword defines functions. Type hints are recommended:
+The pure version is predictable. You can read it in isolation, test it in
+isolation, and reason about it without understanding any surrounding context.
+For a given `data` and `threshold`, it will always return the same result.
 
-```{python}
-import statistics
-import scipy.stats as stats
+## T Nodes *Are* Pure Functions
 
-def calculate_ci(x: list[float], level: float = 0.95) -> dict:
-    """Calculate confidence interval for a list of numbers."""
-    n = len(x)
-    mean_val = statistics.mean(x)
-    se = statistics.stdev(x) / (n ** 0.5)
-    alpha = 1 - level
-    z = stats.norm.ppf(1 - alpha / 2)
-    return {"mean": mean_val, "lower": mean_val - z * se, "upper": mean_val + z * se}
-```
+This is not a metaphor. A T pipeline node is, by design, a pure function.
 
-::: {.callout-note}
-## Imports and Language Design
+- It takes its inputs explicitly: upstream node outputs are passed into the
+  node's sandbox as named values. There is no global environment to accidentally
+  read from.
+- It returns exactly one thing: the artifact written to the Nix store by its
+  `serializer`. There is no way for a node to modify another node's output as a
+  side effect.
+- Given the same inputs, it produces the same output—always. This is guaranteed
+  by Nix's hermetic sandbox. The node has no access to the outside world beyond
+  what is explicitly declared.
 
-Notice that the Python version requires importing `statistics` and `scipy.stats`
-for basic statistical operations. This is a consequence of Python being a
-general-purpose language: statistical functions are not built in, so we must
-import libraries that provide them.
+Look at a concrete example:
 
-R, by contrast, is a language designed for statistics. Functions like `mean()`,
-`sd()`, and `qnorm()` are available out of the box. When you do need a function
-from an external package, R offers the `::` notation (e.g., `dplyr::filter(df, x
-> 0)`) to call a single function without loading the entire package into your
-namespace.
+```t
+p = pipeline {
+  -- Node 1: produce data. Inputs: none. Output: a DataFrame (serialized as ^ipc).
+  data_node = node(
+    command = <{
+      data.frame(
+        x = c(1.0, 2.0, 3.0, 4.0, 5.0),
+        y = c(0.0, 0.0, 1.0, 1.0, 1.0)
+      )
+    }>,
+    runtime = R,
+    serializer = ^ipc
+  )
 
-But this raises a question: if you have many functions spread across multiple
-files, how do you manage which imports or `library()` calls each file needs?
-This is exactly what Joel Grus advocates: write your code in proper modules
-(`.py` or `.R` files), not notebooks, and structure them as **packages**. When
-you do, each module declares its own dependencies, and the package manager
-ensures everything is available. We will explore packaging in detail later in
-this book.
-:::
-
-### Higher-Order Functions
-
-A **higher-order function** is a function that takes another function as an
-argument, returns a function, or both. This is the foundation of functional
-programming.
-
-You have already seen examples: `map()`, `filter()`, and `reduce()` are all
-higher-order functions because they take a function as their first argument.
-
-Here is a simple example in R:
-
-```{r}
-apply_twice <- function(f, x) {
- f(f(x))
+  -- Node 2: produce a model. Inputs: data_node (^ipc). Output: a model (^pmml).
+  model_node = node(
+    command = <{
+      data_node$y <- as.factor(data_node$y)
+      glm(y ~ x, data = data_node, family = binomial(link = "logit"))
+    }>,
+    runtime = R,
+    serializer = ^pmml,
+    deserializer = ^ipc
+  )
 }
 
-apply_twice(sqrt, 16)  # sqrt(sqrt(16)) = sqrt(4) = 2
+build_pipeline(p)
 ```
 
-And in Python:
+`data_node` takes no inputs and returns one DataFrame. `model_node` takes one
+DataFrame (`data_node`, via `^ipc`) and returns one model (`^pmml`). Neither
+can reach outside its sandbox. Neither modifies anything shared. Each is a
+pure function. And because they are pure, T can cache them: if `data_node`'s
+inputs have not changed, T does not rebuild it. Content-addressed outputs make
+this exact.
 
-```{python}
-def apply_twice(f, x):
-    return f(f(x))
+This also explains something that often surprises new T users: the order of
+node declarations inside a `pipeline { }` block does not matter. T infers
+the execution order from the *data dependencies* between nodes, not from the
+order you wrote them. This is only possible because nodes are pure: if a node
+had side effects, order would matter. Because it does not, T is free to
+determine the correct order itself, in the same way a compiler can reorder
+pure expressions.
 
-apply_twice(lambda x: x ** 2, 2)  # (2^2)^2 = 16
+## A Pipeline Is Function Composition
+
+When you write a pipeline in T, you are describing a **composition** of pure
+functions. You are saying: apply `data_node`, take its output, apply
+`model_node` to it. The pipeline *is* the composition graph.
+
+This idea will be familiar if you have used pipes in R or Python:
+
+```r
+mtcars |>
+  filter(am == 1) |>
+  select(mpg)
 ```
 
-### Closures: Functions That Remember
+Each step takes the output of the previous step as its only input. The whole
+expression is a composition of three pure-ish functions (ignoring that they
+implicitly read column names). T makes this structure *explicit*, *named*, and
+*cached at the node level*.
 
-A **closure** is a function that "remembers" variables from its enclosing scope,
-even after that scope has finished executing. This is useful for creating
-specialised functions. These are sometimes called *function factories*.
+Here is another example which does exactly this:
 
-In R:
+```t
+p = pipeline {
+  -- Load: no inputs, output is a DataFrame
+  mtcars = read_csv("data/mtcars.csv", separator = "|")
 
-```{r}
-make_power <- function(n) {
-  function(x) x^n
+  -- Filter: one input (mtcars), one output (filtered DataFrame)
+  filtered_mtcars = mtcars |> filter($am == 1)
+
+  -- Select: one input (filtered_mtcars), one output (single-column DataFrame)
+  mtcars_mpg = filtered_mtcars |> select($mpg)
 }
 
-square <- make_power(2)
-cube <- make_power(3)
-
-square(4)  # 16
-cube(4)    # 64
+build_pipeline(p)
 ```
 
-In Python:
+Three nodes (because this is using pure T code, there is no need to use the
+`node()` constructor), three pure functions, composed in sequence. T resolves
+the dependency graph (`mtcars_mpg` depends on `filtered_mtcars`, which depends
+on `mtcars`), builds them in the correct order, and caches each result. If you
+change only the `filter` predicate, only `filtered_mtcars` and `mtcars_mpg` are
+rebuilt—`mtcars` is unchanged, so T does not touch it.
 
-```{python}
-def make_power(n):
-    def power(x):
-        return x ** n
-    return power
+## Polyglot Composition: Passing Values Across Languages
 
-square = make_power(2)
-cube = make_power(3)
+One of the most important consequences of treating nodes as pure functions with
+explicit inputs and outputs is that the *runtime inside the node becomes an
+implementation detail*. The serializer/deserializer pair is the function's type
+signature: it says what the node accepts and what it returns. T uses this to
+move data between R, Python, Julia, and T nodes without any manual glue code:
 
-square(4)  # 16
-cube(4)    # 64
-```
-
-The inner function "closes over" the variable `n`, preserving its value.
-
-### Decorators (Python)
-
-Python has a special syntax for a common use of higher-order functions:
-**decorators**. A decorator wraps a function to extend its behaviour without
-modifying its code.
-
-```{python}
-import time
-
-def timer(func):
-    """A decorator that prints how long a function takes to run."""
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        result = func(*args, **kwargs)
-        end = time.time()
-        print(f"{func.__name__} took {end - start:.4f} seconds")
-        return result
-    return wrapper
-
-@timer
-def slow_sum(n):
-    return sum(range(n))
-
-slow_sum(1_000_000)
-```
-
-The `@timer` syntax is equivalent to `slow_sum = timer(slow_sum)`. Decorators
-are widely used in Python frameworks (Flask, FastAPI, pytest) for logging,
-authentication, and caching.
-
-If you find decorators elegant, you will appreciate the chapter on **monads**
-later in this book. Monads take the idea of wrapping and chaining functions
-further, providing a principled way to handle errors, missing values, and side
-effects in a purely functional style.
-
-R does not have built-in decorator syntax, but you can achieve the same effect
-with higher-order functions:
-
-```{r}
-timer <- function(f) {
-  function(...) {
-    start <- Sys.time()
-    result <- f(...)
-    end <- Sys.time()
-    message(sprintf("Elapsed: %.4f seconds", end - start))
-    result
-  }
-}
-
-slow_sum <- timer(function(n) sum(seq_len(n)))
-slow_sum(1e6)
-```
-
-### Tidy Evaluation in R
-
-For data analysis, you will often want functions that work with column names.
-The `{dplyr}` package uses "tidy evaluation" with the `{{ }}` (curly-curly)
-syntax:
-
-```{r}
-library(dplyr)
-
-summarise_variable <- function(data, var) {
-  data %>%
-    summarise(
-      n = n(),
-      mean = mean({{ var }}, na.rm = TRUE),
-      sd = sd({{ var }}, na.rm = TRUE)
+```t
+-- Node 1: R produces a DataFrame, serialized as Arrow IPC
+df_r = node(
+  command = <{
+    data.frame(
+      id    = 1:5,
+      val   = c(1.1, 2.2, 3.3, 4.4, 5.5),
+      label = c("A", "B", "C", "D", "E")
     )
-}
-
-starwars %>%
-  group_by(species) %>%
-  summarise_variable(height)
-```
-
-The `{{ var }}` tells `dplyr` to treat `var` as a column name rather than a
-literal variable.
-
-Python has no equivalent to tidy evaluation. In pandas, column names must always
-be passed as strings:
-
-```{python}
-#| eval: false
-def summarise_variable(df, var):
-    return df[[var]].agg(['count', 'mean', 'std'])
-
-summarise_variable(starwars_py, 'height')
-```
-
-This works, but there are trade-offs. With tidy evaluation, you write unquoted
-column names, which means your editor can provide autocomplete suggestions if it
-knows the data frame's structure. With strings, you are on your own. More
-importantly, writing programmatic functions that accept column names as
-arguments is more cumbersome: you end up passing strings around and using
-methods like `.loc[]` or `.agg()` with string keys, rather than the natural
-"column as variable" style that `{dplyr}` enables.
-
-### Anonymous Functions and Lambdas
-
-Sometimes you need a quick, throwaway function that does not deserve a name.
-Both R and Python support **anonymous functions**.
-
-In Python, the `lambda` keyword creates a small function in a single expression:
-
-```{python}
-squares = list(map(lambda x: x ** 2, [1, 2, 3, 4]))
-squares
-```
-
-In R, the base syntax is verbose, but `{purrr}` introduced the **formula
-shorthand** using `~` and `.x`:
-
-```{r}
-library(purrr)
-
-# Full anonymous function
-map_dbl(1:4, function(x) x^2)
-
-# Formula shorthand (purrr style)
-map_dbl(1:4, ~ .x^2)
-```
-
-R 4.1 also introduced a shorter base syntax with `\(x)`:
-
-```{r}
-# Base R shorthand (R >= 4.1)
-sapply(1:4, \(x) x^2)
-```
-
-Use anonymous functions when the logic is simple and a full function definition
-would be overkill.
-
-### Partial Application
-
-**Partial application** means fixing some arguments of a function to create a
-more specialised version. This is closely related to function factories but
-works with existing functions rather than defining new ones.
-
-In R, use `purrr::partial()`:
-
-```{r}
-library(purrr)
-
-# Create a function that always rounds to 2 decimal places
-round2 <- partial(round, digits = 2)
-
-round2(3.14159)  # 3.14
-round2(2.71828)  # 2.72
-```
-
-In Python, use `functools.partial()`:
-
-```{python}
-from functools import partial
-
-# Create a function that always rounds to 2 decimal places
-round2 = partial(round, ndigits=2)
-
-round2(3.14159)  # 3.14
-round2(2.71828)  # 2.72
-```
-
-Partial application is useful for creating callbacks, simplifying repetitive
-code, and making functions fit the signature expected by `map()` or similar.
-
-### Immutability: Data That Does Not Change
-
-A core principle of functional programming is **immutability**: once data is
-created, it is never modified in place. Instead, transformations produce *new*
-copies of the data.
-
-R has **copy-on-modify** semantics. When you "modify" a data frame, R actually
-creates a new copy:
-
-```{r}
-df <- data.frame(x = 1:3)
-df2 <- df
-df2$x[1] <- 99
-df$x[1]  # Still 1, df was not mutated
-```
-
-Python, by contrast, has **mutable defaults**, which can surprise newcomers:
-
-```{python}
-import pandas as pd
-
-df = pd.DataFrame({"x": [1, 2, 3]})
-df2 = df  # This is a reference, not a copy!
-df2.loc[0, "x"] = 99
-df.loc[0, "x"]  # Now 99, df was mutated!
-
-# To avoid this, explicitly copy:
-df2 = df.copy()
-```
-
-Immutability prevents entire classes of bugs where one part of your code
-unexpectedly modifies data used elsewhere. When using Python, be explicit about
-copying when you need independent data.
-
-## The Functional Toolkit: Map, Filter, and Reduce
-
-Most `for` loops can be replaced by one of three core functional concepts:
-**mapping**, **filtering**, or **reducing**. These are "higher-order functions":
-functions that take other functions as arguments.
-
-### 1. Mapping: Applying a Function to Each Element
-
-**The pattern:** You have a list of things, and you want to perform the same
-action on each element, producing a new list of the same length.
-
-#### In R with `purrr::map()`
-
-The `{purrr}` package is the gold standard for functional programming in R:
-
-- `map()`: Always returns a list
-- `map_dbl()`: Returns a vector of doubles (numeric)
-- `map_chr()`: Returns a vector of characters (strings)
-- `map_lgl()`: Returns a vector of logicals (booleans)
-
-```{r}
-library(purrr)
-
-# The classic for-loop way (verbose)
-means_loop <- vector("double", ncol(mtcars))
-for (i in seq_along(mtcars)) {
-  means_loop[[i]] <- mean(mtcars[[i]], na.rm = TRUE)
-}
-
-# The functional way with map_dbl()
-means_functional <- map_dbl(mtcars, mean, na.rm = TRUE)
-```
-
-The `map()` version is not just shorter; it's safer. You can't make an
-off-by-one error.
-
-#### In Python with List Comprehensions
-
-Python's most idiomatic tool for mapping is the **list comprehension**:
-
-```{python}
-numbers = [1, 2, 3, 4, 5]
-squares = [n**2 for n in numbers]
-# > [1, 4, 9, 16, 25]
-```
-
-Python also has a built-in `map()` function:
-
-```{python}
-def to_upper_case(s: str) -> str:
-    return s.upper()
-
-words = ["hello", "world"]
-upper_words = list(map(to_upper_case, words))
-# > ['HELLO', 'WORLD']
-```
-
-### 2. Filtering: Keeping Elements That Match a Condition
-
-**The pattern:** You have a list of things, and you want to keep only the
-elements that satisfy a certain condition (don't confuse this with filtering
-rows of a data frame).
-
-#### In R with `purrr::keep()`
-
-```{r}
-df1 <- data.frame(x = 1:50)
-df2 <- data.frame(x = 1:200)
-df3 <- data.frame(x = 1:75)
-list_of_dfs <- list(a = df1, b = df2, c = df3)
-
-# Keep only data frames with more than 100 rows
-large_dfs <- keep(list_of_dfs, ~ nrow(.x) > 100)
-```
-
-#### In Python with List Comprehensions
-
-List comprehensions have a built-in `if` clause:
-
-```{python}
-numbers = [1, 10, 5, 20, 15, 30]
-large_numbers = [n for n in numbers if n > 10]
-# > [20, 15, 30]
-```
-
-### 3. Reducing: Combining All Elements into a Single Value
-
-**The pattern:** You have a list of things, and you want to iteratively combine
-them into a single summary value.
-
-#### In R with `purrr::reduce()`
-
-```{r}
-# Sum all elements
-total_sum <- reduce(c(1, 2, 3, 4, 5), `+`)
-
-# Find common columns across multiple data frames
-list_of_colnames <- map(list_of_dfs, names)
-common_cols <- reduce(list_of_colnames, intersect)
-```
-
-#### In Python with `functools.reduce`
-
-```{python}
-from functools import reduce
-import operator
-
-numbers = [1, 2, 3, 4, 5]
-total_sum = reduce(operator.add, numbers)
-# > 15
-```
-
-## The Power of Composition
-
-The final, beautiful consequence of a functional style is **composition**. You
-can chain functions together to build complex workflows from simple, reusable
-parts.
-
-This R code is a sequence of function compositions:
-
-```{r}
-#| eval: false
-starwars %>%
-  filter(!is.na(mass)) %>%
-  select(species, sex, mass) %>%
-  group_by(sex, species) %>%
-  summarise(mean_mass = mean(mass), .groups = "drop")
-```
-
-*Method chaining* provides something similar to function composition:
-
-```{python}
-#| eval: false
-(starwars_py
- .dropna(subset=['mass'])
- .filter(items=['species', 'sex', 'mass'])
- .groupby(['sex', 'species'])
- ['mass'].mean()
- .reset_index()
+  }>,
+  runtime = R,
+  serializer = ^ipc
 )
+
+-- Node 2: Python receives the same DataFrame, doubles val, returns it
+df_py = node(
+  command = <{
+    res = df_r.copy()
+    res['val'] = res['val'] * 2
+    df_py = res
+  }>,
+  runtime = Python,
+  deserializer = ^ipc,
+  serializer = ^ipc
+)
+
+p = pipeline { df_r = df_r; df_py = df_py }
+build_pipeline(p)
 ```
 
-Each step is a function that takes a data frame and returns a new, transformed
-data frame. By combining `map`, `filter`, and `reduce` with this compositional
-style, you can express complex data manipulation pipelines without writing a
-single `for` loop.
+`df_r` is a pure function: it takes nothing, returns a DataFrame. `df_py` is a
+pure function: it takes one DataFrame (`^ipc`), returns a modified DataFrame
+(`^ipc`). The fact that one runs in R and the other in Python is invisible to
+the composition. Purity is what makes this safe: because neither node has side
+effects, T can route the output of one into the input of the other through the
+Nix store without any risk of interference.
 
-### Composition in Python
+## Errors as Values, Not Exceptions
 
-Method chaining in pandas is elegant but limited to the methods defined for
-`DataFrame` objects. R's pipe operators (`|>` and `%>%`) are more flexible
-because functions are not strictly owned by objects, and they can be more easily
-combined.
+One more consequence of the pure function model is worth understanding before
+we move to testing.
 
-This reflects the languages' different philosophies:
+In a stateful script, errors are typically thrown as exceptions that interrupt
+the normal flow of execution, which is a side effect in itself. A pure function
+cannot throw an exception and still be pure: throwing is a side effect that
+transfers control to some unknown handler elsewhere.
 
-- **R**'s lineage traces back to Scheme (a Lisp dialect), making functional
-  composition natural
-- **Python** was designed as an imperative, object-oriented language. In fact,
-  Guido van Rossum, Python's creator, once proposed removing `map()`, `filter()`,
-  and `reduce()` from the language entirely.^[[The fate of reduce() in Python
-  3000](https://www.artima.com/weblogs/viewpost.jsp?thread=98196)] The community
-  pushed back, but functional programming remains a second-class citizen in
-  Python's design.
+T handles this by making **errors first-class values**. If a node produces an
+error—because a file is missing, a computation fails, or you explicitly call
+`error()`—the error is *the node's output*, not an interruption of the pipeline.
+Downstream nodes can inspect it, recover from it, or propagate it, using the
+maybe-pipe `?|>`:
 
-R is fundamentally a functional language that acquired OOP features, while
-Python is an OOP language with functional capabilities that got almost entirely
-removed from the language. I think that this the reason "Python feels weird" to
-R programmers and vice-versa.
+```t
+p = pipeline {
+  -- This node intentionally fails
+  risky_node = node(
+    command = error("DATA_MISSING", "Expected file was not found."),
+    serializer = ^json
+  )
 
-## Handling Errors Functionally
-
-What happens when a function in your pipeline fails? In imperative code, you
-might wrap everything in try/catch blocks. Functional programming offers a
-cleaner approach: functions that *capture* errors rather than throw them.
-
-But first, it is worth noting that **throwing an error is inherently impure**.
-When a function raises an exception, it does not return a value; instead, it
-transfers control flow to some unknown handler elsewhere in the program. This is
-a side effect. A pure function should always return a value, even when something
-goes wrong. The functional solution is to return a value that *represents*
-failure, rather than throwing an exception that breaks the normal flow.
-
-### In R with `purrr::safely()` and `purrr::possibly()`
-
-The `{purrr}` package provides wrappers that turn error-prone functions into
-safe ones:
-
-```{r}
-library(purrr)
-
-# A function that might fail
-risky_log <- function(x) {
-  if (x <= 0) stop("x must be positive")
-  log(x)
+  -- This node recovers: ?|> always forwards, even errors
+  handled_node = node(
+    command = risky_node ?|> \(input) {
+      if (is_error(input)) {
+        "Fallback Data"
+      } else {
+        input
+      }
+    }
+  )
 }
 
-# safely() returns a list with $result and $error
-safe_log <- safely(risky_log)
-safe_log(10)   # list(result = 2.302585, error = NULL)
-safe_log(-1)   # list(result = NULL, error = <error>)
-
-# possibly() returns a default value on error
-maybe_log <- possibly(risky_log, otherwise = NA)
-map_dbl(c(10, -1, 5), maybe_log)  # c(2.30, NA, 1.61)
+build_pipeline(p)
 ```
 
-This lets your pipeline continue even when some elements fail, and you can
-inspect failures afterwards.
+`risky_node` returns an error value. `handled_node` receives it, checks
+`is_error()`, and returns a fallback. The pipeline completes successfully.
+No try/catch scattered through the code, no implicit exception handling—the
+error path is as explicit as the success path.
 
-### In Python with Decorators
+This matters for reproducibility: if part of a pipeline fails, you know exactly
+which node failed, what it returned, and which downstream nodes were affected.
+The error is in the content-addressed store alongside every other output.
 
-We saw decorators earlier as a way to wrap functions with extra behaviour. We
-can use the same pattern to capture errors:
+## What This Means for Your R and Python Code
 
-```{python}
-import math
-from functools import wraps
+The pure function model applies not just to T nodes as a whole, but to the R
+and Python code you write *inside* those nodes.
 
-def maybe(default=None):
-    """A decorator that catches exceptions and returns a default value."""
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception:
-                return default
-        return wrapper
-    return decorator
+A node is only as pure as the code it contains. If your R code inside `<{ ... }>`
+reads from a file path that is hardcoded and only exists on your laptop, or
+depends on a global R environment variable that is not declared as a node input,
+you have introduced a hidden dependency—and the node is no longer reproducible
+in practice, even if T tries its best to make it so.
 
-@maybe(default=None)
-def safe_log(x):
-    if x <= 0:
-        raise ValueError("x must be positive")
-    return math.log(x)
+The practical rule is simple: **inside a node, treat everything from outside the
+node's declared inputs as if it does not exist.** Do not read files unless they
+are passed as explicit inputs (via `fetchurl`, `read_csv`, or another node's
+output). Do not use global R options or environment variables unless they are
+declared in the node's `env` block. Do not install packages at runtime—declare
+them in `tproject.toml`. If you follow these rules, your nodes will be genuinely
+pure, and T's reproducibility guarantees will hold end-to-end.
 
-results = [safe_log(x) for x in [10, -1, 5]]
+## Nodes Can Point to External Scripts
+
+So far, we have written the R and Python code for nodes inline, inside `<{ ... }>`
+blocks. T also lets a node point to an **external script file** using the
+`script` argument:
+
+```t
+p = pipeline {
+  -- runtime auto-detected from .R extension
+  model    = rn(script = "src/train_model.R", serializer = ^pmml)
+
+  -- runtime auto-detected from .py extension
+  preds    = pyn(script = "src/predict.py",   deserializer = ^pmml)
+
+  -- node() auto-detects from any supported extension
+  summary  = node(script = "src/summarise.R", serializer = ^json)
+}
 ```
 
-This is cleaner than scattering try/except blocks throughout your code, and the
-`@maybe` decorator makes the error-handling strategy explicit.
+`script` and `command` are mutually exclusive: you either inline your code or
+point to a file. T reads the file to extract identifier references, so the
+dependency graph is still built correctly. The runtime is inferred from the
+extension (`.R` → R, `.py` → Python, `.jl` → Julia, `.sh` → Shell,
+`.qmd` → Quarto) unless you set it explicitly.
 
-### The Limits of This Approach
+This has an important consequence. When your analysis logic lives in a plain
+`.R` or `.py` file, that file carries **no T-specific syntax**. It is a normal
+script. It can be:
 
-While `safely()` and decorators help, they are still working around the
-fundamental impurity of exceptions. The returned `None` or `NA` values can
-propagate silently, causing confusing errors downstream. For a more principled
-approach, you need **monads**: data structures that explicitly represent success
-or failure and force you to handle both cases. We will explore this in
-**Chapter 9: Robust Pipelines with Monads**, where we introduce `{chronicler}`
-for R and `talvez` for Python.
+- **Sourced directly** in an interactive R or Python session
+- **Picked up by another orchestrator** (a Makefile, a `targets` plan, a
+  Snakemake rule, a CI pipeline)
+- **Run standalone** by a colleague who has never heard of T
+- **Tested** with standard language tools independently of any pipeline
 
-## When NOT to Use Functional Programming
+T becomes the orchestration layer on top of code that is already self-contained
+and portable. This is the right separation of concerns: your domain logic lives
+in plain language files; T handles scheduling, sandboxing, caching, and
+cross-language data routing.
 
-Functional programming is powerful, but it is not always the best choice. Here
-are situations where imperative or object-oriented code may be clearer:
+You can push this further with the `functions` parameter, which sources utility
+files into the node sandbox *before* the main script runs:
 
-1. **Complex stateful algorithms**: Some algorithms (like graph traversals or
-   simulations) naturally require mutable state. Forcing them into a functional
-   style can make the code harder to read.
+```t
+p = pipeline {
+  cleaned = rn(
+    script    = "src/clean.R",
+    functions = ["src/utils.R"],    -- sourced before clean.R runs
+    serializer = ^ipc
+  )
 
-2. **Performance-critical inner loops**: Functional abstractions like `map()`
-   introduce overhead. In tight loops where microseconds matter, a simple `for`
-   loop may be faster.
+  model = rn(
+    script       = "src/model.R",
+    functions    = ["src/utils.R"],  -- same utility file, reused
+    deserializer = ^ipc,
+    serializer   = ^pmml
+  )
+}
+```
 
-The goal is not functional purity for its own sake, but **clarity and
-correctness**. Use functional techniques where they help, and step back to
-simpler approaches when they do not. Thankfully, LLMs here are quite useful
-again, as you can use them if you need to write complex imperative code with
-loops.
+`utils.R` might define `clean_colnames()`, `log_transform()`, or whatever
+helpers your analysis needs. Those functions are written once, tested once, and
+shared across any node that needs them—inside T or outside it.
+
+The principle is the same one that runs through this whole chapter: **write your
+analysis code as if T did not exist.** Pure functions in plain files, with
+explicit inputs and explicit outputs. T wires them together. If T were replaced
+tomorrow by a different orchestrator, your functions would survive unchanged.
 
 ## Summary
 
-This chapter has laid the groundwork for writing reproducible code by embracing
-**Functional Programming**.
+The key ideas in this chapter:
 
-Key takeaways:
+- **Stateful scripts** make reproducibility hard because dependencies are
+  implicit and execution order is load-bearing
+- **Pure functions** — same inputs, same outputs, no side effects — are the
+  antidote: they can be tested, composed, cached, and reasoned about in
+  isolation
+- **Every T node is a pure function**: explicit inputs via deserializers,
+  exactly one output via the serializer, hermetically sandboxed by Nix
+- **A T pipeline is function composition**: the DAG expresses which functions
+  compose into which, and T infers the correct execution order from the data
+  dependencies, not from the declaration order
+- **Errors are values**: T propagates errors through the composition graph
+  without breaking the pipeline, making failure as explicit and inspectable as
+  success
+- **Nodes can point to external scripts**: use `script = "file.R"` instead of
+  inlining code; plain R/Python files are orchestrator-agnostic and can be
+  sourced, tested, or reused outside T entirely
+- **`functions` shares utility code**: source helper files into any node sandbox
+  without coupling them to T's syntax
 
-- **Pure functions** guarantee the same output for the same input, with no
-  hidden dependencies on global state
-- Make impure operations (like randomness) explicit by controlling the seed
-- Replace error-prone `for` loops with **map, filter, and reduce**
-- Use **composition** to build complex pipelines from simple, reusable functions
-- In Python, treat stateful library objects as values passed between pure
-  functions
-
-Understanding the distinction between R's functional heritage and Python's OOP
-nature is key to becoming an effective data scientist in either language. By
-mastering the functional paradigm, you're building a foundation for code that is
-robust, easy to review, simple to debug, and truly reproducible.
-
-But first, in the next chapter, we'll learn how to **test** these pure
-functions—a skill that will make your code far more reliable. Then, in Chapters
-7 and 8, we'll put everything into practice with `{rixpress}`, a package that
-leverages functional composition and Nix to build fully reproducible, polyglot
-analytical pipelines.
+With this model in mind, the next chapter on **testing** becomes natural.
+Testing a pure function is easy: call it with known inputs, assert on the output,
+done. Testing a T pipeline node is the same idea—and T provides the tooling to
+do it systematically.
