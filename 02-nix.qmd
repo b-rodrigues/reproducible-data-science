@@ -4,10 +4,11 @@
 
 Nix is a package manager that can be installed on your computer, regardless of
 the operating system (but requires WSL2 on Windows). If you are familiar with
-the Ubuntu Linux distribution, you have likely used `apt-get` to install software. 
-On macOS, you may have used `homebrew` for similar purposes. Nix functions in a comparable way but has many
-advantages over classic package managers, as it focuses on reproducible builds
-and downloads packages from `nixpkgs`, [currently the largest software
+the Ubuntu Linux distribution, you have likely used `apt-get` to install
+software. On macOS, you may have used `homebrew` for similar purposes. Nix
+functions in a comparable way but has many advantages over classic package
+managers, as it focuses on reproducible builds and downloads packages from
+`nixpkgs`, [currently the largest software
 repository](https://repology.org/repositories/graphs)^[https://repology.org/repositories/graphs].
 
 In this chapter, we will explore the critical need for environment
@@ -31,7 +32,8 @@ things:
 -   Ensure you can install all of this on the hardware you have on hand.
 
 But in practice, one or most of these bullet points are missing from projects.
-Our goal is to learn how to fulfil all the requirements to build reproducible projects.
+Our goal is to learn how to fulfil all the requirements to build reproducible
+projects.
 
 The current consensus for tackling the first three points is often a mixture of
 tools: Docker for system dependencies, `{renv}` or `uv` for package management,
@@ -120,7 +122,9 @@ Here is an example of a *simple* `Nix` expression:
 
 ```nix
 let
-  pkgs = import (fetchTarball "https://github.com/rstats-on-nix/nixpkgs/archive/2025-04-11.tar.gz") {};
+  pkgs = import (
+   fetchTarball "https://github.com/rstats-on-nix/nixpkgs/archive/2025-04-11.tar.gz"
+  ) {};
 in
 pkgs.stdenv.mkDerivation {
   name = "filtered_mtcars";

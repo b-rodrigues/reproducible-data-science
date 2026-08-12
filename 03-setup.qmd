@@ -73,23 +73,33 @@ trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDS
 
 This single command installs Nix and configures everything T needs:
 
-- **`--no-confirm`** runs the installer non-interactively, so you don't have to answer any prompts.
-- **`--extra-conf`** injects configuration directly into your Nix config during installation. The three settings it applies are:
-  - **`trusted-users = root $USER`** — Marks your user as a trusted Nix user. This is required for binary caches and certain Nix operations to work without permission errors.
-  - **`substituters = ...`** — Tells Nix to fetch pre-built packages from the NixOS cache and the `rstats-on-nix` Cachix cache (used by T for R and Python packages), avoiding long builds from source.
-  - **`trusted-public-keys = ...`** — The cryptographic keys Nix uses to verify the authenticity of packages from those caches.
+- **`--no-confirm`** runs the installer non-interactively, so you don't have to
+  answer any prompts.
+- **`--extra-conf`** injects configuration directly into your Nix config during
+  installation. The three settings it applies are:
+- **`trusted-users = root $USER`** — Marks your user as a trusted Nix user.
+  This is required for binary caches and certain Nix operations to work
+  without permission errors.
+- **`substituters = ...`** — Tells Nix to fetch pre-built packages from the
+  NixOS cache and the `rstats-on-nix` Cachix cache (used by T for R and Python
+  packages), avoiding long builds from source.
+- **`trusted-public-keys = ...`** — The cryptographic keys Nix uses to verify
+  the authenticity of packages from those caches.
 
-Because the installer handles all of this in one step, there are no manual post-install configuration steps
-when using the Determinate Systems installer. If you installed Nix through other means, follow along below.
+Because the installer handles all of this in one step, there are no manual
+post-install configuration steps when using the Determinate Systems installer.
+If you installed Nix through other means, follow along below.
 
 ## Already Have Nix?
 
-If you installed Nix through a method other than the Determinate Systems installer (e.g., the [official Nix installer](https://nixos.org/download/), Homebrew, your Linux distribution's package manager, or you're on NixOS), 
-you need to manually configure two more things.
+If you installed Nix through a method other than the Determinate Systems
+installer (e.g., the [official Nix installer](https://nixos.org/download/),
+Homebrew, your Linux distribution's package manager, or you're on NixOS), you
+need to manually configure two more things.
 
 ### Step 1: Add yourself as a trusted user
 
-T uses binary caches that require your user to be in the `trusted-users` list. 
+T uses binary caches that require your user to be in the `trusted-users` list.
 Without this, you'll get "ignoring untrusted substituter" errors.
 
 If you’re on NixOS, add this to your `/etc/nixos/configuration.nix`:
@@ -127,8 +137,9 @@ sudo launchctl kickstart -k system/org.nixos.nix-daemon
 
 ### Step 2: Add the binary cache
 
-T relies on pre-built R and Python packages from the `rstats-on-nix` Cachix cache. 
-Without this cache, `nix develop` will try to build everything from source, which can take a very long time.
+T relies on pre-built R and Python packages from the `rstats-on-nix` Cachix
+cache. Without this cache, `nix develop` will try to build everything from
+source, which can take a very long time.
 
 On NixOS, add this to your `/etc/nixos/configuration.nix`:
 
