@@ -536,12 +536,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This single command installs Nix and configures everything T needs:</p>
 <ul>
 <li><strong><code>--no-confirm</code></strong> runs the installer non-interactively, so you don’t have to answer any prompts.</li>
-<li><strong><code>--extra-conf</code></strong> injects configuration directly into your Nix config during installation. The three settings it applies are:
-<ul>
+<li><strong><code>--extra-conf</code></strong> injects configuration directly into your Nix config during installation. The three settings it applies are:</li>
 <li><strong><code>trusted-users = root $USER</code></strong> — Marks your user as a trusted Nix user. This is required for binary caches and certain Nix operations to work without permission errors.</li>
 <li><strong><code>substituters = ...</code></strong> — Tells Nix to fetch pre-built packages from the NixOS cache and the <code>rstats-on-nix</code> Cachix cache (used by T for R and Python packages), avoiding long builds from source.</li>
 <li><strong><code>trusted-public-keys = ...</code></strong> — The cryptographic keys Nix uses to verify the authenticity of packages from those caches.</li>
-</ul></li>
 </ul>
 <p>Because the installer handles all of this in one step, there are no manual post-install configuration steps when using the Determinate Systems installer. If you installed Nix through other means, follow along below.</p>
 </section>
