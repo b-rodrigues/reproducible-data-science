@@ -3,7 +3,8 @@
 ## Introduction
 
 Now that we have Nix installed, and our IDE configured we can actually tackle
-the reproducibility puzzle.
+the reproducibility puzzle. This chapter will introduce T, a domain-specific
+language developed to build reproducible analytical pipelines using Python, R or Julia.
 
 ### The Reproducibility Puzzle
 
@@ -156,23 +157,6 @@ make the structure of your computation explicit, build in the ability to inspect
 and query it at every stage, and create feedback loops that you and your AI
 collaborators can iterate on together.
 
-### Component Closures: The Nix Approach
-
-This is where Nix shines. Nix deploys *component closures*: when you install a
-package, Nix also installs all its dependencies, their dependencies, and so on.
-Think of it like packing for a trip—traditional package managers assume you'll
-find essentials at your destination, while Nix packs everything you need.
-
-As the original Nix paper explains:
-
-> The idea is to always deploy component closures: if we deploy a component,
-> then we must also deploy its dependencies, their dependencies, and so on.
-> Since closures are self-contained, they are the units of complete software
-> deployment.
-
-This means when you install `{sf}` through Nix, you automatically get the
-correct versions of GDAL, GEOS, and PROJ—no manual system configuration needed.
-
 ### The Polyglot Challenge
 
 Modern data science is increasingly polyglot. Research shows that data
@@ -193,20 +177,21 @@ However, Nix alone has a steep learning curve. Its functional programming
 language can be daunting for researchers focused on their analysis, not system
 administration.
 
-I know this problem well, because I lived it. My first attempt at solving it
+I know this problem well. My first attempt at solving it
 was `{rix}`: an R package that generates Nix expressions from intuitive R
 function calls. You describe *what* you want, and `{rix}` figures out *how* to
 express it in Nix. I then built `{rixpress}` on top of it, an R package for
 defining reproducible, polyglot analytical pipelines. Both packages solved real
-problems—but they were fundamentally R-focused. `{rix}` needed R to run. The
+problems, but they were fundamentally R-focused. `{rix}` needed R to run, and the
 pipeline syntax of `{rixpress}` was R code. If you worked in Python or Julia
 primarily, you were a second-class citizen.
 
 **T** is what I built next, and it goes far beyond both. T is a
 reproducibility-first domain-specific language (DSL) for polyglot data science.
-It is *not* an R package. It is its own language—with its own runtime, its own
+It is *not* an R package. It is its own language, with its own runtime, its own
 REPL, and its own ecosystem of packages, built from the ground up to treat R,
-Python, Julia, and Shell as equals. Critically, T does not just *orchestrate*
+Python, Julia, and Shell as equals. T is meant to orchestrate R, Python and Julia, 
+but critically, T does not just *orchestrate*
 environments defined elsewhere: it *is* the environment definition system. Every
 T project is a Nix flake, and T manages the entire stack: language runtimes,
 system dependencies, and pipeline execution under one roof.
@@ -216,16 +201,24 @@ T provides a functional, immutable language for constructing composable
 R, Python, Julia, Quarto, and Shell execution within a unified system. Pipelines
 in T are not configuration artifacts but executable program structures with
 explicit dataflow, typed nodes, and content-addressed outputs. And unlike
-`{rix}`, T makes reproducibility impossible to opt out of: every node in a T
+any other language used for data science, where reproducibility is more often
+than not bolted on, T makes reproducibility impossible to opt out of: every node in a T
 pipeline runs in its own hermetic Nix sandbox, and every output is
 content-addressed by design. As far as I know, T is literally the first
 reproducibility by design programming language.
+
+T is also designed to treat pair-programming with LLMs, or even delegating the entire 
+pipeline-writing process to an LLM, as a first-class programming model. 
+To support this, T provides built-in mechanisms for LLMs to introspect and query build artifacts with ease. 
+Each T project also includes a dedicated `AGENTS.md` file that guides the LLM on how to properly write and work with T pipelines.
+Pair programming with LLMs will be studied later though.
 
 The workflow is simple:
 
 1. **Bootstrap** a T project using `t init`
 2. **Declare** your dependencies in `tproject.toml`
-3. **Write** your analysis as a T pipeline in `src/pipeline.t`
+3. **Define** your R, Python or Julia functions to perform the actual analysis
+4. **Write** (or better, yet, have your AI agent write for you) your reproducible pipeline as a T pipeline in `src/pipeline.t`
 4. **Build** and run with `t run`
 
 This chapter covers everything you need to know to create project-specific,
@@ -290,7 +283,7 @@ commands should be run inside this shell.
 ::: {.callout-tip}
 ## Getting LLM assistance with T
 
-T is designed from the ground up for AI-assisted development. When you
+As already mentioned, T is designed from the ground up for AI-assisted development. When you
 initialize a new T project, two files are automatically generated in the
 project root:
 
@@ -360,25 +353,95 @@ exit
 nix develop
 ```
 
-This is the equivalent of editing a `rix()` call and running `nix-build` in a
-`{rix}`-based workflow—but T handles all the Nix expression generation for you.
-
 ### Why NOT to use `install.packages()`
 
 It's crucial to understand: **never call `install.packages()` from within a T
 project**. Here's why:
 
-1. **Declarative environments**: If you install packages imperatively, your
-   `tproject.toml` no longer matches your actual environment.
-2. **Reproducibility**: The whole point of T's Nix integration is that your
+1. Technically, it won’t work. Computations defined in your pipeline will run within hermetic
+  Nix sandboxes, so anything not installed through Nix won’t simply be available.
+2. Conceptually, this goes against reproducibility. The whole point of T's Nix integration is that your
    environment is fully defined by `tproject.toml` and `flake.lock`. Ad-hoc
    installations defeat this.
-3. **Isolation**: Packages installed via `install.packages()` go to your user
-   library and can leak into the Nix-managed environment, breaking isolation.
 
 Instead, add packages to `tproject.toml` and run `t update`. Trying to call
 `install.packages()` (or equivalent commands for Julia and Python) will raise
 an error.
+
+This is not the only way to install packages though. It is possible to use `uv` to install
+packages for your T project, but not in an imperative fashion. First, you need to 
+declare the following in your `tproject.toml`:
+
+```toml
+[py-dependencies]
+resolver = "uv"
+workspace = "python"
+```
+
+The workspace directory must contain the UV project metadata and lock file:
+
+```text
+python/
+  pyproject.toml
+  uv.lock
+```
+
+The `version` field is **optional** when using the UV resolver. If omitted, T infers the Nixpkgs Python attribute (e.g. `python312`) from the `requires-python` field in `python/pyproject.toml`. 
+The inference accepts specifiers that constrain to a single minor version (`==3.12`, `==3.12.*`, `~=3.12`, `>=3.12,<3.13`) and errors on open-ended ranges (`>=3.12`). 
+If an explicit `version` conflicts with `requires-python`, T prints a warning and uses the explicit value.
+
+When `resolver = "uv"`, do not set `[py-dependencies].packages`; Python dependencies are declared only in `pyproject.toml` and locked by `uv.lock`. 
+Running `t update` generates uv2nix/pyproject.nix inputs in `flake.nix` and builds the Python environment as a Nix virtual environment.
+
+If you do **not** have `uv` installed and have **no** existing Python package metadata, follow these steps:
+
+First, edit `tproject.toml` and as before, set the resolver to `uv`:
+
+```toml
+[py-dependencies]
+resolver = "uv"
+workspace = "python"
+```
+
+Then create a minal `pyproject.toml`:
+
+```bash
+mkdir python
+```
+
+```toml
+# python/pyproject.toml
+[project]
+name = "my_project_python_env"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pandas",
+]
+```
+
+Add any PyPI packages to the `dependencies` list. Re-run `uv lock` whenever the list changes. Now you need to generate the lock file. I will assume you don’t have `uv` installed,
+but thanks to the power of Nix, this is not an issue. Just enter a temporary shell:
+
+```bash
+nix shell nixpkgs#uv nixpkgs#python3
+```
+
+Then generate the lock file:
+
+```bash
+uv lock --project python
+```
+
+Type `exit` or press `Ctrl-D` to leave the Nix shell when done. Finally, enter your T project shell again using `nix develop` and run:
+
+```bash
+t update
+```
+
+This reads the UV workspace, adds `pyproject-nix`, `uv2nix`, and `pyproject-build-systems` inputs to `flake.nix`, and configures the Python environment to use `pySet.mkVirtualEnv` instead of `pkgs.python314.withPackages`.
+
+## Which resolver to choose?
 
 ## Summary
 
