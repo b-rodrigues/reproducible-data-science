@@ -472,9 +472,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#reproducibility-is-not-just-about-the-environment" id="toc-reproducibility-is-not-just-about-the-environment" class="nav-link" data-scroll-target="#reproducibility-is-not-just-about-the-environment"><span class="header-section-number">4.1.2</span> Reproducibility Is Not Just About the Environment</a></li>
   <li><a href="#the-mindset-shift-from-tasks-to-rules" id="toc-the-mindset-shift-from-tasks-to-rules" class="nav-link" data-scroll-target="#the-mindset-shift-from-tasks-to-rules"><span class="header-section-number">4.1.3</span> The Mindset Shift: From Tasks to Rules</a></li>
   <li><a href="#thinking-in-systems-in-an-ai-first-world" id="toc-thinking-in-systems-in-an-ai-first-world" class="nav-link" data-scroll-target="#thinking-in-systems-in-an-ai-first-world"><span class="header-section-number">4.1.4</span> Thinking in Systems in an AI-First World</a></li>
-  <li><a href="#component-closures-the-nix-approach" id="toc-component-closures-the-nix-approach" class="nav-link" data-scroll-target="#component-closures-the-nix-approach"><span class="header-section-number">4.1.5</span> Component Closures: The Nix Approach</a></li>
-  <li><a href="#the-polyglot-challenge" id="toc-the-polyglot-challenge" class="nav-link" data-scroll-target="#the-polyglot-challenge"><span class="header-section-number">4.1.6</span> The Polyglot Challenge</a></li>
-  <li><a href="#enter-t" id="toc-enter-t" class="nav-link" data-scroll-target="#enter-t"><span class="header-section-number">4.1.7</span> Enter T</a></li>
+  <li><a href="#the-polyglot-challenge" id="toc-the-polyglot-challenge" class="nav-link" data-scroll-target="#the-polyglot-challenge"><span class="header-section-number">4.1.5</span> The Polyglot Challenge</a></li>
+  <li><a href="#enter-t" id="toc-enter-t" class="nav-link" data-scroll-target="#enter-t"><span class="header-section-number">4.1.6</span> Enter T</a></li>
   </ul></li>
   <li><a href="#transitioning-to-nix-managed-r" id="toc-transitioning-to-nix-managed-r" class="nav-link" data-scroll-target="#transitioning-to-nix-managed-r"><span class="header-section-number">4.2</span> Transitioning to Nix-Managed R</a>
   <ul class="collapse">
@@ -486,7 +485,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#declaring-dependencies-with-tproject.toml" id="toc-declaring-dependencies-with-tproject.toml" class="nav-link" data-scroll-target="#declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.2</span> Declaring Dependencies with <code>tproject.toml</code></a></li>
   <li><a href="#why-not-to-use-install.packages" id="toc-why-not-to-use-install.packages" class="nav-link" data-scroll-target="#why-not-to-use-install.packages"><span class="header-section-number">4.3.3</span> Why NOT to use <code>install.packages()</code></a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.4</span> Summary</a></li>
+  <li><a href="#which-resolver-to-choose" id="toc-which-resolver-to-choose" class="nav-link" data-scroll-target="#which-resolver-to-choose"><span class="header-section-number">4.4</span> Which resolver to choose?</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.5</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/04-t.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -515,7 +515,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
-<p>Now that we have Nix installed, and our IDE configured we can actually tackle the reproducibility puzzle.</p>
+<p>Now that we have Nix installed, and our IDE configured we can actually tackle the reproducibility puzzle. This chapter will introduce T, a domain-specific language developed to build reproducible analytical pipelines using Python, R or Julia.</p>
 <section id="the-reproducibility-puzzle" class="level3" data-number="4.1.1">
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="the-reproducibility-puzzle"><span class="header-section-number">4.1.1</span> The Reproducibility Puzzle</h3>
 <p>Reproducibility in research and data science exists on a continuum. At one end, authors might only describe their methods in prose. Moving along the spectrum, they might share code, then data, and finally what we call a <em>computational environment</em>: the complete set of software required to execute an analysis.</p>
@@ -551,31 +551,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The result: an actual, running Game Boy game, built by someone who cannot write the underlying code. What I contributed was the <em>systems thinking</em>: insisting on reproducibility, insisting on programmable state inspection, insisting on a feedback loop that could be automated. The LLM contributed the implementation. Neither of us could have done it alone.</p>
 <p>This is the approach that this book is trying to teach for data science. The specific tools—T, Nix, R, Python—matter less than the underlying mental model: make the structure of your computation explicit, build in the ability to inspect and query it at every stage, and create feedback loops that you and your AI collaborators can iterate on together.</p>
 </section>
-<section id="component-closures-the-nix-approach" class="level3" data-number="4.1.5">
-<h3 data-number="4.1.5" class="anchored" data-anchor-id="component-closures-the-nix-approach"><span class="header-section-number">4.1.5</span> Component Closures: The Nix Approach</h3>
-<p>This is where Nix shines. Nix deploys <em>component closures</em>: when you install a package, Nix also installs all its dependencies, their dependencies, and so on. Think of it like packing for a trip—traditional package managers assume you’ll find essentials at your destination, while Nix packs everything you need.</p>
-<p>As the original Nix paper explains:</p>
-<blockquote class="blockquote">
-<p>The idea is to always deploy component closures: if we deploy a component, then we must also deploy its dependencies, their dependencies, and so on. Since closures are self-contained, they are the units of complete software deployment.</p>
-</blockquote>
-<p>This means when you install <code>{sf}</code> through Nix, you automatically get the correct versions of GDAL, GEOS, and PROJ—no manual system configuration needed.</p>
-</section>
-<section id="the-polyglot-challenge" class="level3" data-number="4.1.6">
-<h3 data-number="4.1.6" class="anchored" data-anchor-id="the-polyglot-challenge"><span class="header-section-number">4.1.6</span> The Polyglot Challenge</h3>
+<section id="the-polyglot-challenge" class="level3" data-number="4.1.5">
+<h3 data-number="4.1.5" class="anchored" data-anchor-id="the-polyglot-challenge"><span class="header-section-number">4.1.5</span> The Polyglot Challenge</h3>
 <p>Modern data science is increasingly polyglot. Research shows that data scientists use, on average, nearly two programming languages in their work, with R and Python being the most common combination. Python dominates machine learning, R excels at statistical modelling, and Julia offers high-performance numerics. Projects increasingly combine these strengths.</p>
 <p>This creates a reproducibility challenge: a project using R, Python, and Quarto requires coordinating multiple package managers. Nix solves this by providing a unified framework for all languages and system tools. But there is still a missing piece: something to <em>orchestrate</em> all these moving parts within a single, coherent and reproducible workflow.</p>
 </section>
-<section id="enter-t" class="level3" data-number="4.1.7">
-<h3 data-number="4.1.7" class="anchored" data-anchor-id="enter-t"><span class="header-section-number">4.1.7</span> Enter T</h3>
+<section id="enter-t" class="level3" data-number="4.1.6">
+<h3 data-number="4.1.6" class="anchored" data-anchor-id="enter-t"><span class="header-section-number">4.1.6</span> Enter T</h3>
 <p>However, Nix alone has a steep learning curve. Its functional programming language can be daunting for researchers focused on their analysis, not system administration.</p>
-<p>I know this problem well, because I lived it. My first attempt at solving it was <code>{rix}</code>: an R package that generates Nix expressions from intuitive R function calls. You describe <em>what</em> you want, and <code>{rix}</code> figures out <em>how</em> to express it in Nix. I then built <code>{rixpress}</code> on top of it, an R package for defining reproducible, polyglot analytical pipelines. Both packages solved real problems—but they were fundamentally R-focused. <code>{rix}</code> needed R to run. The pipeline syntax of <code>{rixpress}</code> was R code. If you worked in Python or Julia primarily, you were a second-class citizen.</p>
-<p><strong>T</strong> is what I built next, and it goes far beyond both. T is a reproducibility-first domain-specific language (DSL) for polyglot data science. It is <em>not</em> an R package. It is its own language—with its own runtime, its own REPL, and its own ecosystem of packages, built from the ground up to treat R, Python, Julia, and Shell as equals. Critically, T does not just <em>orchestrate</em> environments defined elsewhere: it <em>is</em> the environment definition system. Every T project is a Nix flake, and T manages the entire stack: language runtimes, system dependencies, and pipeline execution under one roof.</p>
-<p>T provides a functional, immutable language for constructing composable <em>micropipelines</em>: first-class, introspectable computation graphs that coordinate R, Python, Julia, Quarto, and Shell execution within a unified system. Pipelines in T are not configuration artifacts but executable program structures with explicit dataflow, typed nodes, and content-addressed outputs. And unlike <code>{rix}</code>, T makes reproducibility impossible to opt out of: every node in a T pipeline runs in its own hermetic Nix sandbox, and every output is content-addressed by design. As far as I know, T is literally the first reproducibility by design programming language.</p>
+<p>I know this problem well. My first attempt at solving it was <code>{rix}</code>: an R package that generates Nix expressions from intuitive R function calls. You describe <em>what</em> you want, and <code>{rix}</code> figures out <em>how</em> to express it in Nix. I then built <code>{rixpress}</code> on top of it, an R package for defining reproducible, polyglot analytical pipelines. Both packages solved real problems, but they were fundamentally R-focused. <code>{rix}</code> needed R to run, and the pipeline syntax of <code>{rixpress}</code> was R code. If you worked in Python or Julia primarily, you were a second-class citizen.</p>
+<p><strong>T</strong> is what I built next, and it goes far beyond both. T is a reproducibility-first domain-specific language (DSL) for polyglot data science. It is <em>not</em> an R package. It is its own language, with its own runtime, its own REPL, and its own ecosystem of packages, built from the ground up to treat R, Python, Julia, and Shell as equals. T is meant to orchestrate R, Python and Julia, but critically, T does not just <em>orchestrate</em> environments defined elsewhere: it <em>is</em> the environment definition system. Every T project is a Nix flake, and T manages the entire stack: language runtimes, system dependencies, and pipeline execution under one roof.</p>
+<p>T provides a functional, immutable language for constructing composable <em>micropipelines</em>: first-class, introspectable computation graphs that coordinate R, Python, Julia, Quarto, and Shell execution within a unified system. Pipelines in T are not configuration artifacts but executable program structures with explicit dataflow, typed nodes, and content-addressed outputs. And unlike any other language used for data science, where reproducibility is more often than not bolted on, T makes reproducibility impossible to opt out of: every node in a T pipeline runs in its own hermetic Nix sandbox, and every output is content-addressed by design. As far as I know, T is literally the first reproducibility by design programming language.</p>
+<p>T is also designed to treat pair-programming with LLMs, or even delegating the entire pipeline-writing process to an LLM, as a first-class programming model. To support this, T provides built-in mechanisms for LLMs to introspect and query build artifacts with ease. Each T project also includes a dedicated <code>AGENTS.md</code> file that guides the LLM on how to properly write and work with T pipelines. Pair programming with LLMs will be studied later though.</p>
 <p>The workflow is simple:</p>
 <ol type="1">
 <li><strong>Bootstrap</strong> a T project using <code>t init</code></li>
 <li><strong>Declare</strong> your dependencies in <code>tproject.toml</code></li>
-<li><strong>Write</strong> your analysis as a T pipeline in <code>src/pipeline.t</code></li>
+<li><strong>Define</strong> your R, Python or Julia functions to perform the actual analysis</li>
+<li><strong>Write</strong> (or better, yet, have your AI agent write for you) your reproducible pipeline as a T pipeline in <code>src/pipeline.t</code></li>
 <li><strong>Build</strong> and run with <code>t run</code></li>
 </ol>
 <p>This chapter covers everything you need to know to create project-specific, reproducible development environments and pipelines for your polyglot data science projects.</p>
@@ -608,7 +601,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>T is designed from the ground up for AI-assisted development. When you initialize a new T project, two files are automatically generated in the project root:</p>
+<p>As already mentioned, T is designed from the ground up for AI-assisted development. When you initialize a new T project, two files are automatically generated in the project root:</p>
 <ul>
 <li><strong><code>AGENTS.md</code></strong>: A project-specific onboarding guide that tells LLMs how to work within your project’s architecture.</li>
 <li><strong><code>T-LANGUAGE-REFERENCE.md</code></strong>: A tiered technical reference for the AI to read, tuned to the context level you chose at <code>t init</code>.</li>
@@ -655,21 +648,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Then re-enter the development shell so the updated package set is active:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This is the equivalent of editing a <code>rix()</code> call and running <code>nix-build</code> in a <code>{rix}</code>-based workflow—but T handles all the Nix expression generation for you.</p>
 </section>
 <section id="why-not-to-use-install.packages" class="level3" data-number="4.3.3">
 <h3 data-number="4.3.3" class="anchored" data-anchor-id="why-not-to-use-install.packages"><span class="header-section-number">4.3.3</span> Why NOT to use <code>install.packages()</code></h3>
 <p>It’s crucial to understand: <strong>never call <code>install.packages()</code> from within a T project</strong>. Here’s why:</p>
 <ol type="1">
-<li><strong>Declarative environments</strong>: If you install packages imperatively, your <code>tproject.toml</code> no longer matches your actual environment.</li>
-<li><strong>Reproducibility</strong>: The whole point of T’s Nix integration is that your environment is fully defined by <code>tproject.toml</code> and <code>flake.lock</code>. Ad-hoc installations defeat this.</li>
-<li><strong>Isolation</strong>: Packages installed via <code>install.packages()</code> go to your user library and can leak into the Nix-managed environment, breaking isolation.</li>
+<li>Technically, it won’t work. Computations defined in your pipeline will run within hermetic Nix sandboxes, so anything not installed through Nix won’t simply be available.</li>
+<li>Conceptually, this goes against reproducibility. The whole point of T’s Nix integration is that your environment is fully defined by <code>tproject.toml</code> and <code>flake.lock</code>. Ad-hoc installations defeat this.</li>
 </ol>
 <p>Instead, add packages to <code>tproject.toml</code> and run <code>t update</code>. Trying to call <code>install.packages()</code> (or equivalent commands for Julia and Python) will raise an error.</p>
+<p>This is not the only way to install packages though. It is possible to use <code>uv</code> to install packages for your T project, but not in an imperative fashion. First, you need to declare the following in your <code>tproject.toml</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[py-dependencies]</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">resolver</span> <span class="op">=</span> <span class="st">"uv"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dt">workspace</span> <span class="op">=</span> <span class="st">"python"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The workspace directory must contain the UV project metadata and lock file:</p>
+<pre class="text"><code>python/
+  pyproject.toml
+  uv.lock</code></pre>
+<p>The <code>version</code> field is <strong>optional</strong> when using the UV resolver. If omitted, T infers the Nixpkgs Python attribute (e.g.&nbsp;<code>python312</code>) from the <code>requires-python</code> field in <code>python/pyproject.toml</code>. The inference accepts specifiers that constrain to a single minor version (<code>==3.12</code>, <code>==3.12.*</code>, <code>~=3.12</code>, <code>&gt;=3.12,&lt;3.13</code>) and errors on open-ended ranges (<code>&gt;=3.12</code>). If an explicit <code>version</code> conflicts with <code>requires-python</code>, T prints a warning and uses the explicit value.</p>
+<p>When <code>resolver = "uv"</code>, do not set <code>[py-dependencies].packages</code>; Python dependencies are declared only in <code>pyproject.toml</code> and locked by <code>uv.lock</code>. Running <code>t update</code> generates uv2nix/pyproject.nix inputs in <code>flake.nix</code> and builds the Python environment as a Nix virtual environment.</p>
+<p>If you do <strong>not</strong> have <code>uv</code> installed and have <strong>no</strong> existing Python package metadata, follow these steps:</p>
+<p>First, edit <code>tproject.toml</code> and as before, set the resolver to <code>uv</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[py-dependencies]</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">resolver</span> <span class="op">=</span> <span class="st">"uv"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="dt">workspace</span> <span class="op">=</span> <span class="st">"python"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then create a minal <code>pyproject.toml</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># python/pyproject.toml</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">[project]</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"my_project_python_env"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="dt">requires-python</span> <span class="op">=</span> <span class="st">"&gt;=3.12,&lt;3.13"</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="dt">dependencies</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pandas"</span><span class="op">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Add any PyPI packages to the <code>dependencies</code> list. Re-run <code>uv lock</code> whenever the list changes. Now you need to generate the lock file. I will assume you don’t have <code>uv</code> installed, but thanks to the power of Nix, this is not an issue. Just enter a temporary shell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell nixpkgs#uv nixpkgs#python3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then generate the lock file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> lock <span class="at">--project</span> python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Type <code>exit</code> or press <code>Ctrl-D</code> to leave the Nix shell when done. Finally, enter your T project shell again using <code>nix develop</code> and run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> update</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This reads the UV workspace, adds <code>pyproject-nix</code>, <code>uv2nix</code>, and <code>pyproject-build-systems</code> inputs to <code>flake.nix</code>, and configures the Python environment to use <code>pySet.mkVirtualEnv</code> instead of <code>pkgs.python314.withPackages</code>.</p>
 </section>
 </section>
-<section id="summary" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.4</span> Summary</h2>
+<section id="which-resolver-to-choose" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="which-resolver-to-choose"><span class="header-section-number">4.4</span> Which resolver to choose?</h2>
+</section>
+<section id="summary" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.5</span> Summary</h2>
 <p>Traditional tools like <code>{renv}</code> or Python’s <code>venv</code> only capture part of the reproducibility puzzle. They track package versions but not the language version itself, nor system-level dependencies like GDAL or Java. This means your project can still break on a different machine, or even on your own machine after a system update.</p>
 <p>Nix solves this by managing <em>everything</em>: R, Python, all packages, and all system dependencies. T builds on top of Nix to solve the <em>orchestration</em> problem: it provides a language for describing <em>how</em> computations in different runtimes interact, and it enforces reproducibility at every step.</p>
 <p>When you define a pipeline with T, you get a complete, self-contained specification that anyone can use to recreate the exact same results, on any machine, at any point in the future.</p>
