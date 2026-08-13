@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>9&nbsp; Advanced Pipeline Patterns – Reproducible Polyglot Data Science</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./10-monads.html" rel="next">
+<link href="./08-pipelines.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script data-goatcounter="https://brodriguesco-raps-with-python.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<noscript>
+    </noscript></head><body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script><img src="https://brodriguesco-raps-with-python.goatcounter.com/count?p=/test-noscript">
+
+
+
+<link rel="stylesheet" href="epub.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-pipelines-advanced.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Reproducible Polyglot Data Science</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/b-rodrigues/reproducible-data-science" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Reproducible-Polyglot-Data-Science.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Reproducible-Polyglot-Data-Science.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-nix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Nix Package Manager</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting Up Your Environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-t.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Reproducible Development Environments and Pipelines with T</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-first-pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-pipelines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building T Pipelines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-pipelines-advanced.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#pipelines-as-data" id="toc-pipelines-as-data" class="nav-link active" data-scroll-target="#pipelines-as-data"><span class="header-section-number">9.1</span> Pipelines as Data</a></li>
+  <li><a href="#querying-the-dag" id="toc-querying-the-dag" class="nav-link" data-scroll-target="#querying-the-dag"><span class="header-section-number">9.2</span> Querying the DAG</a>
+  <ul class="collapse">
+  <li><a href="#pipeline_to_frame" id="toc-pipeline_to_frame" class="nav-link" data-scroll-target="#pipeline_to_frame"><span class="header-section-number">9.2.1</span> <code>pipeline_to_frame</code></a></li>
+  <li><a href="#structural-queries" id="toc-structural-queries" class="nav-link" data-scroll-target="#structural-queries"><span class="header-section-number">9.2.2</span> Structural queries</a></li>
+  <li><a href="#column-projection-with-select_node" id="toc-column-projection-with-select_node" class="nav-link" data-scroll-target="#column-projection-with-select_node"><span class="header-section-number">9.2.3</span> Column projection with <code>select_node</code></a></li>
+  </ul></li>
+  <li><a href="#modifying-nodes-surgically" id="toc-modifying-nodes-surgically" class="nav-link" data-scroll-target="#modifying-nodes-surgically"><span class="header-section-number">9.3</span> Modifying Nodes Surgically</a>
+  <ul class="collapse">
+  <li><a href="#filter_node" id="toc-filter_node" class="nav-link" data-scroll-target="#filter_node"><span class="header-section-number">9.3.1</span> <code>filter_node</code></a></li>
+  <li><a href="#mutate_node" id="toc-mutate_node" class="nav-link" data-scroll-target="#mutate_node"><span class="header-section-number">9.3.2</span> <code>mutate_node</code></a></li>
+  <li><a href="#rename_node" id="toc-rename_node" class="nav-link" data-scroll-target="#rename_node"><span class="header-section-number">9.3.3</span> <code>rename_node</code></a></li>
+  <li><a href="#swap" id="toc-swap" class="nav-link" data-scroll-target="#swap"><span class="header-section-number">9.3.4</span> <code>swap</code></a></li>
+  <li><a href="#rewire" id="toc-rewire" class="nav-link" data-scroll-target="#rewire"><span class="header-section-number">9.3.5</span> <code>rewire</code></a></li>
+  <li><a href="#a-realistic-what-if-workflow" id="toc-a-realistic-what-if-workflow" class="nav-link" data-scroll-target="#a-realistic-what-if-workflow"><span class="header-section-number">9.3.6</span> A realistic “what-if” workflow</a></li>
+  </ul></li>
+  <li><a href="#set-operations" id="toc-set-operations" class="nav-link" data-scroll-target="#set-operations"><span class="header-section-number">9.4</span> Set Operations</a>
+  <ul class="collapse">
+  <li><a href="#union" id="toc-union" class="nav-link" data-scroll-target="#union"><span class="header-section-number">9.4.1</span> <code>union</code></a></li>
+  <li><a href="#difference" id="toc-difference" class="nav-link" data-scroll-target="#difference"><span class="header-section-number">9.4.2</span> <code>difference</code></a></li>
+  <li><a href="#intersect" id="toc-intersect" class="nav-link" data-scroll-target="#intersect"><span class="header-section-number">9.4.3</span> <code>intersect</code></a></li>
+  <li><a href="#patch" id="toc-patch" class="nav-link" data-scroll-target="#patch"><span class="header-section-number">9.4.4</span> <code>patch</code></a></li>
+  <li><a href="#prune" id="toc-prune" class="nav-link" data-scroll-target="#prune"><span class="header-section-number">9.4.5</span> <code>prune</code></a></li>
+  <li><a href="#a-realistic-use-case-shared-etl-swapped-model" id="toc-a-realistic-use-case-shared-etl-swapped-model" class="nav-link" data-scroll-target="#a-realistic-use-case-shared-etl-swapped-model"><span class="header-section-number">9.4.6</span> A realistic use-case: shared ETL, swapped model</a></li>
+  </ul></li>
+  <li><a href="#dag-aware-transformations" id="toc-dag-aware-transformations" class="nav-link" data-scroll-target="#dag-aware-transformations"><span class="header-section-number">9.5</span> DAG-Aware Transformations</a>
+  <ul class="collapse">
+  <li><a href="#upstream_of" id="toc-upstream_of" class="nav-link" data-scroll-target="#upstream_of"><span class="header-section-number">9.5.1</span> <code>upstream_of</code></a></li>
+  <li><a href="#downstream_of" id="toc-downstream_of" class="nav-link" data-scroll-target="#downstream_of"><span class="header-section-number">9.5.2</span> <code>downstream_of</code></a></li>
+  <li><a href="#subgraph" id="toc-subgraph" class="nav-link" data-scroll-target="#subgraph"><span class="header-section-number">9.5.3</span> <code>subgraph</code></a></li>
+  </ul></li>
+  <li><a href="#pipeline-composition" id="toc-pipeline-composition" class="nav-link" data-scroll-target="#pipeline-composition"><span class="header-section-number">9.6</span> Pipeline Composition</a>
+  <ul class="collapse">
+  <li><a href="#chain" id="toc-chain" class="nav-link" data-scroll-target="#chain"><span class="header-section-number">9.6.1</span> <code>chain</code></a></li>
+  <li><a href="#the-t-stub-workaround-for-cross-runtime-chains" id="toc-the-t-stub-workaround-for-cross-runtime-chains" class="nav-link" data-scroll-target="#the-t-stub-workaround-for-cross-runtime-chains"><span class="header-section-number">9.6.2</span> The T-stub workaround for cross-runtime chains</a></li>
+  <li><a href="#parallel" id="toc-parallel" class="nav-link" data-scroll-target="#parallel"><span class="header-section-number">9.6.3</span> <code>parallel</code></a></li>
+  <li><a href="#pipeline_of-meta-pipelines" id="toc-pipeline_of-meta-pipelines" class="nav-link" data-scroll-target="#pipeline_of-meta-pipelines"><span class="header-section-number">9.6.4</span> <code>pipeline_of</code> meta-pipelines</a></li>
+  <li><a href="#pipeline-templates-via-lambdas" id="toc-pipeline-templates-via-lambdas" class="nav-link" data-scroll-target="#pipeline-templates-via-lambdas"><span class="header-section-number">9.6.5</span> Pipeline templates via lambdas</a></li>
+  </ul></li>
+  <li><a href="#dynamic-branching" id="toc-dynamic-branching" class="nav-link" data-scroll-target="#dynamic-branching"><span class="header-section-number">9.7</span> Dynamic Branching</a>
+  <ul class="collapse">
+  <li><a href="#map_pattern" id="toc-map_pattern" class="nav-link" data-scroll-target="#map_pattern"><span class="header-section-number">9.7.1</span> <code>map_pattern</code></a></li>
+  <li><a href="#cross_pattern" id="toc-cross_pattern" class="nav-link" data-scroll-target="#cross_pattern"><span class="header-section-number">9.7.2</span> <code>cross_pattern</code></a></li>
+  <li><a href="#head-tail-sample-and-slice" id="toc-head-tail-sample-and-slice" class="nav-link" data-scroll-target="#head-tail-sample-and-slice"><span class="header-section-number">9.7.3</span> Head, tail, sample, and slice</a></li>
+  </ul></li>
+  <li><a href="#static-conditionals" id="toc-static-conditionals" class="nav-link" data-scroll-target="#static-conditionals"><span class="header-section-number">9.8</span> Static Conditionals</a>
+  <ul class="collapse">
+  <li><a href="#node_when" id="toc-node_when" class="nav-link" data-scroll-target="#node_when"><span class="header-section-number">9.8.1</span> <code>node_when</code></a></li>
+  <li><a href="#node_fork" id="toc-node_fork" class="nav-link" data-scroll-target="#node_fork"><span class="header-section-number">9.8.2</span> <code>node_fork</code></a></li>
+  </ul></li>
+  <li><a href="#custom-flakes-per-node" id="toc-custom-flakes-per-node" class="nav-link" data-scroll-target="#custom-flakes-per-node"><span class="header-section-number">9.9</span> Custom Flakes Per Node</a></li>
+  <li><a href="#validation" id="toc-validation" class="nav-link" data-scroll-target="#validation"><span class="header-section-number">9.10</span> Validation</a>
+  <ul class="collapse">
+  <li><a href="#pipeline_validate" id="toc-pipeline_validate" class="nav-link" data-scroll-target="#pipeline_validate"><span class="header-section-number">9.10.1</span> <code>pipeline_validate</code></a></li>
+  <li><a href="#pipeline_assert" id="toc-pipeline_assert" class="nav-link" data-scroll-target="#pipeline_assert"><span class="header-section-number">9.10.2</span> <code>pipeline_assert</code></a></li>
+  </ul></li>
+  <li><a href="#handling-ambiguous-dependencies" id="toc-handling-ambiguous-dependencies" class="nav-link" data-scroll-target="#handling-ambiguous-dependencies"><span class="header-section-number">9.11</span> Handling Ambiguous Dependencies</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">9.12</span> Summary</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/09-pipelines-advanced.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>By this point you can declare a T pipeline, build it, inspect its outputs, and wire it into a CI job. That covers the majority of day-to-day work. This chapter goes further: it treats pipelines themselves as data.</p>
+<p>In most pipeline tools—<code>targets</code>, Snakemake, Airflow—the pipeline <em>definition</em> is code that runs once, produces a build graph, and is then discarded. The graph is an internal implementation detail you cannot touch. T takes a different view. A pipeline value is a first-class object you can query, filter, transform, and compose using the same functional idioms you apply to any other value. This opens up meta-programming patterns that simply are not possible in other tools: running only a subgraph, swapping one node’s implementation for another, generating dozens of branches from a list, or assembling a production pipeline from tested sub-components.</p>
+<p>We cover these patterns in order of complexity, starting with the simplest read-only queries and working up to dynamic branching and composable meta-pipelines. All examples build on the project layout introduced in <a href="./08-pipelines.html">Chapter 8</a>.</p>
+<section id="pipelines-as-data" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="pipelines-as-data"><span class="header-section-number">9.1</span> Pipelines as Data</h2>
+<p>The pipeline value you construct inside a <code>pipeline { ... }</code> block is an ordinary T record. It carries the DAG structure, the node metadata, and enough information for T’s build engine to emit Nix derivations. Because it is a record, all the standard higher-order functions—<code>filter</code>, <code>map</code>, <code>fold</code>, <code>select</code>—work on it just as they do on any other collection.</p>
+<p>This has a practical consequence: you write <em>pipeline transformations</em> in the same language as the pipeline itself, without shelling out to a separate tool or reading a build-graph dump. The chapter illustrates this with a running example: a shared ETL pipeline wired to two alternative model pipelines, one linear, one a random forest. We will build it up gradually.</p>
+<pre class="t"><code>etl = pipeline {
+  raw        = r { read.csv("data/sales.csv") }
+  validated  = r { validate_schema(raw) }
+  cleaned    = r { clean_missing(validated) }
+  features   = r { engineer_features(cleaned) }
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Keep this pipeline in mind; we will manipulate it throughout the chapter.</p>
+</section>
+<section id="querying-the-dag" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="querying-the-dag"><span class="header-section-number">9.2</span> Querying the DAG</h2>
+<section id="pipeline_to_frame" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="pipeline_to_frame"><span class="header-section-number">9.2.1</span> <code>pipeline_to_frame</code></h3>
+<p><code>pipeline_to_frame(p)</code> converts a pipeline into a data frame whose rows are nodes. The columns are:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 10%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Type</th>
+<th>What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>name</code></td>
+<td>string</td>
+<td>Node name</td>
+</tr>
+<tr class="even">
+<td><code>runtime</code></td>
+<td>string</td>
+<td><code>"r"</code>, <code>"python"</code>, <code>"julia"</code>, <code>"shell"</code>, <code>"quarto"</code></td>
+</tr>
+<tr class="odd">
+<td><code>serializer</code></td>
+<td>string</td>
+<td>Encoder used when writing the node’s output</td>
+</tr>
+<tr class="even">
+<td><code>deserializer</code></td>
+<td>string</td>
+<td>Decoder used when reading upstream artifacts</td>
+</tr>
+<tr class="odd">
+<td><code>noop</code></td>
+<td>bool</td>
+<td>If <code>true</code>, the node is skipped at build time</td>
+</tr>
+<tr class="even">
+<td><code>deps</code></td>
+<td>list</td>
+<td>Immediate dependency names</td>
+</tr>
+<tr class="odd">
+<td><code>depth</code></td>
+<td>int</td>
+<td>Distance from any root node</td>
+</tr>
+<tr class="even">
+<td><code>command_type</code></td>
+<td>string</td>
+<td><code>"expr"</code>, <code>"file"</code>, or <code>"shell"</code></td>
+</tr>
+</tbody>
+</table>
+<p>You do not need to memorise those columns; the point is that they are queryable with ordinary data-frame operations.</p>
+<pre class="t"><code>df = pipeline_to_frame(etl)
+print(df)</code></pre>
+<pre class="text t-output"><code>Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-12cb5fe3271be372/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<pre><code>name        runtime  serializer   noop  depth
+raw         r        rds          false  0
+validated   r        rds          false  1
+cleaned     r        rds          false  2
+features    r        rds          false  3</code></pre>
+<p>From here, any standard filter or select applies directly. To find every Python node:</p>
+<pre class="t"><code>py_nodes = filter(df, runtime == "python")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-cf428789fbffe389/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<p>To find every node at depth 2 or deeper—useful when you want to know which steps are non-trivial downstream work:</p>
+<pre class="t"><code>deep_nodes = filter(df, depth &gt;= 2)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-4e3a777855ba6126/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+</section>
+<section id="structural-queries" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="structural-queries"><span class="header-section-number">9.2.2</span> Structural queries</h3>
+<p>Four functions give you structural information without materialising a full frame:</p>
+<ul>
+<li><code>pipeline_roots(p)</code> — nodes with no dependencies (the entry points)</li>
+<li><code>pipeline_leaves(p)</code> — nodes on which nothing else depends (the outputs)</li>
+<li><code>pipeline_edges(p)</code> — every <code>(from, to)</code> dependency pair as a frame</li>
+<li><code>pipeline_depth(p)</code> — a named record mapping each node name to its depth</li>
+</ul>
+<pre class="t"><code>roots  = pipeline_roots(etl)   -- ["raw"]
+leaves = pipeline_leaves(etl)  -- ["features"]
+edges  = pipeline_edges(etl)
+
+-- edges:
+-- from         to
+-- raw          validated
+-- validated    cleaned
+-- cleaned      features</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-a6a6738f3fd37204/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+</section>
+<section id="column-projection-with-select_node" class="level3" data-number="9.2.3">
+<h3 data-number="9.2.3" class="anchored" data-anchor-id="column-projection-with-select_node"><span class="header-section-number">9.2.3</span> Column projection with <code>select_node</code></h3>
+<p><code>select_node</code> lets you project specific fields using non-standard evaluation (the <code>$field</code> syntax). It returns a frame restricted to the named columns, which is handy when you want to pass a compact summary to a report or a CI log:</p>
+<pre class="t"><code>summary = select_node(etl, $name, $runtime, $depth)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-66e19bdf0a016aa0/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>select_node</code> is a read-only view; it does not modify the pipeline. For modifications, see <code>mutate_node</code> below.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="modifying-nodes-surgically" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="modifying-nodes-surgically"><span class="header-section-number">9.3</span> Modifying Nodes Surgically</h2>
+<p>Queries tell you what is in a pipeline. The mutating functions let you change it—always producing a <em>new</em> pipeline value, leaving the original intact, in keeping with T’s pervasive immutability.</p>
+<section id="filter_node" class="level3" data-number="9.3.1">
+<h3 data-number="9.3.1" class="anchored" data-anchor-id="filter_node"><span class="header-section-number">9.3.1</span> <code>filter_node</code></h3>
+<p><code>filter_node(p, pred)</code> returns a new pipeline containing only the nodes that satisfy the predicate. DAG validity is <em>not</em> checked until <code>build_pipeline</code> is called, so you can remove nodes freely and let T report missing-dependency errors only when you actually try to build.</p>
+<pre class="t"><code>-- Keep only the ETL steps that are not "raw" (already built, skip ingestion)
+no_ingest = filter_node(etl, $name != "raw")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-fd9c182019b58ecc/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<p>This is the simplest way to produce a lighter pipeline for a fast check run.</p>
+</section>
+<section id="mutate_node" class="level3" data-number="9.3.2">
+<h3 data-number="9.3.2" class="anchored" data-anchor-id="mutate_node"><span class="header-section-number">9.3.2</span> <code>mutate_node</code></h3>
+<p><code>mutate_node(p, pred, field = value)</code> modifies a field on all nodes matching <code>pred</code>. Without a predicate, every node is affected.</p>
+<p><strong>Skipping expensive nodes.</strong> Set <code>$noop = true</code> to mark a node as a no-op at build time. T will resolve the node’s output by reading the most recent cached artifact instead of rebuilding it, so downstream nodes can still reference it. This is the canonical way to skip slow steps during development:</p>
+<pre class="t"><code>-- Skip the feature-engineering step while iterating on the model
+fast_etl = mutate_node(etl, $name == "features", $noop = true)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-f128ec9000e77ea4/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<p><strong>Swapping runtimes.</strong> You can change the runtime of a node to test whether a Python reimplementation of an R step produces the same result:</p>
+<pre class="t"><code>-- Run "cleaned" in Python instead of R, without touching anything else
+py_etl = mutate_node(etl, $name == "cleaned", $runtime = "python")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-33ac8948fad25946/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>mutate_node</code> <em>replaces</em> the field entirely. This differs from <code>set_pipeline_global_options</code>, which <em>prepends</em> to option lists. Use <code>mutate_node</code> when you want a clean override; use <code>set_pipeline_global_options</code> when you want to augment existing options.</p>
+</div>
+</div>
+</section>
+<section id="rename_node" class="level3" data-number="9.3.3">
+<h3 data-number="9.3.3" class="anchored" data-anchor-id="rename_node"><span class="header-section-number">9.3.3</span> <code>rename_node</code></h3>
+<p><code>rename_node(p, old, new)</code> renames a node and automatically rewires every dependency edge that referenced the old name. You do not have to hunt through the pipeline looking for references; T handles the rewriting:</p>
+<pre class="t"><code>-- Rename "features" to "feature_matrix" for a cleaner downstream API
+etl2 = rename_node(etl, "features", "feature_matrix")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-fee1412c1101457a/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+</section>
+<section id="swap" class="level3" data-number="9.3.4">
+<h3 data-number="9.3.4" class="anchored" data-anchor-id="swap"><span class="header-section-number">9.3.4</span> <code>swap</code></h3>
+<p><code>swap(p, name, new_node)</code> replaces a node’s implementation while keeping all its dependency edges intact. The new node inherits the same name and position in the DAG; only its command changes. This is the right tool when you want to test an alternative algorithm without restructuring the pipeline:</p>
+<pre class="t"><code>glm_node = r { glm(target ~ ., data = features, family = gaussian()) }
+
+model_pipeline_glm = swap(model_pipeline, "linear_model", glm_node)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+</section>
+<section id="rewire" class="level3" data-number="9.3.5">
+<h3 data-number="9.3.5" class="anchored" data-anchor-id="rewire"><span class="header-section-number">9.3.5</span> <code>rewire</code></h3>
+<p><code>rewire(p, name, new_deps)</code> reroutes a node’s dependency edges. The node’s command stays the same; only <em>what it reads from</em> changes. Use it when you want to connect the same computation to a different upstream:</p>
+<pre class="t"><code>-- Point "linear_model" at "features_v2" instead of "features"
+rewired = rewire(model_pipeline, "linear_model", ["features_v2"])</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-00462ec365e7193e/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+</section>
+<section id="a-realistic-what-if-workflow" class="level3" data-number="9.3.6">
+<h3 data-number="9.3.6" class="anchored" data-anchor-id="a-realistic-what-if-workflow"><span class="header-section-number">9.3.6</span> A realistic “what-if” workflow</h3>
+<p>Putting this together: suppose you have a model step that takes twenty minutes to run, and you want a quick sanity check that only reruns the feature engineering and report steps.</p>
+<pre class="t"><code>-- 1. Build the full pipeline once
+res = build_pipeline(full_pipeline)
+
+-- 2. For the next iteration, skip the model and go straight to the report
+fast_check = full_pipeline
+  |&gt; mutate_node($name == "model", $noop = true)
+  |&gt; build_pipeline()</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-cfca65ba48a7190e/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<p>Because T cached the model node on step 1, step 2 reads that cache and immediately builds the report. No data is lost; no special configuration is required.</p>
+</section>
+</section>
+<section id="set-operations" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="set-operations"><span class="header-section-number">9.4</span> Set Operations</h2>
+<p>T exposes four set operations on pipeline values. They compose naturally: the output of any set operation is itself a pipeline, so you can chain them.</p>
+<section id="union" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="union"><span class="header-section-number">9.4.1</span> <code>union</code></h3>
+<p><code>union(p1, p2)</code> merges two pipelines. If both contain a node with the same name, T raises an error at construction time. Use <code>rename_node</code> on one of the pipelines first if you need to resolve the collision:</p>
+<pre class="t"><code>full = union(etl, model_pipeline)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-5201120bacf5af35/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+</section>
+<section id="difference" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="difference"><span class="header-section-number">9.4.2</span> <code>difference</code></h3>
+<p><code>difference(p, names)</code> removes the named nodes from the pipeline. This is useful when you want to strip out a phase you no longer need:</p>
+<pre class="t"><code>-- Remove the ingestion node; data is already validated upstream
+trimmed = difference(etl, ["raw", "validated"])</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-075796cf89d19778/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After removing nodes with <code>difference</code>, you may be left with leaf nodes that have dangling dependencies. Run <code>prune</code> (see below) to strip them automatically.</p>
+</div>
+</div>
+</section>
+<section id="intersect" class="level3" data-number="9.4.3">
+<h3 data-number="9.4.3" class="anchored" data-anchor-id="intersect"><span class="header-section-number">9.4.3</span> <code>intersect</code></h3>
+<p><code>intersect(p1, p2)</code> keeps only the nodes that appear in <em>both</em> pipelines, using the definitions from <code>p1</code>. This is handy when you want to extract the shared core of two related pipelines:</p>
+<pre class="t"><code>shared_core = intersect(full_pipeline_v1, full_pipeline_v2)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-0d8dae541ea746d7/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+</section>
+<section id="patch" class="level3" data-number="9.4.4">
+<h3 data-number="9.4.4" class="anchored" data-anchor-id="patch"><span class="header-section-number">9.4.4</span> <code>patch</code></h3>
+<p><code>patch(p, overrides)</code> updates existing nodes in <code>p</code> using definitions from <code>overrides</code>, but ignores any node in <code>overrides</code> that does not already exist in <code>p</code>. This is the safe way to apply configuration overrides: new nodes in the override pipeline cannot accidentally sneak into the production pipeline.</p>
+<pre class="t"><code>-- Override the "cleaned" node without risk of adding unreviewed steps
+prod = patch(prod_pipeline, dev_overrides)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-4cfe8309faa986bb/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+</section>
+<section id="prune" class="level3" data-number="9.4.5">
+<h3 data-number="9.4.5" class="anchored" data-anchor-id="prune"><span class="header-section-number">9.4.5</span> <code>prune</code></h3>
+<p><code>prune(p)</code> removes all leaf nodes—nodes that nothing else depends on. It is typically used after <code>difference</code> to clean up dangling tails:</p>
+<pre class="t"><code>-- Remove the report node, then prune anything that became orphaned
+no_report = difference(full_pipeline, ["report"])
+             |&gt; prune()</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-2edcbf66e97f16ad/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+</section>
+<section id="a-realistic-use-case-shared-etl-swapped-model" class="level3" data-number="9.4.6">
+<h3 data-number="9.4.6" class="anchored" data-anchor-id="a-realistic-use-case-shared-etl-swapped-model"><span class="header-section-number">9.4.6</span> A realistic use-case: shared ETL, swapped model</h3>
+<p>Here is the pattern you will reach for most often in a production setting: a shared ETL pipeline assembled once, then forked into two model pipelines that differ only in their model node.</p>
+<pre class="t"><code>-- Shared ETL (defined once, potentially sourced from its own file)
+etl = pipeline {
+  raw      = r { read.csv("data/sales.csv") }
+  cleaned  = r { clean_missing(raw) }
+  features = r { engineer_features(cleaned) }
+}
+
+-- Linear model pipeline
+linear = pipeline {
+  linear_model = r { lm(target ~ ., data = features) }
+  report       = qmd { "reports/linear.qmd" }
+}
+
+-- Random forest pipeline: same structure, different model node
+rf_node = r { randomForest::randomForest(target ~ ., data = features) }
+rf      = swap(linear, "linear_model", rf_node)
+          |&gt; rename_node("report", "report_rf")
+
+-- Assemble both into one build
+full = union(etl, union(linear, rf))
+res  = build_pipeline(full)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>We build one ETL phase and two model branches in a single call. Nix caches the ETL outputs and reuses them for both branches.</p>
+</section>
+</section>
+<section id="dag-aware-transformations" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="dag-aware-transformations"><span class="header-section-number">9.5</span> DAG-Aware Transformations</h2>
+<p>The set operations above operate on names. The DAG-aware functions operate on <em>structure</em>—they follow dependency edges to extract connected subgraphs.</p>
+<section id="upstream_of" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1" class="anchored" data-anchor-id="upstream_of"><span class="header-section-number">9.5.1</span> <code>upstream_of</code></h3>
+<p><code>upstream_of(p, name)</code> returns a new pipeline containing the named node and all of its transitive ancestors:</p>
+<pre class="t"><code>-- Everything needed to produce "features", and nothing more
+etl_only = upstream_of(full, "features")
+build_pipeline(etl_only)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-f82688564ce6b85a/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+</section>
+<section id="downstream_of" class="level3" data-number="9.5.2">
+<h3 data-number="9.5.2" class="anchored" data-anchor-id="downstream_of"><span class="header-section-number">9.5.2</span> <code>downstream_of</code></h3>
+<p><code>downstream_of(p, name)</code> returns the named node and everything that directly or transitively depends on it:</p>
+<pre class="t"><code>-- Re-run the model and every downstream step after changing a hyperparameter
+model_onwards = downstream_of(full, "linear_model")
+build_pipeline(model_onwards)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-f7a3b816b4e44e3f/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<p>This is the most common use of DAG-aware transformations: you change a parameter, extract everything that is sensitive to that parameter, and rebuild only that subgraph.</p>
+</section>
+<section id="subgraph" class="level3" data-number="9.5.3">
+<h3 data-number="9.5.3" class="anchored" data-anchor-id="subgraph"><span class="header-section-number">9.5.3</span> <code>subgraph</code></h3>
+<p><code>subgraph(p, names)</code> returns the full connected component reachable from any of the named nodes, traversing both upstream and downstream edges. Use it when you want to isolate a middle section of a complex pipeline for testing:</p>
+<pre class="t"><code>-- Isolate the cleaning and feature-engineering stages
+mid = subgraph(full, ["cleaned", "features"])</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-b7583cacb2a7a0d3/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Combine <code>downstream_of</code> with <code>mutate_node</code> for a surgical rebuild after a parameter change: extract the affected subgraph, mark the changed node as non-noop (or simply rebuild it), and leave everything upstream cached.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="pipeline-composition" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="pipeline-composition"><span class="header-section-number">9.6</span> Pipeline Composition</h2>
+<p>So far we have been working with flat pipelines assembled by hand. T provides higher-level composition tools for when you want to treat pipelines as modules.</p>
+<section id="chain" class="level3" data-number="9.6.1">
+<h3 data-number="9.6.1" class="anchored" data-anchor-id="chain"><span class="header-section-number">9.6.1</span> <code>chain</code></h3>
+<p><code>chain(p1, p2)</code> wires two pipelines together explicitly: it requires that <code>p2</code> references at least one node from <code>p1</code> by name. This is stricter than <code>union</code> (which silently accepts unconnected pipelines) and is the right choice when you want T to enforce that the wiring is intentional.</p>
+<pre class="t"><code>chained = chain(etl, model_pipeline)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-dbd6ffbfde85aad7/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<p>If <code>p2</code> contains no reference to any node in <code>p1</code>, <code>chain</code> raises an error at construction time.</p>
+</section>
+<section id="the-t-stub-workaround-for-cross-runtime-chains" class="level3" data-number="9.6.2">
+<h3 data-number="9.6.2" class="anchored" data-anchor-id="the-t-stub-workaround-for-cross-runtime-chains"><span class="header-section-number">9.6.2</span> The T-stub workaround for cross-runtime chains</h3>
+<p>T infers inter-node dependencies by scanning the lexical content of each node’s command. This works well within a single runtime, but when you cross from, say, an R pipeline to a Python pipeline, T’s lexical analyser may not see the dependency because the Python node refers to the upstream R node by a name that appears only inside a string.</p>
+<p>The idiomatic fix is an <em>alias stub</em>: declare an extra node in the Python pipeline that simply equates to the upstream name, making the dependency explicit to T’s scanner:</p>
+<pre class="t"><code>model_pipeline = pipeline {
+  -- T-stub: makes "features" visible to the lexical analyser
+  features    = features            -- alias: the ETL node by the same name
+  predictions = py { predict(features) }
+  report      = qmd { "reports/report.qmd" }
+}
+
+chained = chain(etl, model_pipeline)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>The stub node costs nothing at build time—T sees it is a no-op alias—but it satisfies the dependency declaration that <code>chain</code> requires.</p>
+</section>
+<section id="parallel" class="level3" data-number="9.6.3">
+<h3 data-number="9.6.3" class="anchored" data-anchor-id="parallel"><span class="header-section-number">9.6.3</span> <code>parallel</code></h3>
+<p><code>parallel(p1, p2)</code> combines two independent pipelines that share no nodes and need no wiring. T checks for name collisions and raises an error if it finds any:</p>
+<pre class="t"><code>report_en  = pipeline { report = qmd { "reports/report_en.qmd" } }
+report_fr  = pipeline { report = qmd { "reports/report_fr.qmd" } }
+
+-- Name collision! Both have a node called "report"
+-- parallel(report_en, report_fr)  -- ERROR
+
+report_fr2 = rename_node(report_fr, "report", "report_fr")
+both       = parallel(report_en, report_fr2)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+</section>
+<section id="pipeline_of-meta-pipelines" class="level3" data-number="9.6.4">
+<h3 data-number="9.6.4" class="anchored" data-anchor-id="pipeline_of-meta-pipelines"><span class="header-section-number">9.6.4</span> <code>pipeline_of</code> meta-pipelines</h3>
+<p><code>pipeline_of</code> lets you compose multiple named pipelines into a higher-order DAG, where each sub-pipeline becomes a namespace. Nodes are auto-namespaced with the sub-pipeline name as a prefix: a node <code>summary</code> inside a sub-pipeline called <code>stats</code> becomes <code>stats.summary</code>. You can build, read, and inspect the meta-pipeline exactly as you would a flat pipeline:</p>
+<pre class="t"><code>meta = pipeline_of {
+  etl   = etl_pipeline
+  stats = stats_pipeline
+  plots = plots_pipeline
+}
+
+-- Build the whole thing
+res = build_pipeline(meta)
+
+-- Read a namespaced node
+read_node("stats.summary")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-279f12812feeb395/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dependencies between sub-pipelines still need to be declared. If <code>stats</code> references <code>etl.features</code>, that reference must appear in the node’s command—or use a T-stub as described above.</p>
+</div>
+</div>
+</section>
+<section id="pipeline-templates-via-lambdas" class="level3" data-number="9.6.5">
+<h3 data-number="9.6.5" class="anchored" data-anchor-id="pipeline-templates-via-lambdas"><span class="header-section-number">9.6.5</span> Pipeline templates via lambdas</h3>
+<p>Because pipelines are values, you can wrap them in functions to produce parameterised templates. This is the T idiom for the factory pattern:</p>
+<pre class="t"><code>make_model_pipeline = \(multiplier) pipeline {
+  scaled_features = r { features * multiplier }
+  model           = r { lm(target ~ ., data = scaled_features) }
+  report          = qmd { "reports/model.qmd" }
+}
+
+p1   = make_model_pipeline(1.0)
+p2   = make_model_pipeline(0.5)
+
+both = parallel(p1 |&gt; rename_node("report", "report_1x"),
+                p2 |&gt; rename_node("report", "report_half"))</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+</section>
+</section>
+<section id="dynamic-branching" class="level2" data-number="9.7">
+<h2 data-number="9.7" class="anchored" data-anchor-id="dynamic-branching"><span class="header-section-number">9.7</span> Dynamic Branching</h2>
+<p>Static pipelines describe a fixed graph. Dynamic branching generates nodes at build time—one node per element of a list, or one per combination of parameter values. The resulting graph can be large, but you declare it concisely.</p>
+<section id="map_pattern" class="level3" data-number="9.7.1">
+<h3 data-number="9.7.1" class="anchored" data-anchor-id="map_pattern"><span class="header-section-number">9.7.1</span> <code>map_pattern</code></h3>
+<p><code>map_pattern(name, over, template)</code> generates one branch per element of <code>over</code>, instantiating <code>template</code> for each element:</p>
+<pre class="t"><code>regions = ["north", "south", "east", "west"]
+
+regional_models = map_pattern("region", over = regions, template = \(region) {
+  r { fit_regional_model(features, region) }
+})</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>T expands this into four nodes (<code>north</code>, <code>south</code>, <code>east</code>, <code>west</code>) at <code>build_pipeline</code> time and builds them in parallel where Nix’s <code>--max-jobs</code> allows it.</p>
+</section>
+<section id="cross_pattern" class="level3" data-number="9.7.2">
+<h3 data-number="9.7.2" class="anchored" data-anchor-id="cross_pattern"><span class="header-section-number">9.7.2</span> <code>cross_pattern</code></h3>
+<p><code>cross_pattern</code> generates a Cartesian product—one branch per combination of values across multiple lists:</p>
+<pre class="t"><code>thetas = [0.5, 1.0, 2.0]
+gammas = [0.1, 0.5, 1.0]
+
+param_sweep = cross_pattern(
+  "params",
+  over     = [thetas, gammas],
+  names    = ["theta", "gamma"],
+  template = \(theta, gamma) {
+    r { fit_model(features, theta = theta, gamma = gamma) }
+  }
+)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>This produces nine nodes from a three-by-three grid. The spirograph example in the T demos does exactly this: three values of angular frequency crossed with three values of petal count produce nine data-generation nodes and nine R-based plot nodes, each rendered in parallel:</p>
+<pre class="t"><code>-- Nine data nodes x nine plot nodes = 18 Nix derivations, declared in ~10 lines
+spirograph_data = cross_pattern(
+  "spiro",
+  over     = [omegas, petals],
+  names    = ["omega", "petal"],
+  template = \(omega, petal) { py { make_spirograph(omega, petal) } }
+)
+
+spirograph_plots = map_pattern(
+  "plot",
+  over     = pipeline_leaves(spirograph_data),
+  template = \(data_node) { r { plot_spirograph(data_node) } }
+)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+</section>
+<section id="head-tail-sample-and-slice" class="level3" data-number="9.7.3">
+<h3 data-number="9.7.3" class="anchored" data-anchor-id="head-tail-sample-and-slice"><span class="header-section-number">9.7.3</span> Head, tail, sample, and slice</h3>
+<p>When a map or cross generates many branches, you often want to prototype on a subset. These helpers operate on the <em>expanded</em> pipeline:</p>
+<pre class="t"><code>first_three = head(param_sweep, 3)
+last_three  = tail(param_sweep, 3)
+random_two  = sample(param_sweep, 2, seed = 42)
+middle      = slice(param_sweep, 4, 6)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-49fb42e2e662da49/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<p>Expansion happens at <code>build_pipeline</code> time. Until then, <code>param_sweep</code> is a single lazy pattern value. After building, use <code>build_log_to_frame</code> to inspect which branches ran and how long each took:</p>
+<pre class="t"><code>res = build_pipeline(param_sweep)
+log = build_log_to_frame(res)
+-- log columns: node, status, duration_s, store_path
+filter(log, status == "failed")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-19eb034720e0f0bb/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>During development, use <code>head(param_sweep, 1)</code> to prototype your template on a single branch before committing to a full grid build.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="static-conditionals" class="level2" data-number="9.8">
+<h2 data-number="9.8" class="anchored" data-anchor-id="static-conditionals"><span class="header-section-number">9.8</span> Static Conditionals</h2>
+<p>Dynamic branching generates nodes from data. Static conditionals <em>exclude</em> nodes from the pipeline entirely at construction time, based on conditions evaluated before any build starts. This is the right tool for environment-specific toggles.</p>
+<section id="node_when" class="level3" data-number="9.8.1">
+<h3 data-number="9.8.1" class="anchored" data-anchor-id="node_when"><span class="header-section-number">9.8.1</span> <code>node_when</code></h3>
+<p><code>node_when(condition, node)</code> includes <code>node</code> in the pipeline only if <code>condition</code> is truthy. If the condition is falsy, the node is simply absent—it does not appear in the DAG at all, and any downstream node that references it will report a missing-dependency error (which is the correct behaviour: you should not silently skip a node that something else needs).</p>
+<p>The idiomatic pattern reads environment variables via <code>env()</code>:</p>
+<pre class="t"><code>p = pipeline {
+  raw      = r { read.csv("data/sales.csv") }
+  cleaned  = r { clean_missing(raw) }
+  features = r { engineer_features(cleaned) }
+
+  -- Only run the expensive validation step outside CI
+  node_when(env("CI") == "", {
+    deep_validation = r { run_expensive_validation(cleaned) }
+  })
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>In a CI environment where <code>CI</code> is set (GitHub Actions sets it to <code>"true"</code>), <code>deep_validation</code> is simply absent. In a local development shell where <code>CI</code> is unset (empty string), it is included.</p>
+</section>
+<section id="node_fork" class="level3" data-number="9.8.2">
+<h3 data-number="9.8.2" class="anchored" data-anchor-id="node_fork"><span class="header-section-number">9.8.2</span> <code>node_fork</code></h3>
+<p><code>node_fork</code> is a multi-way branch: it evaluates a list of <code>(condition, node)</code> pairs and includes the <em>first</em> node whose condition is truthy. An optional <code>.default</code> provides a fallback:</p>
+<pre class="t"><code>model_type = env("MODEL")
+
+p = pipeline {
+  features = r { engineer_features(cleaned) }
+
+  node_fork(
+    model_type == "linear", {
+      model = r { lm(target ~ ., data = features) }
+    },
+    model_type == "forest", {
+      model = r { randomForest::randomForest(target ~ ., data = features) }
+    },
+    model_type == "neural", {
+      model = py { train_neural_net(features) }
+    },
+    .default = {
+      model = r { lm(target ~ ., data = features) }
+    }
+  )
+
+  report = qmd { "reports/model.qmd" }
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Setting <code>MODEL=forest</code> in the shell and running the pipeline will include only the random-forest node. The report node references <code>model</code> and will build against whichever implementation was selected. Adding a new model type requires one extra clause in <code>node_fork</code>, nothing else.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Static conditionals are evaluated at pipeline <em>construction</em> time, not at build time. <code>env()</code> reads the shell environment at the moment you call <code>build_pipeline(p)</code>. If you change <code>MODEL</code> and call <code>build_pipeline</code> again in the same T session, the pipeline is reconstructed and the new value is picked up.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="custom-flakes-per-node" class="level2" data-number="9.9">
+<h2 data-number="9.9" class="anchored" data-anchor-id="custom-flakes-per-node"><span class="header-section-number">9.9</span> Custom Flakes Per Node</h2>
+<p>By default, every node in a T pipeline uses the Nix flake specified in <code>tproject.toml</code>. The packages you list there are installed in every node’s environment. The <em>flake</em> determines which revision of <code>nixpkgs</code> those packages are drawn from.</p>
+<p>The <code>flake</code> argument on <code>node()</code>, <code>rn()</code>, and <code>pyn()</code> lets individual nodes use a <em>different</em> flake entirely:</p>
+<ul>
+<li><strong>Pin one node to an older <code>nixpkgs</code> snapshot</strong> — a legacy model that requires an older version of a C library.</li>
+<li><strong>Use a specialist R distribution for one node</strong> — for example, <code>github:jbedo/rshells</code> for a node that needs R with specific compile-time options.</li>
+<li><strong>Point a node at a local flake</strong> — for a private package not yet in <code>nixpkgs</code>.</li>
+</ul>
+<pre class="t"><code>p = pipeline {
+  cleaned  = r { clean_missing(raw) }
+  features = r { engineer_features(cleaned) }
+
+  -- Pin a specific nixpkgs snapshot for a legacy Stan model
+  legacy_model = rn(
+    { run_stan_model(features) },
+    flake = "github:NixOS/nixpkgs/nixpkgs-24.05"
+  )
+
+  -- Use a local flake for an internal package
+  internal_report = rn(
+    { render_internal_report(legacy_model) },
+    flake = "path:../internal_flake"
+  )
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The packages listed in <code>tproject.toml</code> still determine <em>what</em> is installed in every node. The <code>flake</code> argument determines <em>which nixpkgs revision</em> resolves those package names. You can combine per-node flakes with project-wide packages freely; T merges them correctly when emitting each derivation.</p>
+</div>
+</div>
+<p>A practical guideline: keep the project-wide flake at a recent <code>nixpkgs</code> pin for everything except nodes with known compatibility constraints, and use per-node flakes only where necessary. Overusing per-node flakes makes the build harder to reason about.</p>
+</section>
+<section id="validation" class="level2" data-number="9.10">
+<h2 data-number="9.10" class="anchored" data-anchor-id="validation"><span class="header-section-number">9.10</span> Validation</h2>
+<p>Pipeline construction in T is cheap—values are not built until <code>build_pipeline</code> is called. But some errors (cycles, missing dependencies, unknown runtimes) are structural and can be caught before any Nix derivation is emitted.</p>
+<section id="pipeline_validate" class="level3" data-number="9.10.1">
+<h3 data-number="9.10.1" class="anchored" data-anchor-id="pipeline_validate"><span class="header-section-number">9.10.1</span> <code>pipeline_validate</code></h3>
+<p><code>pipeline_validate(p)</code> returns a list of error messages. It <em>never</em> throws; if the pipeline is valid, it returns an empty list. This makes it suitable for CI checks where you want to collect all errors at once:</p>
+<pre class="t"><code>errs = pipeline_validate(full_pipeline)
+
+if length(errs) &gt; 0 {
+  for e in errs { print(e) }
+  exit(1)
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>The validator checks:</p>
+<ul>
+<li><strong>Cycles</strong> — any circular dependency in the DAG.</li>
+<li><strong>Missing dependencies</strong> — a node references a name that is not defined.</li>
+<li><strong>Unknown runtimes</strong> — a node declares a runtime T does not recognise.</li>
+<li><strong>Cross-runtime deserialiser gaps</strong> — a Python node reads from an R node but no compatible deserialiser is configured.</li>
+<li><strong>File existence</strong> — nodes that reference local files check that those files are present at validation time.</li>
+</ul>
+</section>
+<section id="pipeline_assert" class="level3" data-number="9.10.2">
+<h3 data-number="9.10.2" class="anchored" data-anchor-id="pipeline_assert"><span class="header-section-number">9.10.2</span> <code>pipeline_assert</code></h3>
+<p><code>pipeline_assert(p)</code> throws on the <em>first</em> error it finds. Use it as a guard at the top of a pipeline construction chain when you want to fail fast:</p>
+<pre class="t"><code>full_pipeline = chain(etl, model_pipeline)
+                |&gt; pipeline_assert()
+                |&gt; build_pipeline()</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129224-229764031/tlang-8858a4ec4cb4155f/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+</code></pre>
+<p>If <code>chain</code> produces an invalid graph, <code>pipeline_assert</code> surfaces the error immediately rather than waiting for Nix to fail deep inside a derivation build.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In CI, prefer <code>pipeline_validate</code> so that the log shows <em>all</em> structural errors in one run. In interactive development, prefer <code>pipeline_assert</code> so you get a fast failure at the exact line where the broken pipeline was constructed.</p>
+</div>
+</div>
+<p><code>pipeline_cycles(p)</code> is a narrower variant that returns only cycle-related errors—useful when you are debugging a <code>union</code> or <code>chain</code> that you suspect has introduced a circular dependency.</p>
+</section>
+</section>
+<section id="handling-ambiguous-dependencies" class="level2" data-number="9.11">
+<h2 data-number="9.11" class="anchored" data-anchor-id="handling-ambiguous-dependencies"><span class="header-section-number">9.11</span> Handling Ambiguous Dependencies</h2>
+<p>T infers which nodes depend on which by scanning the lexical content of each node’s command for names that match other nodes in the pipeline. This heuristic works in the vast majority of cases and requires no boilerplate. Two situations trip it up.</p>
+<p><strong>First</strong>, comments. T strips comments before scanning, so a node name that appears only in a comment is invisible to the analyser:</p>
+<pre class="t"><code>-- This will NOT create a dependency on "features":
+model = r {
+  # features is the input (see the data-prep pipeline)
+  lm(target ~ ., data = cleaned_features)
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p><strong>Second</strong>, shell nodes that read files created by other nodes. The file name is a runtime string and the node name never appears in the command text:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="ex">summarise_outputs</span> = shell {</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> summarise.R <span class="op">&gt;</span> summary.txt</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If <code>summarise.R</code> reads a file written by another node, T cannot infer that dependency from the shell command text alone.</p>
+<p>For both cases, the <code>deps</code> argument force-declares dependencies that cannot be inferred:</p>
+<pre class="t"><code>model = r(
+  { lm(target ~ ., data = cleaned_features) },
+  deps = ["features"]
+)
+
+summarise_outputs = shell(
+  { Rscript summarise.R &gt; summary.txt },
+  deps = ["model_output", "validation_report"]
+)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Declared dependencies are merged with inferred ones. You do not need to re-declare dependencies that T already finds; <code>deps</code> only adds what would otherwise be missing.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>deps</code> argument is also the right tool when a node’s command is generated dynamically (for example, via a string built at construction time) and cannot be statically scanned. Declaring deps explicitly is always safe; the only cost is a small amount of extra annotation.</p>
+</div>
+</div>
+</section>
+<section id="summary" class="level2" data-number="9.12">
+<h2 data-number="9.12" class="anchored" data-anchor-id="summary"><span class="header-section-number">9.12</span> Summary</h2>
+<p>The patterns in this chapter compose. A real production pipeline might look like this:</p>
+<pre class="t"><code>-- 1. Assemble the ETL and model sub-pipelines
+etl   = chain(ingest_pipeline, clean_pipeline)
+        |&gt; pipeline_assert()
+
+model = swap(baseline_pipeline, "model", tuned_model_node)
+
+-- 2. For a fast CI run, skip the slow validation and use a cached model
+ci_check = union(etl, model)
+           |&gt; mutate_node($name == "deep_validation", $noop = true)
+           |&gt; downstream_of("feature_matrix")
+
+-- 3. For the full nightly run, build everything including the report
+nightly = union(etl, union(model, report_pipeline))
+
+-- 4. Build whichever is appropriate for this invocation
+target = if env("CI") != "" then ci_check else nightly
+res    = build_pipeline(target)
+log    = build_log_to_frame(res)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>This is twelve lines of T that orchestrate conditional skipping, structural extraction, alternative implementations, and CI/nightly branching—without a single configuration file or wrapper script.</p>
+<p>The patterns also stack:</p>
+<ul>
+<li>Use <code>upstream_of</code> to extract a subgraph.</li>
+<li>Use <code>filter_node</code> or <code>mutate_node</code> to skip or swap nodes within it.</li>
+<li>Use <code>cross_pattern</code> to fan out over a parameter grid.</li>
+<li>Use <code>node_fork</code> to select an implementation based on an environment variable.</li>
+<li>Validate with <code>pipeline_validate</code> before any Nix work begins.</li>
+</ul>
+<p>The next chapter covers error handling and monadic pipelines—what to do when a node can <em>fail in an expected way</em> and you want to propagate that failure gracefully rather than aborting the whole build. <a href="./12-packaging.html">Chapter 12</a> then covers how to package a mature pipeline as a distributable artefact.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./08-pipelines.html" class="pagination-link" aria-label="Building T Pipelines">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building T Pipelines</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./10-monads.html" class="pagination-link" aria-label="Robust Pipelines with Monads">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/09-pipelines-advanced.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

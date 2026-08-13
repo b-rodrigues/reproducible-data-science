@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>8&nbsp; Building T Pipelines – Reproducible Polyglot Data Science</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./09-pipelines-advanced.html" rel="next">
+<link href="./07-testing.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script data-goatcounter="https://brodriguesco-raps-with-python.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<noscript>
+    </noscript></head><body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script><img src="https://brodriguesco-raps-with-python.goatcounter.com/count?p=/test-noscript">
+
+
+
+<link rel="stylesheet" href="epub.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-pipelines.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building T Pipelines</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Reproducible Polyglot Data Science</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/b-rodrigues/reproducible-data-science" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Reproducible-Polyglot-Data-Science.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Reproducible-Polyglot-Data-Science.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-nix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Nix Package Manager</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting Up Your Environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-t.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Reproducible Development Environments and Pipelines with T</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-first-pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-pipelines.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building T Pipelines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-pipelines-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-monads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">8.1</span> Introduction</a></li>
+  <li><a href="#sec-worked-example" id="toc-sec-worked-example" class="nav-link" data-scroll-target="#sec-worked-example"><span class="header-section-number">8.2</span> A Realistic Worked Example</a></li>
+  <li><a href="#sec-runtimes" id="toc-sec-runtimes" class="nav-link" data-scroll-target="#sec-runtimes"><span class="header-section-number">8.3</span> All Node Runtimes at a Glance</a>
+  <ul class="collapse">
+  <li><a href="#shell-nodes-shn" id="toc-shell-nodes-shn" class="nav-link" data-scroll-target="#shell-nodes-shn"><span class="header-section-number">8.3.1</span> Shell Nodes: <code>shn()</code></a></li>
+  <li><a href="#julia-nodes-jln" id="toc-julia-nodes-jln" class="nav-link" data-scroll-target="#julia-nodes-jln"><span class="header-section-number">8.3.2</span> Julia Nodes: <code>jln()</code></a></li>
+  <li><a href="#quarto-nodes-qn" id="toc-quarto-nodes-qn" class="nav-link" data-scroll-target="#quarto-nodes-qn"><span class="header-section-number">8.3.3</span> Quarto Nodes: <code>qn()</code></a></li>
+  <li><a href="#step-1-prefetch-the-hash" id="toc-step-1-prefetch-the-hash" class="nav-link" data-scroll-target="#step-1-prefetch-the-hash"><span class="header-section-number">8.3.4</span> Step 1: Prefetch the hash</a></li>
+  <li><a href="#step-2-use-fetchurl-in-the-pipeline" id="toc-step-2-use-fetchurl-in-the-pipeline" class="nav-link" data-scroll-target="#step-2-use-fetchurl-in-the-pipeline"><span class="header-section-number">8.3.5</span> Step 2: Use <code>fetchurl</code> in the pipeline</a></li>
+  </ul></li>
+  <li><a href="#sec-code-sharing" id="toc-sec-code-sharing" class="nav-link" data-scroll-target="#sec-code-sharing"><span class="header-section-number">8.4</span> Sharing Code Across Nodes</a>
+  <ul class="collapse">
+  <li><a href="#the-functions-parameter" id="toc-the-functions-parameter" class="nav-link" data-scroll-target="#the-functions-parameter"><span class="header-section-number">8.4.1</span> The <code>functions</code> Parameter</a></li>
+  <li><a href="#the-include-parameter" id="toc-the-include-parameter" class="nav-link" data-scroll-target="#the-include-parameter"><span class="header-section-number">8.4.2</span> The <code>include</code> Parameter</a></li>
+  <li><a href="#global-pipeline-options" id="toc-global-pipeline-options" class="nav-link" data-scroll-target="#global-pipeline-options"><span class="header-section-number">8.4.3</span> Global Pipeline Options</a></li>
+  </ul></li>
+  <li><a href="#sec-env-vars" id="toc-sec-env-vars" class="nav-link" data-scroll-target="#sec-env-vars"><span class="header-section-number">8.5</span> Environment Variables in Nodes</a></li>
+  <li><a href="#sec-logs-artifacts" id="toc-sec-logs-artifacts" class="nav-link" data-scroll-target="#sec-logs-artifacts"><span class="header-section-number">8.6</span> Build Logs and Artifacts</a>
+  <ul class="collapse">
+  <li><a href="#reading-the-build-log" id="toc-reading-the-build-log" class="nav-link" data-scroll-target="#reading-the-build-log"><span class="header-section-number">8.6.1</span> Reading the Build Log</a></li>
+  <li><a href="#copying-artifacts-out-of-the-store" id="toc-copying-artifacts-out-of-the-store" class="nav-link" data-scroll-target="#copying-artifacts-out-of-the-store"><span class="header-section-number">8.6.2</span> Copying Artifacts Out of the Store</a></li>
+  <li><a href="#garbage-collection" id="toc-garbage-collection" class="nav-link" data-scroll-target="#garbage-collection"><span class="header-section-number">8.6.3</span> Garbage Collection</a></li>
+  </ul></li>
+  <li><a href="#sec-caching" id="toc-sec-caching" class="nav-link" data-scroll-target="#sec-caching"><span class="header-section-number">8.7</span> Incremental Builds and Caching</a>
+  <ul class="collapse">
+  <li><a href="#previewing-cache-hits" id="toc-previewing-cache-hits" class="nav-link" data-scroll-target="#previewing-cache-hits"><span class="header-section-number">8.7.1</span> Previewing Cache Hits</a></li>
+  </ul></li>
+  <li><a href="#sec-cicd" id="toc-sec-cicd" class="nav-link" data-scroll-target="#sec-cicd"><span class="header-section-number">8.8</span> CI/CD with <code>pipeline_to_ga()</code></a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">8.9</span> Summary</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/08-pipelines.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building T Pipelines</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">8.1</span> Introduction</h2>
+<p>Chapter 5 gave you the core development loop: declare nodes, build the pipeline, inspect results. You know how <code>rn()</code>, <code>pyn()</code>, and <code>node()</code> work, and you have seen serializers like <code>^ipc</code> and <code>^parquet</code> in passing. This chapter is where we put all those pieces together and push further.</p>
+<p>We will build a realistic, end-to-end polyglot pipeline — CSV ingestion in T, cleaning in Python, modelling in R, and a rendered Quarto report — and use that worked example as a scaffold to explore every runtime T supports, including shell nodes, Julia nodes, and Quarto nodes. We then cover the practical concerns that come up on real projects: fetching remote data inside a sandboxed build, sharing utility code across nodes, passing environment variables, reading build logs, understanding caching, and wiring up continuous integration with a single function call.</p>
+<p>By the end of this chapter you will have a complete mental model of what a production T pipeline looks like and why every design decision was made the way it was.</p>
+</section>
+<section id="sec-worked-example" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="sec-worked-example"><span class="header-section-number">8.2</span> A Realistic Worked Example</h2>
+<p>Most toy examples in data science tooling documentation use <code>mtcars</code>. We will use the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a> dataset instead — still small enough to reason about quickly, but with a real modelling task: predict penguin species from morphological measurements.</p>
+<p>The pipeline has four stages:</p>
+<ol type="1">
+<li>Read the raw CSV in T.</li>
+<li>Clean and feature-engineer in Python (drop missing values, encode species).</li>
+<li>Fit a logistic regression in R and save the model.</li>
+<li>Render a Quarto report that loads the model and produces a summary table.</li>
+</ol>
+<p>Here is the complete <code>src/pipeline.t</code> for that workflow:</p>
+<pre class="t"><code>p = pipeline {
+
+  -- Stage 1: load raw CSV in T.
+  -- T's built-in read_csv keeps paths out of foreign code blocks.
+  raw = read_csv("data/penguins.csv")
+
+  -- Stage 2: clean in Python.
+  -- The ^ipc deserializer turns raw into a pandas DataFrame automatically.
+  clean = pyn(
+    command      = &lt;{
+      import pandas as pd
+
+      df = (
+        raw
+          .dropna()
+          .assign(
+            species_code = raw["species"].astype("category").cat.codes
+          )
+          [["bill_length_mm", "bill_depth_mm",
+            "flipper_length_mm", "body_mass_g", "species_code"]]
+      )
+      df
+    }&gt;,
+    deserializer = ^ipc,
+    serializer   = ^parquet
+  )
+
+  -- Stage 3: fit a logistic regression in R.
+  -- ^parquet on the R side becomes a data.frame automatically.
+  model = rn(
+    command = &lt;{
+      library(nnet)
+      m &lt;- multinom(species_code ~ ., data = clean, trace = FALSE)
+      m
+    }&gt;,
+    deserializer = ^parquet,
+    serializer   = ^pmml
+  )
+
+  -- Stage 4: render the Quarto report.
+  -- The .qmd file is declared in the script argument.
+  -- read_node("model") inside the .qmd is auto-detected as a dependency.
+  report = qn(
+    script     = "src/report.qmd",
+    serializer = ^html
+  )
+
+}
+
+build_pipeline(p)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Let us walk through the data flow step by step.</p>
+<p><strong><code>raw</code></strong> is a native T node — no foreign runtime involved. <code>read_csv</code> is a T built-in that returns a <code>DataFrame</code>. Because it is a native node, it inherits T’s default <code>^ipc</code> serializer: the data is written to the Nix store as an Arrow IPC file.</p>
+<p><strong><code>clean</code></strong> is a Python node. The <code>deserializer = ^ipc</code> instruction tells the generated sandbox wrapper to load the upstream <code>raw</code> artifact from the store as a <code>pandas.DataFrame</code> and bind it to the name <code>raw</code> before executing the <code>&lt;{ ... }&gt;</code> block. The body of the block is plain Python — no argument parsing, no file I/O. It assigns back to <code>df</code> and T reads the last expression as the node’s result. The <code>serializer = ^parquet</code> writes it out as a Parquet file, which is the right choice here: Parquet is compressed, column-oriented, and readable by every runtime T supports.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Why <code>^parquet</code> after a Python cleaning step?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>^ipc</code> is fastest for passing data <em>between adjacent nodes in the same build</em>. <code>^parquet</code> is the right serializer when the artifact will be read by a subsequent node in a <em>different runtime</em> (here, R) or when you want the artifact to be directly usable by external tools like DuckDB or Polars after you copy it out of the Nix store. Both work symmetrically across T, R, Python, and Julia.</p>
+</div>
+</div>
+<p><strong><code>model</code></strong> is an R node. The <code>deserializer = ^parquet</code> loads <code>clean</code> as an R <code>data.frame</code>. The R code fits a multinomial logistic regression with <code>nnet</code> and returns the fitted model object. The <code>serializer = ^pmml</code> exports the model to <a href="https://dmg.org/pmml/v4-4-1/GeneralStructure.html">PMML</a>, a portable XML format that T can load natively for scoring — no R session required downstream.</p>
+<p><strong><code>report</code></strong> is a Quarto node. The <code>script</code> argument points to a <code>.qmd</code> file that T copies into the sandbox. Inside <code>src/report.qmd</code>, any call to <code>read_node("model")</code> or <code>read_node("clean")</code> is statically analysed by T at pipeline-analysis time and registered as a dependency of <code>report</code>. The rendered HTML is stored in the Nix store; we will copy it out in <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.6</span></a>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Reading upstream nodes from inside a <code>.qmd</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Within a Quarto node’s <code>.qmd</code> file, call <code>read_node("name")</code> just as you would in the REPL. T’s static analyser scans the source file for these calls when building the dependency graph, so you do not need to redeclare the dependencies manually. If the upstream node changes, the report is automatically rebuilt.</p>
+</div>
+</div>
+<p>To build, simply run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>or, from inside the REPL:</p>
+<pre class="t"><code>t&gt; build_pipeline(p)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>T resolves the DAG, emits four Nix derivations, and builds them in dependency order. If you rebuild without changing anything, all four nodes are served from the Nix store cache — zero recomputation.</p>
+</section>
+<section id="sec-runtimes" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="sec-runtimes"><span class="header-section-number">8.3</span> All Node Runtimes at a Glance</h2>
+<p>Chapter 5 introduced <code>node()</code>, <code>rn()</code>, and <code>pyn()</code>. T supports two more runtimes that come up frequently in real projects. Rather than reproducing the full API here — which you can find in the T documentation — we will focus on the practical patterns for each.</p>
+<section id="shell-nodes-shn" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="shell-nodes-shn"><span class="header-section-number">8.3.1</span> Shell Nodes: <code>shn()</code></h3>
+<p>Shell nodes run a shell command inside the derivation’s sandbox. They are useful for wrapping command-line tools (data converters, compilers, external binaries) without writing glue code in a scripting language.</p>
+<p><code>shn()</code> operates in two modes:</p>
+<p><strong>Exec mode</strong> (default) — the <code>command</code> argument is a shell string run with <code>bash -c</code>. The node’s serializer is <code>^text</code> by default, and the output is whatever is written to stdout:</p>
+<pre class="t"><code>p = pipeline {
+
+  -- Call an external converter and capture stdout
+  schema = shn(
+    command    = "duckdb :memory: \"SELECT * FROM parquet_schema('data/raw.parquet')\"",
+    serializer = ^text
+  )
+
+}</code></pre>
+<p><strong>Script mode</strong> — set <code>script</code> to a path and <code>shn()</code> copies that script into the sandbox and executes it. Use this when the shell logic is more than a one-liner:</p>
+<pre class="t"><code>p = pipeline {
+
+  compressed = shn(
+    script     = "scripts/compress.sh",
+    serializer = ^text
+  )
+
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Inside <code>compress.sh</code> you have access to any executables declared in <code>tproject.toml</code>’s <code>[shell-dependencies]</code> section. The sandbox has no network access, so all inputs must arrive as upstream node artifacts or via <code>include</code> (see <a href="#sec-code-sharing" class="quarto-xref"><span>Section 8.4</span></a>).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Shell nodes and serializers
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The default serializer for <code>shn()</code> is <code>^text</code>. If your shell script produces a CSV or JSON file rather than stdout text, point the serializer at the right format — e.g., <code>serializer = ^csv</code> — and write the file to the path that T exposes as <code>$out</code> inside the sandbox.</p>
+</div>
+</div>
+</section>
+<section id="julia-nodes-jln" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="julia-nodes-jln"><span class="header-section-number">8.3.2</span> Julia Nodes: <code>jln()</code></h3>
+<p>Julia nodes work exactly like Python and R nodes. The <code>command</code> argument is a <code>&lt;{ ... }&gt;</code> block of Julia code, upstream artifacts are injected as Julia values, and the result is serialized.</p>
+<p>Declare Julia packages in the <code>[jl-dependencies]</code> section of <code>tproject.toml</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[jl-dependencies]</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"DataFrames"</span><span class="op">,</span> <span class="st">"GLM"</span><span class="op">,</span> <span class="st">"CSV"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then declare environment in the usual way with <code>t update &amp;&amp; exit &amp;&amp; nix develop</code>.</p>
+<p>A Julia node that fits a linear model:</p>
+<pre class="t"><code>p = pipeline {
+
+  raw = read_csv("data/fuel.csv")
+
+  jl_model = jln(
+    command = &lt;{
+      using DataFrames, GLM
+
+      m = lm(@formula(mpg ~ disp + hp), clean)
+      m
+    }&gt;,
+    deserializer = ^ipc,
+    serializer   = ^json
+  )
+
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Julia’s native serialization format is <code>.jls</code> (Julia serialization). This is the default serializer for <code>jln()</code> nodes. Use it when the artifact will only ever be consumed by another Julia node in the same pipeline. For cross-runtime data exchange — passing a Julia <code>DataFrame</code> to R or Python — use <code>^csv</code>, <code>^ipc</code>, or <code>^json</code> instead, which are understood by all runtimes.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Julia and first-run latency
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Julia’s JIT compilation makes the first build of a <code>jln()</code> node noticeably slower than equivalent R or Python nodes. Subsequent builds hit the Nix cache and are instant. If compilation time matters, consider running <code>t run</code> from a persistent terminal so the Julia sysimage (if you generate one) is preserved across builds.</p>
+</div>
+</div>
+</section>
+<section id="quarto-nodes-qn" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="quarto-nodes-qn"><span class="header-section-number">8.3.3</span> Quarto Nodes: <code>qn()</code></h3>
+<p>We saw <code>qn()</code> briefly in <a href="#sec-worked-example" class="quarto-xref"><span>Section 8.2</span></a>. A few points worth emphasising:</p>
+<ul>
+<li>The <code>.qmd</code> file path goes in the <code>script</code> argument, not <code>command</code>.</li>
+<li>The rendered output (HTML, PDF, or docx depending on the document’s YAML header) is stored in the Nix store like any other artifact.</li>
+<li>Use <code>pipeline_copy()</code> (see <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.6</span></a>) to retrieve the rendered file to a local directory — the Nix store path is opaque and not meant for direct use.</li>
+<li><code>read_node("name")</code> calls inside the <code>.qmd</code> are statically scanned by T and register as dependencies automatically.</li>
+</ul>
+<p>A Quarto node that produces a PDF report:</p>
+<pre class="t"><code>report = qn(
+  script     = "src/report.qmd",
+  serializer = ^pdf
+)</code></pre>
+<p>The <code>.qmd</code> file itself:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>src/report.qmd</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="src/report.qmd"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Penguin Species Model"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> pdf</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>::: {.cell}</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="in">```{.r .cell-code}</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"model"</span>)    <span class="co"># T registers 'model' as a dependency</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>clean <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"clean"</span>)    <span class="co"># and 'clean' too</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>:::</p>
+<pre><code>
+::: {.callout-note}
+## Quarto nodes and their environments
+
+Quarto nodes run in a Nix sandbox that contains the Quarto executable and
+whichever R or Python packages are listed in `tproject.toml`. If your report
+uses `knitr` (R code blocks), list the required R packages under
+`[r-dependencies]`. If it uses `jupyter` (Python code blocks), list Python
+packages under `[py-dependencies]`.
+:::
+
+## Fetching Remote Data {#sec-remote-data}
+
+Every T node executes in a Nix **sandbox** — a restricted build environment that
+has no network access. This is intentional: if network calls were permitted
+inside a build, the same pipeline could produce different results on different
+days depending on what a remote server returns. Reproducibility would be broken
+by design.
+
+The practical consequence is that you cannot do this inside a node:
+
+```python
+# This will fail — no network in the sandbox
+import requests
+df = pd.read_csv(requests.get("https://example.com/data.csv").content)</code></pre>
+<p>Nor this in R:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Also fails</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">url</span>(<span class="st">"https://example.com/data.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Instead, T provides a two-step <strong>prefetch and fetch</strong> pattern that lets Nix download the file <em>before</em> the sandbox is created, pin the download to a cryptographic hash, and inject the file as a read-only input.</p>
+</section>
+<section id="step-1-prefetch-the-hash" class="level3" data-number="8.3.4">
+<h3 data-number="8.3.4" class="anchored" data-anchor-id="step-1-prefetch-the-hash"><span class="header-section-number">8.3.4</span> Step 1: Prefetch the hash</h3>
+<p>From your project REPL (which <em>does</em> have network access), call:</p>
+<pre class="t"><code>t&gt; hash = prefetch("https://zenodo.org/record/9999/penguins.csv")
+t&gt; hash
+"sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p><code>prefetch</code> downloads the file, computes its SHA-256 hash in Nix’s standard base64 encoding, and returns the hash string. <strong>Copy this string.</strong> It is your permanent, tamper-evident reference to that exact file.</p>
+</section>
+<section id="step-2-use-fetchurl-in-the-pipeline" class="level3" data-number="8.3.5">
+<h3 data-number="8.3.5" class="anchored" data-anchor-id="step-2-use-fetchurl-in-the-pipeline"><span class="header-section-number">8.3.5</span> Step 2: Use <code>fetchurl</code> in the pipeline</h3>
+<p>Now declare a node that fetches the same URL, passing the hash you recorded:</p>
+<pre class="t"><code>p = pipeline {
+
+  raw = fetchurl(
+    url  = "https://zenodo.org/record/9999/penguins.csv",
+    hash = "sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="
+  )
+
+  clean = pyn(
+    command      = &lt;{ raw.dropna() }&gt;,
+    deserializer = ^csv,
+    serializer   = ^parquet
+  )
+
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>At build time Nix checks whether the file is already in the store. If not, it downloads it from the URL and verifies the hash before proceeding. If the remote file ever changes, the hash will not match and the build will fail loudly — no silent data drift.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>REPL mode bypasses the sandbox restriction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In REPL mode — when you call <code>fetchurl(...)</code> directly at the <code>t&gt;</code> prompt without a surrounding <code>pipeline { }</code> — T downloads the file immediately using <code>curl</code> and returns the path, just like <code>read_csv</code>. This makes interactive exploration easy: start with REPL mode to prototype, then promote the <code>fetchurl</code> into a pipeline node once you have the hash.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Authenticated downloads
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>fetchurl</code> supports HTTP headers for bearer tokens and API keys via the <code>headers</code> argument. The header values should come from environment variables (see <a href="#sec-env-vars" class="quarto-xref"><span>Section 8.5</span></a>) so they are never stored in the pipeline source.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-code-sharing" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="sec-code-sharing"><span class="header-section-number">8.4</span> Sharing Code Across Nodes</h2>
+<p>As pipelines grow, you will find yourself writing the same utility functions in multiple nodes. T provides two complementary mechanisms for sharing code, and a global-options helper for reducing per-node repetition.</p>
+<section id="the-functions-parameter" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="the-functions-parameter"><span class="header-section-number">8.4.1</span> The <code>functions</code> Parameter</h3>
+<p>The <code>functions</code> parameter accepts a path to a source file. T copies that file into the node’s sandbox and executes it before the node’s own <code>command</code>, so every function defined in the file is available to the node.</p>
+<p>The mechanics differ slightly by runtime:</p>
+<ul>
+<li><strong>R</strong>: T prepends <code>source("utils.R")</code> before the command.</li>
+<li><strong>Python</strong>: T prepends <code>exec(open("utils.py").read())</code> before the command.</li>
+<li><strong>Julia</strong>: T prepends <code>include("utils.jl")</code> before the command.</li>
+</ul>
+<p>A concrete example with Python cleaning and R modelling sharing utility functions:</p>
+<pre class="t"><code>p = pipeline {
+
+  raw = read_csv("data/penguins.csv")
+
+  clean = pyn(
+    command      = &lt;{ clean_penguins(raw) }&gt;,
+    deserializer = ^ipc,
+    serializer   = ^parquet,
+    functions    = "src/py_utils.py"   -- defines clean_penguins()
+  )
+
+  model = rn(
+    command      = &lt;{ fit_model(clean) }&gt;,
+    deserializer = ^parquet,
+    serializer   = ^pmml,
+    functions    = "src/r_utils.R"     -- defines fit_model()
+  )
+
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p><code>src/py_utils.py</code> is a plain Python file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># src/py_utils.py</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_penguins(df):</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        df</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        .dropna()</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        .assign(species_code<span class="op">=</span>df[<span class="st">"species"</span>].astype(<span class="st">"category"</span>).cat.codes)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        [[<span class="st">"bill_length_mm"</span>, <span class="st">"bill_depth_mm"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>          <span class="st">"flipper_length_mm"</span>, <span class="st">"body_mass_g"</span>, <span class="st">"species_code"</span>]]</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And <code>src/r_utils.R</code> is plain R:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># src/r_utils.R</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>fit_model <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  nnet<span class="sc">::</span><span class="fu">multinom</span>(species_code <span class="sc">~</span> ., <span class="at">data =</span> df, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The key benefit is that your node commands become one-liners that delegate to tested, version-controlled utility functions. When the function changes, every node that lists it under <code>functions</code> is automatically rebuilt by Nix.</p>
+</section>
+<section id="the-include-parameter" class="level3" data-number="8.4.2">
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="the-include-parameter"><span class="header-section-number">8.4.2</span> The <code>include</code> Parameter</h3>
+<p><code>functions</code> is designed for executable source files. If your node needs additional <em>non-executable</em> resources — a configuration YAML, a lookup table, a template file — use the <code>include</code> parameter instead. T copies the listed paths into the sandbox without attempting to source or execute them:</p>
+<pre class="t"><code>report = qn(
+  script  = "src/report.qmd",
+  include = ["src/custom.scss", "src/logo.png", "data/lookups.csv"]
+)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+</section>
+<section id="global-pipeline-options" class="level3" data-number="8.4.3">
+<h3 data-number="8.4.3" class="anchored" data-anchor-id="global-pipeline-options"><span class="header-section-number">8.4.3</span> Global Pipeline Options</h3>
+<p>Repeating <code>functions = "src/utils.R"</code> on every R node is tedious and error-prone. The <code>set_pipeline_global_options</code> function lets you declare defaults once for all nodes of a given runtime:</p>
+<pre class="t"><code>set_pipeline_global_options(
+  r      = [functions = "src/r_utils.R"],
+  python = [functions = "src/py_utils.py"],
+  julia  = [functions = "src/jl_utils.jl"]
+)
+
+p = pipeline {
+
+  raw = read_csv("data/penguins.csv")
+
+  -- r_utils.R is automatically sourced in every rn() node
+  clean_r = rn(
+    command      = &lt;{ prepare(raw) }&gt;,
+    deserializer = ^ipc,
+    serializer   = ^parquet
+  )
+
+  model = rn(
+    command      = &lt;{ fit_model(clean_r) }&gt;,
+    deserializer = ^parquet,
+    serializer   = ^pmml
+  )
+
+}
+
+build_pipeline(p)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>You can also set global <code>include</code> and <code>env_vars</code> here. Node-level settings take precedence over globals: if a node declares its own <code>functions</code>, it overrides the global default for that node (rather than appending to it), so you retain full per-node control.</p>
+</section>
+</section>
+<section id="sec-env-vars" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="sec-env-vars"><span class="header-section-number">8.5</span> Environment Variables in Nodes</h2>
+<p>The <code>env_vars</code> argument passes named environment variables into a node’s sandbox. This is the correct way to inject secrets, feature flags, and run-mode switches without hardcoding them in the pipeline source.</p>
+<pre class="t"><code>p = pipeline {
+
+  model = rn(
+    command  = &lt;{
+      mode &lt;- Sys.getenv("MODEL_MODE", unset = "production")
+      if (mode == "debug") {
+        message("Debug mode — using 100 trees")
+        ntree &lt;- 100L
+      } else {
+        ntree &lt;- 500L
+      }
+      randomForest::randomForest(species ~ ., data = clean, ntree = ntree)
+    }&gt;,
+    deserializer = ^parquet,
+    serializer   = ^pmml,
+    env_vars     = [MODEL_MODE = "debug", SEED = "42"]
+  )
+
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>In Python nodes, read variables with <code>os.environ</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>mode <span class="op">=</span> os.environ.get(<span class="st">"MODEL_MODE"</span>, <span class="st">"production"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In Julia nodes, use <code>ENV["MODEL_MODE"]</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Secrets and reproducibility
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Environment variables passed via <code>env_vars</code> are baked into the derivation’s input hash. Two builds with different <code>env_vars</code> values will produce different Nix derivations and will not share cached results. This is the correct behaviour: a model trained with <code>MODEL_MODE=debug</code> and one trained with <code>MODEL_MODE=production</code> are genuinely different artifacts.</p>
+<p>For <em>secrets</em> that should not appear in the pipeline source (API keys, database passwords), do not hardcode them in <code>env_vars</code>. Instead, set them in your shell before running <code>t run</code>, and reference them with the <code>env_from_shell</code> argument — see the T documentation for details.</p>
+</div>
+</div>
+</section>
+<section id="sec-logs-artifacts" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="sec-logs-artifacts"><span class="header-section-number">8.6</span> Build Logs and Artifacts</h2>
+<p>After <code>build_pipeline(p)</code> completes, T provides several tools for inspecting what was built, how long it took, and where the artifacts live.</p>
+<section id="reading-the-build-log" class="level3" data-number="8.6.1">
+<h3 data-number="8.6.1" class="anchored" data-anchor-id="reading-the-build-log"><span class="header-section-number">8.6.1</span> Reading the Build Log</h3>
+<p><code>build_log(p)</code> returns the raw log for the most recent build as a T value. The companion <code>build_log_to_frame(log)</code> materialises it as a <code>DataFrame</code> with four columns:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Type</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>name</code></td>
+<td><code>String</code></td>
+<td>Node name</td>
+</tr>
+<tr class="even">
+<td><code>status</code></td>
+<td><code>String</code></td>
+<td><code>"built"</code>, <code>"cached"</code>, or <code>"failed"</code></td>
+</tr>
+<tr class="odd">
+<td><code>duration_s</code></td>
+<td><code>Float</code></td>
+<td>Wall-clock build time in seconds</td>
+</tr>
+<tr class="even">
+<td><code>path</code></td>
+<td><code>String</code></td>
+<td>Nix store path of the artifact</td>
+</tr>
+</tbody>
+</table>
+<pre class="t"><code>t&gt; log   = build_log(p)
+t&gt; frame = build_log_to_frame(log)
+t&gt; frame
+
+name        status    duration_s  path
+raw         cached    0.00        /nix/store/abc…-raw
+clean       built     3.21        /nix/store/def…-clean
+model       built     8.74        /nix/store/ghi…-model
+report      built     12.05       /nix/store/jkl…-report</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>A <code>status</code> of <code>"cached"</code> means Nix found an existing derivation with the same input hash and served it from the store without rerunning anything. <code>"built"</code> means the node was (re)computed in this run.</p>
+</section>
+<section id="copying-artifacts-out-of-the-store" class="level3" data-number="8.6.2">
+<h3 data-number="8.6.2" class="anchored" data-anchor-id="copying-artifacts-out-of-the-store"><span class="header-section-number">8.6.2</span> Copying Artifacts Out of the Store</h3>
+<p>Nix store paths are read-only and content-addressed — they are not meant to be worked with directly. Use <code>pipeline_copy()</code> to copy artifacts to a local directory:</p>
+<pre class="t"><code>-- Copy a single node's artifact
+t&gt; pipeline_copy(p.report, dest = "outputs/")
+
+-- Copy every artifact in the pipeline
+t&gt; pipeline_copy(p, dest = "outputs/")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>After copying, <code>outputs/report.html</code> (or whatever format the Quarto node produced) is a regular file you can open, commit to Git, or publish.</p>
+</section>
+<section id="garbage-collection" class="level3" data-number="8.6.3">
+<h3 data-number="8.6.3" class="anchored" data-anchor-id="garbage-collection"><span class="header-section-number">8.6.3</span> Garbage Collection</h3>
+<p>Over time the Nix store accumulates artifacts from old builds. Two functions help manage this:</p>
+<p><code>pipeline_gc(p)</code> removes store paths that belong to <em>this pipeline’s</em> previous builds but are no longer referenced by the current build graph. Pass <code>dry_run = true</code> first to see what would be deleted:</p>
+<pre class="t"><code>t&gt; pipeline_gc(p, dry_run = true)
+
+Would remove:
+  /nix/store/xyz…-clean  (superseded by def…-clean)
+
+t&gt; pipeline_gc(p)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p><code>t_gc()</code> runs a full Nix garbage collection — it removes every store path that is not referenced by any active GC root on the system. Use this periodically on development machines or CI runners to reclaim disk space:</p>
+<pre class="t"><code>t&gt; t_gc()</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>GC roots and the current pipeline
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>build_pipeline(p)</code> automatically registers the current build as a GC root, so running <code>t_gc()</code> will not remove artifacts from the most recent successful build. Artifacts from <em>previous</em> builds of the same pipeline are not registered as roots and will be collected. If you need to compare results across builds, copy the artifact you want to keep out of the store with <code>pipeline_copy()</code> before running GC.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-caching" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="sec-caching"><span class="header-section-number">8.7</span> Incremental Builds and Caching</h2>
+<p>You have already seen that T caches nodes by input hash: if nothing changes, nothing is rebuilt. There is an important subtlety worth understanding clearly.</p>
+<p><strong>The pipeline is a child of the environment.</strong></p>
+<p>When Nix builds a node, the derivation’s input hash includes not just the node’s code and upstream data, but also the entire closure of packages and tools that the node’s sandbox contains. Those packages come from the date pin and package list in <code>tproject.toml</code>. If you update the date pin — say, from <code>2026-03-01</code> to <code>2026-06-01</code> — the environment closure changes, which changes the hash of every derivation in the pipeline, which means the entire pipeline rebuilds from scratch.</p>
+<p>This is not a bug. It is the only way to guarantee that the pipeline’s results are reproducible against the <em>current</em> environment. If cached results from an old environment were reused after a package update, you could never be certain that a non-backwards-compatible change in a dependency had not silently altered your results. By rebuilding everything when the environment changes, T ensures that what you see is what the <em>declared</em> environment actually produces.</p>
+<p>In practice, this means:</p>
+<ul>
+<li>Pin the date in <code>tproject.toml</code> deliberately. Do not bump it casually.</li>
+<li>When you do need to update the environment, treat it as an event: rebuild, review the log, commit the new <code>tproject.toml</code> and the updated results together.</li>
+</ul>
+<section id="previewing-cache-hits" class="level3" data-number="8.7.1">
+<h3 data-number="8.7.1" class="anchored" data-anchor-id="previewing-cache-hits"><span class="header-section-number">8.7.1</span> Previewing Cache Hits</h3>
+<p>Before committing to a full build, you can ask T to report which nodes would be rebuilt versus served from cache by passing <code>dry_run = true</code> to <code>build_pipeline</code>:</p>
+<pre class="t"><code>t&gt; build_pipeline(p, dry_run = true)
+
+Would build:  [model, report]
+Would cache:  [raw, clean]</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>This is useful when iterating on a slow node (a model fit, a long render) and you want to confirm that only the nodes downstream of your change will run.</p>
+<p>The equivalent from the shell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t <span class="at">--dry-run</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="sec-cicd" class="level2" data-number="8.8">
+<h2 data-number="8.8" class="anchored" data-anchor-id="sec-cicd"><span class="header-section-number">8.8</span> CI/CD with <code>pipeline_to_ga()</code></h2>
+<p>A reproducible pipeline is most valuable when it runs automatically — on every push, on a schedule, or when upstream data changes. T ships with a function that generates a complete GitHub Actions workflow YAML from your pipeline definition:</p>
+<pre class="t"><code>t&gt; pipeline_to_ga(p, file = ".github/workflows/pipeline.yml")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>That single call writes a workflow file that:</p>
+<ol type="1">
+<li>Installs Nix on the runner using the Determinate Systems installer.</li>
+<li>Restores the Nix store cache from the <code>t-runs</code> branch of your repository (a dedicated branch that stores serialised store paths between runs).</li>
+<li>Runs <code>t run src/pipeline.t</code> inside the project’s Nix shell.</li>
+<li>Uploads any artifacts you have declared as outputs.</li>
+<li>Saves the updated Nix store cache back to <code>t-runs</code>.</li>
+</ol>
+<p>The <code>t-runs</code> branch caching approach avoids the GitHub Actions cache size limit by persisting the Nix store as a Git repository. On a typical pipeline, the first CI run downloads and builds everything; subsequent runs restore from cache and only rebuild what changed — the same incremental behaviour you get locally.</p>
+<p>A minimal end-to-end CI setup for our penguin pipeline:</p>
+<pre class="t"><code>-- In src/pipeline.t, add at the bottom:
+pipeline_to_ga(
+  p,
+  file     = ".github/workflows/pipeline.yml",
+  on_push  = ["main"],
+  schedule = "0 6 * * 1"   -- Monday mornings at 06:00 UTC
+)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>The generated YAML looks roughly like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> T Pipeline</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">schedule</span><span class="kw">:</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">cron</span><span class="kw">:</span><span class="at"> </span><span class="st">"0 6 * * 1"</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">fetch-depth</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> DeterminateSystems/nix-installer-action@main</span></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Restore t-runs cache</span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/cache@v4</span></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">path</span><span class="kw">:</span><span class="at"> /nix/store</span></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">key</span><span class="kw">:</span><span class="at"> t-runs-${{ hashFiles('tproject.toml') }}</span></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">restore-keys</span><span class="kw">:</span><span class="at"> t-runs-</span></span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build pipeline</span></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> nix develop --command t run src/pipeline.t</span></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Upload artifacts</span></span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/upload-artifact@v4</span></span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">name</span><span class="kw">:</span><span class="at"> pipeline-outputs</span></span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">path</span><span class="kw">:</span><span class="at"> outputs/</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Committing <code>pipeline.yml</code> to version control
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Commit the generated <code>.github/workflows/pipeline.yml</code> to your repository. It is generated deterministically from your pipeline definition, so it will be regenerated identically by anyone who runs <code>pipeline_to_ga(p, ...)</code>. Treat it like any other generated file: regenerate it when the pipeline changes, review the diff, and commit.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Other CI providers
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>pipeline_to_ga()</code> targets GitHub Actions because it is the most common platform in the community, but the underlying Nix build is CI-agnostic. For GitLab CI, Forgejo Actions, or Jenkins, the pattern is the same: install Nix, restore the store cache if available, run <code>t run src/pipeline.t</code>. The T documentation includes template snippets for the major providers.</p>
+</div>
+</div>
+</section>
+<section id="summary" class="level2" data-number="8.9">
+<h2 data-number="8.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">8.9</span> Summary</h2>
+<p>We have covered a lot of ground in this chapter. Here is what we built:</p>
+<ul>
+<li>A four-stage polyglot pipeline (T → Python → R → Quarto) as a concrete working reference (<a href="#sec-worked-example" class="quarto-xref"><span>Section 8.2</span></a>).</li>
+<li>The full set of node runtimes: <code>node()</code>, <code>rn()</code>, <code>pyn()</code>, <code>jln()</code>, <code>shn()</code>, and <code>qn()</code>, with the practical usage patterns for each (<a href="#sec-runtimes" class="quarto-xref"><span>Section 8.3</span></a>).</li>
+<li>The <code>fetchurl</code> / <code>prefetch</code> pattern for safely pulling remote data into a sandboxed build (<span class="quarto-unresolved-ref">?sec-remote-data</span>).</li>
+<li>The <code>functions</code>, <code>include</code>, and <code>set_pipeline_global_options</code> mechanisms for sharing code without repetition (<a href="#sec-code-sharing" class="quarto-xref"><span>Section 8.4</span></a>).</li>
+<li>The <code>env_vars</code> argument for passing flags and secrets into node sandboxes (<a href="#sec-env-vars" class="quarto-xref"><span>Section 8.5</span></a>).</li>
+<li><code>build_log_to_frame</code>, <code>pipeline_copy</code>, <code>pipeline_gc</code>, and <code>t_gc</code> for inspecting and managing build artifacts (<a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.6</span></a>).</li>
+<li>Why the pipeline rebuilds when <code>tproject.toml</code> changes, and why that is the correct behaviour (<a href="#sec-caching" class="quarto-xref"><span>Section 8.7</span></a>).</li>
+<li><code>pipeline_to_ga()</code> for generating a GitHub Actions workflow in three lines (<a href="#sec-cicd" class="quarto-xref"><span>Section 8.8</span></a>).</li>
+</ul>
+<p>Between Chapter 5 and this chapter you now have a complete picture of the T pipeline model for single-machine analytical workflows. The next chapter takes the pipeline abstraction further: we will look at <em>pipeline manipulation</em> — composing pipelines, branching on parameter grids, mapping nodes over collections, and building reusable pipeline templates that can be shared across projects.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./07-testing.html" class="pagination-link" aria-label="Professional Workflows: Testing and Git">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./09-pipelines-advanced.html" class="pagination-link" aria-label="Advanced Pipeline Patterns">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/08-pipelines.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
