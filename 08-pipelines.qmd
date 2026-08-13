@@ -295,7 +295,7 @@ title: "Penguin Species Model"
 format: pdf
 ---
 
-```{r}
+```{r, eval = FALSE}
 model <- read_node("model")    # T registers 'model' as a dependency
 clean <- read_node("clean")    # and 'clean' too
 
