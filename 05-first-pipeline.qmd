@@ -391,6 +391,84 @@ scriptable:
 Make it a habit: **`t check` first, `t run` only when clean.**
 
 
+## Interactive Development with the T REPL in Positron
+
+Non-interactive batch execution via shell commands like `t run src/pipeline.t` is perfect for automated builds, reproducible pipelines, and CI/CD runners. But humans rarely write data science workflows as single monolithic batch runs. Data analysis is inherently iterative: we need to explore intermediate outputs, check data shapes, inspect model coefficients, test function logic, and troubleshoot errors in real time.
+
+Humans need a REPL (Read-Eval-Print Loop).
+
+When working in Positron (or VS Code with the T extension), you can open an interactive `t` session directly in your editor terminal. Running `t` (or `t repl`) inside Positron gives you a live, interactive environment where you can execute pipeline definitions, evaluate `build_pipeline(p)` on the fly, and inspect nodes immediately.
+
+### Inspecting Live Nodes: `read_node()`
+
+Once a pipeline is built in your session, you can inspect any node's computed result using `read_node()`:
+
+```t
+t> p = pipeline {
+..   data  = node(command = to_dataframe([x = [1.0, 2.0, 3.0], y = [10L, 20L, 30L]]))
+..   stats = rn(command = <{ summary(data) }>, deserializer = ^json, serializer = ^json)
+.. }
+t> build_pipeline(p)
+t> read_node(p.data)
+```
+
+Note that `read_node()` strictly expects a `ComputedNode` reference (such as `p.data` or `p.stats`), not a raw string name.
+
+#### High-Fidelity Representation of Foreign Objects
+
+One of the greatest benefits of the T REPL is how it displays results from foreign runtimes. Whether a node was computed in pure T, R (`rn`), Python (`pyn`), or Julia (`jln`), `read_node()` automatically deserializes the underlying artifact (Parquet, Arrow IPC, JSON, PMML, etc.) and converts it into a native, high-fidelity T representation.
+
+When you call `read_node()` on a foreign node from the T REPL, T formats the output cleanly:
+
+- **DataFrames** (from R `tibble`/`data.frame`, Python `pandas`/`polars`, or Julia `DataFrame`) print with column names, data types, and row/column counts.
+- **Models** (such as an R `glm` serialized as PMML or a Python `scikit-learn` model) display structured model metadata and tidy coefficient tables via `fitted.coefficients`.
+- **Structured collections** (Lists and Dicts) display as clean, readable trees without low-level string formatting artifacts.
+
+You get rich, instant feedback inside your interactive Positron session without writing custom glue code or manually serializing objects to temporary files.
+
+### Inspecting Historical Builds: `read_past_node()`
+
+What if you want to inspect a node's output from a previous build, or examine artifacts when the pipeline object `p` is no longer in your active REPL memory?
+
+T provides `read_past_node()` for temporal introspection:
+
+```t
+t> read_past_node(p.data, which_log = "2026-08-14")
+```
+
+Unlike `read_node()`, which looks up live in-scope nodes from the active pipeline object, `read_past_node()` captures the node identifier non-evaluatively and queries T's historical build logs in `_pipeline/logs/`. The mandatory `which_log` parameter specifies a timestamp or log identifier pattern. This allows you to inspect past run outputs, audit how dataset values evolved over time, or inspect artifacts from previous sessions without re-running the pipeline.
+
+### Stepping into Guest Runtimes: `debug_node()` (A Debugging Appetizer)
+
+Sometimes inspecting an output from the T REPL isn't enough—especially when a foreign script throws an unexpected runtime error or requires step-by-step code execution.
+
+T provides `debug_node()` to drop you directly from the T REPL into an interactive guest subshell for that specific language:
+
+```t
+t> debug_node(p.stats)
+```
+
+Calling `debug_node()` automatically:
+
+1. Resolves all upstream dependency artifacts for `p.stats` from the Nix store.
+2. Sets up environment variables and imports context.
+3. Spawns an interactive REPL for the target language—a Python subshell with prompt `py> `, an R subshell with prompt `r> `, or a Julia subshell with prompt `jl> `.
+
+Inside the guest subshell, the `tlang` companion library is pre-loaded, allowing you to load upstream node data live:
+
+```python
+py> import tlang
+py> data = tlang.read_node("data")
+py> print(data.head())
+```
+
+To preserve workspace reproducibility during debugging, imperative package manager commands (such as `install.packages()`, `pip install`, or `Pkg.add()`) are dynamically intercepted and blocked inside `debug_node()` subshells. If your code requires an additional package, simply declare it in `tproject.toml` and re-enter `nix develop`.
+
+Pressing `Ctrl+D` (or typing `exit()`) exits the guest subshell and returns control seamlessly back to your parent T REPL session.
+
+*(We will explore interactive subshells, failure logs, stack trace analysis, and advanced troubleshooting techniques in detail in an upcoming chapter dedicated to debugging).*
+
+
 ## Pointing Nodes at External Scripts
 
 You do not have to inline all your code in `<{ ... }>` blocks. The `script`
