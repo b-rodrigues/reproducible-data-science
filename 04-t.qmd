@@ -276,9 +276,11 @@ cd my-analysis
 nix develop
 ```
 
-This enters the project's development shell, which provides the pinned version
+That last command, `nix develop` is going to be very important. It is the 
+command that enters the project's development shell, which provides the pinned version
 of `t` alongside all declared R, Python, and Julia runtimes. All subsequent
-commands should be run inside this shell.
+commands should be run inside this shell. To laeve that shell, type `exit` just
+like we did above to leave the temporary shell to bootstrap our project.
 
 ::: {.callout-tip}
 ## Getting LLM assistance with T
