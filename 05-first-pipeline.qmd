@@ -33,7 +33,7 @@ through from declaration to result:
 
 > **Key insight**: A pipeline is a *declarative build graph*, not a script.
 > Nodes describe *what* to produce, not *when* to compute. T handles the
-> ordering, caching, and reproducibility — the same pipeline produces the same
+> ordering, caching, and reproducibility: the same pipeline produces the same
 > results on any machine.
 
 ## The Simplest Possible Pipeline
@@ -50,11 +50,19 @@ p = pipeline {
 build_pipeline(p)
 ```
 
-Run it:
+This pipeline doesn’t use any R, Python or Julia code yet, but is written in pure T.
+T comes with many builtin functions, and even data manipulation verbs inspired
+by `{dplyr}`! But let’s discuss these later.
+
+Now let’s run the pipeline. There are two ways of doing it. From the terminal
+(inside of the environment):
 
 ```bash
+nix developt
 t run src/pipeline.t
 ```
+
+or inside an interactive T session, using `t_make()`.
 
 T resolves the dependency graph (` total` depends on `x` and `y`), builds each
 node, and caches the results. Access any node's value with dot notation in the
@@ -78,7 +86,7 @@ and `y` and the result would be identical.
 
 ## The Core Development Loop
 
-A productive way to build pipelines is incrementally — start small, build,
+A productive way to build pipelines is incrementally: start small, build,
 inspect, extend:
 
 ```bash
@@ -112,7 +120,8 @@ preview which nodes will be rebuilt versus served from cache before committing t
 a full build.
 
 This **check → build → inspect → extend** loop is the core iterative development
-cycle in T. Get comfortable with it before moving on.
+cycle in T. Get comfortable with it before moving on. It is also possible to 
+interactively inspect R, Python or Julia nodes. More on this later.
 
 ## Node Types: Calling R, Python, and Julia
 
@@ -121,7 +130,7 @@ make this explicit:
 
 | Function | Runtime | Use case |
 |----------|---------|----------|
-| `node()` | T native | Data manipulation, logic, native T operations |
+| `node()` | T native | Data manipulation, logic, native T operations (optional) |
 | `rn()` | R | Statistical modelling, tidyverse, Bioconductor |
 | `pyn()` | Python | Machine learning, scikit-learn, PyTorch |
 | `jln()` | Julia | High-performance numerics, Flux.jl |
@@ -155,7 +164,7 @@ build_pipeline(p)
 
 T reads the R node's output (`summary_r`, serialized as `^ipc` Arrow IPC) and
 makes it available inside the Python node's sandbox under the same name.
-Serialization and deserialization happen automatically—you never write glue code
+Serialization and deserialization happen automatically, you never write glue code
 to convert between R data frames and Python DataFrames.
 
 ## Serializers
@@ -202,9 +211,6 @@ Now write the pipeline:
 
 ```t
 -- src/pipeline.t
-import stats
-import dataframe
-
 p = pipeline {
   -- Node 1: load data in T
   data = node(
@@ -229,7 +235,7 @@ p = pipeline {
 build_pipeline(p, verbose = 1)
 
 -- Read results back into T and inspect
-raw   = read_node(p.data)
+raw = read_node(p.data)
 fitted = read_node(p.model)
 
 print("Data shape:")
@@ -246,7 +252,7 @@ t run src/pipeline.t
 ```
 
 You should see the build log, then the data shape and model coefficients printed.
-Try changing the data values and re-running—only the affected nodes rebuild.
+Try changing the data values and re-running; only the affected nodes rebuild.
 
 ## Inspecting the Pipeline
 
