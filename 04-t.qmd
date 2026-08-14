@@ -348,7 +348,42 @@ After editing `tproject.toml`, sync the project environment:
 t update
 ```
 
-Then re-enter the development shell so the updated package set is active:
+You might get the following error:
+
+```bash
+Error: Git working directory is not clean. Commit or stash changes first.
+```
+
+This is because each T project also gets automatically tracked by Git. I won’t
+talk about how to set up Git, but this is another way how T is a reproducibility
+first language; the projects must be version controlled! Running `t update`
+will generate the `flake.nix` and `flake.lock` files. These files are what
+define the computational environment your pipeline will run in. These also need
+to be tracked by Git. You will get this error again:
+
+```bash
+bash-5.3$ t update
+No T package dependencies declared in tproject.toml; project defines 3 R dependencies, 4 Python dependencies and 2 additional tools.
+Syncing 0 T dependencies, 3 R dependencies, 4 Python dependencies, 0 Julia dependencies and 2 additional tools from tproject.toml → flake.nix...
+Running nix flake update...
+Error: Failed to update dependencies: Command 'nix flake update --accept-flake-config' failed (exit 1): error: Path 'basic_t/flake.nix' in the repository "/home/user/projects/project-1" is not tracked by Git.
+
+       To make it visible to Nix, run:
+
+       git -C "/home/user/projects/project-1" add "flake.nix"
+```
+
+Follow the instructions and then run `t update` again. This is a one-time setup, and if 
+everything goes well, you should see this:
+
+```bash
+Running nix flake update...
+flake.lock changes:
+  - flake.lock created.
+Updated.
+```
+
+Then exit the temporary shell, and re-enter the development shell so the updated package set is active:
 
 ```bash
 exit
