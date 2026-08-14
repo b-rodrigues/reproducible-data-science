@@ -481,12 +481,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#the-t-project" id="toc-the-t-project" class="nav-link" data-scroll-target="#the-t-project"><span class="header-section-number">4.3</span> The T Project</a>
   <ul class="collapse">
-  <li><a href="#project-layout" id="toc-project-layout" class="nav-link" data-scroll-target="#project-layout"><span class="header-section-number">4.3.1</span> Project Layout</a></li>
-  <li><a href="#declaring-dependencies-with-tproject.toml" id="toc-declaring-dependencies-with-tproject.toml" class="nav-link" data-scroll-target="#declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.2</span> Declaring Dependencies with <code>tproject.toml</code></a></li>
-  <li><a href="#why-not-to-use-install.packages" id="toc-why-not-to-use-install.packages" class="nav-link" data-scroll-target="#why-not-to-use-install.packages"><span class="header-section-number">4.3.3</span> Why NOT to use <code>install.packages()</code></a></li>
+  <li><a href="#declaring-dependencies-with-tproject.toml" id="toc-declaring-dependencies-with-tproject.toml" class="nav-link" data-scroll-target="#declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.1</span> Declaring Dependencies with <code>tproject.toml</code></a></li>
+  <li><a href="#alternative-installation-methods" id="toc-alternative-installation-methods" class="nav-link" data-scroll-target="#alternative-installation-methods"><span class="header-section-number">4.3.2</span> Alternative installation methods</a></li>
+  <li><a href="#system-dependencies-and-latex" id="toc-system-dependencies-and-latex" class="nav-link" data-scroll-target="#system-dependencies-and-latex"><span class="header-section-number">4.3.3</span> System Dependencies and LaTeX</a></li>
   </ul></li>
-  <li><a href="#which-resolver-to-choose" id="toc-which-resolver-to-choose" class="nav-link" data-scroll-target="#which-resolver-to-choose"><span class="header-section-number">4.4</span> Which resolver to choose?</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.5</span> Summary</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.4</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/04-t.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -549,7 +548,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>I will close this section with a personal anecdote that I think illustrates the point well. Alongside this book, I have been building a Game Boy game—using LLMs to write essentially all the code. I know nothing about Game Boy development: I do not know the hardware architecture, I have never written a line of assembly, and I have certainly never shipped a cartridge. But I approached the project exactly as I would approach a data science project.</p>
 <p>The first thing I did was set up a reproducible development environment. The second was to make the LLM build tooling to <em>query the game’s state programmatically</em>: not just run the game, but interrogate it—what is the player’s position? What are the active sprites? What is the current game phase? With that infrastructure in place, I could instruct the LLM to run test scenarios from any point in the game, with any parameters, and get structured feedback. The game could be developed and debugged in a principled loop rather than by manually playing through it each time.</p>
 <p>The result: an actual, running Game Boy game, built by someone who cannot write the underlying code. What I contributed was the <em>systems thinking</em>: insisting on reproducibility, insisting on programmable state inspection, insisting on a feedback loop that could be automated. The LLM contributed the implementation. Neither of us could have done it alone.</p>
-<p>This is the approach that this book is trying to teach for data science. The specific tools—T, Nix, R, Python—matter less than the underlying mental model: make the structure of your computation explicit, build in the ability to inspect and query it at every stage, and create feedback loops that you and your AI collaborators can iterate on together.</p>
+<p>This is the approach that this book is trying to teach for data science. The specific tools matter less than the underlying mental model: make the structure of your computation explicit, build in the ability to inspect and query it at every stage, and create feedback loops that you and your AI collaborators can iterate on together.</p>
 </section>
 <section id="the-polyglot-challenge" class="level3" data-number="4.1.5">
 <h3 data-number="4.1.5" class="anchored" data-anchor-id="the-polyglot-challenge"><span class="header-section-number">4.1.5</span> The Polyglot Challenge</h3>
@@ -613,8 +612,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="the-t-project" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="the-t-project"><span class="header-section-number">4.3</span> The T Project</h2>
-<section id="project-layout" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="project-layout"><span class="header-section-number">4.3.1</span> Project Layout</h3>
 <p>Every T project has the following directory structure:</p>
 <pre><code>my-analysis/
 ├── tproject.toml       # Project configuration and dependencies
@@ -629,10 +626,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ├── outputs/            # Output directory for results
 └── tests/              # Unit tests for your analysis</code></pre>
 <p>The two most important files are <code>tproject.toml</code> and <code>src/pipeline.t</code>.</p>
-</section>
-<section id="declaring-dependencies-with-tproject.toml" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.2</span> Declaring Dependencies with <code>tproject.toml</code></h3>
-<p>T projects are explicit: R, Python, and Julia packages belong in <code>tproject.toml</code>, not in ad hoc <code>install.packages()</code>, <code>pip install</code>, or <code>Pkg.add()</code> calls. Open <code>tproject.toml</code> and add the runtime packages you need:</p>
+<section id="declaring-dependencies-with-tproject.toml" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.1</span> Declaring Dependencies with <code>tproject.toml</code></h3>
+<p>T projects are explicit: R, Python, and Julia packages belong in <code>tproject.toml</code>, not in ad-hoc <code>install.packages()</code>, <code>pip install</code>, or <code>Pkg.add()</code> calls. Open <code>tproject.toml</code> and add the runtime packages you need:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"dplyr"</span><span class="op">,</span> <span class="st">"ggplot2"</span><span class="op">]</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -642,60 +638,114 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">[jl-dependencies]</span></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"lts"</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"DataFrames"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"DataFrames"</span><span class="op">,</span> <span class="st">"CSV"</span><span class="op">,</span> <span class="st">"GLM"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For Julia, the <code>version</code> field defaults to <code>"lts"</code> (the current Julia long-term-support release). To pin a specific Julia version, use formats like <code>"1.10"</code> or <code>"1.11"</code>, which map to <code>julia_1_10</code> or <code>julia_1_11</code> in Nixpkgs.</p>
 <p>After editing <code>tproject.toml</code>, sync the project environment:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> update</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then re-enter the development shell so the updated package set is active:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="why-not-to-use-install.packages" class="level3" data-number="4.3.3">
-<h3 data-number="4.3.3" class="anchored" data-anchor-id="why-not-to-use-install.packages"><span class="header-section-number">4.3.3</span> Why NOT to use <code>install.packages()</code></h3>
-<p>It’s crucial to understand: <strong>never call <code>install.packages()</code> from within a T project</strong>. Here’s why:</p>
+<section id="why-not-to-use-install.packages-pip-install-pkg.add" class="level4" data-number="4.3.1.1">
+<h4 data-number="4.3.1.1" class="anchored" data-anchor-id="why-not-to-use-install.packages-pip-install-pkg.add"><span class="header-section-number">4.3.1.1</span> Why NOT to use <code>install.packages()</code> / <code>pip install</code> / <code>Pkg.add()</code></h4>
+<p>It’s crucial to understand: <strong>never call imperative installation commands from within a T project</strong>. Here’s why:</p>
 <ol type="1">
-<li>Technically, it won’t work. Computations defined in your pipeline will run within hermetic Nix sandboxes, so anything not installed through Nix won’t simply be available.</li>
-<li>Conceptually, this goes against reproducibility. The whole point of T’s Nix integration is that your environment is fully defined by <code>tproject.toml</code> and <code>flake.lock</code>. Ad-hoc installations defeat this.</li>
+<li><strong>Technically, it won’t work:</strong> Computations defined in your pipeline run inside hermetic Nix sandboxes. Anything not declared through Nix simply will not be available during pipeline execution.</li>
+<li><strong>Conceptually, it defeats reproducibility:</strong> The whole point of T’s Nix integration is that your environment is fully defined by <code>tproject.toml</code> and <code>flake.lock</code>. Ad-hoc installations break this guarantee.</li>
 </ol>
-<p>Instead, add packages to <code>tproject.toml</code> and run <code>t update</code>. Trying to call <code>install.packages()</code> (or equivalent commands for Julia and Python) will raise an error.</p>
-<p>This is not the only way to install packages though. It is possible to use <code>uv</code> to install packages for your T project, but not in an imperative fashion. First, you need to declare the following in your <code>tproject.toml</code>:</p>
+<p>Instead, add packages to <code>tproject.toml</code> and run <code>t update</code>. Calling <code>install.packages()</code> (or equivalent commands for Python and Julia) will raise an error.</p>
+</section>
+</section>
+<section id="alternative-installation-methods" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="alternative-installation-methods"><span class="header-section-number">4.3.2</span> Alternative installation methods</h3>
+<p>T provides several other ways to install packages, using <code>uv</code> for Python or <code>{renv}</code> for R. By default, T uses Nix to resolve packages directly. We recommend sticking to the default resolver as much as possible. The default approach works exceptionally well for <strong>Julia</strong> and <strong>R</strong> because virtually all packages in their ecosystems are available through Nix. This is not the case for <strong>Python</strong>.</p>
+<p>Python’s PyPI contains hundreds of thousands of packages of varying quality. If you use Python for data analysis, you’ve likely hit this issue: you try to install one package that requires <code>numpy &lt; 2</code>, and another that requires <code>numpy &gt;= 2</code>. You’re <em>cooked</em>, as the youths say. The resolver can’t help you because the requirements are literally incompatible. No amount of Rust-written package managers can solve this, the underlying issue is PyPI’s ecosystem model.</p>
+<p>In R, this situation rarely happens. CRAN enforces a system where packages are continuously tested against their reverse dependencies. If <code>{ggplot2}</code> or <code>{dplyr}</code> updates in a way that breaks other packages, CRAN catches it. Authors have two weeks to fix the issue, or their package gets archived. As a result, if a package is on CRAN, it works. CRAN manages this consistency across ~27,000 packages.</p>
+<p>PyPI does not do this. It hosts packages without global consistency checks. If Package A and Package B declare mutually exclusive requirements, PyPI hosts them both anyway. Nix tries to curate Python packages, but because of PyPI’s constraints, the entirety of PyPI cannot be made available through Nix in an automated way. Occasionally, you can patch a package’s <code>pyproject.toml</code> in Nix to relax incompatible constraints (e.g., changing <code>numpy = "^1"</code> to <code>numpy = "&gt;=1"</code>), but patching isn’t a universal solution.</p>
+<p>This is why T provides alternative resolvers (<code>uv</code> for Python and <code>{renv}</code> for R): * For Python (<code>uv</code>): Allows Nix to build the environment while fetching packages directly from PyPI via <code>uv</code>. This is especially useful if you are collaborating with non-T/Nix users who rely on standard <code>pyproject.toml</code> and <code>uv.lock</code> files.</p>
+<ul>
+<li><strong>For R (<code>renv</code>):</strong> Allows you to reuse existing <code>renv.lock</code> files for collaboration or legacy workflows.</li>
+</ul>
+<section id="alternative-python-resolver-uv" class="level4" data-number="4.3.2.1">
+<h4 data-number="4.3.2.1" class="anchored" data-anchor-id="alternative-python-resolver-uv"><span class="header-section-number">4.3.2.1</span> Alternative Python Resolver: <code>uv</code></h4>
+<p>Instead of declaring Python packages directly in <code>tproject.toml</code>, you can delegate dependency management to <code>uv</code>.</p>
+<p>First, configure <code>tproject.toml</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[py-dependencies]</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">resolver</span> <span class="op">=</span> <span class="st">"uv"</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dt">workspace</span> <span class="op">=</span> <span class="st">"python"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The workspace directory must contain the UV project metadata and lock file:</p>
+<p>The workspace directory must contain your <code>uv</code> project metadata and lock file:</p>
 <pre class="text"><code>python/
   pyproject.toml
   uv.lock</code></pre>
-<p>The <code>version</code> field is <strong>optional</strong> when using the UV resolver. If omitted, T infers the Nixpkgs Python attribute (e.g.&nbsp;<code>python312</code>) from the <code>requires-python</code> field in <code>python/pyproject.toml</code>. The inference accepts specifiers that constrain to a single minor version (<code>==3.12</code>, <code>==3.12.*</code>, <code>~=3.12</code>, <code>&gt;=3.12,&lt;3.13</code>) and errors on open-ended ranges (<code>&gt;=3.12</code>). If an explicit <code>version</code> conflicts with <code>requires-python</code>, T prints a warning and uses the explicit value.</p>
-<p>When <code>resolver = "uv"</code>, do not set <code>[py-dependencies].packages</code>; Python dependencies are declared only in <code>pyproject.toml</code> and locked by <code>uv.lock</code>. Running <code>t update</code> generates uv2nix/pyproject.nix inputs in <code>flake.nix</code> and builds the Python environment as a Nix virtual environment.</p>
-<p>If you do <strong>not</strong> have <code>uv</code> installed and have <strong>no</strong> existing Python package metadata, follow these steps:</p>
-<p>First, edit <code>tproject.toml</code> and as before, set the resolver to <code>uv</code>:</p>
+<p>The <code>version</code> field in <code>tproject.toml</code> is <strong>optional</strong> when using the <code>uv</code> resolver. If omitted, T infers the Nixpkgs Python attribute (e.g., <code>python312</code>) from the <code>requires-python</code> field in <code>python/pyproject.toml</code>.</p>
+<p>The inference accepts specifiers that constrain to a single minor version (<code>==3.12</code>, <code>==3.12.*</code>, <code>~=3.12</code>, <code>&gt;=3.12,&lt;3.13</code>) and errors on open-ended ranges (<code>&gt;=3.12</code>). If an explicit <code>version</code> conflicts with <code>requires-python</code>, T prints a warning and uses the explicit version.</p>
+<p>When using <code>resolver = "uv"</code>, do <strong>not</strong> set <code>[py-dependencies].packages</code>. Python dependencies are declared exclusively in <code>pyproject.toml</code> and locked by <code>uv.lock</code>. Running <code>t update</code> generates <code>uv2nix</code>/<code>pyproject.nix</code> inputs in <code>flake.nix</code> and builds the Python environment as a Nix virtual environment.</p>
+<p>If you don’t have <code>uv</code> installed locally and lack existing metadata:</p>
+<ol type="1">
+<li><p>Edit <code>tproject.toml</code> to set the resolver:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[py-dependencies]</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">resolver</span> <span class="op">=</span> <span class="st">"uv"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="dt">workspace</span> <span class="op">=</span> <span class="st">"python"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Then create a minal <code>pyproject.toml</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># python/pyproject.toml</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">[project]</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"my_project_python_env"</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="dt">requires-python</span> <span class="op">=</span> <span class="st">"&gt;=3.12,&lt;3.13"</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="dt">dependencies</span> <span class="op">=</span> <span class="op">[</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pandas"</span><span class="op">,</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Add any PyPI packages to the <code>dependencies</code> list. Re-run <code>uv lock</code> whenever the list changes. Now you need to generate the lock file. I will assume you don’t have <code>uv</code> installed, but thanks to the power of Nix, this is not an issue. Just enter a temporary shell:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell nixpkgs#uv nixpkgs#python3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Then generate the lock file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> lock <span class="at">--project</span> python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Type <code>exit</code> or press <code>Ctrl-D</code> to leave the Nix shell when done. Finally, enter your T project shell again using <code>nix develop</code> and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> update</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This reads the UV workspace, adds <code>pyproject-nix</code>, <code>uv2nix</code>, and <code>pyproject-build-systems</code> inputs to <code>flake.nix</code>, and configures the Python environment to use <code>pySet.mkVirtualEnv</code> instead of <code>pkgs.python314.withPackages</code>.</p>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="dt">workspace</span> <span class="op">=</span> <span class="st">"python"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Create a minimal <code>pyproject.toml</code> inside the <code>python/</code> directory:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># python/pyproject.toml</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">[project]</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"my_project_python_env"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="dt">requires-python</span> <span class="op">=</span> <span class="st">"&gt;=3.12,&lt;3.13"</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="dt">dependencies</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pandas"</span><span class="op">,</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Enter a temporary Nix shell to generate the lock file using <code>uv</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell nixpkgs#uv nixpkgs#python3</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> lock <span class="at">--project</span> python</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Re-enter your T development shell and update:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> update</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ol>
+<p>This reads the <code>uv</code> workspace, adds <code>pyproject-nix</code>, <code>uv2nix</code>, and <code>pyproject-build-systems</code> inputs to <code>flake.nix</code>, and configures the Python environment to use <code>pySet.mkVirtualEnv</code>.</p>
+</section>
+<section id="alternative-r-options-renv-git-repositories" class="level4" data-number="4.3.2.2">
+<h4 data-number="4.3.2.2" class="anchored" data-anchor-id="alternative-r-options-renv-git-repositories"><span class="header-section-number">4.3.2.2</span> Alternative R Options: <code>{renv}</code> &amp; Git Repositories</h4>
+<p>If your project already contains an <code>renv.lock</code> file, set:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">resolver</span> <span class="op">=</span> <span class="st">"renv"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When <code>resolver = "renv"</code>, T automatically discovers all R dependencies from <code>renv.lock</code>:</p>
+<ul>
+<li><strong>CRAN packages</strong> are read from each entry’s <code>Repository</code> or <code>Bioconductor</code> field and mapped to <code>pkgs.rPackages.*</code>.</li>
+<li><strong>GitHub/GitLab packages</strong> are fetched via <code>builtins.fetchGit</code> using the <code>RemoteHost</code>, <code>RemoteUsername</code>, <code>RemoteRepo</code>, and <code>RemoteSha</code> fields (supports <code>api.github.com</code> and <code>gitlab.com</code>).</li>
+<li><strong>Remotes</strong> are parsed and injected as <code>buildInputs</code> for dependent Git packages.</li>
+<li>Base R packages (<code>R</code>, <code>methods</code>, <code>stats</code>, etc.) are automatically filtered out.</li>
+</ul>
+<p>No <code>packages</code> list is required in <code>tproject.toml</code>; <code>renv.lock</code> serves as the single source of truth. Run <code>t update</code> to regenerate <code>flake.nix</code>.</p>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> This does not install the <em>exact</em> package versions locked in <code>renv.lock</code>. Instead, it installs the package versions available in Nixpkgs at the date defined in your <code>tproject.toml</code> (<code>[nixpkgs].date</code>).</p>
+</blockquote>
+<p>To install R packages directly from remote Git repositories (e.g., GitHub), declare them directly in <code>tproject.toml</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"dplyr"</span><span class="op">]</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="dt">my_pkg</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">git</span><span class="op"> =</span> <span class="st">"https://github.com/user/my-pkg"</span><span class="op">, </span><span class="dt">rev</span><span class="op"> =</span> <span class="st">"abc123def456"</span><span class="op"> }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>rev</code> field must be a full Git commit hash. Each Git package is injected into every R pipeline node’s <code>buildInputs</code>. When using <code>resolver = "renv"</code>, Git packages declared in <code>tproject.toml</code> are automatically merged with those in <code>renv.lock</code>.</p>
 </section>
 </section>
-<section id="which-resolver-to-choose" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="which-resolver-to-choose"><span class="header-section-number">4.4</span> Which resolver to choose?</h2>
+<section id="system-dependencies-and-latex" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="system-dependencies-and-latex"><span class="header-section-number">4.3.3</span> System Dependencies and LaTeX</h3>
+<p>Beyond language packages, you can declare system tools and LaTeX packages required by your project.</p>
+<section id="additional-tools" class="level4" data-number="4.3.3.1">
+<h4 data-number="4.3.3.1" class="anchored" data-anchor-id="additional-tools"><span class="header-section-number">4.3.3.1</span> Additional Tools</h4>
+<p>Use <code>[additional-tools]</code> to make CLI utilities, compilers, or system libraries available in your shell and pipeline sandboxes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[additional-tools]</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"git"</span><span class="op">,</span> <span class="st">"jq"</span><span class="op">,</span> <span class="st">"gawk"</span><span class="op">,</span> <span class="st">"pandoc"</span><span class="op">,</span> <span class="st">"typst"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="summary" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.5</span> Summary</h2>
+<section id="latex-support" class="level4" data-number="4.3.3.2">
+<h4 data-number="4.3.3.2" class="anchored" data-anchor-id="latex-support"><span class="header-section-number">4.3.3.2</span> LaTeX Support</h4>
+<p>If your project generates PDFs or reports, use the <code>[latex]</code> section. T automatically provides a <code>texlive</code> environment (starting from <code>scheme-small</code>). Simply list any extra LaTeX packages needed:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[latex]</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"amsmath"</span><span class="op">,</span> <span class="st">"blindtext"</span><span class="op">,</span> <span class="st">"physics"</span><span class="op">,</span> <span class="st">"hyperref"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+</section>
+<section id="summary" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.4</span> Summary</h2>
 <p>Traditional tools like <code>{renv}</code> or Python’s <code>venv</code> only capture part of the reproducibility puzzle. They track package versions but not the language version itself, nor system-level dependencies like GDAL or Java. This means your project can still break on a different machine, or even on your own machine after a system update.</p>
 <p>Nix solves this by managing <em>everything</em>: R, Python, all packages, and all system dependencies. T builds on top of Nix to solve the <em>orchestration</em> problem: it provides a language for describing <em>how</em> computations in different runtimes interact, and it enforces reproducibility at every step.</p>
 <p>When you define a pipeline with T, you get a complete, self-contained specification that anyone can use to recreate the exact same results, on any machine, at any point in the future.</p>
