@@ -152,7 +152,7 @@ feedback loop that could be automated. The LLM contributed the implementation.
 Neither of us could have done it alone.
 
 This is the approach that this book is trying to teach for data science. The
-specific tools—T, Nix, R, Python—matter less than the underlying mental model:
+specific tools matter less than the underlying mental model:
 make the structure of your computation explicit, build in the ability to inspect
 and query it at every stage, and create feedback loops that you and your AI
 collaborators can iterate on together.
@@ -300,8 +300,6 @@ website](https://tstats-project.org).
 
 ## The T Project
 
-### Project Layout
-
 Every T project has the following directory structure:
 
 ```
@@ -323,9 +321,8 @@ The two most important files are `tproject.toml` and `src/pipeline.t`.
 
 ### Declaring Dependencies with `tproject.toml`
 
-T projects are explicit: R, Python, and Julia packages belong in
-`tproject.toml`, not in ad hoc `install.packages()`, `pip install`, or
-`Pkg.add()` calls. Open `tproject.toml` and add the runtime packages you need:
+T projects are explicit: R, Python, and Julia packages belong in `tproject.toml`, not in ad-hoc `install.packages()`, `pip install`, or `Pkg.add()` calls. 
+Open `tproject.toml` and add the runtime packages you need:
 
 ```toml
 [r-dependencies]
@@ -337,8 +334,11 @@ packages = ["polars", "scikit-learn"]
 
 [jl-dependencies]
 version = "lts"
-packages = ["DataFrames"]
+packages = ["DataFrames", "CSV", "GLM"]
 ```
+
+For Julia, the `version` field defaults to `"lts"` (the current Julia long-term-support release). 
+To pin a specific Julia version, use formats like `"1.10"` or `"1.11"`, which map to `julia_1_10` or `julia_1_11` in Nixpkgs.
 
 After editing `tproject.toml`, sync the project environment:
 
@@ -353,24 +353,47 @@ exit
 nix develop
 ```
 
-### Why NOT to use `install.packages()`
+#### Why NOT to use `install.packages()` / `pip install` / `Pkg.add()`
 
-It's crucial to understand: **never call `install.packages()` from within a T
-project**. Here's why:
+It's crucial to understand: **never call imperative installation commands from within a T project**. Here's why:
 
-1. Technically, it won’t work. Computations defined in your pipeline will run within hermetic
-  Nix sandboxes, so anything not installed through Nix won’t simply be available.
-2. Conceptually, this goes against reproducibility. The whole point of T's Nix integration is that your
-   environment is fully defined by `tproject.toml` and `flake.lock`. Ad-hoc
-   installations defeat this.
+1. **Technically, it won’t work:** Computations defined in your pipeline run inside hermetic Nix sandboxes.
+  Anything not declared through Nix simply will not be available during pipeline execution.
+2. **Conceptually, it defeats reproducibility:** The whole point of T's Nix integration is that your environment is fully defined by `tproject.toml` and `flake.lock`. 
+  Ad-hoc installations break this guarantee.
 
-Instead, add packages to `tproject.toml` and run `t update`. Trying to call
-`install.packages()` (or equivalent commands for Julia and Python) will raise
-an error.
+Instead, add packages to `tproject.toml` and run `t update`. Calling `install.packages()` (or equivalent commands for Python and Julia) will raise an error.
 
-This is not the only way to install packages though. It is possible to use `uv` to install
-packages for your T project, but not in an imperative fashion. First, you need to 
-declare the following in your `tproject.toml`:
+### Alternative installation methods
+
+T provides several other ways to install packages, using `uv` for Python or `{renv}` for R.
+By default, T uses Nix to resolve packages directly. We recommend sticking to the default resolver as much as possible. 
+The default approach works exceptionally well for **Julia** and **R** because virtually all packages in their ecosystems are available through Nix. This is not the case for **Python**. 
+
+Python’s PyPI contains hundreds of thousands of packages of varying quality. 
+If you use Python for data analysis, you’ve likely hit this issue: you try to install one package that requires `numpy < 2`, and another that requires `numpy >= 2`. 
+You're *cooked*, as the youths say. The resolver can't help you because the requirements are literally incompatible. 
+No amount of Rust-written package managers can solve this, the underlying issue is PyPI's ecosystem model.
+
+In R, this situation rarely happens. CRAN enforces a system where packages are continuously tested against their reverse dependencies. 
+If `{ggplot2}` or `{dplyr}` updates in a way that breaks other packages, CRAN catches it. 
+Authors have two weeks to fix the issue, or their package gets archived. As a result, if a package is on CRAN, it works. CRAN manages this consistency across ~27,000 packages.
+
+PyPI does not do this. It hosts packages without global consistency checks. If Package A and Package B declare mutually exclusive requirements, PyPI hosts them both anyway. 
+Nix tries to curate Python packages, but because of PyPI's constraints, the entirety of PyPI cannot be made available through Nix in an automated way. 
+Occasionally, you can patch a package's `pyproject.toml` in Nix to relax incompatible constraints (e.g., changing `numpy = "^1"` to `numpy = ">=1"`), but patching isn't a universal solution.
+
+This is why T provides alternative resolvers (`uv` for Python and `{renv}` for R):
+* For Python (`uv`): Allows Nix to build the environment while fetching packages directly from PyPI via `uv`. 
+  This is especially useful if you are collaborating with non-T/Nix users who rely on standard `pyproject.toml` and `uv.lock` files.
+
+* **For R (`renv`):** Allows you to reuse existing `renv.lock` files for collaboration or legacy workflows.
+
+#### Alternative Python Resolver: `uv`
+
+Instead of declaring Python packages directly in `tproject.toml`, you can delegate dependency management to `uv`. 
+
+First, configure `tproject.toml`:
 
 ```toml
 [py-dependencies]
@@ -378,7 +401,7 @@ resolver = "uv"
 workspace = "python"
 ```
 
-The workspace directory must contain the UV project metadata and lock file:
+The workspace directory must contain your `uv` project metadata and lock file:
 
 ```text
 python/
@@ -386,62 +409,101 @@ python/
   uv.lock
 ```
 
-The `version` field is **optional** when using the UV resolver. If omitted, T infers the Nixpkgs Python attribute (e.g. `python312`) from the `requires-python` field in `python/pyproject.toml`. 
+The `version` field in `tproject.toml` is **optional** when using the `uv` resolver. If omitted, T infers the Nixpkgs Python attribute (e.g., `python312`) from the `requires-python` field in `python/pyproject.toml`. 
+
 The inference accepts specifiers that constrain to a single minor version (`==3.12`, `==3.12.*`, `~=3.12`, `>=3.12,<3.13`) and errors on open-ended ranges (`>=3.12`). 
-If an explicit `version` conflicts with `requires-python`, T prints a warning and uses the explicit value.
+If an explicit `version` conflicts with `requires-python`, T prints a warning and uses the explicit version.
 
-When `resolver = "uv"`, do not set `[py-dependencies].packages`; Python dependencies are declared only in `pyproject.toml` and locked by `uv.lock`. 
-Running `t update` generates uv2nix/pyproject.nix inputs in `flake.nix` and builds the Python environment as a Nix virtual environment.
+When using `resolver = "uv"`, do **not** set `[py-dependencies].packages`. Python dependencies are declared exclusively in `pyproject.toml` and locked by `uv.lock`. 
+Running `t update` generates `uv2nix`/`pyproject.nix` inputs in `flake.nix` and builds the Python environment as a Nix virtual environment.
 
-If you do **not** have `uv` installed and have **no** existing Python package metadata, follow these steps:
+If you don't have `uv` installed locally and lack existing metadata:
 
-First, edit `tproject.toml` and as before, set the resolver to `uv`:
+1. Edit `tproject.toml` to set the resolver:
+   ```toml
+   [py-dependencies]
+   resolver = "uv"
+   workspace = "python"
+   ```
+
+2. Create a minimal `pyproject.toml` inside the `python/` directory:
+   ```toml
+   # python/pyproject.toml
+   [project]
+   name = "my_project_python_env"
+   version = "0.1.0"
+   requires-python = ">=3.12,<3.13"
+   dependencies = [
+       "pandas",
+   ]
+   ```
+
+3. Enter a temporary Nix shell to generate the lock file using `uv`:
+   ```bash
+   nix shell nixpkgs#uv nixpkgs#python3
+   uv lock --project python
+   exit
+   ```
+
+4. Re-enter your T development shell and update:
+   ```bash
+   nix develop
+   t update
+   ```
+
+This reads the `uv` workspace, adds `pyproject-nix`, `uv2nix`, and `pyproject-build-systems` inputs to `flake.nix`, and configures the Python environment to use `pySet.mkVirtualEnv`.
+
+#### Alternative R Options: `{renv}` & Git Repositories
+
+If your project already contains an `renv.lock` file, set:
 
 ```toml
-[py-dependencies]
-resolver = "uv"
-workspace = "python"
+[r-dependencies]
+resolver = "renv"
 ```
 
-Then create a minal `pyproject.toml`:
+When `resolver = "renv"`, T automatically discovers all R dependencies from `renv.lock`:
 
-```bash
-mkdir python
-```
+* **CRAN packages** are read from each entry's `Repository` or `Bioconductor` field and mapped to `pkgs.rPackages.*`.
+* **GitHub/GitLab packages** are fetched via `builtins.fetchGit` using the `RemoteHost`, `RemoteUsername`, `RemoteRepo`, and `RemoteSha` fields (supports `api.github.com` and `gitlab.com`).
+* **Remotes** are parsed and injected as `buildInputs` for dependent Git packages.
+* Base R packages (`R`, `methods`, `stats`, etc.) are automatically filtered out.
+
+No `packages` list is required in `tproject.toml`; `renv.lock` serves as the single source of truth. Run `t update` to regenerate `flake.nix`.
+
+> **Note:** This does not install the *exact* package versions locked in `renv.lock`. Instead, it installs the package versions available in Nixpkgs at the date defined in your `tproject.toml` (`[nixpkgs].date`).
+
+To install R packages directly from remote Git repositories (e.g., GitHub), declare them directly in `tproject.toml`:
 
 ```toml
-# python/pyproject.toml
-[project]
-name = "my_project_python_env"
-version = "0.1.0"
-requires-python = ">=3.12,<3.13"
-dependencies = [
-    "pandas",
-]
+[r-dependencies]
+packages = ["dplyr"]
+my_pkg = { git = "https://github.com/user/my-pkg", rev = "abc123def456" }
 ```
 
-Add any PyPI packages to the `dependencies` list. Re-run `uv lock` whenever the list changes. Now you need to generate the lock file. I will assume you don’t have `uv` installed,
-but thanks to the power of Nix, this is not an issue. Just enter a temporary shell:
+The `rev` field must be a full Git commit hash. Each Git package is injected into every R pipeline node's `buildInputs`. When using `resolver = "renv"`, Git packages declared in `tproject.toml` are automatically merged with those in `renv.lock`.
 
-```bash
-nix shell nixpkgs#uv nixpkgs#python3
+### System Dependencies and LaTeX
+
+Beyond language packages, you can declare system tools and LaTeX packages required by your project.
+
+#### Additional Tools
+
+Use `[additional-tools]` to make CLI utilities, compilers, or system libraries available in your shell and pipeline sandboxes:
+
+```toml
+[additional-tools]
+packages = ["git", "jq", "gawk", "pandoc", "typst"]
 ```
 
-Then generate the lock file:
+#### LaTeX Support
 
-```bash
-uv lock --project python
+If your project generates PDFs or reports, use the `[latex]` section. T automatically provides a `texlive` environment (starting from `scheme-small`). Simply list any extra LaTeX packages needed:
+
+```toml
+[latex]
+packages = ["amsmath", "blindtext", "physics", "hyperref"]
 ```
-
-Type `exit` or press `Ctrl-D` to leave the Nix shell when done. Finally, enter your T project shell again using `nix develop` and run:
-
-```bash
-t update
-```
-
-This reads the UV workspace, adds `pyproject-nix`, `uv2nix`, and `pyproject-build-systems` inputs to `flake.nix`, and configures the Python environment to use `pySet.mkVirtualEnv` instead of `pkgs.python314.withPackages`.
-
-## Which resolver to choose?
 
 ## Summary
 
