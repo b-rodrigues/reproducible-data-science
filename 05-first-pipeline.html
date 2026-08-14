@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -521,7 +521,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Read back.</strong> After <code>build_pipeline(p)</code> completes, use <code>read_node(p.name)</code> to load any node’s artifact back into T for inspection.</li>
 </ol>
 <blockquote class="blockquote">
-<p><strong>Key insight</strong>: A pipeline is a <em>declarative build graph</em>, not a script. Nodes describe <em>what</em> to produce, not <em>when</em> to compute. T handles the ordering, caching, and reproducibility — the same pipeline produces the same results on any machine.</p>
+<p><strong>Key insight</strong>: A pipeline is a <em>declarative build graph</em>, not a script. Nodes describe <em>what</em> to produce, not <em>when</em> to compute. T handles the ordering, caching, and reproducibility: the same pipeline produces the same results on any machine.</p>
 </blockquote>
 </section>
 <section id="the-simplest-possible-pipeline" class="level2" data-number="5.3">
@@ -536,8 +536,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 build_pipeline(p)</code></pre>
 <pre class="text t-error"><code>T execution failed:
 Error running t (error code 1): &lt;no output&gt;</code></pre>
-<p>Run it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This pipeline doesn’t use any R, Python or Julia code yet, but is written in pure T. T comes with many builtin functions, and even data manipulation verbs inspired by <code>{dplyr}</code>! But let’s discuss these later.</p>
+<p>Now let’s run the pipeline. There are two ways of doing it. From the terminal (inside of the environment):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> developt</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>or inside an interactive T session, using <code>t_make()</code>.</p>
 <p>T resolves the dependency graph (<code>total</code> depends on <code>x</code> and <code>y</code>), builds each node, and caches the results. Access any node’s value with dot notation in the REPL:</p>
 <pre class="t"><code>t&gt; p.x      -- 10
 t&gt; p.y      -- 20
@@ -550,7 +553,7 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 </section>
 <section id="the-core-development-loop" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="the-core-development-loop"><span class="header-section-number">5.4</span> The Core Development Loop</h2>
-<p>A productive way to build pipelines is incrementally — start small, build, inspect, extend:</p>
+<p>A productive way to build pipelines is incrementally: start small, build, inspect, extend:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> check src/pipeline.t   <span class="co"># validate cheaply, catches errors in milliseconds</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t     <span class="co"># build when clean</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Inside the REPL (<code>t</code> or <code>t repl</code>) you can inspect results immediately after a build:</p>
@@ -569,12 +572,17 @@ build_pipeline(p)</code></pre>
 <pre class="text t-error"><code>T execution failed:
 Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>Because <code>x</code>, <code>y</code>, and <code>total</code> were already built and cached, Nix skips them and only computes the new <code>label</code> node. Run <code>build_pipeline(p, dry_run = true)</code> to preview which nodes will be rebuilt versus served from cache before committing to a full build.</p>
-<p>This <strong>check → build → inspect → extend</strong> loop is the core iterative development cycle in T. Get comfortable with it before moving on.</p>
+<p>This <strong>check → build → inspect → extend</strong> loop is the core iterative development cycle in T. Get comfortable with it before moving on. It is also possible to interactively inspect R, Python or Julia nodes. More on this later.</p>
 </section>
 <section id="node-types-calling-r-python-and-julia" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="node-types-calling-r-python-and-julia"><span class="header-section-number">5.5</span> Node Types: Calling R, Python, and Julia</h2>
 <p>The power of T is that nodes can run in any runtime. The node wrapper functions make this explicit:</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 31%">
+<col style="width: 34%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Function</th>
@@ -586,7 +594,7 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <tr class="odd">
 <td><code>node()</code></td>
 <td>T native</td>
-<td>Data manipulation, logic, native T operations</td>
+<td>Data manipulation, logic, native T operations (optional)</td>
 </tr>
 <tr class="even">
 <td><code>rn()</code></td>
@@ -633,7 +641,7 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 build_pipeline(p)</code></pre>
 <pre class="text t-error"><code>T execution failed:
 Error running t (error code 1): &lt;no output&gt;</code></pre>
-<p>T reads the R node’s output (<code>summary_r</code>, serialized as <code>^ipc</code> Arrow IPC) and makes it available inside the Python node’s sandbox under the same name. Serialization and deserialization happen automatically—you never write glue code to convert between R data frames and Python DataFrames.</p>
+<p>T reads the R node’s output (<code>summary_r</code>, serialized as <code>^ipc</code> Arrow IPC) and makes it available inside the Python node’s sandbox under the same name. Serialization and deserialization happen automatically, you never write glue code to convert between R data frames and Python DataFrames.</p>
 </section>
 <section id="serializers" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="serializers"><span class="header-section-number">5.6</span> Serializers</h2>
@@ -701,9 +709,6 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>Then run <code>t update &amp;&amp; exit &amp;&amp; nix develop</code> to sync the environment.</p>
 <p>Now write the pipeline:</p>
 <pre class="t"><code>-- src/pipeline.t
-import stats
-import dataframe
-
 p = pipeline {
   -- Node 1: load data in T
   data = node(
@@ -728,7 +733,7 @@ p = pipeline {
 build_pipeline(p, verbose = 1)
 
 -- Read results back into T and inspect
-raw   = read_node(p.data)
+raw = read_node(p.data)
 fitted = read_node(p.model)
 
 print("Data shape:")
@@ -740,7 +745,7 @@ print(fitted.coefficients)</code></pre>
 Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>Run it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see the build log, then the data shape and model coefficients printed. Try changing the data values and re-running—only the affected nodes rebuild.</p>
+<p>You should see the build log, then the data shape and model coefficients printed. Try changing the data values and re-running; only the affected nodes rebuild.</p>
 </section>
 <section id="inspecting-the-pipeline" class="level2" data-number="5.8">
 <h2 data-number="5.8" class="anchored" data-anchor-id="inspecting-the-pipeline"><span class="header-section-number">5.8</span> Inspecting the Pipeline</h2>
@@ -778,7 +783,7 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 ├── error_code: "NameError"
 ├── error_message: "Name `p` is not defined.\nDid you mean `n`?"
 ├── na_count: 0
-├── file: "/tmp/nix-shell-128965-2191714850/tlang-a1e83ab5739d64be/chunk.t"
+├── file: "/tmp/nix-shell-129204-3139562180/tlang-56da54aec7bdb884/chunk.t"
 ├── line: 1
 └── column: 9
 </code></pre>
