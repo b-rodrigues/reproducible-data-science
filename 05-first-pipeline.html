@@ -476,9 +476,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#inspecting-the-pipeline" id="toc-inspecting-the-pipeline" class="nav-link" data-scroll-target="#inspecting-the-pipeline"><span class="header-section-number">5.8</span> Inspecting the Pipeline</a></li>
   <li><a href="#comparing-builds-with-t-diff" id="toc-comparing-builds-with-t-diff" class="nav-link" data-scroll-target="#comparing-builds-with-t-diff"><span class="header-section-number">5.9</span> Comparing Builds with <code>t diff</code></a></li>
   <li><a href="#what-t-check-catches" id="toc-what-t-check-catches" class="nav-link" data-scroll-target="#what-t-check-catches"><span class="header-section-number">5.10</span> What <code>t check</code> Catches</a></li>
-  <li><a href="#pointing-nodes-at-external-scripts" id="toc-pointing-nodes-at-external-scripts" class="nav-link" data-scroll-target="#pointing-nodes-at-external-scripts"><span class="header-section-number">5.11</span> Pointing Nodes at External Scripts</a></li>
-  <li><a href="#pairing-with-an-ai-agent" id="toc-pairing-with-an-ai-agent" class="nav-link" data-scroll-target="#pairing-with-an-ai-agent"><span class="header-section-number">5.12</span> Pairing with an AI Agent</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">5.13</span> Summary</a></li>
+  <li><a href="#interactive-development-with-the-t-repl-in-positron" id="toc-interactive-development-with-the-t-repl-in-positron" class="nav-link" data-scroll-target="#interactive-development-with-the-t-repl-in-positron"><span class="header-section-number">5.11</span> Interactive Development with the T REPL in Positron</a>
+  <ul class="collapse">
+  <li><a href="#inspecting-live-nodes-read_node" id="toc-inspecting-live-nodes-read_node" class="nav-link" data-scroll-target="#inspecting-live-nodes-read_node"><span class="header-section-number">5.11.1</span> Inspecting Live Nodes: <code>read_node()</code></a></li>
+  <li><a href="#inspecting-historical-builds-read_past_node" id="toc-inspecting-historical-builds-read_past_node" class="nav-link" data-scroll-target="#inspecting-historical-builds-read_past_node"><span class="header-section-number">5.11.2</span> Inspecting Historical Builds: <code>read_past_node()</code></a></li>
+  <li><a href="#stepping-into-guest-runtimes-debug_node-a-debugging-appetizer" id="toc-stepping-into-guest-runtimes-debug_node-a-debugging-appetizer" class="nav-link" data-scroll-target="#stepping-into-guest-runtimes-debug_node-a-debugging-appetizer"><span class="header-section-number">5.11.3</span> Stepping into Guest Runtimes: <code>debug_node()</code> (A Debugging Appetizer)</a></li>
+  </ul></li>
+  <li><a href="#pointing-nodes-at-external-scripts" id="toc-pointing-nodes-at-external-scripts" class="nav-link" data-scroll-target="#pointing-nodes-at-external-scripts"><span class="header-section-number">5.12</span> Pointing Nodes at External Scripts</a></li>
+  <li><a href="#pairing-with-an-ai-agent" id="toc-pairing-with-an-ai-agent" class="nav-link" data-scroll-target="#pairing-with-an-ai-agent"><span class="header-section-number">5.13</span> Pairing with an AI Agent</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">5.14</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/05-first-pipeline.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -783,7 +789,7 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 ├── error_code: "NameError"
 ├── error_message: "Name `p` is not defined.\nDid you mean `n`?"
 ├── na_count: 0
-├── file: "/tmp/nix-shell-129259-2947325895/tlang-7d56332c06de73e9/chunk.t"
+├── file: "/tmp/nix-shell-129279-1228029032/tlang-e39c87e010b9a5f7/chunk.t"
 ├── line: 1
 └── column: 9
 </code></pre>
@@ -885,8 +891,68 @@ model         Changed   T        T</code></pre>
 </table>
 <p>Make it a habit: <strong><code>t check</code> first, <code>t run</code> only when clean.</strong></p>
 </section>
-<section id="pointing-nodes-at-external-scripts" class="level2" data-number="5.11">
-<h2 data-number="5.11" class="anchored" data-anchor-id="pointing-nodes-at-external-scripts"><span class="header-section-number">5.11</span> Pointing Nodes at External Scripts</h2>
+<section id="interactive-development-with-the-t-repl-in-positron" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="interactive-development-with-the-t-repl-in-positron"><span class="header-section-number">5.11</span> Interactive Development with the T REPL in Positron</h2>
+<p>Non-interactive batch execution via shell commands like <code>t run src/pipeline.t</code> is perfect for automated builds, reproducible pipelines, and CI/CD runners. But humans rarely write data science workflows as single monolithic batch runs. Data analysis is inherently iterative: we need to explore intermediate outputs, check data shapes, inspect model coefficients, test function logic, and troubleshoot errors in real time.</p>
+<p>Humans need a REPL (Read-Eval-Print Loop).</p>
+<p>When working in Positron (or VS Code with the T extension), you can open an interactive <code>t</code> session directly in your editor terminal. Running <code>t</code> (or <code>t repl</code>) inside Positron gives you a live, interactive environment where you can execute pipeline definitions, evaluate <code>build_pipeline(p)</code> on the fly, and inspect nodes immediately.</p>
+<section id="inspecting-live-nodes-read_node" class="level3" data-number="5.11.1">
+<h3 data-number="5.11.1" class="anchored" data-anchor-id="inspecting-live-nodes-read_node"><span class="header-section-number">5.11.1</span> Inspecting Live Nodes: <code>read_node()</code></h3>
+<p>Once a pipeline is built in your session, you can inspect any node’s computed result using <code>read_node()</code>:</p>
+<pre class="t"><code>t&gt; p = pipeline {
+..   data  = node(command = to_dataframe([x = [1.0, 2.0, 3.0], y = [10L, 20L, 30L]]))
+..   stats = rn(command = &lt;{ summary(data) }&gt;, deserializer = ^json, serializer = ^json)
+.. }
+t&gt; build_pipeline(p)
+t&gt; read_node(p.data)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Note that <code>read_node()</code> strictly expects a <code>ComputedNode</code> reference (such as <code>p.data</code> or <code>p.stats</code>), not a raw string name.</p>
+<section id="high-fidelity-representation-of-foreign-objects" class="level4" data-number="5.11.1.1">
+<h4 data-number="5.11.1.1" class="anchored" data-anchor-id="high-fidelity-representation-of-foreign-objects"><span class="header-section-number">5.11.1.1</span> High-Fidelity Representation of Foreign Objects</h4>
+<p>One of the greatest benefits of the T REPL is how it displays results from foreign runtimes. Whether a node was computed in pure T, R (<code>rn</code>), Python (<code>pyn</code>), or Julia (<code>jln</code>), <code>read_node()</code> automatically deserializes the underlying artifact (Parquet, Arrow IPC, JSON, PMML, etc.) and converts it into a native, high-fidelity T representation.</p>
+<p>When you call <code>read_node()</code> on a foreign node from the T REPL, T formats the output cleanly:</p>
+<ul>
+<li><strong>DataFrames</strong> (from R <code>tibble</code>/<code>data.frame</code>, Python <code>pandas</code>/<code>polars</code>, or Julia <code>DataFrame</code>) print with column names, data types, and row/column counts.</li>
+<li><strong>Models</strong> (such as an R <code>glm</code> serialized as PMML or a Python <code>scikit-learn</code> model) display structured model metadata and tidy coefficient tables via <code>fitted.coefficients</code>.</li>
+<li><strong>Structured collections</strong> (Lists and Dicts) display as clean, readable trees without low-level string formatting artifacts.</li>
+</ul>
+<p>You get rich, instant feedback inside your interactive Positron session without writing custom glue code or manually serializing objects to temporary files.</p>
+</section>
+</section>
+<section id="inspecting-historical-builds-read_past_node" class="level3" data-number="5.11.2">
+<h3 data-number="5.11.2" class="anchored" data-anchor-id="inspecting-historical-builds-read_past_node"><span class="header-section-number">5.11.2</span> Inspecting Historical Builds: <code>read_past_node()</code></h3>
+<p>What if you want to inspect a node’s output from a previous build, or examine artifacts when the pipeline object <code>p</code> is no longer in your active REPL memory?</p>
+<p>T provides <code>read_past_node()</code> for temporal introspection:</p>
+<pre class="t"><code>t&gt; read_past_node(p.data, which_log = "2026-08-14")</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Unlike <code>read_node()</code>, which looks up live in-scope nodes from the active pipeline object, <code>read_past_node()</code> captures the node identifier non-evaluatively and queries T’s historical build logs in <code>_pipeline/logs/</code>. The mandatory <code>which_log</code> parameter specifies a timestamp or log identifier pattern. This allows you to inspect past run outputs, audit how dataset values evolved over time, or inspect artifacts from previous sessions without re-running the pipeline.</p>
+</section>
+<section id="stepping-into-guest-runtimes-debug_node-a-debugging-appetizer" class="level3" data-number="5.11.3">
+<h3 data-number="5.11.3" class="anchored" data-anchor-id="stepping-into-guest-runtimes-debug_node-a-debugging-appetizer"><span class="header-section-number">5.11.3</span> Stepping into Guest Runtimes: <code>debug_node()</code> (A Debugging Appetizer)</h3>
+<p>Sometimes inspecting an output from the T REPL isn’t enough—especially when a foreign script throws an unexpected runtime error or requires step-by-step code execution.</p>
+<p>T provides <code>debug_node()</code> to drop you directly from the T REPL into an interactive guest subshell for that specific language:</p>
+<pre class="t"><code>t&gt; debug_node(p.stats)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>Calling <code>debug_node()</code> automatically:</p>
+<ol type="1">
+<li>Resolves all upstream dependency artifacts for <code>p.stats</code> from the Nix store.</li>
+<li>Sets up environment variables and imports context.</li>
+<li>Spawns an interactive REPL for the target language—a Python subshell with prompt <code>py&gt;</code>, an R subshell with prompt <code>r&gt;</code>, or a Julia subshell with prompt <code>jl&gt;</code>.</li>
+</ol>
+<p>Inside the guest subshell, the <code>tlang</code> companion library is pre-loaded, allowing you to load upstream node data live:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> data <span class="op">=</span> tlang.read_node(<span class="st">"data"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="bu">print</span>(data.head())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To preserve workspace reproducibility during debugging, imperative package manager commands (such as <code>install.packages()</code>, <code>pip install</code>, or <code>Pkg.add()</code>) are dynamically intercepted and blocked inside <code>debug_node()</code> subshells. If your code requires an additional package, simply declare it in <code>tproject.toml</code> and re-enter <code>nix develop</code>.</p>
+<p>Pressing <code>Ctrl+D</code> (or typing <code>exit()</code>) exits the guest subshell and returns control seamlessly back to your parent T REPL session.</p>
+<p><em>(We will explore interactive subshells, failure logs, stack trace analysis, and advanced troubleshooting techniques in detail in an upcoming chapter dedicated to debugging).</em></p>
+</section>
+</section>
+<section id="pointing-nodes-at-external-scripts" class="level2" data-number="5.12">
+<h2 data-number="5.12" class="anchored" data-anchor-id="pointing-nodes-at-external-scripts"><span class="header-section-number">5.12</span> Pointing Nodes at External Scripts</h2>
 <p>You do not have to inline all your code in <code>&lt;{ ... }&gt;</code> blocks. The <code>script</code> argument lets a node point to an external file:</p>
 <pre class="t"><code>p = pipeline {
   data  = node(command = read_csv("data/sales.csv"), serializer = ^ipc)
@@ -898,8 +964,8 @@ build_pipeline(p)</code></pre>
 Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>The runtime is inferred from the file extension (<code>.R</code> → R, <code>.py</code> → Python, <code>.jl</code> → Julia, <code>.sh</code> → Shell, <code>.qmd</code> → Quarto). T reads the file to extract identifier references, so the dependency graph is still built correctly. We will return to this in Chapter 6, where we discuss why external script files make your analysis code more portable and testable.</p>
 </section>
-<section id="pairing-with-an-ai-agent" class="level2" data-number="5.12">
-<h2 data-number="5.12" class="anchored" data-anchor-id="pairing-with-an-ai-agent"><span class="header-section-number">5.12</span> Pairing with an AI Agent</h2>
+<section id="pairing-with-an-ai-agent" class="level2" data-number="5.13">
+<h2 data-number="5.13" class="anchored" data-anchor-id="pairing-with-an-ai-agent"><span class="header-section-number">5.13</span> Pairing with an AI Agent</h2>
 <p>T is designed for AI-assisted development. The <code>AGENTS.md</code> and <code>T-LANGUAGE-REFERENCE.md</code> files that <code>t init</code> generates give any LLM the context it needs to write correct T pipelines. But the <em>workflow</em> matters as much as the context.</p>
 <p>The core principle: <strong><code>t check</code> is cheap (milliseconds), <code>t run</code> is expensive (minutes, the first time Nix builds an environment).</strong> An AI agent should iterate on <code>t check</code> until the pipeline is structurally clean, then trigger <code>t run</code> once.</p>
 <p>The recommended loop:</p>
@@ -995,8 +1061,8 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="5.13">
-<h2 data-number="5.13" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.13</span> Summary</h2>
+<section id="summary" class="level2" data-number="5.14">
+<h2 data-number="5.14" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.14</span> Summary</h2>
 <p>The core workflow you will use throughout the rest of this book:</p>
 <ol type="1">
 <li><strong><code>t check --schema src/pipeline.t</code></strong> — validate cheaply, tier 1 + 2, in milliseconds</li>
