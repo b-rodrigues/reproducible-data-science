@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7867367fb29fda389467840c5866f6a2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f265b87640d31df99b0219922ff83384.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -631,7 +631,7 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>You do not need to memorise those columns; the point is that they are queryable with ordinary data-frame operations.</p>
 <pre class="t"><code>df = pipeline_to_frame(etl)
 print(df)</code></pre>
-<pre class="text t-output"><code>Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-36c0bdde079d4c4e/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+<pre class="text t-output"><code>Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-55bd41f0d220e22b/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <pre><code>name        runtime  serializer   noop  depth
 raw         r        rds          false  0
@@ -641,12 +641,12 @@ features    r        rds          false  3</code></pre>
 <p>From here, any standard filter or select applies directly. To find every Python node:</p>
 <pre class="t"><code>py_nodes = filter(df, runtime == "python")</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-cd8f9fd29fe2102c/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-1d8f5b81c0df052c/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>To find every node at depth 2 or deeper—useful when you want to know which steps are non-trivial downstream work:</p>
 <pre class="t"><code>deep_nodes = filter(df, depth &gt;= 2)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-da0f3d3b9ecc7f17/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-4a515b37be5eee4f/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="structural-queries" class="level3" data-number="9.2.2">
@@ -668,7 +668,7 @@ edges  = pipeline_edges(etl)
 -- validated    cleaned
 -- cleaned      features</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-695bd70042624bc2/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-df92a35545ecf753/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="column-projection-with-select_node" class="level3" data-number="9.2.3">
@@ -676,7 +676,7 @@ Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562
 <p><code>select_node</code> lets you project specific fields using non-standard evaluation (the <code>$field</code> syntax). It returns a frame restricted to the named columns, which is handy when you want to pass a compact summary to a report or a CI log:</p>
 <pre class="t"><code>summary = select_node(etl, $name, $runtime, $depth)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-3980bd7f9f79727e/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-56002b8178a1c4f2/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -702,7 +702,7 @@ Note
 <pre class="t"><code>-- Keep only the ETL steps that are not "raw" (already built, skip ingestion)
 no_ingest = filter_node(etl, $name != "raw")</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-62131c4aaab43e62/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-a31478d280e2b556/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>This is the simplest way to produce a lighter pipeline for a fast check run.</p>
 </section>
@@ -713,13 +713,13 @@ Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562
 <pre class="t"><code>-- Skip the feature-engineering step while iterating on the model
 fast_etl = mutate_node(etl, $name == "features", $noop = true)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-123a6eaf7ac874a7/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-d46396994bd8b45e/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><strong>Swapping runtimes.</strong> You can change the runtime of a node to test whether a Python reimplementation of an R step produces the same result:</p>
 <pre class="t"><code>-- Run "cleaned" in Python instead of R, without touching anything else
 py_etl = mutate_node(etl, $name == "cleaned", $runtime = "python")</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-bd1e1b94649d525a/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-a9b9dc12aa452946/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -741,7 +741,7 @@ Tip
 <pre class="t"><code>-- Rename "features" to "feature_matrix" for a cleaner downstream API
 etl2 = rename_node(etl, "features", "feature_matrix")</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-1a1e9214aaf34893/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-b2de848b36948999/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="swap" class="level3" data-number="9.3.4">
@@ -759,7 +759,7 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <pre class="t"><code>-- Point "linear_model" at "features_v2" instead of "features"
 rewired = rewire(model_pipeline, "linear_model", ["features_v2"])</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-34835e8c47982fa9/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-bf9a9516ff67b493/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="a-realistic-what-if-workflow" class="level3" data-number="9.3.6">
@@ -773,7 +773,7 @@ fast_check = full_pipeline
   |&gt; mutate_node($name == "model", $noop = true)
   |&gt; build_pipeline()</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-24b20f057ad6955f/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-31325f3549d048d6/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>Because T cached the model node on step 1, step 2 reads that cache and immediately builds the report. No data is lost; no special configuration is required.</p>
 </section>
@@ -786,7 +786,7 @@ Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562
 <p><code>union(p1, p2)</code> merges two pipelines. If both contain a node with the same name, T raises an error at construction time. Use <code>rename_node</code> on one of the pipelines first if you need to resolve the collision:</p>
 <pre class="t"><code>full = union(etl, model_pipeline)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-feb0b9f012d92169/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-f0fa05a1bc077034/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="difference" class="level3" data-number="9.4.2">
@@ -795,7 +795,7 @@ Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562
 <pre class="t"><code>-- Remove the ingestion node; data is already validated upstream
 trimmed = difference(etl, ["raw", "validated"])</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-db991684fca5b845/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-1efa456752f8bf13/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -816,7 +816,7 @@ Note
 <p><code>intersect(p1, p2)</code> keeps only the nodes that appear in <em>both</em> pipelines, using the definitions from <code>p1</code>. This is handy when you want to extract the shared core of two related pipelines:</p>
 <pre class="t"><code>shared_core = intersect(full_pipeline_v1, full_pipeline_v2)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-901dab43b43072e0/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-774fc9f7402edabe/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="patch" class="level3" data-number="9.4.4">
@@ -825,7 +825,7 @@ Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562
 <pre class="t"><code>-- Override the "cleaned" node without risk of adding unreviewed steps
 prod = patch(prod_pipeline, dev_overrides)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-89d0b6442859c74f/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-46eec5794000cba3/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="prune" class="level3" data-number="9.4.5">
@@ -835,7 +835,7 @@ Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562
 no_report = difference(full_pipeline, ["report"])
              |&gt; prune()</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-bea6a887fcbbf9f1/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-2c603fa6fa419df5/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="a-realistic-use-case-shared-etl-swapped-model" class="level3" data-number="9.4.6">
@@ -877,7 +877,7 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 etl_only = upstream_of(full, "features")
 build_pipeline(etl_only)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-93a2549b5dcbc351/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-5133f81c0755d585/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="downstream_of" class="level3" data-number="9.5.2">
@@ -887,7 +887,7 @@ Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562
 model_onwards = downstream_of(full, "linear_model")
 build_pipeline(model_onwards)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-caaab8ecd67b7790/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-888e495f2e29e16a/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>This is the most common use of DAG-aware transformations: you change a parameter, extract everything that is sensitive to that parameter, and rebuild only that subgraph.</p>
 </section>
@@ -897,7 +897,7 @@ Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562
 <pre class="t"><code>-- Isolate the cleaning and feature-engineering stages
 mid = subgraph(full, ["cleaned", "features"])</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-64187dd107315b92/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-f9560f3311a16dab/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -922,7 +922,7 @@ Tip
 <p><code>chain(p1, p2)</code> wires two pipelines together explicitly: it requires that <code>p2</code> references at least one node from <code>p1</code> by name. This is stricter than <code>union</code> (which silently accepts unconnected pipelines) and is the right choice when you want T to enforce that the wiring is intentional.</p>
 <pre class="t"><code>chained = chain(etl, model_pipeline)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-14e0b92b27725ba7/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-f41f4f41e66c0d72/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>If <code>p2</code> contains no reference to any node in <code>p1</code>, <code>chain</code> raises an error at construction time.</p>
 </section>
@@ -971,7 +971,7 @@ res = build_pipeline(meta)
 -- Read a namespaced node
 read_node("stats.summary")</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-4bc2c82c7354ddf1/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-4af5c10b31dcbc12/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1061,7 +1061,7 @@ last_three  = tail(param_sweep, 3)
 random_two  = sample(param_sweep, 2, seed = 42)
 middle      = slice(param_sweep, 4, 6)</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-84079c4691fc8131/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-33be4b5a111728fd/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>Expansion happens at <code>build_pipeline</code> time. Until then, <code>param_sweep</code> is a single lazy pattern value. After building, use <code>build_log_to_frame</code> to inspect which branches ran and how long each took:</p>
 <pre class="t"><code>res = build_pipeline(param_sweep)
@@ -1069,7 +1069,7 @@ log = build_log_to_frame(res)
 -- log columns: node, status, duration_s, store_path
 filter(log, status == "failed")</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-417e293f23a229c0/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-ad4af079c62541d2/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1222,7 +1222,7 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
                 |&gt; pipeline_assert()
                 |&gt; build_pipeline()</code></pre>
 <pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129204-3139562180/tlang-5bef0cb123ee362e/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
+Error running t (error code 1): Error(TypeError: "[/tmp/nix-shell-129259-2947325895/tlang-92cf5d10f5d5d9e4/chunk.t:L1:C6] Function `pipeline_to_frame` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>If <code>chain</code> produces an invalid graph, <code>pipeline_assert</code> surfaces the error immediately rather than waiting for Nix to fail deep inside a derivation build.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
