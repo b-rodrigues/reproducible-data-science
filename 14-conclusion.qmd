@@ -29,7 +29,7 @@ candidate is a personal side project or an internal analysis that nobody else
 depends on.
 
 Your goal in this phase is to build muscle memory. You want to reach the point
-where creating a `default.nix` file feels as natural as opening RStudio. You
+where writing a `pipeline.t` feels as natural as opening RStudio. You
 want to be able to troubleshoot common Nix errors without panic. You want to
 have a working CI pipeline that you understand inside and out.
 
@@ -43,9 +43,9 @@ Once you are comfortable, look for opportunities to demonstrate value. The best
 opportunities are problems that everyone recognises but nobody has solved.
 
 "It works on my machine" is the classic. The next time a colleague struggles to
-run your code, don't just send them a fixed script. Send them a `default.nix`
-file and a one-liner: `nix-shell --run "Rscript analysis.R"`. When it works on
-the first try, you will have their attention.
+run your code, don't just send them a fixed script. Send them the T project and
+a one-liner: `nix develop --command t run`. When the whole pipeline runs on the
+first try, you will have their attention.
 
 Another opportunity is the dreaded "update everything and pray" scenario. When
 a project breaks after a package update, you can show how Nix lets you pin
@@ -65,9 +65,10 @@ to entry as much as possible. This means:
    has never heard of Nix. Assume they will spend five minutes reading before
    giving up.
 
-2. Provide templates. Create a repository with a working `default.nix`,
-   `gen-env.R`, CI workflow, and a simple example analysis. When someone starts
-   a new project, they can clone this template and be productive immediately.
+2. Provide templates. Create a repository with a working T project: a
+   `pipeline.t`, a `tproject.toml`, a CI workflow, and a simple example
+   analysis. When someone starts a new project, they can clone this template
+   and be productive immediately.
 
 3. Automate the setup. If your organisation allows it, provide a script that
    installs Nix with a single command. The fewer steps, the fewer places where
@@ -105,7 +106,8 @@ own projects. Get comfortable. Build your own templates and workflows.
 
 **Month 3-4: Show and tell.** Start sharing your work. When you give a code
 review, mention that the project runs in a Nix shell. When someone asks how to
-install a package, show them `rix()`. Let people discover the value organically.
+add a package, show them that it is a line in `tproject.toml` followed by
+`t update`. Let people discover the value organically.
 
 **Month 5-6: Pilot project.** Propose using the full stack (Nix, tests, CI) for
 one team project. Pick something visible but not critical. Document everything.
@@ -149,38 +151,58 @@ begin.
 
 Throughout this book, we have seen how LLMs can assist with writing tests,
 generating documentation, and even drafting functions. But there is a bigger
-point to make here: LLMs dramatically lower the barrier to adopting these
-practices.
+point to make here: T was designed with LLMs in mind, and that design choice
+changes how you adopt everything else in this book.
 
 The old objection to tools like Nix was that the learning curve was too steep.
 You had to understand a new language, a new paradigm, and a lot of unfamiliar
-syntax. This is still true to some extent. But with an LLM at your side, you no
-longer need to memorise everything. You can ask.
+syntax. T softens that objection in two ways. First, its syntax is simple
+enough that a human can read and write it comfortably, without a manual. Second,
+and more importantly, it was designed from the start to be written by LLMs. The
+nodes, the dependencies, the data flow: all of it maps cleanly onto the kind of
+structured, declarative description that language models are good at producing.
 
-"How do I add a Python package to my `rix()` call?" "What does this Nix error
-message mean?" "Generate a GitHub Actions workflow that runs my tests in a Nix
-shell." These are questions that would have required hours of documentation
-diving or forum searching. Now they take seconds.
+So who writes your pipeline? In practice, both. You can open a `pipeline.t`
+file and understand it. You can also hand a problem to an LLM and get a working
+pipeline back. The same file can be edited by a human on Monday and regenerated
+by a model on Tuesday, and both versions stay legible to both of you. That is a
+rare property, and it is what makes T a good fit for AI-assisted work.
 
-This changes the economics of learning. The boilerplate that used to be a
-barrier is now generated for you. The syntax you kept forgetting is a prompt
-away. The edge cases you never encountered are handled by an assistant that has
-seen them all.
+But the language is only half the story. What actually determines whether an
+LLM contributes meaningfully is the context you give it, and the harness that
+surrounds it. Every T project ships with an `AGENTS.md` file and a
+`T-LANGUAGE-REFERENCE.md`. The `AGENTS.md` is where you tell the model how your
+project works: where the data lives, what the conventions are, what "done"
+looks like. The language reference gives it the precise syntax it needs.
+Together they turn a general-purpose model into something that knows your
+project. `t init` generates both for you, which is why a brand-new project is
+already LLM-ready.
 
-More importantly, LLMs make it easier to help your colleagues. When someone on
-your team struggles with a Nix expression, you do not need to be available at
-that exact moment. They can ask an LLM for help. They can generate a first
-draft and ask you to review it. The bottleneck shifts from "I need to learn
-everything" to "I need to understand enough to verify the output."
+This is where the real investment is, and it is not in prompting. It is in
+thinking. Take the time to understand your project well enough to explain it. A
+model given a rich, accurate description of your data and your goals will
+produce something you can build on. A model given a vague one-liner will
+produce something plausible but wrong. The quality of the context is the
+quality of the result.
 
-This is why the `pkgctx` tool exists. By feeding package documentation to an
-LLM, you give it the context it needs to generate idiomatic code for libraries
-like `{rix}` and `{rixpress}`. You are not replacing your expertise; you are
-amplifying it.
+And there is a lot you can do, as a human, to make the model's life easier. You
+do not have to ask the LLM to do everything. If downloading and cleaning the
+raw data into a tidy, ready-to-use format is something you can do once by hand,
+do it, and store the result in the project. Now the model starts from clean
+input instead of spending its effort, and your review time, writing a script to
+scrape and wrangle data you could have prepared yourself. The same goes for
+pinning a tricky dependency, sketching the first version of the pipeline's
+nodes, or writing the hard function yourself. You are not offloading your
+thinking to the model; you are clearing the path so that when it does think, it
+thinks about the right things.
 
-The combination of reproducibility tools and LLMs is powerful. The tools
-provide structure. The LLMs provide accessibility. Together, they make best
-practices achievable for teams that would never have adopted them otherwise.
+The human's job, then, shifts from writing every line to reviewing and
+directing. The bottleneck is no longer "I need to learn everything"; it is "I
+need to understand enough to verify the output." That is a much smaller ask,
+and it is why the combination works. T provides the structure and the
+reproducibility. The LLM provides the speed and the accessibility. And the
+context you invest provides the accuracy. Together, they make best practices
+achievable for teams that would never have adopted them otherwise.
 
 ## A note on literate programming
 
