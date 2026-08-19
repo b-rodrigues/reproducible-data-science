@@ -180,6 +180,77 @@ This will ensure that if someone contributes to your project, you know
 immediately if what they did breaks tests or not. If it does, ask them to fix
 the code until tests pass.
 
+## Running a T Pipeline on GitHub Actions
+
+Now that we know how to set up Nix on GitHub Actions, running a T pipeline is
+straightforward. Recall from Chapter 4 that T is distributed exclusively via
+Nix: you never install it in the traditional sense. A T project pins the exact
+version of T it uses in its committed `flake.nix` and `flake.lock` files, and
+`nix develop` drops you into a shell where that pinned `t` executable is
+available alongside all of your R, Python, and Julia runtimes.
+
+That means "installing T" on CI is really just "installing Nix." Once Nix is
+present, the project's own flake takes care of the rest. Here is a complete
+workflow that runs our pipeline on every push and pull request to `main`:
+
+```yaml
+name: T Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            substituters = https://cache.nixos.org https://rstats-on-nix.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= rstats-on-nix.cachix.org-1:vdiiVgocg6WeJrODIqdprZRUrhi1JzhBnXv7aWI6+F0=
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: rstats-on-nix
+
+      - name: Run pipeline
+        run: nix develop --command t run --failfast src/pipeline.t
+```
+
+The `extra_nix_config` block enables Nix flakes and points Nix at the
+`rstats-on-nix` binary cache, so R packages are downloaded pre-built rather
+than compiled from source. The `Setup Cachix` step registers that cache so the
+runner can pull from it.
+
+The important line is the last one:
+
+```
+run: nix develop --command t run --failfast src/pipeline.t
+```
+
+`nix develop` enters the project's environment using the committed
+`flake.lock`, which is where the T version is pinned. We then run `t run` on
+`src/pipeline.t`, exactly as we would locally. The `--failfast` flag makes the
+step, and therefore the whole workflow, fail as soon as any node errors, which
+is what you want on CI: a red build should mean something is actually broken.
+
+A couple of notes:
+
+- If you have changed `tproject.toml` (added a package, bumped a version), run
+  `t update` first to regenerate `flake.nix` and `flake.lock`, then commit those
+  files, the same one-time sync you do locally.
+- Chapter 8 showed the `pipeline_to_ga()` function, which generates a workflow
+  like this one automatically, including artifact caching. Writing it by hand,
+  as here, just makes each moving part explicit.
+
 ## Running a dockerized workflow
 
 This next example can be found in [this
