@@ -4,9 +4,9 @@
 
 We are almost at the end of our journey. In the previous chapters, we built
 reproducible environments with Nix, organised our code into pure functions,
-added robustness with monads, proved correctness with unit tests, managed our
-collaboration with Git, and bundled everything into shareable packages. We can
-now run our pipelines in a 100% reproducible way.
+made them robust with error handling and debugging, proved correctness with
+unit tests, managed our collaboration with Git, and bundled everything into
+shareable packages. We can now run our pipelines in a 100% reproducible way.
 
 However, all of this still requires manual steps. And maybe that's not a
 problem; if your environment is set up and users only need to drop into a Nix

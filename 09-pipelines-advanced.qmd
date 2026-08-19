@@ -851,7 +851,7 @@ The patterns also stack:
 - Use `node_fork` to select an implementation based on an environment variable.
 - Validate with `pipeline_validate` before any Nix work begins.
 
-The next chapter covers error handling and monadic pipelines—what to do when a
-node can *fail in an expected way* and you want to propagate that failure
-gracefully rather than aborting the whole build. [Chapter 12](12-packaging.qmd)
-then covers how to package a mature pipeline as a distributable artefact.
+The next chapter covers debugging and error handling—what to do when a node
+can *fail in an expected way* and you want to propagate that failure gracefully
+rather than aborting the whole build. [Chapter 12](12-packaging.qmd) then
+covers how to package a mature pipeline as a distributable artefact.

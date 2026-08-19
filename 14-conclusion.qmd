@@ -175,8 +175,8 @@ everything" to "I need to understand enough to verify the output."
 
 This is why the `pkgctx` tool exists. By feeding package documentation to an
 LLM, you give it the context it needs to generate idiomatic code for libraries
-like `{rix}`, `{rixpress}`, or `{chronicler}`. You are not replacing your
-expertise; you are amplifying it.
+like `{rix}` and `{rixpress}`. You are not replacing your expertise; you are
+amplifying it.
 
 The combination of reproducibility tools and LLMs is powerful. The tools
 provide structure. The LLMs provide accessibility. Together, they make best

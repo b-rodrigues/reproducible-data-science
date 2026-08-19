@@ -29,7 +29,7 @@ book:
     - 07-testing.qmd
     - 08-pipelines.qmd
     - 09-pipelines-advanced.qmd
-    - 10-monads.qmd
+    - 10-debugging.qmd
     - 11-docker.qmd
     - 12-packaging.qmd
     - 13-ci.qmd

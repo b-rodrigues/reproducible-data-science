@@ -3,9 +3,10 @@
 ## Introduction
 
 Up until now, we've built reproducible environments with Nix, written testable
-code with FP principles, orchestrated pipelines with `{rixpress}`, and added
-robustness with monads. Now we turn to **distribution**: how do we share our
-work with others who may not have Nix installed?
+code with FP principles, orchestrated pipelines with `{rixpress}`, and made
+them robust with error handling and debugging. Now we turn to
+**distribution**: how do we share our work with others who may not have Nix
+installed?
 
 Nix gives us fine-grained control over every package and dependency in our
 project, ensuring bit-for-bit reproducibility. However, when it comes to
