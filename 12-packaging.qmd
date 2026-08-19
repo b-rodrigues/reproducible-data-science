@@ -23,7 +23,9 @@ both R and Python. You will learn how to create, document, and test a basic R
 package using `{devtools}` and `{usethis}`, how to do the same for a modern
 Python package using `uv` and `pytest`, and how to install your own packages
 directly from GitHub so you can share your tools with colleagues and your future
-self. The goal is not to become an expert package developer, but to understand
+self. Finally, we will show how to integrate your packages into a T pipeline,
+turning them into a first-class part of your reproducible workflows. The goal is
+not to become an expert package developer, but to understand
 the structure and benefits so you can apply this powerful "packaging mindset" to
 all your future projects.
 
@@ -480,6 +482,91 @@ Finally, add `pyclean` to the `buildInputs` of the shell:
 
 This process is naturally more involved than simply calling `pip install`, but
 it has the advantage of being entirely reproducible.
+
+## Part 3: Integrating Your Packages into a T Pipeline
+
+Throughout this book, your T pipelines have declared their runtime dependencies
+in `tproject.toml` — R packages under `[r-dependencies]` and Python packages
+under `[py-dependencies]` (Chapter 4) — and you have built pipelines from those
+dependencies (Chapter 8). Here is the payoff of the packaging work you just did:
+you can now drop *your own* packages into that same mechanism and call them from
+any node.
+
+### Adding an R Package
+
+For a package that is already on CRAN, list it in the `packages` array, exactly
+as in Chapter 4:
+
+```toml
+[r-dependencies]
+packages = ["dplyr", "ggplot2"]
+```
+
+For a package you host on GitHub — such as the `cleanR` package from Part 1 —
+declare it as a named entry with a `git` URL and a full commit `rev` (see the
+T project development guide, section 3.3.3):
+
+```toml
+[r-dependencies]
+packages = ["dplyr"]
+cleanR = { git = "https://github.com/yourusername/cleanR", rev = "abc123def456" }
+```
+
+The `rev` field must be the full 40-character commit hash of the version you
+want to use. After editing `tproject.toml`, run `t update` to regenerate
+`flake.nix`, then re-enter the shell with `nix develop`. The package is injected
+into every R node's `buildInputs`, so `library(cleanR)` works inside any `rn()`
+node.
+
+### Adding a Python Package
+
+For a package on PyPI, the default Nix resolver is the simplest option:
+
+```toml
+[py-dependencies]
+packages = ["pandas", "scikit-learn"]
+```
+
+If your package is only on GitHub — like `pyclean` from Part 2 — and is not on
+PyPI, switch to the `uv` resolver (Chapter 4). This makes a `pyproject.toml`
+and a `uv.lock` file the source of truth for your Python dependencies:
+
+```toml
+[py-dependencies]
+resolver = "uv"
+workspace = "python"
+```
+
+Create the workspace directory and declare `pyclean` as a direct Git reference:
+
+```bash
+mkdir python
+```
+
+```toml
+# python/pyproject.toml
+[project]
+name = "my_project_python_env"
+version = "0.1.0"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "pandas",
+    "pyclean @ git+https://github.com/yourusername/pyclean.git",
+]
+```
+
+Generate the lock file and regenerate the flake (run these from the Nix shell
+where `uv` is available):
+
+```bash
+uv lock --project python
+t update
+```
+
+Commit `python/pyproject.toml`, `python/uv.lock`, and `tproject.toml` together.
+From then on, `import pyclean` works inside any `pyn()` node. To add or remove a
+dependency later, edit `dependencies` in `python/pyproject.toml`, re-run
+`uv lock --project python` and `t update`, and commit the updated files.
 
 ## Conclusion: The Packaging Mindset in the Age of AI
 
