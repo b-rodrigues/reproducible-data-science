@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./12-packaging.html" rel="next">
-<link href="./10-monads.html" rel="prev">
+<link href="./10-debugging.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -422,8 +422,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-monads.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span></a>
+  <a href="./10-debugging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Debugging and Error Handling</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -534,7 +534,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2" data-number="11.1">
 <h2 data-number="11.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">11.1</span> Introduction</h2>
-<p>Up until now, we’ve built reproducible environments with Nix, written testable code with FP principles, orchestrated pipelines with <code>{rixpress}</code>, and added robustness with monads. Now we turn to <strong>distribution</strong>: how do we share our work with others who may not have Nix installed?</p>
+<p>Up until now, we’ve built reproducible environments with Nix, written testable code with FP principles, orchestrated pipelines with <code>{rixpress}</code>, and made them robust with error handling and debugging. Now we turn to <strong>distribution</strong>: how do we share our work with others who may not have Nix installed?</p>
 <p>Nix gives us fine-grained control over every package and dependency in our project, ensuring bit-for-bit reproducibility. However, when it comes to distributing a <em>data product</em>, another technology, Docker, is incredibly popular.</p>
 <p>A common misconception is that Nix and Docker are alternatives, that you must choose one or the other. This is wrong. They are conceptually different tools that solve different problems. Nix is a <strong>package manager and build system</strong>: it answers “what software do I need and how do I build it reproducibly?” Docker is a <strong>containerisation platform</strong>: it answers “how do I package and run an application in isolation?” Understanding this distinction is key to using them together effectively.</p>
 <p>While Nix manages dependencies for an application that runs on a host operating system, Docker takes a different approach: it packages an application <em>along with</em> a lightweight operating system and all its dependencies into a single, portable unit called a <strong>container</strong>. This container can then run on any machine that has Docker installed, regardless of its underlying OS. Being familiar with both tools makes you a more versatile data scientist: you can use Nix for precise, reproducible development environments and Docker for distributing your work to colleagues, servers, or CI pipelines that may not have Nix installed.</p>
@@ -1503,8 +1503,8 @@ For more examples and ideas, visit:
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./10-monads.html" class="pagination-link" aria-label="Robust Pipelines with Monads">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Robust Pipelines with Monads</span></span>
+      <a href="./10-debugging.html" class="pagination-link" aria-label="Debugging and Error Handling">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Debugging and Error Handling</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

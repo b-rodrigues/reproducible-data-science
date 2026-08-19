@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; The Nix Package Manager – Reproducible Polyglot Data Science</title>
+<title>10&nbsp; Debugging and Error Handling – Reproducible Polyglot Data Science</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./03-setup.html" rel="next">
-<link href="./intro.html" rel="prev">
+<link href="./11-docker.html" rel="next">
+<link href="./09-pipelines-advanced.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -278,35 +278,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script><img src="https://brodriguesco-raps-with-python.goatcounter.com/count?p=/test-noscript">
 
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="epub.css">
 
@@ -320,7 +291,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-nix.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Nix Package Manager</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10-debugging.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Debugging and Error Handling</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -403,7 +374,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-nix.html" class="sidebar-item-text sidebar-link active">
+  <a href="./02-nix.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Nix Package Manager</span></span></a>
   </div>
 </li>
@@ -451,7 +422,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-debugging.html" class="sidebar-item-text sidebar-link">
+  <a href="./10-debugging.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Debugging and Error Handling</span></span></a>
   </div>
 </li>
@@ -495,24 +466,24 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">2.1</span> Introduction</a></li>
-  <li><a href="#why-reproducibility-why-nix" id="toc-why-reproducibility-why-nix" class="nav-link" data-scroll-target="#why-reproducibility-why-nix"><span class="header-section-number">2.2</span> Why Reproducibility? Why Nix?</a>
+  <li><a href="#errors-are-values" id="toc-errors-are-values" class="nav-link active" data-scroll-target="#errors-are-values"><span class="header-section-number">10.1</span> Errors Are Values</a></li>
+  <li><a href="#resilient-builds-and-fail-fast" id="toc-resilient-builds-and-fail-fast" class="nav-link" data-scroll-target="#resilient-builds-and-fail-fast"><span class="header-section-number">10.2</span> Resilient Builds and Fail-Fast</a></li>
+  <li><a href="#pipes-propagate-or-recover" id="toc-pipes-propagate-or-recover" class="nav-link" data-scroll-target="#pipes-propagate-or-recover"><span class="header-section-number">10.3</span> Pipes: Propagate or Recover</a></li>
+  <li><a href="#recovering-from-errors" id="toc-recovering-from-errors" class="nav-link" data-scroll-target="#recovering-from-errors"><span class="header-section-number">10.4</span> Recovering from Errors</a></li>
+  <li><a href="#when-a-pipeline-node-fails" id="toc-when-a-pipeline-node-fails" class="nav-link" data-scroll-target="#when-a-pipeline-node-fails"><span class="header-section-number">10.5</span> When a Pipeline Node Fails</a></li>
+  <li><a href="#inspecting-a-failed-build" id="toc-inspecting-a-failed-build" class="nav-link" data-scroll-target="#inspecting-a-failed-build"><span class="header-section-number">10.6</span> Inspecting a Failed Build</a></li>
+  <li><a href="#interactive-debugging" id="toc-interactive-debugging" class="nav-link" data-scroll-target="#interactive-debugging"><span class="header-section-number">10.7</span> Interactive Debugging</a>
   <ul class="collapse">
-  <li><a href="#motivation-reproducibility-in-scientific-and-data-workflows" id="toc-motivation-reproducibility-in-scientific-and-data-workflows" class="nav-link" data-scroll-target="#motivation-reproducibility-in-scientific-and-data-workflows"><span class="header-section-number">2.2.1</span> Motivation: Reproducibility in Scientific and Data Workflows</a></li>
-  <li><a href="#problems-with-ad-hoc-tools" id="toc-problems-with-ad-hoc-tools" class="nav-link" data-scroll-target="#problems-with-ad-hoc-tools"><span class="header-section-number">2.2.2</span> Problems with Ad-Hoc Tools</a></li>
-  <li><a href="#nix-a-declarative-solution" id="toc-nix-a-declarative-solution" class="nav-link" data-scroll-target="#nix-a-declarative-solution"><span class="header-section-number">2.2.3</span> Nix: A Declarative Solution</a></li>
+  <li><a href="#the-t-debug-command" id="toc-the-t-debug-command" class="nav-link" data-scroll-target="#the-t-debug-command"><span class="header-section-number">10.7.1</span> The <code>t debug</code> Command</a></li>
+  <li><a href="#debug_node-from-the-repl" id="toc-debug_node-from-the-repl" class="nav-link" data-scroll-target="#debug_node-from-the-repl"><span class="header-section-number">10.7.2</span> <code>debug_node()</code> from the REPL</a></li>
+  <li><a href="#keeping-the-debug-environment-reproducible" id="toc-keeping-the-debug-environment-reproducible" class="nav-link" data-scroll-target="#keeping-the-debug-environment-reproducible"><span class="header-section-number">10.7.3</span> Keeping the Debug Environment Reproducible</a></li>
   </ul></li>
-  <li><a href="#important-concepts" id="toc-important-concepts" class="nav-link" data-scroll-target="#important-concepts"><span class="header-section-number">2.3</span> Important Concepts</a>
-  <ul class="collapse">
-  <li><a href="#derivations" id="toc-derivations" class="nav-link" data-scroll-target="#derivations"><span class="header-section-number">2.3.1</span> Derivations</a></li>
-  <li><a href="#dependencies-of-derivations" id="toc-dependencies-of-derivations" class="nav-link" data-scroll-target="#dependencies-of-derivations"><span class="header-section-number">2.3.2</span> Dependencies of derivations</a></li>
-  <li><a href="#the-nix-store-and-hermetic-builds" id="toc-the-nix-store-and-hermetic-builds" class="nav-link" data-scroll-target="#the-nix-store-and-hermetic-builds"><span class="header-section-number">2.3.3</span> The Nix store and hermetic builds</a></li>
-  <li><a href="#other-key-nix-concepts" id="toc-other-key-nix-concepts" class="nav-link" data-scroll-target="#other-key-nix-concepts"><span class="header-section-number">2.3.4</span> Other key Nix concepts</a></li>
-  </ul></li>
-  <li><a href="#caveats" id="toc-caveats" class="nav-link" data-scroll-target="#caveats"><span class="header-section-number">2.4</span> Caveats</a></li>
-  <li><a href="#in-summary" id="toc-in-summary" class="nav-link" data-scroll-target="#in-summary"><span class="header-section-number">2.5</span> In summary</a></li>
+  <li><a href="#polyglot-error-handling" id="toc-polyglot-error-handling" class="nav-link" data-scroll-target="#polyglot-error-handling"><span class="header-section-number">10.8</span> Polyglot Error Handling</a></li>
+  <li><a href="#common-errors" id="toc-common-errors" class="nav-link" data-scroll-target="#common-errors"><span class="header-section-number">10.9</span> Common Errors</a></li>
+  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices"><span class="header-section-number">10.10</span> Best Practices</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">10.11</span> Summary</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/02-nix.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/10-debugging.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -520,7 +491,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Nix Package Manager</span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Debugging and Error Handling</span></h1>
 </div>
 
 
@@ -537,140 +508,323 @@ window.Quarto = {
 </header>
 
 
-<section id="introduction" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2.1</span> Introduction</h2>
-<p>Nix is a package manager that can be installed on your computer, regardless of the operating system (but requires WSL2 on Windows). If you are familiar with the Ubuntu Linux distribution, you have likely used <code>apt-get</code> to install software. On macOS, you may have used <code>homebrew</code> for similar purposes. Nix functions in a comparable way but has many advantages over classic package managers, as it focuses on reproducible builds and downloads packages from <code>nixpkgs</code>, <a href="https://repology.org/repositories/graphs">currently the largest software repository</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
-<p>In this chapter, we will explore the critical need for environment reproducibility in modern workflows. We will see why ad-hoc tools often fail, and how Nix’s declarative approach and “component closures” provide a robust solution. We will also cover the core concepts of Nix—derivations, the store, and hermetic builds—that make this possible.</p>
-</section>
-<section id="why-reproducibility-why-nix" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="why-reproducibility-why-nix"><span class="header-section-number">2.2</span> Why Reproducibility? Why Nix?</h2>
-<section id="motivation-reproducibility-in-scientific-and-data-workflows" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="motivation-reproducibility-in-scientific-and-data-workflows"><span class="header-section-number">2.2.1</span> Motivation: Reproducibility in Scientific and Data Workflows</h3>
-<p>To ensure that a project is reproducible you need to deal with at least four things:</p>
+<p>In the previous chapters, you learned functional programming fundamentals and how to build reproducible pipelines with <code>{rixpress}</code>. Now we’ll add another layer of robustness: <strong>error handling</strong> and <strong>debugging</strong>.</p>
+<p>When a pipeline runs, things inevitably go wrong. A dataset might have unexpected missing values. A computation might divide by zero. A join might drop more rows than expected. When these issues occur, the first question is always: <strong>where did it happen, and what do we do about it?</strong></p>
+<p>T answers that question at three levels:</p>
 <ul>
-<li>Ensure the required version of your programming language (R, Python, etc.) is installed.</li>
-<li>Ensure the required versions of all packages are installed.</li>
-<li>Ensure all necessary system dependencies are installed (for example, a working Java installation for the <code>{rJava}</code> R package on Linux).</li>
-<li>Ensure you can install all of this on the hardware you have on hand.</li>
+<li><strong>Expressions</strong>: errors are <em>values</em>, so a failing computation produces something you can inspect, branch on, and recover from instead of crashing the program.</li>
+<li><strong>Pipelines</strong>: a failing node can be <em>captured</em> without aborting the whole build, and the build log tells you exactly what happened and where.</li>
+<li><strong>Interactive sessions</strong>: when static inspection is not enough, you can drop into the failing node’s own runtime and poke at the real data.</li>
 </ul>
-<p>But in practice, one or most of these bullet points are missing from projects. Our goal is to learn how to fulfil all the requirements to build reproducible projects.</p>
-<p>The current consensus for tackling the first three points is often a mixture of tools: Docker for system dependencies, <code>{renv}</code> or <code>uv</code> for package management, and tools like the R installation manager (<code>rig</code>) for language versions. As for the last point, hardware architecture, the only way out is to be able to compile the software for the target platform. This involves a lot of moving parts and requires significant knowledge to get right.</p>
-</section>
-<section id="problems-with-ad-hoc-tools" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="problems-with-ad-hoc-tools"><span class="header-section-number">2.2.2</span> Problems with Ad-Hoc Tools</h3>
-<p>Tools like Python’s <code>venv</code> or R’s <code>renv</code> only deal with some pieces of the reproducibility puzzle. Often, they assume an underlying OS, do not capture system-level dependencies (like <code>libxml2</code>, <code>pandoc</code>, or <code>curl</code>), and require users to “rebuild” their environments from partial metadata. Docker helps but introduces overhead, security challenges, and complexity, and just adding it to your project doesn’t make it reproducible if you don’t explicitly take some precautionary steps.</p>
-<p>Traditional approaches fail to capture the entire dependency graph of a project in a deterministic way. This leads to “it works on my machine” syndromes, onboarding delays, and subtle bugs.</p>
-</section>
-<section id="nix-a-declarative-solution" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="nix-a-declarative-solution"><span class="header-section-number">2.2.3</span> Nix: A Declarative Solution</h3>
-<p>With Nix, we can handle all of these challenges with a single tool.</p>
-<p>The first advantage of Nix is that its repository, <code>nixpkgs</code>, is humongous. As of this writing, it contains over 120,000 pieces of software, including the <em>entirety of CRAN and Bioconductor</em>. This means you can use Nix to handle everything: R, Python, Julia, their respective packages, and any other software available through <code>nixpkgs</code>, making it particularly useful for polyglot pipelines.</p>
-<p>The second and most crucial advantage is that Nix allows you to install software in (relatively) isolated environments. When you start a new project, you can use Nix to install a project-specific version of R and all its packages. These dependencies are used only for that project. If you switch to another project, you switch to a different, independent environment. But this also means that all the dependencies of R and R packages, plus all of their dependencies and so on get installed as well. Your project’s development environment will not depend on anything outside of it (well, there are some caveats which we will explore as we move on).</p>
-<p>This is similar to <code>{renv}</code>, but the difference is profound: you get not only a project-specific library of R packages but also a project-specific R version and all the necessary system dependencies. For example, if you need <code>{xlsx}</code>, Nix automatically figures out that Java is required and installs and configures it for you, without any intervention.</p>
-<p>What’s more, you can <em>pin</em> your project to a specific revision of the <code>nixpkgs</code> repository. This ensures that every package Nix installs will always be at the exact same version, regardless of when or where the project is built. The environment is defined in a simple plain-text file, and anyone using that file will get a byte-for-byte identical environment, even on a different operating system.</p>
-</section>
-</section>
-<section id="important-concepts" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="important-concepts"><span class="header-section-number">2.3</span> Important Concepts</h2>
-<p>Before we start using Nix, it is important to spend some time learning about some Nix-centric concepts, starting with the <em>derivation</em>.</p>
-<p>In <code>Nix</code> terminology, a derivation is <em>a specification for running an executable on precisely defined input files to repeatably produce output files at uniquely determined file system paths.</em> (<a href="https://nix.dev/manual/nix/2.25/language/derivations">source</a>)</p>
-<p>In simpler terms, a derivation is a recipe with precisely defined inputs, steps, and a fixed output. This means that given identical inputs and build steps, the exact same output will always be produced. To achieve this level of reproducibility, several important measures must be taken:</p>
+<p>By the end of this chapter, you’ll know how to write pipelines that fail gracefully, how to read the diagnostics T produces, and how to use the interactive debugger to get inside a failing node.</p>
+<section id="errors-are-values" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="errors-are-values"><span class="header-section-number">10.1</span> Errors Are Values</h2>
+<p>In most languages, an exception is an interruption: it unwinds the call stack, and unless someone catches it, the program dies. T takes a different view. An error in T is just another value — a first-class citizen, like a number, a string, or a DataFrame — and, like any other value, it can be passed around, inspected, and transformed.</p>
+<p>Consider the most classic failure of all:</p>
+<pre class="t"><code>err = 1 / 0</code></pre>
+<p>In a strict language this would crash. In T, the expression <em>evaluates</em> to an error value, and the program continues. You can ask the error value questions:</p>
+<pre class="t"><code>err = 1 / 0
+print(is_error(err))
+print(error_code(err))
+print(error_msg(err))
+print(error_context(err))</code></pre>
+<pre class="text"><code>true
+DivisionByZero
+Division by zero.
+{}</code></pre>
 <ul>
-<li>All inputs to a derivation must be explicitly declared (and “inputs” here is meant in a very broad sense; for example, configuration flags are also inputs!).</li>
-<li>Inputs include not just data files but also software dependencies, configuration flags, and environment variables: essentially, anything necessary for the build process.</li>
-<li>The build process takes place in a <em>hermetic</em> sandbox to ensure the exact same output is always produced.</li>
+<li><code>is_error(x)</code> returns <code>true</code> if <code>x</code> is an error value, <code>false</code> otherwise.</li>
+<li><code>error_code(x)</code> returns the machine-readable code, here <code>DivisionByZero</code>.</li>
+<li><code>error_msg(x)</code> returns the human-readable message.</li>
+<li><code>error_context(x)</code> returns a dict of context attached to the error. It is empty for a bare arithmetic failure, but errors raised inside functions can carry stack information.</li>
 </ul>
-<p>The next sections explain these three points in more detail.</p>
-<section id="derivations" class="level3" data-number="2.3.1">
-<h3 data-number="2.3.1" class="anchored" data-anchor-id="derivations"><span class="header-section-number">2.3.1</span> Derivations</h3>
-<p>Here is an example of a <em>simple</em> <code>Nix</code> expression:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">pkgs</span> <span class="op">=</span> <span class="bu">import</span> <span class="op">(</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>   <span class="bu">fetchTarball</span> <span class="st">"https://github.com/rstats-on-nix/nixpkgs/archive/2025-04-11.tar.gz"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">)</span> <span class="op">{};</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pkgs<span class="op">.</span>stdenv<span class="op">.</span>mkDerivation <span class="op">{</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">"filtered_mtcars"</span><span class="op">;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">buildInputs</span> <span class="op">=</span> <span class="op">[</span> pkgs<span class="op">.</span>gawk <span class="op">];</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="va">dontUnpack</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="va">src</span> <span class="op">=</span> <span class="ss">./mtcars.csv</span><span class="op">;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="va">installPhase</span> <span class="op">=</span> <span class="st">''</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">    mkdir -p $out</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">    awk -F',' 'NR==1 || $9=="1" { print }' $src &gt; $out/filtered.csv</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">  ''</span><span class="op">;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Without going into too much detail, this code uses <code>awk</code>, a common Unix data processing tool, to filter the <code>mtcars.csv</code> file. As you can see, a significant amount of boilerplate is required for this simple operation. However, this approach is completely reproducible: the dependencies are declared and pinned to a specific version of the <code>nixpkgs</code> repository. The only thing that could make this small pipeline fail is if the <code>mtcars.csv</code> file is not provided to it.</p>
-<p><code>Nix</code> builds the <code>filtered.csv</code> output file in two steps: it first generates a <em>derivation</em> from this expression, and only then does it build the output. For clarity, I will refer to code like the example above as a <em>derivation</em> rather than an expression, to avoid confusion with the concept of an <em>expression</em> in R.</p>
-<p>The goal of the tools we will use in this book, <code>{rix}</code> and <code>{rixpress}</code> (or <code>ryxpress</code> if you prefer using Python), is to help you create pipelines from such derivations without needing to learn the Nix language itself, while still benefiting from its powerful reproducibility features.</p>
+<p>This is what makes T <em>resilient</em> by default: a failing expression does not stop the world, it produces a value that flows downstream, and every function downstream gets a chance to notice it and react.</p>
 </section>
-<section id="dependencies-of-derivations" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2" class="anchored" data-anchor-id="dependencies-of-derivations"><span class="header-section-number">2.3.2</span> Dependencies of derivations</h3>
-<p>Nix requires that the dependencies of any derivation be explicitly listed and managed by Nix itself. If you are building an output that requires Quarto, then Quarto must be explicitly listed as an input, even if you already have it installed on your system. The same applies to Quarto’s dependencies, and their dependencies, all the way down. To run a linear regression with R, you essentially need Nix to build the entire universe of software that R depends on first.</p>
-<p>In Nix terms, this complete set of packages is what its author, Eelco Dolstra, refers to as a <em>component closure</em>:</p>
-<blockquote class="blockquote">
-<p>The idea is to always deploy component closures: if we deploy a component, then we must also deploy its dependencies, their dependencies, and so on. That is, we must always deploy a set of components that is closed under the ‘depends on’ relation.</p>
-</blockquote>
-<p>(<em>Nix: A Safe and Policy-Free System for Software Deployment</em>, Dolstra et al., 2004).</p>
-<figure class="figure">
-<img src="https://raw.githubusercontent.com/b-rodrigues/rixpress/refs/heads/main/vignettes/figure_4.png" alt="Figure 4 of Dolstra et al. (2004)" class="figure-img">
-<figcaption aria-hidden="true">
-Figure 4 of Dolstra et al.&nbsp;(2004)
-</figcaption>
-</figure>
-<p>In the figure, <code>subversion</code> depends on <code>openssl</code>, which itself depends on <code>glibc</code>. Similarly, if you write a derivation to filter <code>mtcars</code>, it requires an input file, R, <code>{dplyr}</code>, and all of their respective dependencies. All of these must be managed by Nix. If any dependency exists “outside” this closure, the pipeline will only <em>work on your machine</em>, defeating the purpose of reproducibility.</p>
+<section id="resilient-builds-and-fail-fast" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="resilient-builds-and-fail-fast"><span class="header-section-number">10.2</span> Resilient Builds and Fail-Fast</h2>
+<p>That resilience extends to whole pipelines. When a node’s code raises an error, T captures it as a first-class value, marks the node accordingly, and — by default — keeps building every branch of the pipeline that does not depend on the failed node.</p>
+<p>Every node in a build ends up in one of four states:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Status</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Completed</code></td>
+<td>The node ran successfully and serialized its output artifact.</td>
+</tr>
+<tr class="even">
+<td><code>Completed with error</code></td>
+<td>The node’s code ran but raised a user-space exception. T captured the error as a value, and independent branches kept building.</td>
+</tr>
+<tr class="odd">
+<td><code>Errored</code></td>
+<td>The sandbox itself failed — a syntax error, a missing package, running out of memory. This is a <em>hard</em> failure that aborts the build.</td>
+</tr>
+<tr class="even">
+<td><code>Skipped</code></td>
+<td>The node was never run because an upstream dependency suffered a hard failure.</td>
+</tr>
+</tbody>
+</table>
+<p>The important distinction is between the first two rows. A <code>Completed with error</code> node is a <em>soft</em> failure: the code ran, the error is a value, and the build carries on. An <code>Errored</code> node is a <em>hard</em> failure: Nix’s build machinery itself gave up, and everything downstream is marked <code>Skipped</code>.</p>
+<p>If you want the opposite behaviour — stop at the first error — T has a fail-fast mode:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run <span class="at">--failfast</span> src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>From the REPL you can set <code>t_run(failfast = true, ...)</code> for a single run, or declare <code>t_make(failfast = true)</code> when defining a pipeline. For most data pipelines the default resilient mode is what you want: you get as many diagnostic outcomes as possible from a single pass, and you decide afterwards which failures actually matter.</p>
 </section>
-<section id="the-nix-store-and-hermetic-builds" class="level3" data-number="2.3.3">
-<h3 data-number="2.3.3" class="anchored" data-anchor-id="the-nix-store-and-hermetic-builds"><span class="header-section-number">2.3.3</span> The Nix store and hermetic builds</h3>
-<p>When building derivations, their outputs are saved into the <strong>Nix store</strong>. Typically located at <code>/nix/store/</code>, this folder contains all the software and build artefacts produced by Nix.</p>
-<p>For example, the output of a derivation might be stored at a path like <code>/nix/store/81k4s9q652jlka0c36khpscnmr8wk7jb-filtered</code>. The long cryptographic hash uniquely identifies the build output and is computed based on the content of the derivation and all its inputs. This ensures that the build is fully reproducible.</p>
-<p>As a result, building the same derivation on two different machines will yield the same cryptographic hash. You can substitute the built artefact with the derivation that generates it one-to-one, just as in mathematics, where writing <span class="math inline">\(f(2)\)</span> is the same as writing <span class="math inline">\(4\)</span> for the function <span class="math inline">\(f(x) := x^2\)</span>.</p>
-<p>To guarantee that derivations always produce identical outputs, builds must occur in an isolated environment known as a <strong>hermetic sandbox</strong>. This process ensures that the build is unaffected by external factors, such as the state of the host system. This isolation extends to environment variables and even network access. If you need to download data from an API, for example, it will not work from within the build sandbox. This may seem restrictive, but it makes perfect sense for reproducibility: an API’s output can change over time.</p>
-<p>For a truly reproducible result, you should obtain the data once, version it, and use that archived data as an input to your analysis.</p>
+<section id="pipes-propagate-or-recover" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="pipes-propagate-or-recover"><span class="header-section-number">10.3</span> Pipes: Propagate or Recover</h2>
+<p>T has two pipe operators, and the difference between them <em>is</em> the error-handling story.</p>
+<p>The ordinary pipe <code>|&gt;</code> is <em>short-circuiting</em>: if the value on the left is an error, the function on the right is not applied, and the error flows through untouched. The maybe-pipe <code>?|&gt;</code> <em>always forwards</em> the value — errors included — to the function on the right, giving that function a chance to look at the error and recover.</p>
+<pre class="t"><code>doubled = 5 |&gt; \(x: Int -&gt; Int) x * 2
+print(doubled)
+e = 10 / 0
+propagated = e |&gt; \(x: Int -&gt; Int) x + 1
+print(is_error(propagated))
+print(error_code(propagated))
+recover = \(x: Any -&gt; Int) if (is_error(x)) 0 else x
+print(e ?|&gt; recover)
+print(5 ?|&gt; recover)</code></pre>
+<pre class="text"><code>10
+true
+DivisionByZero
+0
+5</code></pre>
+<p>Three things to notice. First, <code>|&gt;</code> on an error passes the error straight through: <code>propagated</code> is still the original <code>DivisionByZero</code> error, which means the <code>x + 1</code> function was never applied. Second, <code>?|&gt;</code> hands the error to <code>recover</code>, which inspects it with <code>is_error</code> and substitutes a default. Third, <code>?|&gt;</code> is not only for errors: when the value is a normal one, the function runs exactly as it would with <code>|&gt;</code>.</p>
+<p>Use <code>|&gt;</code> for the majority of your pipelines, where you expect success and want any error to keep propagating until something explicitly handles it. Use <code>?|&gt;</code> at the specific points where you want to <em>act</em> on an error — log it, replace it with a fallback, or transform it.</p>
 </section>
-<section id="other-key-nix-concepts" class="level3" data-number="2.3.4">
-<h3 data-number="2.3.4" class="anchored" data-anchor-id="other-key-nix-concepts"><span class="header-section-number">2.3.4</span> Other key Nix concepts</h3>
-<p>We’ve covered derivations, dependencies, closures, the Nix store, and hermetic builds. That’s the core of what makes Nix tick. But there are a few more concepts worth knowing about before we move on:</p>
+<section id="recovering-from-errors" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="recovering-from-errors"><span class="header-section-number">10.4</span> Recovering from Errors</h2>
+<p>The most declarative way to recover is pattern matching. <code>match</code> lets you destructure an error value and branch on what went wrong:</p>
+<pre class="t"><code>caught = match(1 / 0) { Error { m } =&gt; str_join(["Caught: ", m], ""), _ =&gt; "no error" }
+print(caught)
+safe = match(1 / 0) { Error { _ } =&gt; 0, _ =&gt; 1 }
+print(safe)
+fallback = match(42) { Error { m } =&gt; str_join(["Caught: ", m], ""), _ =&gt; 99 }
+print(fallback)</code></pre>
+<pre class="text"><code>Caught: Division by zero.
+0
+99</code></pre>
+<p>The <code>Error { m }</code> pattern binds the error’s message to <code>m</code>, so you can build a diagnostic string, write it to a log, or feed it into a fallback computation. The <code>_</code> pattern catches everything else — in the last example, the successful value <code>42</code> — and returns it (or a default) unchanged.</p>
+<p>From there, the recovery patterns fall out naturally:</p>
 <ul>
-<li><p><strong>Purity</strong>: Nix tries very hard to keep builds “pure”: the output only depends on what you explicitly list as inputs. If a build script tries to reach out to the internet or read some random file on your machine, Nix will block it. That can feel restrictive at first, but it’s what guarantees reproducibility.</p></li>
-<li><p><strong>Binary caches</strong>: You don’t always need to build everything yourself. Think back to the math analogy: if you already know that <span class="math inline">\(f(2) = 4\)</span>, there’s no need to compute it again; just reuse the result! Nix does the same with binary caches: because every build is identified by its unique cryptographic hash made from its inputs, this means a prebuilt package fetched from <code>cache.nixos.org</code> (or your own cache you may want to set up) is bit-for-bit identical to what you would have built locally. This is why Nix is both reproducible and fast.</p></li>
-<li><p><strong>Garbage collection</strong>: Since Nix never overwrites anything in the store, old packages can pile up. Running <code>nix-store --gc</code> will run the garbage collector to free up space.</p></li>
-<li><p><strong>Overlays</strong>: If you want to tweak a package or add your own without forking all of <code>nixpkgs</code>, you can use overlays. They let you extend or override existing definitions in a clean, composable way.</p></li>
-<li><p><strong>Flakes</strong>: The newer way to define and pin Nix projects. Flakes make it easier to share and reuse Nix setups across machines and repositories. There is a lot of discussion around flakes, as they’re officially still considered not stable, even though they’ve been widely adopted by the community. But don’t worry, this is not something you’ll need to think about for this book.</p></li>
+<li><strong>Default values</strong>: <code>?|&gt; \(x: Any -&gt; Int) if (is_error(x)) 0 else x</code> replaces any failure with a sensible default.</li>
+<li><strong>Fallbacks</strong>: try the expensive computation first, and if it fails, fall back to a cheaper approximation — the <code>match</code> above is exactly this shape.</li>
+<li><strong>Log and continue</strong>: print <code>error_msg(x)</code> inside the error branch, then return a placeholder so the rest of the pipeline can run and you get a full diagnostic report from one pass.</li>
+<li><strong>Log and rethrow</strong>: print the message, then <code>error(error_code(x), error_msg(x))</code> to keep the failure visible to whoever is upstream of you.</li>
 </ul>
-<p>Together, these features explain why Nix isn’t <em>just another package manager</em>. It’s more like a framework for reproducible environments that can scale from a single project to an entire operating system (called <a href="https://nixos.org/">NixOS</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>).</p>
-<p>As a little sidenote: I want also to highlight that Nix can even be used to declaratively and reproducibly configure your operating system (be it NixOS, macOS or other Linux distributions) using a tool that integrates with it called <code>homemanager</code>.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> This is outside the scope of this book, but I wanted to highlight it, as it’s extremely powerful. What this means in practice is that you could write a whole Nix expression that not only downloads and configures software, but even sets up users with their specific software, and preferences like wallpapers, colour schemes and so on.</p>
+<p>For a single, uniform recovery, a <code>?|&gt;</code> with an <code>if (is_error(x))</code> is the lightest tool. When different error types need different responses, or when the recovery logic has more than one branch, <code>match</code> is clearer.</p>
 </section>
+<section id="when-a-pipeline-node-fails" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="when-a-pipeline-node-fails"><span class="header-section-number">10.5</span> When a Pipeline Node Fails</h2>
+<p>Let’s put it together. The pipeline below has three nodes: one that succeeds, one that divides by zero, and one more that succeeds.</p>
+<pre class="t"><code>p = pipeline {
+  nums = [10, 0, 30]
+  bad = 1 / 0
+  ok = 42
+}
+build_pipeline(p)
+print(is_error(p.bad))
+print(error_code(p.bad))
+print(error_msg(p.bad))
+print(is_error(read_node(p.bad)))</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): true 
+DivisionByZero 
+Division by zero. 
+{} 
+10 
+true 
+DivisionByZero 
+0 
+5 
+Caught: Division by zero. 
+0 
+99 
+</code></pre>
+<pre class="text"><code>false
+DivisionByZero
+Division by zero.
+true</code></pre>
+<p>Because the build is resilient, <code>build_pipeline(p)</code> completes: <code>nums</code> and <code>ok</code> are built, and <code>bad</code> is marked <code>Completed with error</code>. The build summary you see on the console names the failing node and even suggests the next command to run.</p>
+<p>The four <code>print</code> statements show how you interrogate the result. Note the subtlety: <code>is_error(p.bad)</code> is <code>false</code>, because the <em>node</em> is not an error — it is a node that <em>contains</em> an error. The error lives in the node’s artifact. That is why <code>error_code(p.bad)</code> and <code>error_msg(p.bad)</code> work directly on the node (they look inside it), and why <code>is_error(read_node(p.bad))</code> is the way to check the node’s <em>value</em>: <code>read_node</code> deserializes the artifact, and that value is indeed an error.</p>
 </section>
-<section id="caveats" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="caveats"><span class="header-section-number">2.4</span> Caveats</h2>
-<p>While Nix is powerful, there are some limitations and practical hurdles to be aware of if you plan to use it for actual work:</p>
+<section id="inspecting-a-failed-build" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="inspecting-a-failed-build"><span class="header-section-number">10.6</span> Inspecting a Failed Build</h2>
+<p>Beyond per-node checks, T gives you build-wide views of what went wrong.</p>
+<p><code>collect_exceptions(p)</code> gathers every captured error in the pipeline into a DataFrame with a row per failing node:</p>
+<pre class="t"><code>collect_exceptions(p)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): true 
+DivisionByZero 
+Division by zero. 
+{} 
+10 
+true 
+DivisionByZero 
+0 
+5 
+Caught: Division by zero. 
+0 
+99 
+</code></pre>
+<pre class="text"><code>  node  status  code            message
+  ----  ------  --------------  -----------------
+  bad   Error   DivisionByZero  Division by zero.
+DataFrame: 1 rows x 4 cols</code></pre>
+<p>In a long pipeline with several independent failures, this is the fastest way to see the full damage report in one place.</p>
+<p>Chapter 8 introduced <code>build_log(p)</code> and <code>build_log_to_frame()</code>, which turn the most recent build into a DataFrame with one row per node — name, status, duration, and artifact path:</p>
+<pre class="t"><code>bl = build_log(p)
+build_log_to_frame(bl)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): true 
+DivisionByZero 
+Division by zero. 
+{} 
+10 
+true 
+DivisionByZero 
+0 
+5 
+Caught: Division by zero. 
+0 
+99 
+</code></pre>
+<pre class="text"><code>  name  status                duration  path
+  ----  --------------------  --------  -----------------------------------
+  nums  Completed             0.8792    /nix/store/ds36srq9gb2q49bhsri1z...
+  bad   Completed with error  0.8896    /nix/store/ds36srq9gb2q49bhsri1z...
+  ok    Completed             0.8686    /nix/store/ds36srq9gb2q49bhsri1z...
+DataFrame: 3 rows x 4 cols</code></pre>
+<p>The <code>status</code> column is exactly the four-state vocabulary from earlier in this chapter, and the <code>duration</code> column tells you which nodes are slow even when they succeed. (One gotcha: assign the log to a variable that is not already a T builtin — <code>log</code> is the natural logarithm — before passing it to <code>build_log_to_frame</code>.)</p>
+<p>Finally, <code>inspect_node</code> reports the metadata T recorded for a single node:</p>
+<pre class="t"><code>inspect_node(p.bad)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): true 
+DivisionByZero 
+Division by zero. 
+{} 
+10 
+true 
+DivisionByZero 
+0 
+5 
+Caught: Division by zero. 
+0 
+99 
+</code></pre>
+<pre class="text"><code>dict
+├── name: "bad"
+├── runtime: "T"
+├── path: "/nix/store/lvxlc8a6bll2hlwnbxyj7vbvxyw3f3wf-pipeline_output/bad/artifact"
+├── serializer: "default"
+├── class: "Error"
+├── dependencies: []
+└── warnings: []</code></pre>
+<p>The <code>class</code> field is the node’s value type as T sees it: <code>Int</code> for a healthy node, <code>Error</code> for a soft failure. Combined with the build log, this is usually all you need to triage a failed build without ever opening a debugger.</p>
+</section>
+<section id="interactive-debugging" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="interactive-debugging"><span class="header-section-number">10.7</span> Interactive Debugging</h2>
+<p>Sometimes the build log is not enough. The classic case: a Python node fails with a cryptic traceback, the real inputs are locked in the Nix store, and writing mock inputs by hand is tedious and error-prone. For that, T has an interactive debugger that drops you <em>inside</em> the failing node’s runtime, with all of its upstream dependencies already materialized.</p>
+<section id="the-t-debug-command" class="level3" data-number="10.7.1">
+<h3 data-number="10.7.1" class="anchored" data-anchor-id="the-t-debug-command"><span class="header-section-number">10.7.1</span> The <code>t debug</code> Command</h3>
+<p>From your shell, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug <span class="op">&lt;</span>node_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>By default this looks for the pipeline in <code>src/pipeline.t</code>; if your pipeline lives elsewhere, pass the file first:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug src/my_custom_pipeline.t data_cleanup</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>T evaluates the script up to the requested node, resolves every upstream dependency, locates their latest materialized <code>/nix/store</code> paths, sets up the environment, and launches the runtime’s interactive REPL. Targeting a Python node, for example, produces something like:</p>
+<pre class="text"><code>================================================
+Debugging Node: Y (Runtime: Python)
+================================================
+Environment variables set for dependencies:
+  - dataset_np = /nix/store/5fcfj6wfh...-pipeline_output/dataset_np
+
+Starting interactive Python REPL...
+Tip: Load upstream dependencies in Python using:
+  import tlang
+  dataset_np = tlang.read_node("dataset_np")
+Press Ctrl+D or exit to return to T REPL.
+================================================</code></pre>
+</section>
+<section id="debug_node-from-the-repl" class="level3" data-number="10.7.2">
+<h3 data-number="10.7.2" class="anchored" data-anchor-id="debug_node-from-the-repl"><span class="header-section-number">10.7.2</span> <code>debug_node()</code> from the REPL</h3>
+<p>If you are already inside a T REPL session with a built pipeline, the same debugger is one call away:</p>
+<pre class="t"><code>debug_node(p.data_cleanup)</code></pre>
+<p>This spawns the same subshell environment. Inside it, a <code>tlang</code> companion library lets you load upstream node data live:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df <span class="op">=</span> tlang.read_node(<span class="st">"raw_df"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now you can inspect the exact data that crashed your node, dry-run the offending function line by line, and confirm the fix. Press <code>Ctrl+D</code> (or <code>exit()</code>, or <code>q()</code> in R) to leave the subshell; control returns cleanly to your T session.</p>
+<p>The subshells are customized so you always know where you are: Python starts with a <code>py&gt;</code> prompt, R starts quietly (no welcome banner) with <code>r&gt;</code>, and Julia shows <code>jl&gt;</code>. Interactive debugging is supported for the three REPL-capable runtimes — Python, R, and Julia; debugging a Quarto or Bash node raises a descriptive <code>ValueError</code> instead of dropping you into a raw shell.</p>
+</section>
+<section id="keeping-the-debug-environment-reproducible" class="level3" data-number="10.7.3">
+<h3 data-number="10.7.3" class="anchored" data-anchor-id="keeping-the-debug-environment-reproducible"><span class="header-section-number">10.7.3</span> Keeping the Debug Environment Reproducible</h3>
+<p>The debugger runs inside the project environment declared in <code>tproject.toml</code>. If a runtime package needed to deserialize an upstream artifact is missing, the debugger will start without it. Use <code>t doctor</code> to spot missing packages and add them to the right section:</p>
 <ul>
-<li><p><strong>Hardware acceleration</strong>: On non-NixOS systems, it can be difficult to set up GPU acceleration (CUDA, ROCm, OpenCL). Drivers are tightly coupled to the host kernel and libraries, while Nix builds aim for strict isolation. On NixOS this integration is smoother, but on macOS or other Linux distros you may encounter limitations or extra manual steps.</p></li>
-<li><p><strong>macOS-specific issues</strong>: Reproducibility is harder to achieve on macOS (both Intel and Apple Silicon) than on Linux. Nix packages often rely on Apple system frameworks (e.g., CoreFoundation, Security) that live outside the Nix store and compromise hermetic builds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. The macOS sandbox is also weaker than Linux’s and sometimes leaks system tools like Xcode or Rosetta into builds<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Hydra cache coverage is thinner for Darwin platforms, especially Apple Silicon, so cache misses and local builds are much more common<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>. Finally, pinned environments can break after macOS or Xcode updates because of changes in system libraries or compiler flags<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>.</p>
-<p>That said, in practice most packages build fine on macOS, and the ecosystem continues to improve. When reproducibility problems do appear, the simplest fix is often just to use another nearby <code>nixpkgs</code> revision for pinning that is known to work. This makes the situation less fragile than it might first appear. Another solution would be to use Docker to deploy the Nix environment and use that as a dev container. All of this will be discussed in detail in this book.</p></li>
-<li><p><strong>Steep learning curve</strong>: The Nix language and ecosystem (flakes, overlays, derivations) can be conceptually difficult if you come from traditional package managers. Even basic customizations require some ramp-up time. This was my main motivation to write <code>{rix}</code>, <code>{rixpress}</code> (for R) and <code>ryxpress</code> (for Python).</p></li>
-<li><p><strong>Disk space and builds</strong>: Because Nix never mutates software in place, the store can accumulate large amounts of data. Cache misses sometimes force local builds, which can be slow and resource-intensive. However, it is of course possible to empty the Nix store to recover disk space, and it is also possible to set up your own project cache if you wish so. Setting up your own cache will also be something that we will explore in this book.</p></li>
+<li><code>[r-dependencies].packages</code> for R packages</li>
+<li><code>[py-dependencies].packages</code> for Python packages</li>
+<li><code>[jl-dependencies].packages</code> for Julia packages</li>
 </ul>
-<p>These caveats don’t diminish Nix’s strengths but highlight that its guarantees are strongest on Linux (and thus WSL), and especially on NixOS. On macOS, reproducibility is possible but sometimes requires extra work, a bit of flexibility, and occasionally picking a different <code>nixpkgs</code> snapshot.</p>
+<p>For example, a Julia node that reads a CSV ancestor needs <code>CSV</code> and <code>DataFrames</code>; one that reads Arrow or Parquet needs <code>Arrow</code> (or <code>Parquet2</code>) and <code>DataFrames</code>; a Python node reading Arrow data needs <code>pandas</code> and <code>pyarrow</code>. After editing <code>tproject.toml</code>, run <code>t update</code> and re-enter <code>nix develop</code> so the debug environment is rebuilt. Do not install these packages ad hoc with <code>pip</code>, <code>install.packages()</code>, or <code>Pkg.add()</code> — those commands are intercepted inside the debugger precisely to keep your debugging reproducible.</p>
 </section>
-<section id="in-summary" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="in-summary"><span class="header-section-number">2.5</span> In summary</h2>
-<p>Nix makes it possible to <em>actually</em> build software reproducibly. To achieve this, it introduces several core concepts that are quite specific, and definitely worth taking the time to understand.</p>
-<p>In the next chapter, we will learn how to install Nix, configure <code>cachix</code>, and set up Positron for a seamless development experience.</p>
+</section>
+<section id="polyglot-error-handling" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="polyglot-error-handling"><span class="header-section-number">10.8</span> Polyglot Error Handling</h2>
+<p>The same rules apply to nodes written in R, Python, or Julia. When a foreign script raises a native exception — an R <code>stop()</code>, a Python <code>ValueError</code>, a Julia <code>UndefVarError</code> — T captures it exactly as it captures a T error: the node is marked <code>Completed with error</code>, and <code>error_code</code>, <code>error_msg</code>, <code>collect_exceptions</code>, and the build log all work on it as before.</p>
+<pre class="t"><code>p2 = pipeline {
+  data = node(
+    command = to_dataframe([
+      x = [1.0, 2.0, 3.0],
+      y = [0L, 0L, 0L]
+    ])
+  )
+  model = rn(
+    command = &lt;{
+      data$y &lt;- as.factor(data$y)
+      glm(y ~ x, data = data, family = binomial(link = "logit"))
+    }&gt;,
+    deserializer = ^ipc,
+    serializer = ^pmml
+  )
+}
+build_pipeline(p2)</code></pre>
+<p>Here the response variable has only one level, so the logistic regression fails inside the R sandbox. The build does not abort; <code>model</code> is a soft failure, and <code>error_msg(p2.model)</code> carries R’s original message. And because <code>model</code> is an R node, <code>debug_node(p2.model)</code> drops you into an <code>r&gt;</code> subshell with the exact <code>data</code> frame that caused the trouble.</p>
+<p>The one polyglot-specific habit worth forming: keep error messages in your foreign code informative. A bare <code>stop()</code> in R or a bare <code>raise</code> in Python gives you an <code>Error</code> with little to go on; a message like <code>stop("no rows left after filtering")</code> is what <code>error_msg</code> will hand you later, and what you will thank yourself for at 2 a.m.</p>
+</section>
+<section id="common-errors" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="common-errors"><span class="header-section-number">10.9</span> Common Errors</h2>
+<p>A few failures show up in nearly every pipeline. Knowing the idiomatic fix saves a lot of debugging:</p>
+<ul>
+<li><strong>Missing values</strong>: <code>mean([1, 2, NA, 4])</code> raises an <code>NAError</code>. Pass <code>na_rm = true</code> when NAs are expected, or filter them deliberately.</li>
+<li><strong>Type mismatches</strong>: <code>"Age: " + 25</code> raises a <code>TypeError</code> because T does not implicitly coerce. Convert explicitly with <code>to_string()</code> (or <code>str_join</code>).</li>
+<li><strong>Empty collections</strong>: <code>mean([])</code> raises a <code>ValueError</code>. Check <code>length(data) == 0</code> first and return a default.</li>
+<li><strong>Division by zero</strong>: guard the denominator — <code>if (count == 0) 0.0 else total / count</code> — or let it fail and recover downstream with <code>?|&gt;</code> or <code>match</code>.</li>
+<li><strong>Missing columns</strong>: <code>df.nonexistent</code> raises a <code>NameError</code>. Check <code>colnames(df)</code> before accessing, and raise a descriptive error of your own when a required column is absent.</li>
+</ul>
+</section>
+<section id="best-practices" class="level2" data-number="10.10">
+<h2 data-number="10.10" class="anchored" data-anchor-id="best-practices"><span class="header-section-number">10.10</span> Best Practices</h2>
+<ul>
+<li><strong>Fail fast, fail explicitly.</strong> Validate inputs early and raise descriptive errors (<code>error("ValidationError", "Empty dataset")</code>) at the boundary where you can say <em>why</em> it is invalid, rather than letting a cryptic failure surface ten nodes later.</li>
+<li><strong>Let soft failures stay soft.</strong> In a long pipeline, prefer the default resilient build so one bad node does not hide three others; use <code>collect_exceptions</code> to review everything at once.</li>
+<li><strong>Keep recovery at the edges.</strong> Use <code>|&gt;</code> in the middle of your pipelines and concentrate <code>?|&gt;</code>/<code>match</code> recovery where a fallback is genuinely meaningful.</li>
+<li><strong>Name your errors.</strong> A good <code>error_msg</code> is a unit of documentation: it should tell the next reader what was expected and what they found.</li>
+<li><strong>Debug with real data.</strong> When in doubt, <code>debug_node</code> beats a mock: the subshell gives you the exact upstream artifacts your node saw.</li>
+</ul>
+</section>
+<section id="summary" class="level2" data-number="10.11">
+<h2 data-number="10.11" class="anchored" data-anchor-id="summary"><span class="header-section-number">10.11</span> Summary</h2>
+<p>T treats errors as first-class values, and that single decision shapes everything in this chapter. <code>is_error</code>, <code>error_code</code>, <code>error_msg</code>, and <code>error_context</code> let you interrogate a failure; <code>|&gt;</code> propagates errors untouched while <code>?|&gt;</code> hands them to a recovery function; and <code>match</code> gives you declarative branching over error and success alike. At the pipeline level, resilient builds capture node failures as <code>Completed with error</code> without aborting, and <code>collect_exceptions</code>, <code>build_log</code>, and <code>inspect_node</code> turn any build — healthy or not — into data you can query. When the data is not enough, <code>t debug</code> and <code>debug_node</code> drop you into the failing node’s own runtime, with its real inputs, ready to step through the code that broke.</p>
+<p>Next, we turn to <strong>distribution</strong>: how to package all of this into containers so that others can run your pipelines without installing anything at all.</p>
 
 
-</section>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr>
-<ol>
-<li id="fn1"><p>https://repology.org/repositories/graphs<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>https://nixos.org/<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>https://github.com/nix-community/home-manager<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>https://github.com/NixOS/nixpkgs/issues/67166<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>https://discourse.nixos.org/t/nix-macos-sandbox-issues-in-nix-2-4-and-later/17475<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>https://www.reddit.com/r/NixOS/comments/17uxj6q/how_does_nix_package_manager_work_on_apple_silicon/<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>https://github.com/NixOS/nix/issues/11679<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
 </section>
 
 </main> <!-- /main -->
@@ -1089,13 +1243,13 @@ Figure 4 of Dolstra et al.&nbsp;(2004)
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./intro.html" class="pagination-link" aria-label="Introduction">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      <a href="./09-pipelines-advanced.html" class="pagination-link" aria-label="Advanced Pipeline Patterns">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./03-setup.html" class="pagination-link" aria-label="Setting Up Your Environment">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting Up Your Environment</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./11-docker.html" class="pagination-link" aria-label="Containerisation With Docker">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1104,4 +1258,4 @@ Figure 4 of Dolstra et al.&nbsp;(2004)
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/02-nix.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/10-debugging.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
