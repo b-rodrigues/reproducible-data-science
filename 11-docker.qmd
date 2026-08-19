@@ -65,11 +65,21 @@ This is why we combine Nix and Docker rather than choosing one or the other:
   distribution: the guarantee that a container runs the same everywhere Docker 
   runs.
 
-The pattern we'll use is simple: use Nix *inside* a Docker container. Start with 
-a minimal base image that has Nix installed. Then, use Nix to declaratively 
-build the precise environment within the image. Docker becomes a portable 
-runtime for this Nix-managed environment, excellent for deployment to systems 
-where Nix isn't installed.
+The pattern we'll use is simple: use Nix *inside* a Docker container, so that 
+the container is both small and reproducible. Docker becomes a portable 
+runtime for a Nix-managed environment, excellent for deployment to systems 
+where Nix isn't installed. There are three ways to get Nix into the image:
+
+1. **Install Nix inside the container** from a minimal base image. You add a 
+   few lines to the Dockerfile that install Nix, and everything after that is 
+   installed with Nix.
+2. **Start from a base image that already has Nix.** You pull an existing 
+   image with Nix installed and use it as the foundation, skipping the 
+   installation step.
+3. **Build the whole image with Nix.** You write the image definition in Nix 
+   itself, and Nix produces the container image for you.
+
+This chapter covers all three, starting with the first two.
 
 ### Interactive Development vs Distribution
 
@@ -389,6 +399,43 @@ docker run -it --rm --name my-project-container my-project
 ```
 
 This drops you in an interactive Nix shell running inside Docker!
+
+### Making T Available in the Image
+
+So far, our images contain Nix and the packages we asked Nix to install. If 
+your project uses T, you also need the `t` executable inside the container. T 
+is distributed exclusively through Nix and is never installed as a system 
+program, so the natural approach is to build it from the T flake and put `t` 
+on the `PATH`. Add a step to the Dockerfile:
+
+```dockerfile
+RUN nix build --accept-flake-config github:b-rodrigues/tlang \
+    && ln -s "$(readlink -f result)/bin/t" /usr/local/bin/t
+```
+
+`nix build` compiles (or fetches from the rstats-on-nix cache) the T package 
+and leaves a `result` symlink pointing at the built store path. The `ln` 
+command creates a permanent symlink from `/usr/local/bin/t` to the `t` 
+executable inside that store path. Because the symlink points at an absolute 
+path in the Nix store, it survives across Docker layers, and `t` keeps working 
+in the final image.
+
+The `t` executable is a wrapper that already points at the R, Python, and 
+Julia runtimes it needs. All of those runtimes live in the same Nix store, and 
+Nix downloaded them when it built T, so the symlinked `t` runs without any 
+extra setup.
+
+For a fully reproducible build, pin the exact version of T that your project 
+uses rather than the latest one on GitHub. A T project records its T version in 
+`flake.lock`, so build that specific version:
+
+```dockerfile
+RUN nix build --accept-flake-config github:b-rodrigues/tlang/v0.55.0 \
+    && ln -s "$(readlink -f result)/bin/t" /usr/local/bin/t
+```
+
+Either way, `t` is available in the container without ever being installed as 
+a system program.
 
 ## Publishing Images on Docker Hub
 
@@ -810,6 +857,9 @@ For reproducibility:
 
 - Use `ubuntu:latest` + Nix rather than pinning specific OS versions
 - Build a reusable `nix-base` image to share across projects
+- Get Nix into the image by installing it in the Dockerfile, starting from a 
+  base image that already has Nix, or building the whole image with Nix
+- Build T from its flake and symlink `t` onto the `PATH`
 - Package `{rixpress}` pipelines for distribution
 
 ## Further Reading
