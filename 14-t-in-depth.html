@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>14&nbsp; Beyond the Basics: T in Depth – Reproducible Polyglot Data Science</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./15-conclusion.html" rel="next">
+<link href="./13-ci.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script data-goatcounter="https://brodriguesco-raps-with-python.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<noscript>
+    </noscript></head><body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script><img src="https://brodriguesco-raps-with-python.goatcounter.com/count?p=/test-noscript">
+
+
+
+<link rel="stylesheet" href="epub.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-t-in-depth.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Reproducible Polyglot Data Science</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/b-rodrigues/reproducible-data-science" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Reproducible-Polyglot-Data-Science.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Reproducible-Polyglot-Data-Science.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-nix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Nix Package Manager</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting Up Your Environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-t.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Reproducible Development Environments and Pipelines with T</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-first-pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Your First T Pipeline</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-fp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pipelines as Function Composition</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Professional Workflows: Testing and Git</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-pipelines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building T Pipelines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-pipelines-advanced.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Advanced Pipeline Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-debugging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Debugging and Error Handling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Containerisation With Docker</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-packaging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">A Short Intro to Packaging Your Code in R and Python</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-t-in-depth.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-interactive-t-magic-commands" id="toc-the-interactive-t-magic-commands" class="nav-link active" data-scroll-target="#the-interactive-t-magic-commands"><span class="header-section-number">14.1</span> The Interactive T: Magic Commands</a>
+  <ul class="collapse">
+  <li><a href="#navigating-your-environment" id="toc-navigating-your-environment" class="nav-link" data-scroll-target="#navigating-your-environment"><span class="header-section-number">14.1.1</span> Navigating your environment</a></li>
+  <li><a href="#inspecting-what-you-have" id="toc-inspecting-what-you-have" class="nav-link" data-scroll-target="#inspecting-what-you-have"><span class="header-section-number">14.1.2</span> Inspecting what you have</a></li>
+  <li><a href="#timing-and-capturing-work" id="toc-timing-and-capturing-work" class="nav-link" data-scroll-target="#timing-and-capturing-work"><span class="header-section-number">14.1.3</span> Timing and capturing work</a></li>
+  </ul></li>
+  <li><a href="#metaprogramming-quotation-and-quasiquotation" id="toc-metaprogramming-quotation-and-quasiquotation" class="nav-link" data-scroll-target="#metaprogramming-quotation-and-quasiquotation"><span class="header-section-number">14.2</span> Metaprogramming: Quotation and Quasiquotation</a>
+  <ul class="collapse">
+  <li><a href="#capturing-code-to_expr-and-quo" id="toc-capturing-code-to_expr-and-quo" class="nav-link" data-scroll-target="#capturing-code-to_expr-and-quo"><span class="header-section-number">14.2.1</span> Capturing code: <code>to_expr</code> and <code>quo</code></a></li>
+  <li><a href="#unquoting-and" id="toc-unquoting-and" class="nav-link" data-scroll-target="#unquoting-and"><span class="header-section-number">14.2.2</span> Unquoting: <code>!!</code> and <code>!!!</code></a></li>
+  <li><a href="#dynamic-names-and-symbols" id="toc-dynamic-names-and-symbols" class="nav-link" data-scroll-target="#dynamic-names-and-symbols"><span class="header-section-number">14.2.3</span> Dynamic names and symbols</a></li>
+  <li><a href="#non-standard-evaluation" id="toc-non-standard-evaluation" class="nav-link" data-scroll-target="#non-standard-evaluation"><span class="header-section-number">14.2.4</span> Non-standard evaluation</a></li>
+  </ul></li>
+  <li><a href="#serializers-in-depth" id="toc-serializers-in-depth" class="nav-link" data-scroll-target="#serializers-in-depth"><span class="header-section-number">14.3</span> Serializers in Depth</a>
+  <ul class="collapse">
+  <li><a href="#the-built-in-serializers" id="toc-the-built-in-serializers" class="nav-link" data-scroll-target="#the-built-in-serializers"><span class="header-section-number">14.3.1</span> The built-in serializers</a></li>
+  <li><a href="#symbols-variables-and-the-string-trap" id="toc-symbols-variables-and-the-string-trap" class="nav-link" data-scroll-target="#symbols-variables-and-the-string-trap"><span class="header-section-number">14.3.2</span> Symbols, variables, and the string trap</a></li>
+  <li><a href="#custom-serializers" id="toc-custom-serializers" class="nav-link" data-scroll-target="#custom-serializers"><span class="header-section-number">14.3.3</span> Custom serializers</a></li>
+  </ul></li>
+  <li><a href="#plotting-in-pipelines" id="toc-plotting-in-pipelines" class="nav-link" data-scroll-target="#plotting-in-pipelines"><span class="header-section-number">14.4</span> Plotting in Pipelines</a>
+  <ul class="collapse">
+  <li><a href="#returning-a-plot-from-a-node" id="toc-returning-a-plot-from-a-node" class="nav-link" data-scroll-target="#returning-a-plot-from-a-node"><span class="header-section-number">14.4.1</span> Returning a plot from a node</a></li>
+  <li><a href="#reading-a-plot-back" id="toc-reading-a-plot-back" class="nav-link" data-scroll-target="#reading-a-plot-back"><span class="header-section-number">14.4.2</span> Reading a plot back</a></li>
+  <li><a href="#plots-in-literate-documents" id="toc-plots-in-literate-documents" class="nav-link" data-scroll-target="#plots-in-literate-documents"><span class="header-section-number">14.4.3</span> Plots in literate documents</a></li>
+  </ul></li>
+  <li><a href="#nix-build-options-and-orchestration" id="toc-nix-build-options-and-orchestration" class="nav-link" data-scroll-target="#nix-build-options-and-orchestration"><span class="header-section-number">14.5</span> Nix Build Options and Orchestration</a>
+  <ul class="collapse">
+  <li><a href="#the-nix_options-dictionary" id="toc-the-nix_options-dictionary" class="nav-link" data-scroll-target="#the-nix_options-dictionary"><span class="header-section-number">14.5.1</span> The <code>nix_options</code> dictionary</a></li>
+  <li><a href="#dry-runs-and-plans" id="toc-dry-runs-and-plans" class="nav-link" data-scroll-target="#dry-runs-and-plans"><span class="header-section-number">14.5.2</span> Dry runs and plans</a></li>
+  <li><a href="#where-environment-comes-from" id="toc-where-environment-comes-from" class="nav-link" data-scroll-target="#where-environment-comes-from"><span class="header-section-number">14.5.3</span> Where environment comes from</a></li>
+  <li><a href="#building-on-other-machines" id="toc-building-on-other-machines" class="nav-link" data-scroll-target="#building-on-other-machines"><span class="header-section-number">14.5.4</span> Building on other machines</a></li>
+  </ul></li>
+  <li><a href="#building-t-packages" id="toc-building-t-packages" class="nav-link" data-scroll-target="#building-t-packages"><span class="header-section-number">14.6</span> Building T Packages</a>
+  <ul class="collapse">
+  <li><a href="#initialising-a-package" id="toc-initialising-a-package" class="nav-link" data-scroll-target="#initialising-a-package"><span class="header-section-number">14.6.1</span> Initialising a package</a></li>
+  <li><a href="#public-and-private-api" id="toc-public-and-private-api" class="nav-link" data-scroll-target="#public-and-private-api"><span class="header-section-number">14.6.2</span> Public and private API</a></li>
+  <li><a href="#testing-a-package" id="toc-testing-a-package" class="nav-link" data-scroll-target="#testing-a-package"><span class="header-section-number">14.6.3</span> Testing a package</a></li>
+  <li><a href="#t-doc-documentation" id="toc-t-doc-documentation" class="nav-link" data-scroll-target="#t-doc-documentation"><span class="header-section-number">14.6.4</span> T-Doc documentation</a></li>
+  <li><a href="#publishing" id="toc-publishing" class="nav-link" data-scroll-target="#publishing"><span class="header-section-number">14.6.5</span> Publishing</a></li>
+  <li><a href="#importing" id="toc-importing" class="nav-link" data-scroll-target="#importing"><span class="header-section-number">14.6.6</span> Importing</a></li>
+  </ul></li>
+  <li><a href="#property-based-testing-with-propcraft" id="toc-property-based-testing-with-propcraft" class="nav-link" data-scroll-target="#property-based-testing-with-propcraft"><span class="header-section-number">14.7</span> Property-Based Testing with Propcraft</a>
+  <ul class="collapse">
+  <li><a href="#the-idea" id="toc-the-idea" class="nav-link" data-scroll-target="#the-idea"><span class="header-section-number">14.7.1</span> The idea</a></li>
+  <li><a href="#generators" id="toc-generators" class="nav-link" data-scroll-target="#generators"><span class="header-section-number">14.7.2</span> Generators</a></li>
+  <li><a href="#the-property-contract" id="toc-the-property-contract" class="nav-link" data-scroll-target="#the-property-contract"><span class="header-section-number">14.7.3</span> The property contract</a></li>
+  <li><a href="#a-concrete-example" id="toc-a-concrete-example" class="nav-link" data-scroll-target="#a-concrete-example"><span class="header-section-number">14.7.4</span> A concrete example</a></li>
+  <li><a href="#seeding-and-sample-size" id="toc-seeding-and-sample-size" class="nav-link" data-scroll-target="#seeding-and-sample-size"><span class="header-section-number">14.7.5</span> Seeding and sample size</a></li>
+  <li><a href="#running-with-t-test" id="toc-running-with-t-test" class="nav-link" data-scroll-target="#running-with-t-test"><span class="header-section-number">14.7.6</span> Running with <code>t test</code></a></li>
+  </ul></li>
+  <li><a href="#where-to-go-from-here" id="toc-where-to-go-from-here" class="nav-link" data-scroll-target="#where-to-go-from-here"><span class="header-section-number">14.8</span> Where to go from here</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/14-t-in-depth.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The earlier chapters took you from a blank Nix installation to a fully automated, reproducible pipeline running on GitHub Actions. Along the way you learned the core loop: declare nodes, build, inspect, test, and ship. But T is a larger language than that loop requires, and this chapter is where we go deeper.</p>
+<p>The material here is not required for every project. It is the toolkit you reach for when a problem outgrows the basics: when you need to script the REPL, generate code programmatically, move data between runtimes in a specific format, turn a plot into something you can assert on, offload a build to a remote machine, package a reusable library in T itself, or harden a function against every input it might ever see.</p>
+<p>We cover seven topics, in the order you are likely to need them. Each section is self-contained, but it builds on the foundations from the earlier chapters, and we point back to them rather than repeating what they already teach.</p>
+<section id="the-interactive-t-magic-commands" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="the-interactive-t-magic-commands"><span class="header-section-number">14.1</span> The Interactive T: Magic Commands</h2>
+<p>Chapter 5 introduced the T REPL as a place to explore data and prototype node logic before committing it to a pipeline. The REPL has a small set of conveniences that make interactive work faster: the magic commands.</p>
+<p>Magic commands are REPL-only shortcuts prefixed with <code>%</code>. They give you quick access to common operations without parentheses or string quotes. They are not part of the language proper — they only work at the REPL prompt — so they will never appear in a <code>pipeline.t</code> file.</p>
+<section id="navigating-your-environment" class="level3" data-number="14.1.1">
+<h3 data-number="14.1.1" class="anchored" data-anchor-id="navigating-your-environment"><span class="header-section-number">14.1.1</span> Navigating your environment</h3>
+<p>The first group of commands helps you get your bearings. <code>%pwd</code> prints the current working directory, and <code>%cd</code> changes it (it expands <code>~</code> correctly, and reports an error if the target directory does not exist). <code>%ls</code> lists the contents of the current directory, and <code>%env</code> prints every environment variable, one per line.</p>
+<pre class="t"><code>%pwd
+/home/user/projects
+%cd data
+%ls
+raw.csv  clean.csv</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>These mirror the shell commands you already know, so the REPL feels less like a foreign object and more like a workspace you can move around in.</p>
+</section>
+<section id="inspecting-what-you-have" class="level3" data-number="14.1.2">
+<h3 data-number="14.1.2" class="anchored" data-anchor-id="inspecting-what-you-have"><span class="header-section-number">14.1.2</span> Inspecting what you have</h3>
+<p>When you have been working in the REPL for a while, it is easy to lose track of what is in scope. <code>%objects</code> (aliased <code>%who</code>) lists every user-defined variable, its type, and a compact summary:</p>
+<pre class="t"><code>x = 42
+df = read_csv("data.csv")
+%objects
+--  name  type       summary
+--  x     Int        42
+--  df    DataFrame  150 rows x 5 cols</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p><code>%history</code> shows the last fifty entries from the REPL command history, stored in <code>~/.t_history</code>, which is handy for re-running or copying something you did a few minutes ago. <code>%reset</code> removes all user-defined variables and returns you to a clean base environment.</p>
+</section>
+<section id="timing-and-capturing-work" class="level3" data-number="14.1.3">
+<h3 data-number="14.1.3" class="anchored" data-anchor-id="timing-and-capturing-work"><span class="header-section-number">14.1.3</span> Timing and capturing work</h3>
+<p><code>%time</code> evaluates any T expression and prints both its result and how long it took. It is the quickest way to get a feel for whether a piece of logic is fast enough to keep:</p>
+<pre class="t"><code>%time df |&gt; filter($x &gt; 10) |&gt; nrow()
+42
+Execution time: 0.1540 seconds</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>The most underrated command is <code>%save</code>. It writes a transcript of the session — every command and its result — to a file, so you can turn an exploratory session into a starting point for a script. In compact mode it records a one-line summary of each result; in verbose mode it records the full pretty-printed output:</p>
+<pre class="t"><code>%save my_session.t
+%save verbose my_session.t</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>A common workflow is to run <code>%reset</code> to clear the transcript, then do a clean run and <code>%save</code> it, giving you a tidy record of exactly what you tried. Typing <code>%magic</code> lists every magic command with a description, and if you mistype one, the REPL offers a fuzzy match: <code>%objcts</code> suggests <code>Did you mean: %objects?</code>.</p>
+</section>
+</section>
+<section id="metaprogramming-quotation-and-quasiquotation" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="metaprogramming-quotation-and-quasiquotation"><span class="header-section-number">14.2</span> Metaprogramming: Quotation and Quasiquotation</h2>
+<p>Chapter 6 introduced T’s functional core — pure functions and function composition. Most of the time you can stay in that world and never think about how expressions are evaluated. But sometimes you need to treat code itself as data: to build expressions programmatically, to forward a column name that is only known at runtime, or to write a function that behaves like the data verbs such as <code>mutate</code> and <code>filter</code>. That is what metaprogramming is for.</p>
+<p>T’s metaprogramming is modelled on Lisp and on R’s <code>rlang</code>, and it rests on a small set of ideas:</p>
+<ul>
+<li><strong>Quotation</strong> captures an expression without evaluating it.</li>
+<li>A <strong>quosure</strong> is a quoted expression paired with the environment in which it was written.</li>
+<li><strong>Unquoting</strong> injects an already-evaluated value back into a quoted expression.</li>
+<li><strong>Splicing</strong> expands a collection into the arguments of a call.</li>
+</ul>
+<section id="capturing-code-to_expr-and-quo" class="level3" data-number="14.2.1">
+<h3 data-number="14.2.1" class="anchored" data-anchor-id="capturing-code-to_expr-and-quo"><span class="header-section-number">14.2.1</span> Capturing code: <code>to_expr</code> and <code>quo</code></h3>
+<p>The two ways to capture code differ in whether they remember the surrounding environment. <code>to_expr()</code> captures a bare expression; <code>quo()</code> captures a quosure — the expression plus the environment at the call site.</p>
+<pre class="t"><code>x = 10
+q = quo(1 + x)   -- captures x = 10
+x = 99
+eval(q)          -- 11, not 100: it runs in the captured environment</code></pre>
+<pre class="text t-output"><code>11
+</code></pre>
+<p>That distinction is the whole point of a quosure. When <code>eval()</code> runs a quosure, it evaluates it in the environment the quosure captured, not in whatever environment happens to be current. For a bare expression from <code>to_expr()</code>, <code>eval()</code> uses the current environment.</p>
+<p>There are plural forms too: <code>to_exprs(...)</code> and <code>quos(...)</code> capture several expressions at once, returning a list of bare expressions or quosures respectively.</p>
+</section>
+<section id="unquoting-and" class="level3" data-number="14.2.2">
+<h3 data-number="14.2.2" class="anchored" data-anchor-id="unquoting-and"><span class="header-section-number">14.2.2</span> Unquoting: <code>!!</code> and <code>!!!</code></h3>
+<p>Quasiquotation is how you fill in the blanks of a captured expression. The <code>!!</code> operator evaluates its operand and injects the result into the surrounding quoted expression. If the operand is a quosure, only the expression part is injected — the environment is stripped.</p>
+<pre class="t"><code>x = 10
+e = to_expr(1 + !!x)
+print(e)         -- to_expr(1 + 10)</code></pre>
+<pre class="text t-output"><code>to_expr(1 + 10) 
+</code></pre>
+<p>The <code>!!!</code> operator goes further: it evaluates its operand and <em>splices</em> the elements into the surrounding call. The operand must be a list, vector, or dict.</p>
+<pre class="t"><code>vals = [1, 2, 3]
+e = to_expr(sum(!!!vals))
+print(e)         -- to_expr(sum(1, 2, 3))</code></pre>
+<pre class="text t-output"><code>to_expr(1 + 10) 
+to_expr(1 + 10) 
+</code></pre>
+<p>If you splice a named list, the names become argument names:</p>
+<pre class="t"><code>my_args = [x: 10, y: 20]
+e = to_expr(f(!!!my_args, z: 30))
+print(e)         -- to_expr(f(x = 10, y = 20, z = 30))</code></pre>
+<pre class="text t-output"><code>to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+</code></pre>
+</section>
+<section id="dynamic-names-and-symbols" class="level3" data-number="14.2.3">
+<h3 data-number="14.2.3" class="anchored" data-anchor-id="dynamic-names-and-symbols"><span class="header-section-number">14.2.3</span> Dynamic names and symbols</h3>
+<p>A frequent need is to use a name that is only known at runtime — a column name stored in a string, say. <code>to_symbol()</code> turns a string into a symbol that <code>!!</code> can inject, and the <code>!!name := value</code> form lets a computed name become an argument or column name.</p>
+<pre class="t"><code>col = "age"
+e = to_expr(mutate(df, !!col := 42))
+print(e)         -- to_expr(mutate(df, age = 42))</code></pre>
+<pre class="text t-output"><code>to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+</code></pre>
+<p><code>get()</code> is the companion for the reverse direction: it retrieves a variable’s value from a string or symbol name, which is how you look up a column dynamically.</p>
+</section>
+<section id="non-standard-evaluation" class="level3" data-number="14.2.4">
+<h3 data-number="14.2.4" class="anchored" data-anchor-id="non-standard-evaluation"><span class="header-section-number">14.2.4</span> Non-standard evaluation</h3>
+<p>The most common reason to reach for all of this is to write a function that accepts an unevaluated column name, the way the data verbs do. T gives you three tools for it, in order of increasing power:</p>
+<ol type="1">
+<li><strong>Auto-quoted parameters.</strong> Prefix a parameter with <code>$</code> and the caller can pass a bare column name, which you forward into an NSE-aware verb with <code>!!</code>.</li>
+</ol>
+<pre class="t"><code>my_mean = \(df, $col) {
+  summarize(df, result = mean(!!col))
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<ol start="2" type="1">
+<li><p><strong><code>enquo(param)</code></strong> captures the caller’s full expression for a named parameter, as a quosure. Use it when you need more than a column name.</p></li>
+<li><p><strong><code>enquos(...)</code></strong> captures all variadic expressions as a list of quosures, which you can splice into a verb.</p></li>
+</ol>
+<pre class="t"><code>my_summarize = \(df: DataFrame, ... -&gt; DataFrame) {
+  cols = enquos(...)
+  eval(to_expr(df |&gt; summarize(!!!cols)))
+}</code></pre>
+<pre class="text t-output"><code>to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+</code></pre>
+<p>The default advice is simple: use <code>quo</code> over <code>to_expr</code> when in doubt, so your code remembers its environment; use the <code>$param</code> form for the common “accept a column” case; and reach for <code>enquo</code>/<code>enquos</code> only when you genuinely need the caller’s expression.</p>
+<p>One detail is worth knowing because it prevents a whole class of confusing bugs. Inside a data verb, expressions are resolved against a <strong>data mask</strong>: T looks up <code>$column</code> in the mask first, so a global variable or function with the same name as a column does not interfere. That is why <code>df |&gt; mutate(new = $score * 2)</code> works even when a function called <code>score</code> exists in scope.</p>
+</section>
+</section>
+<section id="serializers-in-depth" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="serializers-in-depth"><span class="header-section-number">14.3</span> Serializers in Depth</h2>
+<p>Chapter 5 showed you that pipeline nodes pass data to one another through <strong>serializers</strong>, and that you can name a built-in one with the <code>^</code> prefix. This section goes deeper: what the built-ins are, how to choose between them, and how to write your own.</p>
+<section id="the-built-in-serializers" class="level3" data-number="14.3.1">
+<h3 data-number="14.3.1" class="anchored" data-anchor-id="the-built-in-serializers"><span class="header-section-number">14.3.1</span> The built-in serializers</h3>
+<p>Every node’s output is written to disk in some format, and every node reads its inputs in the corresponding format. T ships a set of built-in serializers, identified by <code>^</code> symbols:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Identifier</th>
+<th>Format</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>^ipc</code></td>
+<td>Apache Arrow IPC</td>
+<td>Fast live hand-off between nodes</td>
+</tr>
+<tr class="even">
+<td><code>^parquet</code></td>
+<td>Apache Parquet</td>
+<td>Durable, compressed storage</td>
+</tr>
+<tr class="odd">
+<td><code>^csv</code></td>
+<td>CSV</td>
+<td>Simple tabular interchange</td>
+</tr>
+<tr class="even">
+<td><code>^json</code></td>
+<td>JSON</td>
+<td>Config, lists, dicts</td>
+</tr>
+<tr class="odd">
+<td><code>^pmml</code></td>
+<td>PMML</td>
+<td>Predictive models</td>
+</tr>
+<tr class="even">
+<td><code>^onnx</code></td>
+<td>ONNX</td>
+<td>ML model interchange</td>
+</tr>
+<tr class="odd">
+<td><code>^text</code></td>
+<td>Plain text</td>
+<td>Logs, shell output</td>
+</tr>
+<tr class="even">
+<td><code>^bin</code></td>
+<td>Binary</td>
+<td>Opaque blobs (default for <code>fetchurl</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Most of these are symmetric across the T, R, Python, and Julia runtimes, which is what makes polyglot pipelines possible: a DataFrame written by an R node can be read by a Python node because both sides understand the same format.</p>
+<p>The choice that comes up most often is between <code>^ipc</code> and <code>^parquet</code>. Both are columnar, type-preserving Arrow formats that work in every runtime. The difference is <strong>live hand-off versus durable artifact</strong>. <code>^ipc</code> writes the in-memory Arrow layout straight to disk: the fastest possible round trip, but uncompressed. <code>^parquet</code> is a compressed, storage-optimized layout: smaller files (often several times smaller for numeric data), column pruning on read, and first-class support in Spark, DuckDB, and pandas. The rule of thumb is to pass data <em>between nodes while a pipeline runs</em> with <code>^ipc</code>, and to <em>persist, ship, or store</em> the final result with <code>^parquet</code>. You can do both in one pipeline.</p>
+</section>
+<section id="symbols-variables-and-the-string-trap" class="level3" data-number="14.3.2">
+<h3 data-number="14.3.2" class="anchored" data-anchor-id="symbols-variables-and-the-string-trap"><span class="header-section-number">14.3.2</span> Symbols, variables, and the string trap</h3>
+<p>There is a subtle but important distinction in how you name a serializer. Built-in serializers are <strong>symbols</strong> with the <code>^</code> prefix. A custom serializer you have defined is a <strong>variable</strong>, and you pass its name with no <code>^</code>.</p>
+<pre class="t"><code>node(command = read_csv("large.csv"), serializer = ^ipc)      -- built-in
+import "src/my_ser.t" [my_ser]
+node(command = ..., serializer = my_ser)                        -- custom</code></pre>
+<pre class="text t-output"><code>to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+node&lt;T&gt;(...)
+</code></pre>
+<p>And here is the trap: in a node constructor (<code>node</code>, <code>rn</code>, <code>pyn</code>, <code>jln</code>, <code>shn</code>, <code>qn</code>), a <strong>string literal is not allowed</strong>. Writing <code>serializer = "ipc"</code> raises a <code>TypeError</code>. You must use a <code>^</code> symbol for built-ins or a variable for custom serializers. (The <code>mutate_node()</code> and <code>set_pipeline_global_options()</code> functions are more permissive and accept both strings and symbols.)</p>
+<p>If you do not specify a serializer at all, T uses the <code>default</code>, which is each runtime’s native binary format — <code>saveRDS</code> for R, <code>pickle</code> for Python, and so on. Shell nodes default to <code>^text</code>.</p>
+</section>
+<section id="custom-serializers" class="level3" data-number="14.3.3">
+<h3 data-number="14.3.3" class="anchored" data-anchor-id="custom-serializers"><span class="header-section-number">14.3.3</span> Custom serializers</h3>
+<p>A serializer is a first-class value: a record with a <code>format</code>, a <code>writer</code>, and a <code>reader</code>.</p>
+<pre class="t"><code>type serializer = {
+  format: string,
+  writer: function(path: string, value: any) -&gt; result[NA, string],
+  reader: function(path: string) -&gt; result[any, string]
+}</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>To define one, you write a record that matches that shape. The <code>format</code> field should be a <code>^</code> symbol so it stays consistent with T’s symbol-based serialization.</p>
+<pre class="t"><code>my_log_serializer = {
+  format: ^log,
+  writer: \(path, val) {
+    -- write val to path in your log format
+    Ok(NA)
+  },
+  reader: \(path) {
+    -- read the log back from path
+    Ok("log content")
+  }
+}
+
+node(command = ..., serializer = my_log_serializer)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>For a serializer to work across <em>other</em> runtimes, you can add optional <code>r_writer</code>, <code>r_reader</code>, <code>py_writer</code>, and <code>py_reader</code> fields. These are code snippets — plain strings, or foreign code blocks for readability — that T injects into the generated build script for that runtime.</p>
+<pre class="t"><code>my_custom_ser = [
+  format: ^custom,
+  writer: \(path, val) { Ok(NA) },
+  reader: \(path) { Ok(42) },
+  r_writer: &lt;{ function(obj, path) { writeCustom(obj, path) } },
+  r_reader: &lt;{ function(path) { readCustom(path) } },
+  py_writer: &lt;{ def write_custom(obj, path): ... },
+  py_reader: &lt;{ def read_custom(path): ... }
+]</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p>T performs <strong>static coherence checks</strong> when you build a pipeline that uses a custom serializer: if a node is declared for the R runtime but the serializer has no <code>r_writer</code> or <code>r_reader</code>, you get an error at build time rather than a mystery failure at run time. And when T detects that your serializer references R or Python functions, it can add the corresponding <code>[r-dependencies]</code> or <code>[py-dependencies]</code> to the generated build automatically (controlled by <code>TLANG_AUTO_ADD_PIPELINE_DEPS</code>).</p>
+</section>
+</section>
+<section id="plotting-in-pipelines" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="plotting-in-pipelines"><span class="header-section-number">14.4</span> Plotting in Pipelines</h2>
+<p>Chapter 8 showed you how to structure a pipeline as data. This section covers something that trips people up: what happens when a node’s output is not a DataFrame but a plot.</p>
+<section id="returning-a-plot-from-a-node" class="level3" data-number="14.4.1">
+<h3 data-number="14.4.1" class="anchored" data-anchor-id="returning-a-plot-from-a-node"><span class="header-section-number">14.4.1</span> Returning a plot from a node</h3>
+<p>Any node can return a plot object — a <code>Plot</code> from CairoMakie, a ggplot2 object, a matplotlib figure, and so on. When it does, T serializes the plot and, crucially, records <strong>visualization metadata</strong> alongside the artifact. That metadata is what lets downstream tools know the output is something to be <em>shown</em>, not just <em>read</em>.</p>
+<pre class="t"><code>plot_node = node(
+  command = \(df) {
+    df |&gt; plot($x, $y)
+  }
+)</code></pre>
+<pre class="text t-output"><code>to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+</code></pre>
+</section>
+<section id="reading-a-plot-back" class="level3" data-number="14.4.2">
+<h3 data-number="14.4.2" class="anchored" data-anchor-id="reading-a-plot-back"><span class="header-section-number">14.4.2</span> Reading a plot back</h3>
+<p><code>read_node()</code> on a plotting node returns not the raw artifact but a small metadata record describing it — the path to the serialized plot, its type, and the runtime that produced it. The <code>show_plot()</code> function takes that record and renders the plot in the current environment.</p>
+<pre class="t"><code>meta = read_node("plot_node")
+show_plot(meta)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+</code></pre>
+</section>
+<section id="plots-in-literate-documents" class="level3" data-number="14.4.3">
+<h3 data-number="14.4.3" class="anchored" data-anchor-id="plots-in-literate-documents"><span class="header-section-number">14.4.3</span> Plots in literate documents</h3>
+<p>The most common place this matters is a Quarto document. T’s Quarto integration has a dual behaviour that is worth understanding. A <code>{t}</code> chunk that produces a plot records the visualization metadata, and a companion <code>{r}</code> or <code>{python}</code> chunk can then call <code>show_plot()</code> to render it. This lets you compute the plot in the runtime that is best suited to it and display it in the document without copying data between runtimes.</p>
+<p>The mechanism depends on a few underlying libraries: CairoMakie for T plots, <code>kaleido</code> for exporting ggplot2 objects to images, and <code>cloudpickle</code> for serializing Python plot objects that the standard <code>pickle</code> module cannot handle. If a plot does not render the way you expect in a document, the first thing to check is whether the runtime that produced it has the right export library available in its Nix environment.</p>
+</section>
+</section>
+<section id="nix-build-options-and-orchestration" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="nix-build-options-and-orchestration"><span class="header-section-number">14.5</span> Nix Build Options and Orchestration</h2>
+<p>Chapter 2 introduced Nix as the foundation that makes T reproducible. Chapter 5 showed you <code>build_pipeline()</code> and <code>t run</code> at the command line. This section covers the knobs in between: the <code>nix_options</code> dictionary that controls how a pipeline is actually built, and the ways to orchestrate that build.</p>
+<section id="the-nix_options-dictionary" class="level3" data-number="14.5.1">
+<h3 data-number="14.5.1" class="anchored" data-anchor-id="the-nix_options-dictionary"><span class="header-section-number">14.5.1</span> The <code>nix_options</code> dictionary</h3>
+<p>The build functions — <code>populate_pipeline()</code>, <code>build_pipeline()</code>, <code>pipeline_run()</code>, and the <code>t_make()</code> helper — all accept a <code>nix_options</code> argument. It is a dictionary of build-time settings that override the defaults. The most useful keys are:</p>
+<ul>
+<li><code>max_jobs</code> and <code>max_cores</code>: how much of the machine a build may use.</li>
+<li><code>dry_run</code>: evaluate the build plan without running any node.</li>
+<li><code>force</code>: rebuild nodes even if their outputs already exist.</li>
+<li><code>targets</code>: build only a subset of the pipeline’s nodes.</li>
+<li><code>cache</code>: which Nix cache to use for the build.</li>
+<li><code>builders</code>: which machines to build on (local or remote).</li>
+<li><code>keep_env</code> and <code>sandbox</code>: how much of the host environment a node sees.</li>
+<li><code>env_vars</code>: per-node environment variables, set when the node is defined.</li>
+</ul>
+<p>Validation is strict: pass a key that is not a valid option, or a value of the wrong type, and you get a <code>TypeError</code> or <code>ValueError</code> before the build starts.</p>
+<pre class="t"><code>build_pipeline(p, nix_options = { max_jobs = 4, dry_run = true })</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+</section>
+<section id="dry-runs-and-plans" class="level3" data-number="14.5.2">
+<h3 data-number="14.5.2" class="anchored" data-anchor-id="dry-runs-and-plans"><span class="header-section-number">14.5.2</span> Dry runs and plans</h3>
+<p>Setting <code>dry_run = true</code> is one of the most useful habits to form. Instead of executing the pipeline, the build returns a <strong>plan</strong> as a DataFrame: every node that would run, in dependency order, with its inputs and outputs. You can inspect it, filter it, or assert on it in a test. It is the cheapest way to check that your pipeline is wired the way you think it is.</p>
+</section>
+<section id="where-environment-comes-from" class="level3" data-number="14.5.3">
+<h3 data-number="14.5.3" class="anchored" data-anchor-id="where-environment-comes-from"><span class="header-section-number">14.5.3</span> Where environment comes from</h3>
+<p>It is worth separating two related ideas. <code>keep_env</code> controls whether a node sees the host’s full environment or a clean one — this is a build-time isolation choice. <code>env_vars</code>, by contrast, is how you declare specific variables a node needs, and it is set when the node is defined, not at build time. The first is about isolation; the second is about configuration.</p>
+</section>
+<section id="building-on-other-machines" class="level3" data-number="14.5.4">
+<h3 data-number="14.5.4" class="anchored" data-anchor-id="building-on-other-machines"><span class="header-section-number">14.5.4</span> Building on other machines</h3>
+<p>The <code>builders</code> option is what turns a local build into a distributed one. You can point a build at a remote Nix builder — a faster machine, or a machine with the right architecture — and Nix will ship the build steps there. This is particularly useful when your pipeline has heavy nodes that would take minutes locally but seconds on a larger box. The <code>pipeline_to_drv(p)</code> function returns the underlying Nix derivation, which is the escape hatch for when you need to hand the build to a tool that understands derivations directly.</p>
+</section>
+</section>
+<section id="building-t-packages" class="level2" data-number="14.6">
+<h2 data-number="14.6" class="anchored" data-anchor-id="building-t-packages"><span class="header-section-number">14.6</span> Building T Packages</h2>
+<p>Chapter 12 covered packaging T pipelines for distribution as R and Python packages. But T can also be packaged <em>in T</em>. This section is about that: turning a collection of T functions into a reusable package that others can import.</p>
+<section id="initialising-a-package" class="level3" data-number="14.6.1">
+<h3 data-number="14.6.1" class="anchored" data-anchor-id="initialising-a-package"><span class="header-section-number">14.6.1</span> Initialising a package</h3>
+<p><code>t init --package</code> scaffolds a T package. The result is a directory with a <code>DESCRIPTION.toml</code> that declares the package’s metadata, its dependencies, and its build inputs, and a <code>flake.nix</code> that makes the package itself a Nix input.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[package]</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"mylib"</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="kw">[dependencies]</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="dt">otherlib</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">git</span><span class="op"> =</span> <span class="st">"https://github.com/me/otherlib"</span><span class="op">, </span><span class="dt">tag</span><span class="op"> =</span> <span class="st">"0.3.0"</span><span class="op"> }</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="kw">[additional-tools]</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># extra tools the package needs at build time</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Dependencies are declared by git URL and tag, which keeps them reproducible in the same way the rest of T is.</p>
+</section>
+<section id="public-and-private-api" class="level3" data-number="14.6.2">
+<h3 data-number="14.6.2" class="anchored" data-anchor-id="public-and-private-api"><span class="header-section-number">14.6.2</span> Public and private API</h3>
+<p>By default every top-level function in a package is part of its public API. Mark a function <code>@private</code> to exclude it from the documented surface. This matters because the public API is what <code>t doctor</code> checks for and what the generated documentation advertises.</p>
+</section>
+<section id="testing-a-package" class="level3" data-number="14.6.3">
+<h3 data-number="14.6.3" class="anchored" data-anchor-id="testing-a-package"><span class="header-section-number">14.6.3</span> Testing a package</h3>
+<p><code>t test</code> runs the package’s tests, and it honours the same flags as the pipeline tests from Chapter 7: you can select a subset, run in verbose mode, and so on. A test marked <code>noop</code> is skipped — useful for a test that depends on an optional dependency that may not be present.</p>
+</section>
+<section id="t-doc-documentation" class="level3" data-number="14.6.4">
+<h3 data-number="14.6.4" class="anchored" data-anchor-id="t-doc-documentation"><span class="header-section-number">14.6.4</span> T-Doc documentation</h3>
+<p>T packages use a lightweight documentation format, T-Doc. A function is documented with a <code>--#</code> block that supports directives:</p>
+<pre class="t"><code>--# @param x The input value.
+--# @return A transformed value.
+--# @example
+--#   myfunc(1)
+--# @seealso myotherfunc
+--# @family transforms
+myfunc = \(x) { x * 2 }</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+<p><code>t doc --parse --generate</code> parses these blocks and generates the package’s documentation. <code>t doctor</code> is the linter: it checks that public functions are documented, that <code>@param</code> names match the signature, and that cross-references resolve.</p>
+</section>
+<section id="publishing" class="level3" data-number="14.6.5">
+<h3 data-number="14.6.5" class="anchored" data-anchor-id="publishing"><span class="header-section-number">14.6.5</span> Publishing</h3>
+<p><code>t publish</code> publishes the package by tagging the git repository. There is no central T package registry — distribution is by git, which is deliberate: it means a package version is pinned to an exact commit, and consumers depend on it the same way they depend on any other Nix input.</p>
+</section>
+<section id="importing" class="level3" data-number="14.6.6">
+<h3 data-number="14.6.6" class="anchored" data-anchor-id="importing"><span class="header-section-number">14.6.6</span> Importing</h3>
+<p>Consumers import a T package the same way they import any T module, by name or by path, with optional selective or aliased imports:</p>
+<pre class="t"><code>import "mylib"
+import "mylib" [myfunc]
+import "mylib" [myfunc as transform]</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): &lt;no output&gt;</code></pre>
+</section>
+</section>
+<section id="property-based-testing-with-propcraft" class="level2" data-number="14.7">
+<h2 data-number="14.7" class="anchored" data-anchor-id="property-based-testing-with-propcraft"><span class="header-section-number">14.7</span> Property-Based Testing with Propcraft</h2>
+<p>Chapter 7 introduced unit testing with Testcraft: you write concrete examples and assert on their results. That is the right tool for most functions, but it has a blind spot. A function can pass every example you thought of and still be wrong for the input you did not think of. Property-based testing is how you close that gap, and in T it is provided by Propcraft.</p>
+<section id="the-idea" class="level3" data-number="14.7.1">
+<h3 data-number="14.7.1" class="anchored" data-anchor-id="the-idea"><span class="header-section-number">14.7.1</span> The idea</h3>
+<p>Instead of testing specific inputs, you describe a <strong>property</strong> that should hold for <em>all</em> inputs in some domain, and Propcraft generates hundreds of random inputs to try to break it. If it finds one that fails, it <strong>shrinks</strong> the failing input down to a minimal, easy-to-read counterexample.</p>
+<p>The entry point is <code>prop_for_all</code>, which takes a generator for each argument and a property function:</p>
+<pre class="t"><code>prop_for_all(
+  prop_gen_int_range(0, 100),
+  prop_gen_int_range(0, 100),
+  \(a, b) { add(a, b) == add(b, a) }
+)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+</code></pre>
+</section>
+<section id="generators" class="level3" data-number="14.7.2">
+<h3 data-number="14.7.2" class="anchored" data-anchor-id="generators"><span class="header-section-number">14.7.2</span> Generators</h3>
+<p>A generator describes a domain of values. Propcraft ships generators for the common types:</p>
+<ul>
+<li><code>prop_gen_int</code>, <code>prop_gen_int_range(lo, hi)</code></li>
+<li><code>prop_gen_float_range(lo, hi)</code></li>
+<li><code>prop_gen_bool</code></li>
+<li><code>prop_gen_string_from(alphabet)</code></li>
+<li><code>prop_gen_factor(levels)</code></li>
+<li><code>prop_gen_date_range(lo, hi)</code></li>
+<li><code>prop_gen_df(...)</code> and <code>prop_gen_df_from(template, na_prob = 0.1)</code></li>
+</ul>
+<p>The DataFrame generators are the ones you will use most. <code>prop_gen_df</code> builds a random DataFrame with the column types you specify, and <code>na_prob</code> controls how many missing values to sprinkle in — which is exactly the kind of input that exposes bugs in real pipelines.</p>
+<p>You can also build generators out of other generators with combinators: <code>prop_map_gen</code> transforms a generator’s output, <code>prop_such_that</code> filters it to values satisfying a predicate, and <code>prop_resize</code> scales the size of a collection-valued generator.</p>
+</section>
+<section id="the-property-contract" class="level3" data-number="14.7.3">
+<h3 data-number="14.7.3" class="anchored" data-anchor-id="the-property-contract"><span class="header-section-number">14.7.3</span> The property contract</h3>
+<p>There is one rule that catches people out: <strong>a property that returns <code>NA</code> fails</strong>. A property must return a boolean, and <code>NA</code> is not a <code>true</code>. This is deliberate — a property that cannot decide is not a valid property. The <code>Expect</code> type is understood by Propcraft, so you can write properties in terms of the same assertions you use elsewhere. A property that raises an <code>Error</code> also fails.</p>
+</section>
+<section id="a-concrete-example" class="level3" data-number="14.7.4">
+<h3 data-number="14.7.4" class="anchored" data-anchor-id="a-concrete-example"><span class="header-section-number">14.7.4</span> A concrete example</h3>
+<p>Here is the kind of bug property-based testing finds. Suppose a function is supposed to drop rows with missing values in a given column:</p>
+<pre class="t"><code>prop_for_all(
+  prop_gen_df(na_prob = 0.3),
+  \(df) { nrow(drop_na(df, $x)) &lt;= nrow(df) }
+)</code></pre>
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+to_expr(1 + 10) 
+</code></pre>
+<p>The property — the result has no more rows than the input — is obviously true, yet it fails. Propcraft shrinks the failing input to a tiny DataFrame and shows you the exact rows that broke it, instead of leaving you to guess.</p>
+</section>
+<section id="seeding-and-sample-size" class="level3" data-number="14.7.5">
+<h3 data-number="14.7.5" class="anchored" data-anchor-id="seeding-and-sample-size"><span class="header-section-number">14.7.5</span> Seeding and sample size</h3>
+<p>Generated inputs are random, so tests can be flaky unless you control the randomness. <code>set_seed(n)</code> and <code>with_seed(n, ...)</code> make a property test deterministic for a given seed. The <code>n</code> argument of <code>prop_for_all</code> sets how many cases to try; it defaults to 100.</p>
+</section>
+<section id="running-with-t-test" class="level3" data-number="14.7.6">
+<h3 data-number="14.7.6" class="anchored" data-anchor-id="running-with-t-test"><span class="header-section-number">14.7.6</span> Running with <code>t test</code></h3>
+<p>Propcraft properties are just tests, so <code>t test</code> runs them alongside your Testcraft unit tests. A failing property shows the shrunk counterexample and the seed that reproduces it, so you can pin the seed and turn the counterexample into a permanent regression test.</p>
+<p>One caveat: property-based testing is a <strong>package-hardening</strong> tool. It shines when you are writing a library that others will call with arbitrary inputs. For a one-off analysis pipeline, the concrete examples from Chapter 7 are usually enough, and the cost of generating and shrinking random DataFrames is not worth it.</p>
+</section>
+</section>
+<section id="where-to-go-from-here" class="level2" data-number="14.8">
+<h2 data-number="14.8" class="anchored" data-anchor-id="where-to-go-from-here"><span class="header-section-number">14.8</span> Where to go from here</h2>
+<p>You now have the full toolkit: the REPL conveniences, the metaprogramming primitives, the serializer and plotting machinery, the build orchestration knobs, the package toolchain, and property-based testing. None of these are required for a simple pipeline, but together they are what let a T project grow from a script into a library, a service, or a platform without changing its foundations. The next chapter pulls the threads together.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./13-ci.html" class="pagination-link" aria-label="Continuous Integration with GitHub Actions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./15-conclusion.html" class="pagination-link" aria-label="Conclusion: Adopting Reproducibility in the Real World">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/14-t-in-depth.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
