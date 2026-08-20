@@ -37,6 +37,7 @@ contents of the current directory, and `%env` prints every environment
 variable, one per line.
 
 ```t
+#| eval: false
 %pwd
 /home/user/projects
 %cd data
@@ -54,6 +55,7 @@ what is in scope. `%objects` (aliased `%who`) lists every user-defined
 variable, its type, and a compact summary:
 
 ```t
+#| eval: false
 x = 42
 df = read_csv("data.csv")
 %objects
@@ -74,6 +76,7 @@ took. It is the quickest way to get a feel for whether a piece of logic is fast
 enough to keep:
 
 ```t
+#| eval: false
 %time df |> filter($x > 10) |> nrow()
 42
 Execution time: 0.1540 seconds
@@ -86,6 +89,7 @@ summary of each result; in verbose mode it records the full pretty-printed
 output:
 
 ```t
+#| eval: false
 %save my_session.t
 %save verbose my_session.t
 ```
@@ -194,6 +198,7 @@ three tools for it, in order of increasing power:
    pass a bare column name, which you forward into an NSE-aware verb with `!!`.
 
 ```t
+#| eval: false
 my_mean = \(df, $col) {
   summarize(df, result = mean(!!col))
 }
@@ -292,6 +297,7 @@ A serializer is a first-class value: a record with a `format`, a `writer`, and
 a `reader`.
 
 ```t
+#| eval: false
 type serializer = {
   format: string,
   writer: function(path: string, value: any) -> result[NA, string],
@@ -304,6 +310,7 @@ should be a `^` symbol so it stays consistent with T's symbol-based
 serialization.
 
 ```t
+#| eval: false
 my_log_serializer = {
   format: ^log,
   writer: \(path, val) {
@@ -325,6 +332,7 @@ snippets — plain strings, or foreign code blocks for readability — that T
 injects into the generated build script for that runtime.
 
 ```t
+#| eval: false
 my_custom_ser = [
   format: ^custom,
   writer: \(path, val) { Ok(NA) },
@@ -374,6 +382,7 @@ the runtime that produced it. The `show_plot()` function takes that record and
 renders the plot in the current environment.
 
 ```t
+#| eval: false
 meta = read_node("plot_node")
 show_plot(meta)
 ```
@@ -421,6 +430,7 @@ Validation is strict: pass a key that is not a valid option, or a value of the
 wrong type, and you get a `TypeError` or `ValueError` before the build starts.
 
 ```t
+#| eval: false
 build_pipeline(p, nix_options = { max_jobs = 4, dry_run = true })
 ```
 
@@ -449,6 +459,22 @@ particularly useful when your pipeline has heavy nodes that would take minutes
 locally but seconds on a larger box. The `pipeline_to_drv(p)` function returns
 the underlying Nix derivation, which is the escape hatch for when you need to
 hand the build to a tool that understands derivations directly.
+
+The `cache` option is the companion to `builders`. Where `builders` decides
+*where* a build runs, `cache` decides *where pre-built artifacts come from*.
+Like `builders`, it is a key in the `nix_options` dictionary. Passing a
+Cachix cache name registers it as an extra Nix binary substituter:
+
+```t
+#| eval: false
+build_pipeline(p, nix_options = { cache = "my-team" })
+```
+
+Nix then pulls any matching store paths from `my-team.cachix.org` before
+falling back to building them, and can push freshly built artifacts back to
+the cache. This is how a team shares build results across machines and CI
+runners without each one recompiling the same R and Python packages from
+source.
 
 ## Building T Packages
 
@@ -498,6 +524,7 @@ T packages use a lightweight documentation format, T-Doc. A function is
 documented with a `--#` block that supports directives:
 
 ```t
+#| eval: false
 --# @param x The input value.
 --# @return A transformed value.
 --# @example
@@ -525,6 +552,7 @@ Consumers import a T package the same way they import any T module, by name or
 by path, with optional selective or aliased imports:
 
 ```t
+#| eval: false
 import "mylib"
 import "mylib" [myfunc]
 import "mylib" [myfunc as transform]
@@ -549,6 +577,7 @@ The entry point is `prop_for_all`, which takes a generator for each argument
 and a property function:
 
 ```t
+#| eval: false
 prop_for_all(
   prop_gen_int_range(0, 100),
   prop_gen_int_range(0, 100),
@@ -594,6 +623,7 @@ Here is the kind of bug property-based testing finds. Suppose a function is
 supposed to drop rows with missing values in a given column:
 
 ```t
+#| eval: false
 prop_for_all(
   prop_gen_df(na_prob = 0.3),
   \(df) { nrow(drop_na(df, $x)) <= nrow(df) }

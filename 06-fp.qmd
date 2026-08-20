@@ -105,6 +105,7 @@ This is not a metaphor. A T pipeline node is, by design, a pure function.
 Look at a concrete example:
 
 ```t
+#| eval: false
 p = pipeline {
   -- Node 1: produce data. Inputs: none. Output: a DataFrame (serialized as ^ipc).
   data_node = node(
@@ -170,6 +171,7 @@ implicitly read column names). T makes this structure *explicit*, *named*, and
 Here is another example which does exactly this:
 
 ```t
+#| eval: false
 p = pipeline {
   -- Load: no inputs, output is a DataFrame
   mtcars = read_csv("data/mtcars.csv", separator = "|")
@@ -200,6 +202,7 @@ signature: it says what the node accepts and what it returns. T uses this to
 move data between R, Python, Julia, and T nodes without any manual glue code:
 
 ```t
+#| eval: false
 -- Node 1: R produces a DataFrame, serialized as Arrow IPC
 df_r = node(
   command = <{
@@ -253,6 +256,7 @@ Downstream nodes can inspect it, recover from it, or propagate it, using the
 maybe-pipe `?|>`:
 
 ```t
+#| eval: false
 p = pipeline {
   -- This node intentionally fails
   risky_node = node(
@@ -310,6 +314,7 @@ blocks. T also lets a node point to an **external script file** using the
 `script` argument:
 
 ```t
+#| eval: false
 p = pipeline {
   -- runtime auto-detected from .R extension
   model    = rn(script = "src/train_model.R", serializer = ^pmml)
@@ -347,6 +352,7 @@ You can push this further with the `functions` parameter, which sources utility
 files into the node sandbox *before* the main script runs:
 
 ```t
+#| eval: false
 p = pipeline {
   cleaned = rn(
     script    = "src/clean.R",

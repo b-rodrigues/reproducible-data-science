@@ -41,6 +41,7 @@ through from declaration to result:
 Open `src/pipeline.t` and write:
 
 ```t
+#| eval: false
 p = pipeline {
   x = 10
   y = 20
@@ -69,6 +70,7 @@ node, and caches the results. Access any node's value with dot notation in the
 REPL:
 
 ```t
+#| eval: false
 t> p.x      -- 10
 t> p.y      -- 20
 t> p.total  -- 30
@@ -98,6 +100,7 @@ Inside the REPL (`t` or `t repl`) you can inspect results immediately after a
 build:
 
 ```t
+#| eval: false
 t> read_node(p.total)    -- reads the serialized artifact back from the Nix store
 t> show_plot(p)          -- visualise the DAG
 ```
@@ -105,6 +108,7 @@ t> show_plot(p)          -- visualise the DAG
 Add a node and rebuild:
 
 ```t
+#| eval: false
 p = pipeline {
   x     = 10
   y     = 20
@@ -140,6 +144,7 @@ Foreign-language code lives inside `<{ ... }>` raw code blocks, which pass code
 verbatim to the target runtime without T parsing it:
 
 ```t
+#| eval: false
 p = pipeline {
   -- Load data in T
   data = read_csv("data/mtcars.csv", separator = "|")
@@ -210,6 +215,7 @@ Then run `t update && exit && nix develop` to sync the environment.
 Now write the pipeline:
 
 ```t
+#| eval: false
 -- src/pipeline.t
 p = pipeline {
   -- Node 1: load data in T
@@ -259,6 +265,7 @@ Try changing the data values and re-running; only the affected nodes rebuild.
 After a build, several tools let you look inside the pipeline from the REPL:
 
 ```t
+#| eval: false
 -- See the full DAG as a table
 pipeline_to_frame(p)
 
@@ -279,6 +286,7 @@ read_log("model")
 `explain()` gives a quick summary of any node:
 
 ```t
+#| eval: false
 explain(p.model)
 -- {
 --   `kind`: "computed_node",
@@ -410,12 +418,14 @@ Once a pipeline is built in your session, you can inspect any node's computed re
 working on the pipeline from before. To run it from the REPL, use `t_make()`:
 
 ```t
+#| eval: false
 t_make()
 ```
 
 You can now read the contents of individual nodes:
 
 ```t
+#| eval: false
 read_node(p.data)
 ```
 
@@ -428,6 +438,7 @@ What if you want to inspect a node's output from a previous build, or examine ar
 T provides `read_past_node()` for temporal introspection:
 
 ```t
+#| eval: false
 t> read_past_node(p.data, which_log = "2026-08-14")
 ```
 
@@ -458,6 +469,7 @@ Sometimes inspecting an output from the T REPL isn't enough—especially when a 
 T provides `debug_node()` to drop you directly from the T REPL into an interactive guest subshell for that specific language:
 
 ```t
+#| eval: false
 t> debug_node(p.stats)
 ```
 
@@ -488,6 +500,7 @@ You do not have to inline all your code in `<{ ... }>` blocks. The `script`
 argument lets a node point to an external file:
 
 ```t
+#| eval: false
 p = pipeline {
   data  = node(command = read_csv("data/sales.csv"), serializer = ^ipc)
   model = rn(script = "src/train.R", deserializer = ^ipc, serializer = ^pmml)

@@ -195,6 +195,7 @@ one that divides by zero, and one more that succeeds.
 
 ```t
 #| output: false
+#| eval: false
 p = pipeline {
   nums = [10, 0, 30]
   bad = 1 / 0
@@ -236,6 +237,7 @@ DataFrame with a row per failing node:
 
 ```t
 #| output: false
+#| eval: false
 collect_exceptions(p)
 ```
 
@@ -255,6 +257,7 @@ duration, and artifact path:
 
 ```t
 #| output: false
+#| eval: false
 bl = build_log(p)
 build_log_to_frame(bl)
 ```
@@ -278,6 +281,7 @@ Finally, `inspect_node` reports the metadata T recorded for a single node:
 
 ```t
 #| output: false
+#| eval: false
 inspect_node(p.bad)
 ```
 

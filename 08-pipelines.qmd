@@ -37,6 +37,7 @@ The pipeline has four stages:
 Here is the complete `src/pipeline.t` for that workflow:
 
 ```t
+#| eval: false
 p = pipeline {
 
   -- Stage 1: load raw CSV in T.
@@ -146,6 +147,7 @@ t run src/pipeline.t
 or, from inside the REPL:
 
 ```t
+#| eval: false
 t> build_pipeline(p)
 ```
 
@@ -173,7 +175,7 @@ without writing glue code in a scripting language.
 whatever is written to stdout:
 
 ```t
-p = pipeline {
+p_shn_exec = pipeline {
 
   -- Call an external converter and capture stdout
   schema = shn(
@@ -189,6 +191,7 @@ the sandbox and executes it. Use this when the shell logic is more than a
 one-liner:
 
 ```t
+#| eval: false
 p = pipeline {
 
   compressed = shn(
@@ -231,6 +234,7 @@ Then declare environment in the usual way with `t update && exit && nix develop`
 A Julia node that fits a linear model:
 
 ```t
+#| eval: false
 p = pipeline {
 
   raw = read_csv("data/fuel.csv")
@@ -281,6 +285,7 @@ We saw `qn()` briefly in @sec-worked-example. A few points worth emphasising:
 A Quarto node that produces a PDF report:
 
 ```t
+#| eval: false
 report = qn(
   script     = "src/report.qmd",
   serializer = ^pdf
@@ -345,6 +350,7 @@ cryptographic hash, and inject the file as a read-only input.
 From your project REPL (which *does* have network access), call:
 
 ```t
+#| eval: false
 t> hash = prefetch("https://zenodo.org/record/9999/penguins.csv")
 t> hash
 "sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="
@@ -359,11 +365,11 @@ permanent, tamper-evident reference to that exact file.
 Now declare a node that fetches the same URL, passing the hash you recorded:
 
 ```t
-p = pipeline {
+p_fetchurl = pipeline {
 
   raw = fetchurl(
-    url  = "https://zenodo.org/record/9999/penguins.csv",
-    hash = "sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="
+    url   = "https://zenodo.org/record/9999/penguins.csv",
+    sha256 = "sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="
   )
 
   clean = pyn(
@@ -420,6 +426,7 @@ A concrete example with Python cleaning and R modelling sharing utility
 functions:
 
 ```t
+#| eval: false
 p = pipeline {
 
   raw = read_csv("data/penguins.csv")
@@ -478,6 +485,7 @@ template file — use the `include` parameter instead. T copies the listed paths
 into the sandbox without attempting to source or execute them:
 
 ```t
+#| eval: false
 report = qn(
   script  = "src/report.qmd",
   include = ["src/custom.scss", "src/logo.png", "data/lookups.csv"]
@@ -491,6 +499,7 @@ The `set_pipeline_global_options` function lets you declare defaults once for al
 nodes of a given runtime:
 
 ```t
+#| eval: false
 set_pipeline_global_options(
   r      = [functions = "src/r_utils.R"],
   python = [functions = "src/py_utils.py"],
@@ -531,7 +540,7 @@ sandbox. This is the correct way to inject secrets, feature flags, and
 run-mode switches without hardcoding them in the pipeline source.
 
 ```t
-p = pipeline {
+p_env_vars = pipeline {
 
   model = rn(
     command  = <{
@@ -546,7 +555,7 @@ p = pipeline {
     }>,
     deserializer = ^parquet,
     serializer   = ^pmml,
-    env_vars     = [MODEL_MODE = "debug", SEED = "42"]
+    env_vars     = [MODEL_MODE: "debug", SEED: "42"]
   )
 
 }
@@ -595,6 +604,7 @@ columns:
 | `path` | `String` | Nix store path of the artifact |
 
 ```t
+#| eval: false
 t> log   = build_log(p)
 t> frame = build_log_to_frame(log)
 t> frame
@@ -617,6 +627,7 @@ worked with directly. Use `pipeline_copy()` to copy artifacts to a local
 directory:
 
 ```t
+#| eval: false
 -- Copy a single node's artifact
 t> pipeline_copy(p.report, dest = "outputs/")
 
@@ -637,6 +648,7 @@ builds but are no longer referenced by the current build graph. Pass
 `dry_run = true` first to see what would be deleted:
 
 ```t
+#| eval: false
 t> pipeline_gc(p, dry_run = true)
 
 Would remove:
@@ -650,6 +662,7 @@ is not referenced by any active GC root on the system. Use this periodically on
 development machines or CI runners to reclaim disk space:
 
 ```t
+#| eval: false
 t> t_gc()
 ```
 
@@ -700,6 +713,7 @@ rebuilt versus served from cache by passing `dry_run = true` to
 `build_pipeline`:
 
 ```t
+#| eval: false
 t> build_pipeline(p, dry_run = true)
 
 Would build:  [model, report]
@@ -722,6 +736,7 @@ push, on a schedule, or when upstream data changes. T ships with a function that
 generates a complete GitHub Actions workflow YAML from your pipeline definition:
 
 ```t
+#| eval: false
 t> pipeline_to_ga(p, file = ".github/workflows/pipeline.yml")
 ```
 
@@ -742,6 +757,7 @@ and only rebuild what changed — the same incremental behaviour you get locally
 A minimal end-to-end CI setup for our penguin pipeline:
 
 ```t
+#| eval: false
 -- In src/pipeline.t, add at the bottom:
 pipeline_to_ga(
   p,

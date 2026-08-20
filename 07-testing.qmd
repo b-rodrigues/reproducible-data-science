@@ -492,6 +492,7 @@ because when you wrap one in `assert()`, a failure gives you a rich diagnostic
 message instead of a generic `AssertionError: false`:
 
 ```t
+#| eval: false
 -- Bare assert: not very helpful on failure
 assert(nrow(df) == 4)          -- AssertionError: expression evaluated to false
 
@@ -525,6 +526,7 @@ then assert on the result. Here is a complete test file for the GLM pipeline
 from the previous chapter:
 
 ```t
+#| eval: false
 -- tests/test-glm-pipeline.t
 import stats
 import dataframe
@@ -573,6 +575,7 @@ testthat or pytest: they test the *structure* of the computation, not just the
 outputs.
 
 ```t
+#| eval: false
 -- Check that p is a valid Pipeline value
 assert(expect_pipeline(p))
 
@@ -603,6 +606,7 @@ For more complex test suites, T supports composing pipelines with `chain()` and
 assertion nodes, and compose them into a combined pipeline:
 
 ```t
+#| eval: false
 -- A fixture pipeline produces the base data
 fixture = pipeline {
   data = node(

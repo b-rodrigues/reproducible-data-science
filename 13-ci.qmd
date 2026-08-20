@@ -251,6 +251,52 @@ A couple of notes:
   like this one automatically, including artifact caching. Writing it by hand,
   as here, just makes each moving part explicit.
 
+### Caching T pipeline outputs between runs
+
+Nix already caches builds in its store, but a fresh CI runner starts with an
+empty store, so every node is rebuilt from scratch on the first run. T has
+native functions for shipping a pipeline's cached artifacts between runs, so a
+second run can skip the work a first run already did.
+
+`export_artifacts(p, archive_path)` bundles the cached Nix artifacts of every
+node in `p` into a single portable archive file. All nodes must already exist
+in the local store, so you call it right after a successful build:
+
+```t
+#| eval: false
+build_pipeline(p)
+export_artifacts(p, "artifacts.tar")
+```
+
+On the next run, `import_artifacts()` restores those artifacts into the local
+Nix store before you build, so unchanged nodes are pulled from the archive
+instead of rebuilt:
+
+```t
+#| eval: false
+import_artifacts("artifacts.tar")
+build_pipeline(p)
+```
+
+The two-argument form, `import_artifacts(p, "artifacts.tar")`, additionally
+verifies that the imported store paths match the pipeline's expected
+signatures, catching a stale or mismatched archive.
+
+To see what an archive contains without touching the local store, use
+`inspect_artifacts()`. It loads the archive into a temporary store and returns
+a data frame with one row per node:
+
+```t
+#| eval: false
+inspect_artifacts("artifacts.tar")
+-- columns: node, store_path, hash, size_bytes, references
+```
+
+On GitHub Actions the pattern is to export the archive after a successful
+build and upload it as a workflow artifact, then download and import it at the
+start of the next run. Combined with the `rstats-on-nix` binary cache above,
+this keeps even a cold runner from recompiling anything that has not changed.
+
 ## Running a dockerized workflow
 
 This next example can be found in [this
