@@ -1,0 +1,634 @@
+# Beyond the Basics: T in Depth
+
+The earlier chapters took you from a blank Nix installation to a fully
+automated, reproducible pipeline running on GitHub Actions. Along the way you
+learned the core loop: declare nodes, build, inspect, test, and ship. But T is
+a larger language than that loop requires, and this chapter is where we go
+deeper.
+
+The material here is not required for every project. It is the toolkit you
+reach for when a problem outgrows the basics: when you need to script the REPL,
+generate code programmatically, move data between runtimes in a specific
+format, turn a plot into something you can assert on, offload a build to a
+remote machine, package a reusable library in T itself, or harden a function
+against every input it might ever see.
+
+We cover seven topics, in the order you are likely to need them. Each section
+is self-contained, but it builds on the foundations from the earlier chapters,
+and we point back to them rather than repeating what they already teach.
+
+## The Interactive T: Magic Commands
+
+Chapter 5 introduced the T REPL as a place to explore data and prototype node
+logic before committing it to a pipeline. The REPL has a small set of
+conveniences that make interactive work faster: the magic commands.
+
+Magic commands are REPL-only shortcuts prefixed with `%`. They give you quick
+access to common operations without parentheses or string quotes. They are not
+part of the language proper — they only work at the REPL prompt — so they will
+never appear in a `pipeline.t` file.
+
+### Navigating your environment
+
+The first group of commands helps you get your bearings. `%pwd` prints the
+current working directory, and `%cd` changes it (it expands `~` correctly, and
+reports an error if the target directory does not exist). `%ls` lists the
+contents of the current directory, and `%env` prints every environment
+variable, one per line.
+
+```t
+%pwd
+/home/user/projects
+%cd data
+%ls
+raw.csv  clean.csv
+```
+
+These mirror the shell commands you already know, so the REPL feels less like a
+foreign object and more like a workspace you can move around in.
+
+### Inspecting what you have
+
+When you have been working in the REPL for a while, it is easy to lose track of
+what is in scope. `%objects` (aliased `%who`) lists every user-defined
+variable, its type, and a compact summary:
+
+```t
+x = 42
+df = read_csv("data.csv")
+%objects
+--  name  type       summary
+--  x     Int        42
+--  df    DataFrame  150 rows x 5 cols
+```
+
+`%history` shows the last fifty entries from the REPL command history, stored in
+`~/.t_history`, which is handy for re-running or copying something you did a few
+minutes ago. `%reset` removes all user-defined variables and returns you to a
+clean base environment.
+
+### Timing and capturing work
+
+`%time` evaluates any T expression and prints both its result and how long it
+took. It is the quickest way to get a feel for whether a piece of logic is fast
+enough to keep:
+
+```t
+%time df |> filter($x > 10) |> nrow()
+42
+Execution time: 0.1540 seconds
+```
+
+The most underrated command is `%save`. It writes a transcript of the session —
+every command and its result — to a file, so you can turn an exploratory session
+into a starting point for a script. In compact mode it records a one-line
+summary of each result; in verbose mode it records the full pretty-printed
+output:
+
+```t
+%save my_session.t
+%save verbose my_session.t
+```
+
+A common workflow is to run `%reset` to clear the transcript, then do a clean
+run and `%save` it, giving you a tidy record of exactly what you tried. Typing
+`%magic` lists every magic command with a description, and if you mistype one,
+the REPL offers a fuzzy match: `%objcts` suggests `Did you mean: %objects?`.
+
+## Metaprogramming: Quotation and Quasiquotation
+
+Chapter 6 introduced T's functional core — pure functions and function
+composition. Most of the time you can stay in that world and never think about
+how expressions are evaluated. But sometimes you need to treat code itself as
+data: to build expressions programmatically, to forward a column name that is
+only known at runtime, or to write a function that behaves like the data verbs
+such as `mutate` and `filter`. That is what metaprogramming is for.
+
+T's metaprogramming is modelled on Lisp and on R's `rlang`, and it rests on a
+small set of ideas:
+
+- **Quotation** captures an expression without evaluating it.
+- A **quosure** is a quoted expression paired with the environment in which it
+  was written.
+- **Unquoting** injects an already-evaluated value back into a quoted
+  expression.
+- **Splicing** expands a collection into the arguments of a call.
+
+### Capturing code: `to_expr` and `quo`
+
+The two ways to capture code differ in whether they remember the surrounding
+environment. `to_expr()` captures a bare expression; `quo()` captures a
+quosure — the expression plus the environment at the call site.
+
+```t
+x = 10
+q = quo(1 + x)   -- captures x = 10
+x = 99
+eval(q)          -- 11, not 100: it runs in the captured environment
+```
+
+That distinction is the whole point of a quosure. When `eval()` runs a quosure,
+it evaluates it in the environment the quosure captured, not in whatever
+environment happens to be current. For a bare expression from `to_expr()`,
+`eval()` uses the current environment.
+
+There are plural forms too: `to_exprs(...)` and `quos(...)` capture several
+expressions at once, returning a list of bare expressions or quosures
+respectively.
+
+### Unquoting: `!!` and `!!!`
+
+Quasiquotation is how you fill in the blanks of a captured expression. The `!!`
+operator evaluates its operand and injects the result into the surrounding
+quoted expression. If the operand is a quosure, only the expression part is
+injected — the environment is stripped.
+
+```t
+x = 10
+e = to_expr(1 + !!x)
+print(e)         -- to_expr(1 + 10)
+```
+
+The `!!!` operator goes further: it evaluates its operand and *splices* the
+elements into the surrounding call. The operand must be a list, vector, or
+dict.
+
+```t
+vals = [1, 2, 3]
+e = to_expr(sum(!!!vals))
+print(e)         -- to_expr(sum(1, 2, 3))
+```
+
+If you splice a named list, the names become argument names:
+
+```t
+my_args = [x: 10, y: 20]
+e = to_expr(f(!!!my_args, z: 30))
+print(e)         -- to_expr(f(x = 10, y = 20, z = 30))
+```
+
+### Dynamic names and symbols
+
+A frequent need is to use a name that is only known at runtime — a column name
+stored in a string, say. `to_symbol()` turns a string into a symbol that `!!`
+can inject, and the `!!name := value` form lets a computed name become an
+argument or column name.
+
+```t
+col = "age"
+e = to_expr(mutate(df, !!col := 42))
+print(e)         -- to_expr(mutate(df, age = 42))
+```
+
+`get()` is the companion for the reverse direction: it retrieves a variable's
+value from a string or symbol name, which is how you look up a column
+dynamically.
+
+### Non-standard evaluation
+
+The most common reason to reach for all of this is to write a function that
+accepts an unevaluated column name, the way the data verbs do. T gives you
+three tools for it, in order of increasing power:
+
+1. **Auto-quoted parameters.** Prefix a parameter with `$` and the caller can
+   pass a bare column name, which you forward into an NSE-aware verb with `!!`.
+
+```t
+my_mean = \(df, $col) {
+  summarize(df, result = mean(!!col))
+}
+```
+
+2. **`enquo(param)`** captures the caller's full expression for a named
+   parameter, as a quosure. Use it when you need more than a column name.
+
+3. **`enquos(...)`** captures all variadic expressions as a list of quosures,
+   which you can splice into a verb.
+
+```t
+my_summarize = \(df: DataFrame, ... -> DataFrame) {
+  cols = enquos(...)
+  eval(to_expr(df |> summarize(!!!cols)))
+}
+```
+
+The default advice is simple: use `quo` over `to_expr` when in doubt, so your
+code remembers its environment; use the `$param` form for the common "accept a
+column" case; and reach for `enquo`/`enquos` only when you genuinely need the
+caller's expression.
+
+One detail is worth knowing because it prevents a whole class of confusing
+bugs. Inside a data verb, expressions are resolved against a **data mask**: T
+looks up `$column` in the mask first, so a global variable or function with the
+same name as a column does not interfere. That is why
+`df |> mutate(new = $score * 2)` works even when a function called `score`
+exists in scope.
+
+## Serializers in Depth
+
+Chapter 5 showed you that pipeline nodes pass data to one another through
+**serializers**, and that you can name a built-in one with the `^` prefix. This
+section goes deeper: what the built-ins are, how to choose between them, and how
+to write your own.
+
+### The built-in serializers
+
+Every node's output is written to disk in some format, and every node reads its
+inputs in the corresponding format. T ships a set of built-in serializers,
+identified by `^` symbols:
+
+| Identifier | Format | Best for |
+|---|---|---|
+| `^ipc` | Apache Arrow IPC | Fast live hand-off between nodes |
+| `^parquet` | Apache Parquet | Durable, compressed storage |
+| `^csv` | CSV | Simple tabular interchange |
+| `^json` | JSON | Config, lists, dicts |
+| `^pmml` | PMML | Predictive models |
+| `^onnx` | ONNX | ML model interchange |
+| `^text` | Plain text | Logs, shell output |
+| `^bin` | Binary | Opaque blobs (default for `fetchurl`) |
+
+Most of these are symmetric across the T, R, Python, and Julia runtimes, which
+is what makes polyglot pipelines possible: a DataFrame written by an R node can
+be read by a Python node because both sides understand the same format.
+
+The choice that comes up most often is between `^ipc` and `^parquet`. Both are
+columnar, type-preserving Arrow formats that work in every runtime. The
+difference is **live hand-off versus durable artifact**. `^ipc` writes the
+in-memory Arrow layout straight to disk: the fastest possible round trip, but
+uncompressed. `^parquet` is a compressed, storage-optimized layout: smaller
+files (often several times smaller for numeric data), column pruning on read,
+and first-class support in Spark, DuckDB, and pandas. The rule of thumb is to
+pass data *between nodes while a pipeline runs* with `^ipc`, and to *persist,
+ship, or store* the final result with `^parquet`. You can do both in one
+pipeline.
+
+### Symbols, variables, and the string trap
+
+There is a subtle but important distinction in how you name a serializer.
+Built-in serializers are **symbols** with the `^` prefix. A custom serializer
+you have defined is a **variable**, and you pass its name with no `^`.
+
+```t
+node(command = read_csv("large.csv"), serializer = ^ipc)      -- built-in
+import "src/my_ser.t" [my_ser]
+node(command = ..., serializer = my_ser)                        -- custom
+```
+
+And here is the trap: in a node constructor (`node`, `rn`, `pyn`, `jln`,
+`shn`, `qn`), a **string literal is not allowed**. Writing
+`serializer = "ipc"` raises a `TypeError`. You must use a `^` symbol for
+built-ins or a variable for custom serializers. (The `mutate_node()` and
+`set_pipeline_global_options()` functions are more permissive and accept both
+strings and symbols.)
+
+If you do not specify a serializer at all, T uses the `default`, which is each
+runtime's native binary format — `saveRDS` for R, `pickle` for Python, and so
+on. Shell nodes default to `^text`.
+
+### Custom serializers
+
+A serializer is a first-class value: a record with a `format`, a `writer`, and
+a `reader`.
+
+```t
+type serializer = {
+  format: string,
+  writer: function(path: string, value: any) -> result[NA, string],
+  reader: function(path: string) -> result[any, string]
+}
+```
+
+To define one, you write a record that matches that shape. The `format` field
+should be a `^` symbol so it stays consistent with T's symbol-based
+serialization.
+
+```t
+my_log_serializer = {
+  format: ^log,
+  writer: \(path, val) {
+    -- write val to path in your log format
+    Ok(NA)
+  },
+  reader: \(path) {
+    -- read the log back from path
+    Ok("log content")
+  }
+}
+
+node(command = ..., serializer = my_log_serializer)
+```
+
+For a serializer to work across *other* runtimes, you can add optional
+`r_writer`, `r_reader`, `py_writer`, and `py_reader` fields. These are code
+snippets — plain strings, or foreign code blocks for readability — that T
+injects into the generated build script for that runtime.
+
+```t
+my_custom_ser = [
+  format: ^custom,
+  writer: \(path, val) { Ok(NA) },
+  reader: \(path) { Ok(42) },
+  r_writer: <{ function(obj, path) { writeCustom(obj, path) } },
+  r_reader: <{ function(path) { readCustom(path) } },
+  py_writer: <{ def write_custom(obj, path): ... },
+  py_reader: <{ def read_custom(path): ... }
+]
+```
+
+T performs **static coherence checks** when you build a pipeline that uses a
+custom serializer: if a node is declared for the R runtime but the serializer
+has no `r_writer` or `r_reader`, you get an error at build time rather than a
+mystery failure at run time. And when T detects that your serializer references
+R or Python functions, it can add the corresponding `[r-dependencies]` or
+`[py-dependencies]` to the generated build automatically (controlled by
+`TLANG_AUTO_ADD_PIPELINE_DEPS`).
+
+## Plotting in Pipelines
+
+Chapter 8 showed you how to structure a pipeline as data. This section covers
+something that trips people up: what happens when a node's output is not a
+DataFrame but a plot.
+
+### Returning a plot from a node
+
+Any node can return a plot object — a `Plot` from CairoMakie, a ggplot2 object,
+a matplotlib figure, and so on. When it does, T serializes the plot and,
+crucially, records **visualization metadata** alongside the artifact. That
+metadata is what lets downstream tools know the output is something to be
+*shown*, not just *read*.
+
+```t
+plot_node = node(
+  command = \(df) {
+    df |> plot($x, $y)
+  }
+)
+```
+
+### Reading a plot back
+
+`read_node()` on a plotting node returns not the raw artifact but a small
+metadata record describing it — the path to the serialized plot, its type, and
+the runtime that produced it. The `show_plot()` function takes that record and
+renders the plot in the current environment.
+
+```t
+meta = read_node("plot_node")
+show_plot(meta)
+```
+
+### Plots in literate documents
+
+The most common place this matters is a Quarto document. T's Quarto integration
+has a dual behaviour that is worth understanding. A `{t}` chunk that produces a
+plot records the visualization metadata, and a companion `{r}` or `{python}`
+chunk can then call `show_plot()` to render it. This lets you compute the plot
+in the runtime that is best suited to it and display it in the document without
+copying data between runtimes.
+
+The mechanism depends on a few underlying libraries: CairoMakie for T plots,
+`kaleido` for exporting ggplot2 objects to images, and `cloudpickle` for
+serializing Python plot objects that the standard `pickle` module cannot
+handle. If a plot does not render the way you expect in a document, the first
+thing to check is whether the runtime that produced it has the right export
+library available in its Nix environment.
+
+## Nix Build Options and Orchestration
+
+Chapter 2 introduced Nix as the foundation that makes T reproducible. Chapter 5
+showed you `build_pipeline()` and `t run` at the command line. This section
+covers the knobs in between: the `nix_options` dictionary that controls how a
+pipeline is actually built, and the ways to orchestrate that build.
+
+### The `nix_options` dictionary
+
+The build functions — `populate_pipeline()`, `build_pipeline()`,
+`pipeline_run()`, and the `t_make()` helper — all accept a `nix_options`
+argument. It is a dictionary of build-time settings that override the defaults.
+The most useful keys are:
+
+- `max_jobs` and `max_cores`: how much of the machine a build may use.
+- `dry_run`: evaluate the build plan without running any node.
+- `force`: rebuild nodes even if their outputs already exist.
+- `targets`: build only a subset of the pipeline's nodes.
+- `cache`: which Nix cache to use for the build.
+- `builders`: which machines to build on (local or remote).
+- `keep_env` and `sandbox`: how much of the host environment a node sees.
+- `env_vars`: per-node environment variables, set when the node is defined.
+
+Validation is strict: pass a key that is not a valid option, or a value of the
+wrong type, and you get a `TypeError` or `ValueError` before the build starts.
+
+```t
+build_pipeline(p, nix_options = { max_jobs = 4, dry_run = true })
+```
+
+### Dry runs and plans
+
+Setting `dry_run = true` is one of the most useful habits to form. Instead of
+executing the pipeline, the build returns a **plan** as a DataFrame: every node
+that would run, in dependency order, with its inputs and outputs. You can
+inspect it, filter it, or assert on it in a test. It is the cheapest way to
+check that your pipeline is wired the way you think it is.
+
+### Where environment comes from
+
+It is worth separating two related ideas. `keep_env` controls whether a node
+sees the host's full environment or a clean one — this is a build-time
+isolation choice. `env_vars`, by contrast, is how you declare specific
+variables a node needs, and it is set when the node is defined, not at build
+time. The first is about isolation; the second is about configuration.
+
+### Building on other machines
+
+The `builders` option is what turns a local build into a distributed one. You
+can point a build at a remote Nix builder — a faster machine, or a machine with
+the right architecture — and Nix will ship the build steps there. This is
+particularly useful when your pipeline has heavy nodes that would take minutes
+locally but seconds on a larger box. The `pipeline_to_drv(p)` function returns
+the underlying Nix derivation, which is the escape hatch for when you need to
+hand the build to a tool that understands derivations directly.
+
+## Building T Packages
+
+Chapter 12 covered packaging T pipelines for distribution as R and Python
+packages. But T can also be packaged *in T*. This section is about that:
+turning a collection of T functions into a reusable package that others can
+import.
+
+### Initialising a package
+
+`t init --package` scaffolds a T package. The result is a directory with a
+`DESCRIPTION.toml` that declares the package's metadata, its dependencies, and
+its build inputs, and a `flake.nix` that makes the package itself a Nix input.
+
+```toml
+[package]
+name = "mylib"
+version = "0.1.0"
+
+[dependencies]
+otherlib = { git = "https://github.com/me/otherlib", tag = "0.3.0" }
+
+[additional-tools]
+# extra tools the package needs at build time
+```
+
+Dependencies are declared by git URL and tag, which keeps them reproducible in
+the same way the rest of T is.
+
+### Public and private API
+
+By default every top-level function in a package is part of its public API.
+Mark a function `@private` to exclude it from the documented surface. This
+matters because the public API is what `t doctor` checks for and what the
+generated documentation advertises.
+
+### Testing a package
+
+`t test` runs the package's tests, and it honours the same flags as the
+pipeline tests from Chapter 7: you can select a subset, run in verbose mode,
+and so on. A test marked `noop` is skipped — useful for a test that depends on
+an optional dependency that may not be present.
+
+### T-Doc documentation
+
+T packages use a lightweight documentation format, T-Doc. A function is
+documented with a `--#` block that supports directives:
+
+```t
+--# @param x The input value.
+--# @return A transformed value.
+--# @example
+--#   myfunc(1)
+--# @seealso myotherfunc
+--# @family transforms
+myfunc = \(x) { x * 2 }
+```
+
+`t doc --parse --generate` parses these blocks and generates the package's
+documentation. `t doctor` is the linter: it checks that public functions are
+documented, that `@param` names match the signature, and that cross-references
+resolve.
+
+### Publishing
+
+`t publish` publishes the package by tagging the git repository. There is no
+central T package registry — distribution is by git, which is deliberate: it
+means a package version is pinned to an exact commit, and consumers depend on
+it the same way they depend on any other Nix input.
+
+### Importing
+
+Consumers import a T package the same way they import any T module, by name or
+by path, with optional selective or aliased imports:
+
+```t
+import "mylib"
+import "mylib" [myfunc]
+import "mylib" [myfunc as transform]
+```
+
+## Property-Based Testing with Propcraft
+
+Chapter 7 introduced unit testing with Testcraft: you write concrete examples
+and assert on their results. That is the right tool for most functions, but it
+has a blind spot. A function can pass every example you thought of and still be
+wrong for the input you did not think of. Property-based testing is how you
+close that gap, and in T it is provided by Propcraft.
+
+### The idea
+
+Instead of testing specific inputs, you describe a **property** that should hold
+for *all* inputs in some domain, and Propcraft generates hundreds of random
+inputs to try to break it. If it finds one that fails, it **shrinks** the
+failing input down to a minimal, easy-to-read counterexample.
+
+The entry point is `prop_for_all`, which takes a generator for each argument
+and a property function:
+
+```t
+prop_for_all(
+  prop_gen_int_range(0, 100),
+  prop_gen_int_range(0, 100),
+  \(a, b) { add(a, b) == add(b, a) }
+)
+```
+
+### Generators
+
+A generator describes a domain of values. Propcraft ships generators for the
+common types:
+
+- `prop_gen_int`, `prop_gen_int_range(lo, hi)`
+- `prop_gen_float_range(lo, hi)`
+- `prop_gen_bool`
+- `prop_gen_string_from(alphabet)`
+- `prop_gen_factor(levels)`
+- `prop_gen_date_range(lo, hi)`
+- `prop_gen_df(...)` and `prop_gen_df_from(template, na_prob = 0.1)`
+
+The DataFrame generators are the ones you will use most. `prop_gen_df` builds a
+random DataFrame with the column types you specify, and `na_prob` controls how
+many missing values to sprinkle in — which is exactly the kind of input that
+exposes bugs in real pipelines.
+
+You can also build generators out of other generators with combinators:
+`prop_map_gen` transforms a generator's output, `prop_such_that` filters it to
+values satisfying a predicate, and `prop_resize` scales the size of a
+collection-valued generator.
+
+### The property contract
+
+There is one rule that catches people out: **a property that returns `NA`
+fails**. A property must return a boolean, and `NA` is not a `true`. This is
+deliberate — a property that cannot decide is not a valid property. The
+`Expect` type is understood by Propcraft, so you can write properties in terms
+of the same assertions you use elsewhere. A property that raises an `Error`
+also fails.
+
+### A concrete example
+
+Here is the kind of bug property-based testing finds. Suppose a function is
+supposed to drop rows with missing values in a given column:
+
+```t
+prop_for_all(
+  prop_gen_df(na_prob = 0.3),
+  \(df) { nrow(drop_na(df, $x)) <= nrow(df) }
+)
+```
+
+The property — the result has no more rows than the input — is obviously true,
+yet it fails. Propcraft shrinks the failing input to a tiny DataFrame and shows
+you the exact rows that broke it, instead of leaving you to guess.
+
+### Seeding and sample size
+
+Generated inputs are random, so tests can be flaky unless you control the
+randomness. `set_seed(n)` and `with_seed(n, ...)` make a property test
+deterministic for a given seed. The `n` argument of `prop_for_all` sets how
+many cases to try; it defaults to 100.
+
+### Running with `t test`
+
+Propcraft properties are just tests, so `t test` runs them alongside your
+Testcraft unit tests. A failing property shows the shrunk counterexample and the
+seed that reproduces it, so you can pin the seed and turn the counterexample
+into a permanent regression test.
+
+One caveat: property-based testing is a **package-hardening** tool. It shines
+when you are writing a library that others will call with arbitrary inputs. For
+a one-off analysis pipeline, the concrete examples from Chapter 7 are usually
+enough, and the cost of generating and shrinking random DataFrames is not worth
+it.
+
+## Where to go from here
+
+You now have the full toolkit: the REPL conveniences, the metaprogramming
+primitives, the serializer and plotting machinery, the build orchestration
+knobs, the package toolchain, and property-based testing. None of these are
+required for a simple pipeline, but together they are what let a T project grow
+from a script into a library, a service, or a platform without changing its
+foundations. The next chapter pulls the threads together.

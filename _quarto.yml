@@ -33,7 +33,8 @@ book:
     - 11-docker.qmd
     - 12-packaging.qmd
     - 13-ci.qmd
-    - 14-conclusion.qmd
+    - 14-t-in-depth.qmd
+    - 15-conclusion.qmd
     - references.qmd
 
   page-navigation: true
