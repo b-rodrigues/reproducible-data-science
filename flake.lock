@@ -97,11 +97,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785613539,
-        "narHash": "sha256-tW6cTNH5+v2zFjCIFj4Igbavm8vdRcsrrBHW4hEf7gM=",
+        "lastModified": 1786445582,
+        "narHash": "sha256-JEszxmyC2t+t7EpLWq4u4BDXjCXUQ6jvzwTENBE3Mfo=",
         "owner": "b-rodrigues",
         "repo": "tlang",
-        "rev": "ef410a135a7bc36bb519c90c86bd0e22291608ec",
+        "rev": "a37fc3a6cb0f8e039e196d55356161d80d56fabc",
         "type": "github"
       },
       "original": {
