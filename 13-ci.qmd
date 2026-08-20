@@ -142,22 +142,22 @@ called `run-tests.yaml`):
     name: rstats-on-nix
 ```
 
-If you’re repository contains a `default.nix` file, the same environment you’ve
-been using locally can be used on GitHub Actions just as easily. You can also
-instead generate the `default.nix` from the `gen-env.R` script:
+If your repository contains a `flake.nix` and `flake.lock` (as a T project
+does), the same environment you’ve been using locally can be used on GitHub
+Actions just as easily. The committed flake pins the exact T version and every
+dependency, so there is nothing to generate — `nix develop` reads it directly:
 
 ```yaml
-- name: Build dev env
-  run: |
-    nix-shell --expr "$(curl -sl https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/default.nix)" --run "Rscript -e 'source(\"gen-env.R\")'"
+- name: Run in the project environment
+  run: nix develop --command t --version
 ```
 
 You can then use the shell to run whatever you need. For example, if you’re
 developing a package, you could run unit tests on each push:
 
 ```yaml
-- name: devtools::test() via nix-shell
-  run: nix-shell --run "Rscript -e \"devtools::test(stop_on_failure = TRUE)\""
+- name: devtools::test() via nix develop
+  run: nix develop --command Rscript -e "devtools::test(stop_on_failure = TRUE)"
 ```
 
 `stop_on_failure = TRUE` is needed to make the step fail if there’s an error,
@@ -301,7 +301,7 @@ this keeps even a cold runner from recompiling anything that has not changed.
 
 This next example can be found in [this
 repository](https://github.com/b-rodrigues/dockerized_pipeline_demo). This
-example doesn't use Nix, `{rix}` nor `{rixpress}`, but the point here is to show
+example doesn't use Nix or T, but the point here is to show
 how a Docker container can be executed on GitHub Actions, and artifacts can be
 recovered. The process is always the same, regardless is inside the Docker
 image. If you want to follow along, fork this repository.
@@ -416,12 +416,13 @@ many repositories as projects that run pipelines using that development
 environment image as a basis. Simply add the project-specific packages that you
 need for each project.
 
-## Running a rixpress Pipeline from GitHub Actions
+## A Complete T Pipeline Workflow on GitHub Actions
 
-With Nix and `{rixpress}`, running your pipeline directly on GitHub Actions is
-straightforward. Because Nix handles all dependencies reproducibly, you don't
+The previous section showed the essential workflow in a few lines. Here is a
+complete, annotated version that also inspects the built pipeline and reads a
+node's result. Because Nix handles all dependencies reproducibly, you don't
 need Docker as an intermediary. The
-[rixpress_demos](https://github.com/b-rodrigues/rixpress_demos) repository
+[tlang](https://github.com/b-rodrigues/tlang) repository
 contains several complete examples; here we will walk through the key steps.
 
 The workflow triggers on pushes and pull requests to `main`:
@@ -435,61 +436,46 @@ on:
 ```
 
 After checking out the repository and installing Nix (with Cachix for faster
-builds), the first step generates or regenerates the development environment
-from the `gen-env.R` script:
+builds), there is no environment-generation step. A T project commits its
+`flake.nix` and `flake.lock`, which pin the exact T version and every
+dependency, and the pipeline itself is the committed `src/pipeline.t` file.
+`nix develop` reads the flake directly, so nothing needs to be generated.
 
-```yaml
-- name: Build dev env
-  run: |
-    nix-shell -p R "rPackages.rix" "rPackages.rixpress" --run "Rscript gen-env.R"
-```
-
-Next, the pipeline definition is generated from `gen-pipeline.R`:
-
-```yaml
-- name: Generate pipeline
-  run: |
-    nix-shell --quiet --run "Rscript gen-pipeline.R"
-```
-
-You can optionally visualise the DAG to verify the pipeline structure:
-
-```yaml
-- name: Check DAG
-  run: |
-    nix-shell --quiet -p haskellPackages.stacked-dag --run "stacked-dag dot _rixpress/dag.dot"
-```
-
-Finally, build and inspect the pipeline:
+The core step builds the pipeline exactly as you would locally:
 
 ```yaml
 - name: Build pipeline
-  run: |
-    nix-shell --quiet --run "Rscript -e 'rixpress::rxp_make()'"
+  run: nix develop --command t run src/pipeline.t
+```
 
-- name: Inspect built derivations
-  run: |
-    nix-shell --quiet --run "Rscript -e 'rixpress::rxp_inspect()'"
+You can validate the pipeline's structure with `t check`, which inspects the
+pipeline without running any Nix builds:
 
+```yaml
+- name: Check pipeline structure
+  run: nix develop --command t check src/pipeline.t
+```
+
+Finally, read a node's result to confirm the pipeline produced what you expect:
+
+```yaml
 - name: Show result
-  run: |
-    nix-shell --quiet --run "Rscript -e 'rixpress::rxp_read(\"confusion_matrix\")'"
+  run: nix develop --command t run --expr 'read_node("confusion_matrix")'
 ```
 
 ### Caching Pipeline Outputs Between Runs
 
 While Nix caches derivations, CI runners are ephemeral: each run starts fresh.
-To avoid rebuilding the entire pipeline every time, `{rixpress}` provides
-`rxp_export_artifacts()` and `rxp_import_artifacts()` to persist outputs between
-runs.
+To avoid rebuilding the entire pipeline every time, T provides
+`export_artifacts()` and `import_artifacts()` to persist outputs between runs.
 
 Before building, check if cached outputs exist and import them:
 
 ```yaml
 - name: Import cached outputs if available
   run: |
-    if [ -f "../outputs/my_pipeline/pipeline_outputs.nar" ]; then
-      nix-shell --quiet --run "Rscript -e 'rixpress::rxp_import_artifacts(archive_file = \"../outputs/my_pipeline/pipeline_outputs.nar\")'"
+    if [ -f "../outputs/my_pipeline/pipeline_outputs.tar" ]; then
+      nix develop --command t import_artifacts src/pipeline.t ../outputs/my_pipeline/pipeline_outputs.tar
     else
       echo "No cached outputs found, will build from scratch"
     fi
@@ -501,7 +487,7 @@ After building, export the outputs so they can be reused:
 - name: Export outputs to avoid rebuild
   run: |
     mkdir -p ../outputs/my_pipeline
-    nix-shell --quiet --run "Rscript -e 'rixpress::rxp_export_artifacts(archive_file = \"../outputs/my_pipeline/pipeline_outputs.nar\")'"
+    nix develop --command t export_artifacts src/pipeline.t ../outputs/my_pipeline/pipeline_outputs.tar
 ```
 
 Finally, commit the cached outputs back to the repository:
@@ -513,7 +499,7 @@ Finally, commit the cached outputs back to the repository:
     git config --global user.name "GitHub Actions"
     git config --global user.email "actions@github.com"
     git pull --rebase --autostash origin main
-    git add outputs/my_pipeline/pipeline_outputs.nar
+    git add outputs/my_pipeline/pipeline_outputs.tar
     if git diff --cached --quiet; then
       echo "No changes to commit."
     else
@@ -522,27 +508,26 @@ Finally, commit the cached outputs back to the repository:
     fi
 ```
 
-This pattern ensures that only changed derivations are rebuilt on subsequent
-runs. The `.nar` file format is Nix's archive format and contains all the built
-outputs.
+This pattern ensures that only changed nodes are rebuilt on subsequent runs.
 
-### The Easy Way: `rxp_ga()`
+### The Easy Way: `pipeline_to_ga()`
 
-If the above seems like a lot of boilerplate, `{rixpress}` provides a helper
-function that generates a complete GitHub Actions workflow for you:
+If the above seems like a lot of boilerplate, T provides a helper function that
+generates a complete GitHub Actions workflow for you:
 
-```r
-rixpress::rxp_ga()
+```t
+#| eval: false
+pipeline_to_ga(p, file = ".github/workflows/pipeline.yml")
 ```
 
-This creates a `.github/workflows/run-rxp-pipeline.yaml` file that handles
-everything: installing Nix, setting up Cachix, generating the environment and
-pipeline, importing and exporting artifacts, and storing them in a dedicated
-`rixpress-runs` orphan branch. Using an orphan branch keeps your main branch
-clean while persisting the cached outputs between runs.
+This creates a `.github/workflows/pipeline.yml` file that handles everything:
+installing Nix, setting up Cachix, building the pipeline, and importing and
+exporting artifacts. It stores the cached Nix store in a dedicated `t-runs`
+branch, keeping your main branch clean while persisting the cached outputs
+between runs.
 
-For most projects, running `rxp_ga()` once and committing the generated workflow
-file is all you need to get your pipeline running on CI.
+For most projects, running `pipeline_to_ga()` once and committing the generated
+workflow file is all you need to get your pipeline running on CI.
 
 ## GitHub Actions without Nix
 
@@ -590,8 +575,8 @@ Check out the workflow results to see how the package could be improved
 [here](https://github.com/b-rodrigues/myPackage/actions/runs/12348361696).
 
 Here again, using Nix simplifies this process immensely. Look at this workflow
-file from `{rix}`'s repository
-[here](https://github.com/ropensci/rix/blob/main/.github/workflows/tests-r-via-nix.yaml).
+file from T's repository
+[here](https://github.com/b-rodrigues/tlang/blob/main/.github/workflows/unit-tests.yaml).
 Setting up the environment is much easier, as is running the actual test suite.
 
 ## Advanced patterns
@@ -635,10 +620,10 @@ jobs:
           name: your-cache-name
           authToken: '${{ secrets.CACHIX_AUTH }}'
 
-      - name: Build and push to cache
-        run: |
-          nix-build
-          nix-store -qR --include-outputs $(nix-instantiate default.nix) | cachix push your-cache-name
+       - name: Build and push to cache
+         run: |
+           nix build .#devShell
+           nix-store -qR --include-outputs $(nix eval --raw .#devShell) | cachix push your-cache-name
 ```
 
 The key line here is the `nix-store` command at the end. It queries all the
@@ -699,8 +684,8 @@ Here is the pattern:
 
 This pattern first checks if the branch exists using `git ls-remote`. If not, it
 creates an orphan branch. Then it uses `git worktree` to work with both branches
-simultaneously, copies the outputs, and pushes them. The `{rix}` and `{rixpress}`
-packages use this pattern to store pipeline outputs between runs.
+simultaneously, copies the outputs, and pushes them. T uses this pattern to
+store pipeline outputs between runs.
 
 ### Creating workflow summaries
 
@@ -750,13 +735,13 @@ Key takeaways:
 
 - **Automation removes manual steps**: Every push triggers tests, builds, and
   deployments without human intervention
-- **Nix simplifies CI setup**: The same `default.nix` you use locally works on
+- **Nix simplifies CI setup**: The same `flake.nix` you use locally works on
   GitHub Actions, eliminating "works on my machine" problems
 - **Cachix speeds up builds**: By caching Nix derivations, subsequent runs avoid
   rebuilding unchanged dependencies
-- **`rxp_ga()` handles the boilerplate**: One function call generates a complete
-  workflow for running `{rixpress}` pipelines on CI
-- **Artifact caching persists outputs**: Using `rxp_export_artifacts()` and an
+- **`pipeline_to_ga()` handles the boilerplate**: One function call generates a
+  complete workflow for running T pipelines on CI
+- **Artifact caching persists outputs**: Using `export_artifacts()` and an
   orphan branch, pipeline outputs survive between ephemeral CI runs
 
 With continuous integration in place, your reproducible analytical pipeline is
