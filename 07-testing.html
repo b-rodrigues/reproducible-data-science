@@ -825,8 +825,6 @@ assert(nrow(df) == 4)          -- AssertionError: expression evaluated to false
 assert(expect_nrow(df, 4))     -- AssertionError: expected 4 rows, got 7
 assert(expect_colnames(df, ["id", "val"]))
   -- AssertionError: column mismatch: got ["id", "score"], expected ["id", "val"]</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>The core expectations you will use most often:</p>
 <table class="caption-top table">
 <colgroup>
@@ -932,8 +930,6 @@ model = read_node(p.model_node)
 assert(expect_type(model, "Model"))
 
 print("✓ glm pipeline: all assertions passed")</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 </section>
 <section id="testing-the-pipeline-structure" class="level3" data-number="7.4.4">
 <h3 data-number="7.4.4" class="anchored" data-anchor-id="testing-the-pipeline-structure"><span class="header-section-number">7.4.4</span> Testing the Pipeline Structure</h3>
@@ -954,8 +950,6 @@ assert(expect_deserializer(p, "model_node", ^ipc))
 
 -- Check that model_node was actually built successfully
 assert(expect_computed(p.model_node))</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>These structural tests are most valuable as a guard against refactoring accidents. If you reorganise the pipeline and accidentally break a dependency, <code>expect_dependency</code> will catch it immediately, before any downstream output has a chance to silently produce wrong results.</p>
 </section>
 <section id="the-fixture-chain-pattern" class="level3" data-number="7.4.5">
@@ -991,8 +985,6 @@ test_filter = pipeline {
 -- parallel() allows multiple independent test pipelines to run from the same fixture
 combined = chain(fixture, parallel(test_filter))
 build_pipeline(combined)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>The <code>check_filter</code> node serializes its result as JSON: a named Dict where each key is the name of an assertion and each value is <code>true</code> on success or an <code>Error</code> on failure. This makes test results inspectable and diffable, not just pass/fail.</p>
 </section>
 <section id="summary-of-testing-levels" class="level3" data-number="7.4.6">

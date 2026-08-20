@@ -499,17 +499,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#why-skip-the-dockerfile" id="toc-why-skip-the-dockerfile" class="nav-link" data-scroll-target="#why-skip-the-dockerfile"><span class="header-section-number">11.6.1</span> Why Skip the Dockerfile?</a></li>
   <li><a href="#a-basic-example" id="toc-a-basic-example" class="nav-link" data-scroll-target="#a-basic-example"><span class="header-section-number">11.6.2</span> A Basic Example</a></li>
-  <li><a href="#using-rix-with-dockertools" id="toc-using-rix-with-dockertools" class="nav-link" data-scroll-target="#using-rix-with-dockertools"><span class="header-section-number">11.6.3</span> Using rix with dockerTools</a></li>
+  <li><a href="#using-t-with-dockertools" id="toc-using-t-with-dockertools" class="nav-link" data-scroll-target="#using-t-with-dockertools"><span class="header-section-number">11.6.3</span> Using T with dockerTools</a></li>
   <li><a href="#benefits-over-dockerfiles" id="toc-benefits-over-dockerfiles" class="nav-link" data-scroll-target="#benefits-over-dockerfiles"><span class="header-section-number">11.6.4</span> Benefits Over Dockerfiles</a></li>
   <li><a href="#layered-images-for-efficiency" id="toc-layered-images-for-efficiency" class="nav-link" data-scroll-target="#layered-images-for-efficiency"><span class="header-section-number">11.6.5</span> Layered Images for Efficiency</a></li>
   <li><a href="#when-to-use-this-approach" id="toc-when-to-use-this-approach" class="nav-link" data-scroll-target="#when-to-use-this-approach"><span class="header-section-number">11.6.6</span> When to Use This Approach</a></li>
   </ul></li>
-  <li><a href="#dockerising-a-rixpress-pipeline" id="toc-dockerising-a-rixpress-pipeline" class="nav-link" data-scroll-target="#dockerising-a-rixpress-pipeline"><span class="header-section-number">11.7</span> Dockerising a rixpress Pipeline</a>
+  <li><a href="#dockerising-a-t-pipeline" id="toc-dockerising-a-t-pipeline" class="nav-link" data-scroll-target="#dockerising-a-t-pipeline"><span class="header-section-number">11.7</span> Dockerising a T Pipeline</a>
   <ul class="collapse">
   <li><a href="#step-1-the-dockerfile" id="toc-step-1-the-dockerfile" class="nav-link" data-scroll-target="#step-1-the-dockerfile"><span class="header-section-number">11.7.1</span> Step 1: The Dockerfile</a></li>
-  <li><a href="#step-2-the-export-script" id="toc-step-2-the-export-script" class="nav-link" data-scroll-target="#step-2-the-export-script"><span class="header-section-number">11.7.2</span> Step 2: The Export Script</a></li>
+  <li><a href="#step-2-the-pipeline" id="toc-step-2-the-pipeline" class="nav-link" data-scroll-target="#step-2-the-pipeline"><span class="header-section-number">11.7.2</span> Step 2: The Pipeline</a></li>
   <li><a href="#step-3-build-and-run" id="toc-step-3-build-and-run" class="nav-link" data-scroll-target="#step-3-build-and-run"><span class="header-section-number">11.7.3</span> Step 3: Build and Run</a></li>
-  <li><a href="#alternative-using-dockertools-for-rixpress" id="toc-alternative-using-dockertools-for-rixpress" class="nav-link" data-scroll-target="#alternative-using-dockertools-for-rixpress"><span class="header-section-number">11.7.4</span> Alternative: Using dockerTools for rixpress</a></li>
+  <li><a href="#alternative-using-dockertools-for-t" id="toc-alternative-using-dockertools-for-t" class="nav-link" data-scroll-target="#alternative-using-dockertools-for-t"><span class="header-section-number">11.7.4</span> Alternative: Using dockerTools for T</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">11.8</span> Summary</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">11.9</span> Further Reading</a></li>
@@ -541,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2" data-number="11.1">
 <h2 data-number="11.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">11.1</span> Introduction</h2>
-<p>Up until now, we’ve built reproducible environments with Nix, written testable code with FP principles, orchestrated pipelines with <code>{rixpress}</code>, and made them robust with error handling and debugging. Now we turn to <strong>distribution</strong>: how do we share our work with others who may not have Nix installed?</p>
+<p>Up until now, we’ve built reproducible environments with Nix, written testable code with FP principles, orchestrated pipelines with T, and made them robust with error handling and debugging. Now we turn to <strong>distribution</strong>: how do we share our work with others who may not have Nix installed?</p>
 <p>Nix gives us fine-grained control over every package and dependency in our project, ensuring bit-for-bit reproducibility. However, when it comes to distributing a <em>data product</em>, another technology, Docker, is incredibly popular.</p>
 <p>A common misconception is that Nix and Docker are alternatives, that you must choose one or the other. This is wrong. They are conceptually different tools that solve different problems. Nix is a <strong>package manager and build system</strong>: it answers “what software do I need and how do I build it reproducibly?” Docker is a <strong>containerisation platform</strong>: it answers “how do I package and run an application in isolation?” Understanding this distinction is key to using them together effectively.</p>
 <p>While Nix manages dependencies for an application that runs on a host operating system, Docker takes a different approach: it packages an application <em>along with</em> a lightweight operating system and all its dependencies into a single, portable unit called a <strong>container</strong>. This container can then run on any machine that has Docker installed, regardless of its underlying OS. Being familiar with both tools makes you a more versatile data scientist: you can use Nix for precise, reproducible development environments and Docker for distributing your work to colleagues, servers, or CI pipelines that may not have Nix installed.</p>
@@ -575,7 +575,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This approach also clarifies <em>when</em> to use each tool:</p>
 <ul>
 <li><p><strong>Use Nix directly</strong> for interactive development. It integrates seamlessly with your IDE and filesystem. No volume mounts, no port forwarding, no graphical application headaches.</p></li>
-<li><p><strong>Use Docker</strong> for distributing finished data products. Package your <code>{rixpress}</code> pipeline into an image that anyone can run with a single command.</p></li>
+<li><p><strong>Use Docker</strong> for distributing finished data products. Package your T pipeline into an image that anyone can run with a single command.</p></li>
 </ul>
 <p>If you’ve never heard of Docker before, this chapter will provide the basic knowledge required to get started. Let’s start by watching <a href="https://www.youtube.com/watch?v=-X3AeROGmOw">this very short video</a> that introduces the core concepts.</p>
 <p>The <a href="https://rocker-project.org/">Rocker Project</a> provides a large collection of ready-to-use Docker images for R users.</p>
@@ -669,36 +669,30 @@ For more examples and ideas, visit:
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt</span> update <span class="at">-y</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt</span> install curl <span class="at">-y</span></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the default.nix that comes with {rix}</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">curl</span> <span class="at">-O</span> https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/default.nix</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Nix via Determinate Systems installer</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> <span class="at">-L</span> https://install.determinate.systems/nix <span class="kw">|</span> <span class="fu">sh</span> <span class="at">-s</span> <span class="at">--</span> install linux <span class="dt">\</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">--extra-conf</span> <span class="st">"sandbox = false"</span> <span class="dt">\</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">--init</span> none <span class="dt">\</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">--no-confirm</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Nix to the path</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="kw">ENV</span> PATH=<span class="st">"${PATH}:/nix/var/nix/profiles/default/bin"</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="kw">ENV</span> user=root</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure rstats-on-nix cache</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">mkdir</span> <span class="at">-p</span> /root/.config/nix <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"substituters = https://cache.nixos.org https://rstats-on-nix.cachix.org"</span> <span class="op">&gt;</span> /root/.config/nix/nix.conf <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= rstats-on-nix.cachix.org-1:vdiiVgocg6WeJrODIqdprZRUrhi1JzhBnXv7aWI6+F0="</span> <span class="op">&gt;&gt;</span> /root/.config/nix/nix.conf</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Install Nix via Determinate Systems installer</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">curl</span> <span class="at">--proto</span> <span class="st">'=https'</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> <span class="at">-L</span> https://install.determinate.systems/nix <span class="kw">|</span> <span class="fu">sh</span> <span class="at">-s</span> <span class="at">--</span> install linux <span class="dt">\</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--extra-conf</span> <span class="st">"sandbox = false"</span> <span class="dt">\</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--init</span> none <span class="dt">\</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">--no-confirm</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Nix to the path</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ENV</span> PATH=<span class="st">"${PATH}:/nix/var/nix/profiles/default/bin"</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="kw">ENV</span> user=root</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure rstats-on-nix cache</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">mkdir</span> <span class="at">-p</span> /root/.config/nix <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"substituters = https://cache.nixos.org https://rstats-on-nix.cachix.org"</span> <span class="op">&gt;</span> /root/.config/nix/nix.conf <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= rstats-on-nix.cachix.org-1:vdiiVgocg6WeJrODIqdprZRUrhi1JzhBnXv7aWI6+F0="</span> <span class="op">&gt;&gt;</span> /root/.config/nix/nix.conf</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy the T project's Nix files</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> flake.nix flake.lock tproject.toml .</span>
 <span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy script to generate environment</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> gen-env.R .</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the environment from the flake</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">nix</span> build <span class="at">--accept-flake-config</span> .</span>
 <span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate default.nix from gen-env.R</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">nix-shell</span> <span class="at">--run</span> <span class="st">"Rscript gen-env.R"</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the environment</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">nix-build</span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Run nix-shell when container starts</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="kw">CMD</span> <span class="ex">nix-shell</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Every <code>Dockerfile</code> starts with a <code>FROM</code> statement specifying the base image. Then, every command starts with <code>RUN</code>. We install and configure Nix, copy an R script to generate the environment, and then build it. Finally, we run <code>nix-shell</code> when executing a container (the <code>CMD</code> statement).</p>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Run nix-shell when container starts</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="kw">CMD</span> <span class="ex">nix-shell</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Every <code>Dockerfile</code> starts with a <code>FROM</code> statement specifying the base image. Then, every command starts with <code>RUN</code>. We install and configure Nix, copy the T project’s Nix files, and build the environment from the flake. Finally, we run <code>nix-shell</code> when executing a container (the <code>CMD</code> statement).</p>
 </section>
 <section id="splitting-into-a-reusable-base-image" class="level3" data-number="11.3.2">
 <h3 data-number="11.3.2" class="anchored" data-anchor-id="splitting-into-a-reusable-base-image"><span class="header-section-number">11.3.2</span> Splitting Into a Reusable Base Image</h3>
@@ -726,29 +720,18 @@ For more examples and ideas, visit:
 <p>Now, for any project, simply reuse it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> nix-base:latest</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> gen-env.R .</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> flake.nix flake.lock tproject.toml .</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">curl</span> <span class="at">-O</span> https://raw.githubusercontent.com/ropensci/rix/main/inst/extdata/default.nix</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">nix-shell</span> <span class="at">--run</span> <span class="st">"Rscript gen-env.R"</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">nix-build</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">"nix-shell"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>With <code>gen-env.R</code>:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-08-04"</span>,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>),</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">py_conf =</span> <span class="fu">list</span>(</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_version =</span> <span class="st">"3.13"</span>,</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">py_pkgs =</span> <span class="fu">c</span>(<span class="st">"polars"</span>, <span class="st">"great-tables"</span>)</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">nix</span> build <span class="at">--accept-flake-config</span> .</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">"nix-shell"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In a T project, the environment is declared in <code>tproject.toml</code> rather than generated by a script. For this example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"dplyr"</span><span class="op">,</span> <span class="st">"ggplot2"</span><span class="op">]</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">[py-dependencies]</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"python313"</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"polars"</span><span class="op">,</span> <span class="st">"great-tables"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Build and run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> my-project .</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> <span class="at">--rm</span> <span class="at">--name</span> my-project-container my-project</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -860,47 +843,40 @@ For more examples and ideas, visit:
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Run it</span></span>
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> <span class="at">--rm</span> my-r-env:latest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="using-rix-with-dockertools" class="level3" data-number="11.6.3">
-<h3 data-number="11.6.3" class="anchored" data-anchor-id="using-rix-with-dockertools"><span class="header-section-number">11.6.3</span> Using rix with dockerTools</h3>
-<p>The previous example manually defines the R environment in Nix. If you prefer to use <code>{rix}</code> to generate your environment (as we’ve done throughout this book), you can import the generated <code>default.nix</code> into your Docker image definition.</p>
-<p>First, create your environment with <code>{rix}</code> as usual:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rix)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rix</span>(</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="st">"2025-10-14"</span>,</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_pkgs =</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>, <span class="st">"quarto"</span>),</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ide =</span> <span class="st">"none"</span>,</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">project_path =</span> <span class="st">"."</span>,</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>This generates a <code>default.nix</code>. Now create a <code>docker-image.nix</code> that imports it:</p>
+<section id="using-t-with-dockertools" class="level3" data-number="11.6.3">
+<h3 data-number="11.6.3" class="anchored" data-anchor-id="using-t-with-dockertools"><span class="header-section-number">11.6.3</span> Using T with dockerTools</h3>
+<p>The previous example manually defines the R environment in Nix. If you prefer to let T define your environment (as we’ve done throughout this book), you can build the Docker image from your T project’s flake.</p>
+<p>First, make sure your <code>tproject.toml</code> declares the packages you need:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"dplyr"</span><span class="op">,</span> <span class="st">"ggplot2"</span><span class="op">,</span> <span class="st">"quarto"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then run <code>t update</code> to generate the <code>flake.nix</code> and <code>flake.lock</code> files. Now create a <code>docker-image.nix</code> that builds the image from the project’s flake:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># docker-image.nix</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">pkgs</span> <span class="op">=</span> <span class="bu">import</span> <span class="op">(</span><span class="bu">fetchTarball</span></span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://github.com/rstats-on-nix/nixpkgs/archive/2025-10-14.tar.gz"</span></span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">)</span> <span class="op">{};</span></span>
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Import the shell environment generated by rix</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">rixEnv</span> <span class="op">=</span> <span class="bu">import</span> <span class="ss">./default.nix</span><span class="op">;</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span> pkgs<span class="op">.</span>dockerTools<span class="op">.</span>buildImage <span class="op">{</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">"my-rix-project"</span><span class="op">;</span></span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="va">tag</span> <span class="op">=</span> <span class="st">"latest"</span><span class="op">;</span></span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="va">copyToRoot</span> <span class="op">=</span> pkgs<span class="op">.</span>buildEnv <span class="op">{</span></span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    <span class="va">name</span> <span class="op">=</span> <span class="st">"image-root"</span><span class="op">;</span></span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    <span class="va">paths</span> <span class="op">=</span> rixEnv<span class="op">.</span>buildInputs <span class="op">++</span> <span class="op">[</span> pkgs<span class="op">.</span>coreutils pkgs<span class="op">.</span>bash <span class="op">];</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">pathsToLink</span> <span class="op">=</span> <span class="op">[</span> <span class="st">"/bin"</span> <span class="op">];</span></span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="va">config</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>    <span class="va">Cmd</span> <span class="op">=</span> <span class="op">[</span> <span class="st">"</span><span class="sc">${</span>pkgs<span class="op">.</span>bash<span class="sc">}</span><span class="st">/bin/bash"</span> <span class="op">];</span></span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>    <span class="va">WorkingDir</span> <span class="op">=</span> <span class="st">"/work"</span><span class="op">;</span></span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This approach lets you keep your familiar <code>{rix}</code> workflow for defining environments while gaining the reproducibility benefits of <code>dockerTools</code> for image creation. Any changes to your <code>gen-env.R</code> → <code>default.nix</code> will automatically propagate to the Docker image on the next build.</p>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The T project is a Nix flake. Load it and take the packages from its</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># development shell as the image's build inputs.</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="va">project</span>  <span class="op">=</span> <span class="bu">builtins</span><span class="op">.</span>getFlake <span class="op">(</span><span class="bu">toString</span> <span class="ss">./flake.nix</span><span class="op">);</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="va">devShell</span> <span class="op">=</span> project<span class="op">.</span>devShell<span class="op">;</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span> pkgs<span class="op">.</span>dockerTools<span class="op">.</span>buildImage <span class="op">{</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">"my-t-project"</span><span class="op">;</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="va">tag</span> <span class="op">=</span> <span class="st">"latest"</span><span class="op">;</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="va">copyToRoot</span> <span class="op">=</span> pkgs<span class="op">.</span>buildEnv <span class="op">{</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">name</span> <span class="op">=</span> <span class="st">"image-root"</span><span class="op">;</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>    <span class="va">paths</span> <span class="op">=</span> devShell<span class="op">.</span>buildInputs <span class="op">++</span> <span class="op">[</span> pkgs<span class="op">.</span>coreutils pkgs<span class="op">.</span>bash <span class="op">];</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>    <span class="va">pathsToLink</span> <span class="op">=</span> <span class="op">[</span> <span class="st">"/bin"</span> <span class="op">];</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="va">config</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    <span class="va">Cmd</span> <span class="op">=</span> <span class="op">[</span> <span class="st">"</span><span class="sc">${</span>pkgs<span class="op">.</span>bash<span class="sc">}</span><span class="st">/bin/bash"</span> <span class="op">];</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    <span class="va">WorkingDir</span> <span class="op">=</span> <span class="st">"/work"</span><span class="op">;</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This approach lets you keep your familiar T workflow for defining environments while gaining the reproducibility benefits of <code>dockerTools</code> for image creation. Any changes to your <code>tproject.toml</code> → <code>flake.nix</code> will automatically propagate to the Docker image on the next build.</p>
 </section>
 <section id="benefits-over-dockerfiles" class="level3" data-number="11.6.4">
 <h3 data-number="11.6.4" class="anchored" data-anchor-id="benefits-over-dockerfiles"><span class="header-section-number">11.6.4</span> Benefits Over Dockerfiles</h3>
@@ -966,19 +942,20 @@ For more examples and ideas, visit:
 <p>For simpler use cases, the “Nix inside Docker” approach from earlier sections may be more accessible.</p>
 </section>
 </section>
-<section id="dockerising-a-rixpress-pipeline" class="level2" data-number="11.7">
-<h2 data-number="11.7" class="anchored" data-anchor-id="dockerising-a-rixpress-pipeline"><span class="header-section-number">11.7</span> Dockerising a rixpress Pipeline</h2>
-<p>We can package our entire <code>{rixpress}</code> project into a single Docker image. This image can then be run by anyone with Docker installed, regardless of their host operating system or whether they have Nix.</p>
+<section id="dockerising-a-t-pipeline" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="dockerising-a-t-pipeline"><span class="header-section-number">11.7</span> Dockerising a T Pipeline</h2>
+<p>We can package our entire T project into a single Docker image. This image can then be run by anyone with Docker installed, regardless of their host operating system or whether they have Nix.</p>
 <p>Assume your project directory has:</p>
 <pre><code>.
 ├── data/
 │   └── mtcars.csv
-├── gen-env.R
-├── gen-pipeline.R
-├── functions.R
-├── functions.py
-├── default.nix
-└── pipeline.nix</code></pre>
+├── src/
+│   ├── pipeline.t
+│   ├── functions.R
+│   └── functions.py
+├── tproject.toml
+├── flake.nix
+└── flake.lock</code></pre>
 <section id="step-1-the-dockerfile" class="level3" data-number="11.7.1">
 <h3 data-number="11.7.1" class="anchored" data-anchor-id="step-1-the-dockerfile"><span class="header-section-number">11.7.1</span> Step 1: The Dockerfile</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> nix-base:latest</span>
@@ -989,31 +966,29 @@ For more examples and ideas, visit:
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy all project files</span></span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> . .</span>
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the pipeline during image build</span></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">nix-build</span> pipeline.nix</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Export results when container runs</span></span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> export-results.R .</span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">"nix-shell"</span>, <span class="st">"--run"</span>, <span class="st">"Rscript export-results.R"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the pipeline during image build.</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="co"># `nix develop` enters the project's devShell, which puts `t` on the PATH.</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">nix</span> develop <span class="at">--accept-flake-config</span> <span class="at">--command</span> t run src/pipeline.t</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Export the pipeline artifacts when the container runs</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">"bash"</span>, <span class="st">"-c"</span>, <span class="st">"cp -r _pipeline /output"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="step-2-the-export-script" class="level3" data-number="11.7.2">
-<h3 data-number="11.7.2" class="anchored" data-anchor-id="step-2-the-export-script"><span class="header-section-number">11.7.2</span> Step 2: The Export Script</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># export-results.R</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rixpress)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>output_dir <span class="ot">&lt;-</span> <span class="st">"/output"</span></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(output_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">"Reading target 'mtcars_head'..."</span>)</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>final_data <span class="ot">&lt;-</span> <span class="fu">rxp_read</span>(<span class="st">"mtcars_head"</span>)</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>output_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(output_dir, <span class="st">"mtcars_analysis_result.json"</span>)</span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write_json</span>(final_data, output_path, <span class="at">pretty =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="fu">paste</span>(<span class="st">"Successfully exported result to"</span>, output_path))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="step-2-the-pipeline" class="level3" data-number="11.7.2">
+<h3 data-number="11.7.2" class="anchored" data-anchor-id="step-2-the-pipeline"><span class="header-section-number">11.7.2</span> Step 2: The Pipeline</h3>
+<p>The pipeline lives in <code>src/pipeline.t</code>. It loads the data in T and produces the result as a node artifact:</p>
+<pre class="t"><code>-- src/pipeline.t
+p = pipeline {
+  data = read_csv("data/mtcars.csv")
+
+  mtcars_head = rn(
+    command      = &lt;{ head(data, 10) }&gt;,
+    deserializer = ^ipc,
+    serializer   = ^json
+  )
+}
+
+build_pipeline(p, verbose = 1)</code></pre>
+<p>When T builds the pipeline, every node’s artifact is written to the <code>_pipeline/</code> directory. The <code>mtcars_head</code> node’s result is stored there as JSON, ready to be exported.</p>
 </section>
 <section id="step-3-build-and-run" class="level3" data-number="11.7.3">
 <h3 data-number="11.7.3" class="anchored" data-anchor-id="step-3-build-and-run"><span class="header-section-number">11.7.3</span> Step 3: Build and Run</h3>
@@ -1025,12 +1000,12 @@ For more examples and ideas, visit:
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">--name</span> my_pipeline_run <span class="dt">\</span></span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">/output"</span>:/output <span class="dt">\</span></span>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  my-reproducible-pipeline</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Check your local <code>output</code> directory. You’ll find the <code>mtcars_analysis_result.json</code> file containing the exact, reproducible result of your pipeline.</p>
+<p>Check your local <code>output</code> directory. You’ll find the pipeline’s artifacts, including the <code>mtcars_head</code> result, containing the exact, reproducible output of your pipeline.</p>
 <p>You have successfully packaged a complex, polyglot pipeline into a simple, portable Docker image. This workflow combines the best of both worlds: Nix’s power for creating reproducible builds and Docker’s universal standard for distributing and running applications.</p>
 </section>
-<section id="alternative-using-dockertools-for-rixpress" class="level3" data-number="11.7.4">
-<h3 data-number="11.7.4" class="anchored" data-anchor-id="alternative-using-dockertools-for-rixpress"><span class="header-section-number">11.7.4</span> Alternative: Using dockerTools for rixpress</h3>
-<p>You can also build your rixpress pipeline image purely with Nix, avoiding Dockerfiles entirely. This gives you fully deterministic image builds.</p>
+<section id="alternative-using-dockertools-for-t" class="level3" data-number="11.7.4">
+<h3 data-number="11.7.4" class="anchored" data-anchor-id="alternative-using-dockertools-for-t"><span class="header-section-number">11.7.4</span> Alternative: Using dockerTools for T</h3>
+<p>You can also build your T pipeline image purely with Nix, avoiding Dockerfiles entirely. This gives you fully deterministic image builds.</p>
 <p>Create a <code>docker-pipeline.nix</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode nix code-with-copy"><code class="sourceCode nix"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># docker-pipeline.nix</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span></span>
@@ -1038,44 +1013,45 @@ For more examples and ideas, visit:
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://github.com/rstats-on-nix/nixpkgs/archive/2025-10-14.tar.gz"</span></span>
 <span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">)</span> <span class="op">{};</span></span>
 <span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Import your rix-generated environment</span></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">rixEnv</span> <span class="op">=</span> <span class="bu">import</span> <span class="ss">./default.nix</span><span class="op">;</span></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Build the pipeline as a derivation</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="va">pipelineResult</span> <span class="op">=</span> pkgs<span class="op">.</span>runCommand <span class="st">"pipeline-result"</span> <span class="op">{</span></span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>    <span class="va">buildInputs</span> <span class="op">=</span> rixEnv<span class="op">.</span>buildInputs<span class="op">;</span></span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="st">''</span></span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="st">    mkdir -p $out</span></span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="st">    cd </span><span class="sc">${</span><span class="ss">./.</span> <span class="sc">}</span></span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="st">    Rscript -e "source('gen-pipeline.R')"</span></span>
-<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a><span class="st">    # Copy results to output</span></span>
-<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a><span class="st">    cp -r _rixpress $out/</span></span>
-<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="st">  ''</span><span class="op">;</span></span>
-<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span> pkgs<span class="op">.</span>dockerTools<span class="op">.</span>buildImage <span class="op">{</span></span>
-<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">"my-rixpress-pipeline"</span><span class="op">;</span></span>
-<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  <span class="va">tag</span> <span class="op">=</span> <span class="st">"latest"</span><span class="op">;</span></span>
-<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>  <span class="va">copyToRoot</span> <span class="op">=</span> pkgs<span class="op">.</span>buildEnv <span class="op">{</span></span>
-<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>    <span class="va">name</span> <span class="op">=</span> <span class="st">"image-root"</span><span class="op">;</span></span>
-<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a>    <span class="va">paths</span> <span class="op">=</span> <span class="op">[</span> </span>
-<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a>      rixEnv<span class="op">.</span>buildInputs </span>
-<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a>      pipelineResult </span>
-<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a>      pkgs<span class="op">.</span>coreutils </span>
-<span id="cb41-31"><a href="#cb41-31" aria-hidden="true" tabindex="-1"></a>      pkgs<span class="op">.</span>bash </span>
-<span id="cb41-32"><a href="#cb41-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">];</span></span>
-<span id="cb41-33"><a href="#cb41-33" aria-hidden="true" tabindex="-1"></a>    <span class="va">pathsToLink</span> <span class="op">=</span> <span class="op">[</span> <span class="st">"/bin"</span> <span class="st">"/"</span> <span class="op">];</span></span>
-<span id="cb41-34"><a href="#cb41-34" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
-<span id="cb41-35"><a href="#cb41-35" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb41-36"><a href="#cb41-36" aria-hidden="true" tabindex="-1"></a>  <span class="va">config</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb41-37"><a href="#cb41-37" aria-hidden="true" tabindex="-1"></a>    <span class="va">Cmd</span> <span class="op">=</span> <span class="op">[</span> <span class="st">"</span><span class="sc">${</span>pkgs<span class="op">.</span>bash<span class="sc">}</span><span class="st">/bin/bash"</span> <span class="st">"-c"</span> <span class="st">"cp -r /pipeline-result/* /output/"</span> <span class="op">];</span></span>
-<span id="cb41-38"><a href="#cb41-38" aria-hidden="true" tabindex="-1"></a>    <span class="va">WorkingDir</span> <span class="op">=</span> <span class="st">"/work"</span><span class="op">;</span></span>
-<span id="cb41-39"><a href="#cb41-39" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
-<span id="cb41-40"><a href="#cb41-40" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The T project is a Nix flake. Load its development environment.</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">project</span>  <span class="op">=</span> <span class="bu">builtins</span><span class="op">.</span>getFlake <span class="op">(</span><span class="bu">toString</span> <span class="ss">./flake.nix</span><span class="op">);</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="va">devShell</span> <span class="op">=</span> project<span class="op">.</span>devShell<span class="op">;</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Build the pipeline as a derivation</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="va">pipelineResult</span> <span class="op">=</span> pkgs<span class="op">.</span>runCommand <span class="st">"pipeline-result"</span> <span class="op">{</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>    <span class="va">buildInputs</span> <span class="op">=</span> devShell<span class="op">.</span>buildInputs<span class="op">;</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="st">''</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="st">    mkdir -p $out</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="st">    cd </span><span class="sc">${</span><span class="ss">./.</span> <span class="sc">}</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a><span class="st">    t run src/pipeline.t</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a><span class="st">    # Copy results to output</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="st">    cp -r _pipeline $out/</span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="st">  ''</span><span class="op">;</span></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span> pkgs<span class="op">.</span>dockerTools<span class="op">.</span>buildImage <span class="op">{</span></span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  <span class="va">name</span> <span class="op">=</span> <span class="st">"my-t-pipeline"</span><span class="op">;</span></span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>  <span class="va">tag</span> <span class="op">=</span> <span class="st">"latest"</span><span class="op">;</span></span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>  <span class="va">copyToRoot</span> <span class="op">=</span> pkgs<span class="op">.</span>buildEnv <span class="op">{</span></span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a>    <span class="va">name</span> <span class="op">=</span> <span class="st">"image-root"</span><span class="op">;</span></span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a>    <span class="va">paths</span> <span class="op">=</span> <span class="op">[</span> </span>
+<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a>      devShell<span class="op">.</span>buildInputs</span>
+<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a>      pipelineResult </span>
+<span id="cb41-31"><a href="#cb41-31" aria-hidden="true" tabindex="-1"></a>      pkgs<span class="op">.</span>coreutils </span>
+<span id="cb41-32"><a href="#cb41-32" aria-hidden="true" tabindex="-1"></a>      pkgs<span class="op">.</span>bash </span>
+<span id="cb41-33"><a href="#cb41-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">];</span></span>
+<span id="cb41-34"><a href="#cb41-34" aria-hidden="true" tabindex="-1"></a>    <span class="va">pathsToLink</span> <span class="op">=</span> <span class="op">[</span> <span class="st">"/bin"</span> <span class="st">"/"</span> <span class="op">];</span></span>
+<span id="cb41-35"><a href="#cb41-35" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb41-36"><a href="#cb41-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-37"><a href="#cb41-37" aria-hidden="true" tabindex="-1"></a>  <span class="va">config</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb41-38"><a href="#cb41-38" aria-hidden="true" tabindex="-1"></a>    <span class="va">Cmd</span> <span class="op">=</span> <span class="op">[</span> <span class="st">"</span><span class="sc">${</span>pkgs<span class="op">.</span>bash<span class="sc">}</span><span class="st">/bin/bash"</span> <span class="st">"-c"</span> <span class="st">"cp -r /pipeline-result/* /output/"</span> <span class="op">];</span></span>
+<span id="cb41-39"><a href="#cb41-39" aria-hidden="true" tabindex="-1"></a>    <span class="va">WorkingDir</span> <span class="op">=</span> <span class="st">"/work"</span><span class="op">;</span></span>
+<span id="cb41-40"><a href="#cb41-40" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb41-41"><a href="#cb41-41" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Build and run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix-build</span> docker-pipeline.nix</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> load <span class="op">&lt;</span> result</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">/output"</span>:/output my-rixpress-pipeline:latest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">/output"</span>:/output my-t-pipeline:latest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This approach bakes the pipeline results directly into the image during the Nix build phase. The resulting image is minimal and contains only the outputs, not the full R/Python environment needed to produce them.</p>
 </section>
 </section>
@@ -1100,7 +1076,7 @@ For more examples and ideas, visit:
 <li>Build a reusable <code>nix-base</code> image to share across projects</li>
 <li>Get Nix into the image by installing it in the Dockerfile, starting from a base image that already has Nix, or building the whole image with Nix</li>
 <li>Build T from its flake and symlink <code>t</code> onto the <code>PATH</code></li>
-<li>Package <code>{rixpress}</code> pipelines for distribution</li>
+<li>Package T pipelines for distribution</li>
 </ul>
 </section>
 <section id="further-reading" class="level2" data-number="11.9">

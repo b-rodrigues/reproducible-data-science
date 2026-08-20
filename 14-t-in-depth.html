@@ -564,8 +564,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 %cd data
 %ls
 raw.csv  clean.csv</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>These mirror the shell commands you already know, so the REPL feels less like a foreign object and more like a workspace you can move around in.</p>
 </section>
 <section id="inspecting-what-you-have" class="level3" data-number="14.1.2">
@@ -577,8 +575,6 @@ df = read_csv("data.csv")
 --  name  type       summary
 --  x     Int        42
 --  df    DataFrame  150 rows x 5 cols</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p><code>%history</code> shows the last fifty entries from the REPL command history, stored in <code>~/.t_history</code>, which is handy for re-running or copying something you did a few minutes ago. <code>%reset</code> removes all user-defined variables and returns you to a clean base environment.</p>
 </section>
 <section id="timing-and-capturing-work" class="level3" data-number="14.1.3">
@@ -587,13 +583,9 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <pre class="t"><code>%time df |&gt; filter($x &gt; 10) |&gt; nrow()
 42
 Execution time: 0.1540 seconds</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>The most underrated command is <code>%save</code>. It writes a transcript of the session — every command and its result — to a file, so you can turn an exploratory session into a starting point for a script. In compact mode it records a one-line summary of each result; in verbose mode it records the full pretty-printed output:</p>
 <pre class="t"><code>%save my_session.t
 %save verbose my_session.t</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>A common workflow is to run <code>%reset</code> to clear the transcript, then do a clean run and <code>%save</code> it, giving you a tidy record of exactly what you tried. Typing <code>%magic</code> lists every magic command with a description, and if you mistype one, the REPL offers a fuzzy match: <code>%objcts</code> suggests <code>Did you mean: %objects?</code>.</p>
 </section>
 </section>
@@ -665,8 +657,6 @@ to_expr(1 + 10)
 <pre class="t"><code>my_mean = \(df, $col) {
   summarize(df, result = mean(!!col))
 }</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <ol start="2" type="1">
 <li><p><strong><code>enquo(param)</code></strong> captures the caller’s full expression for a named parameter, as a quosure. Use it when you need more than a column name.</p></li>
 <li><p><strong><code>enquos(...)</code></strong> captures all variadic expressions as a list of quosures, which you can splice into a verb.</p></li>
@@ -767,8 +757,6 @@ node&lt;T&gt;(...)
   writer: function(path: string, value: any) -&gt; result[NA, string],
   reader: function(path: string) -&gt; result[any, string]
 }</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>To define one, you write a record that matches that shape. The <code>format</code> field should be a <code>^</code> symbol so it stays consistent with T’s symbol-based serialization.</p>
 <pre class="t"><code>my_log_serializer = {
   format: ^log,
@@ -783,8 +771,6 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 }
 
 node(command = ..., serializer = my_log_serializer)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>For a serializer to work across <em>other</em> runtimes, you can add optional <code>r_writer</code>, <code>r_reader</code>, <code>py_writer</code>, and <code>py_reader</code> fields. These are code snippets — plain strings, or foreign code blocks for readability — that T injects into the generated build script for that runtime.</p>
 <pre class="t"><code>my_custom_ser = [
   format: ^custom,
@@ -795,8 +781,6 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
   py_writer: &lt;{ def write_custom(obj, path): ... },
   py_reader: &lt;{ def read_custom(path): ... }
 ]</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>T performs <strong>static coherence checks</strong> when you build a pipeline that uses a custom serializer: if a node is declared for the R runtime but the serializer has no <code>r_writer</code> or <code>r_reader</code>, you get an error at build time rather than a mystery failure at run time. And when T detects that your serializer references R or Python functions, it can add the corresponding <code>[r-dependencies]</code> or <code>[py-dependencies]</code> to the generated build automatically (controlled by <code>TLANG_AUTO_ADD_PIPELINE_DEPS</code>).</p>
 </section>
 </section>
@@ -822,12 +806,6 @@ to_expr(1 + 10)
 <p><code>read_node()</code> on a plotting node returns not the raw artifact but a small metadata record describing it — the path to the serialized plot, its type, and the runtime that produced it. The <code>show_plot()</code> function takes that record and renders the plot in the current environment.</p>
 <pre class="t"><code>meta = read_node("plot_node")
 show_plot(meta)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): to_expr(1 + 10) 
-to_expr(1 + 10) 
-to_expr(1 + 10) 
-to_expr(1 + 10) 
-</code></pre>
 </section>
 <section id="plots-in-literate-documents" class="level3" data-number="14.4.3">
 <h3 data-number="14.4.3" class="anchored" data-anchor-id="plots-in-literate-documents"><span class="header-section-number">14.4.3</span> Plots in literate documents</h3>
@@ -853,8 +831,6 @@ to_expr(1 + 10)
 </ul>
 <p>Validation is strict: pass a key that is not a valid option, or a value of the wrong type, and you get a <code>TypeError</code> or <code>ValueError</code> before the build starts.</p>
 <pre class="t"><code>build_pipeline(p, nix_options = { max_jobs = 4, dry_run = true })</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 </section>
 <section id="dry-runs-and-plans" class="level3" data-number="14.5.2">
 <h3 data-number="14.5.2" class="anchored" data-anchor-id="dry-runs-and-plans"><span class="header-section-number">14.5.2</span> Dry runs and plans</h3>
@@ -867,6 +843,9 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <section id="building-on-other-machines" class="level3" data-number="14.5.4">
 <h3 data-number="14.5.4" class="anchored" data-anchor-id="building-on-other-machines"><span class="header-section-number">14.5.4</span> Building on other machines</h3>
 <p>The <code>builders</code> option is what turns a local build into a distributed one. You can point a build at a remote Nix builder — a faster machine, or a machine with the right architecture — and Nix will ship the build steps there. This is particularly useful when your pipeline has heavy nodes that would take minutes locally but seconds on a larger box. The <code>pipeline_to_drv(p)</code> function returns the underlying Nix derivation, which is the escape hatch for when you need to hand the build to a tool that understands derivations directly.</p>
+<p>The <code>cache</code> option is the companion to <code>builders</code>. Where <code>builders</code> decides <em>where</em> a build runs, <code>cache</code> decides <em>where pre-built artifacts come from</em>. Like <code>builders</code>, it is a key in the <code>nix_options</code> dictionary. Passing a Cachix cache name registers it as an extra Nix binary substituter:</p>
+<pre class="t"><code>build_pipeline(p, nix_options = { cache = "my-team" })</code></pre>
+<p>Nix then pulls any matching store paths from <code>my-team.cachix.org</code> before falling back to building them, and can push freshly built artifacts back to the cache. This is how a team shares build results across machines and CI runners without each one recompiling the same R and Python packages from source.</p>
 </section>
 </section>
 <section id="building-t-packages" class="level2" data-number="14.6">
@@ -875,15 +854,15 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <section id="initialising-a-package" class="level3" data-number="14.6.1">
 <h3 data-number="14.6.1" class="anchored" data-anchor-id="initialising-a-package"><span class="header-section-number">14.6.1</span> Initialising a package</h3>
 <p><code>t init --package</code> scaffolds a T package. The result is a directory with a <code>DESCRIPTION.toml</code> that declares the package’s metadata, its dependencies, and its build inputs, and a <code>flake.nix</code> that makes the package itself a Nix input.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[package]</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"mylib"</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="kw">[dependencies]</span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="dt">otherlib</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">git</span><span class="op"> =</span> <span class="st">"https://github.com/me/otherlib"</span><span class="op">, </span><span class="dt">tag</span><span class="op"> =</span> <span class="st">"0.3.0"</span><span class="op"> }</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="kw">[additional-tools]</span></span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># extra tools the package needs at build time</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[package]</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"mylib"</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="kw">[dependencies]</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="dt">otherlib</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">git</span><span class="op"> =</span> <span class="st">"https://github.com/me/otherlib"</span><span class="op">, </span><span class="dt">tag</span><span class="op"> =</span> <span class="st">"0.3.0"</span><span class="op"> }</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="kw">[additional-tools]</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># extra tools the package needs at build time</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Dependencies are declared by git URL and tag, which keeps them reproducible in the same way the rest of T is.</p>
 </section>
 <section id="public-and-private-api" class="level3" data-number="14.6.2">
@@ -904,8 +883,6 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 --# @seealso myotherfunc
 --# @family transforms
 myfunc = \(x) { x * 2 }</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p><code>t doc --parse --generate</code> parses these blocks and generates the package’s documentation. <code>t doctor</code> is the linter: it checks that public functions are documented, that <code>@param</code> names match the signature, and that cross-references resolve.</p>
 </section>
 <section id="publishing" class="level3" data-number="14.6.5">
@@ -918,8 +895,6 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <pre class="t"><code>import "mylib"
 import "mylib" [myfunc]
 import "mylib" [myfunc as transform]</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 </section>
 </section>
 <section id="property-based-testing-with-propcraft" class="level2" data-number="14.7">
@@ -934,12 +909,6 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
   prop_gen_int_range(0, 100),
   \(a, b) { add(a, b) == add(b, a) }
 )</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): to_expr(1 + 10) 
-to_expr(1 + 10) 
-to_expr(1 + 10) 
-to_expr(1 + 10) 
-</code></pre>
 </section>
 <section id="generators" class="level3" data-number="14.7.2">
 <h3 data-number="14.7.2" class="anchored" data-anchor-id="generators"><span class="header-section-number">14.7.2</span> Generators</h3>
@@ -967,12 +936,6 @@ to_expr(1 + 10)
   prop_gen_df(na_prob = 0.3),
   \(df) { nrow(drop_na(df, $x)) &lt;= nrow(df) }
 )</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): to_expr(1 + 10) 
-to_expr(1 + 10) 
-to_expr(1 + 10) 
-to_expr(1 + 10) 
-</code></pre>
 <p>The property — the result has no more rows than the input — is obviously true, yet it fails. Propcraft shrinks the failing input to a tiny DataFrame and shows you the exact rows that broke it, instead of leaving you to guess.</p>
 </section>
 <section id="seeding-and-sample-size" class="level3" data-number="14.7.5">

@@ -641,20 +641,6 @@ print(is_error(p.bad))
 print(error_code(p.bad))
 print(error_msg(p.bad))
 print(is_error(read_node(p.bad)))</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): true 
-DivisionByZero 
-Division by zero. 
-{} 
-10 
-true 
-DivisionByZero 
-0 
-5 
-Caught: Division by zero. 
-0 
-99 
-</code></pre>
 <pre class="text"><code>false
 DivisionByZero
 Division by zero.
@@ -667,20 +653,6 @@ true</code></pre>
 <p>Beyond per-node checks, T gives you build-wide views of what went wrong.</p>
 <p><code>collect_exceptions(p)</code> gathers every captured error in the pipeline into a DataFrame with a row per failing node:</p>
 <pre class="t"><code>collect_exceptions(p)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): true 
-DivisionByZero 
-Division by zero. 
-{} 
-10 
-true 
-DivisionByZero 
-0 
-5 
-Caught: Division by zero. 
-0 
-99 
-</code></pre>
 <pre class="text"><code>  node  status  code            message
   ----  ------  --------------  -----------------
   bad   Error   DivisionByZero  Division by zero.
@@ -689,20 +661,6 @@ DataFrame: 1 rows x 4 cols</code></pre>
 <p>Chapter 8 introduced <code>build_log(p)</code> and <code>build_log_to_frame()</code>, which turn the most recent build into a DataFrame with one row per node — name, status, duration, and artifact path:</p>
 <pre class="t"><code>bl = build_log(p)
 build_log_to_frame(bl)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): true 
-DivisionByZero 
-Division by zero. 
-{} 
-10 
-true 
-DivisionByZero 
-0 
-5 
-Caught: Division by zero. 
-0 
-99 
-</code></pre>
 <pre class="text"><code>  name  status                duration  path
   ----  --------------------  --------  -----------------------------------
   nums  Completed             0.8792    /nix/store/ds36srq9gb2q49bhsri1z...
@@ -712,20 +670,6 @@ DataFrame: 3 rows x 4 cols</code></pre>
 <p>The <code>status</code> column is exactly the four-state vocabulary from earlier in this chapter, and the <code>duration</code> column tells you which nodes are slow even when they succeed. (One gotcha: assign the log to a variable that is not already a T builtin — <code>log</code> is the natural logarithm — before passing it to <code>build_log_to_frame</code>.)</p>
 <p>Finally, <code>inspect_node</code> reports the metadata T recorded for a single node:</p>
 <pre class="t"><code>inspect_node(p.bad)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): true 
-DivisionByZero 
-Division by zero. 
-{} 
-10 
-true 
-DivisionByZero 
-0 
-5 
-Caught: Division by zero. 
-0 
-99 
-</code></pre>
 <pre class="text"><code>dict
 ├── name: "bad"
 ├── runtime: "T"
@@ -742,9 +686,9 @@ Caught: Division by zero.
 <section id="the-t-debug-command" class="level3" data-number="10.7.1">
 <h3 data-number="10.7.1" class="anchored" data-anchor-id="the-t-debug-command"><span class="header-section-number">10.7.1</span> The <code>t debug</code> Command</h3>
 <p>From your shell, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug <span class="op">&lt;</span>node_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug <span class="op">&lt;</span>node_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>By default this looks for the pipeline in <code>src/pipeline.t</code>; if your pipeline lives elsewhere, pass the file first:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug src/my_custom_pipeline.t data_cleanup</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug src/my_custom_pipeline.t data_cleanup</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>T evaluates the script up to the requested node, resolves every upstream dependency, locates their latest materialized <code>/nix/store</code> paths, sets up the environment, and launches the runtime’s interactive REPL. Targeting a Python node, for example, produces something like:</p>
 <pre class="text"><code>================================================
 Debugging Node: Y (Runtime: Python)
@@ -764,9 +708,9 @@ Press Ctrl+D or exit to return to T REPL.
 <p>If you are already inside a T REPL session with a built pipeline, the same debugger is one call away:</p>
 <pre class="t"><code>debug_node(p.data_cleanup)</code></pre>
 <p>This spawns the same subshell environment. Inside it, a <code>tlang</code> companion library lets you load upstream node data live:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df <span class="op">=</span> tlang.read_node(<span class="st">"raw_df"</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df <span class="op">=</span> tlang.read_node(<span class="st">"raw_df"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now you can inspect the exact data that crashed your node, dry-run the offending function line by line, and confirm the fix. Press <code>Ctrl+D</code> (or <code>exit()</code>, or <code>q()</code> in R) to leave the subshell; control returns cleanly to your T session.</p>
 <p>The subshells are customized so you always know where you are: Python starts with a <code>py&gt;</code> prompt, R starts quietly (no welcome banner) with <code>r&gt;</code>, and Julia shows <code>jl&gt;</code>. Interactive debugging is supported for the three REPL-capable runtimes — Python, R, and Julia; debugging a Quarto or Bash node raises a descriptive <code>ValueError</code> instead of dropping you into a raw shell.</p>
 </section>

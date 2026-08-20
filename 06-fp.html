@@ -617,8 +617,6 @@ window.Quarto = {
 }
 
 build_pipeline(p)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p><code>data_node</code> takes no inputs and returns one DataFrame. <code>model_node</code> takes one DataFrame (<code>data_node</code>, via <code>^ipc</code>) and returns one model (<code>^pmml</code>). Neither can reach outside its sandbox. Neither modifies anything shared. Each is a pure function. And because they are pure, T can cache them: if <code>data_node</code>’s inputs have not changed, T does not rebuild it. Content-addressed outputs make this exact.</p>
 <p>This also explains something that often surprises new T users: the order of node declarations inside a <code>pipeline { }</code> block does not matter. T infers the execution order from the <em>data dependencies</em> between nodes, not from the order you wrote them. This is only possible because nodes are pure: if a node had side effects, order would matter. Because it does not, T is free to determine the correct order itself, in the same way a compiler can reorder pure expressions.</p>
 </section>
@@ -626,9 +624,9 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <h2 data-number="6.5" class="anchored" data-anchor-id="a-pipeline-is-function-composition"><span class="header-section-number">6.5</span> A Pipeline Is Function Composition</h2>
 <p>When you write a pipeline in T, you are describing a <strong>composition</strong> of pure functions. You are saying: apply <code>data_node</code>, take its output, apply <code>model_node</code> to it. The pipeline <em>is</em> the composition graph.</p>
 <p>This idea will be familiar if you have used pipes in R or Python:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(am <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mpg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(am <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mpg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Each step takes the output of the previous step as its only input. The whole expression is a composition of three pure-ish functions (ignoring that they implicitly read column names). T makes this structure <em>explicit</em>, <em>named</em>, and <em>cached at the node level</em>.</p>
 <p>Here is another example which does exactly this:</p>
 <pre class="t"><code>p = pipeline {
@@ -643,8 +641,6 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 }
 
 build_pipeline(p)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>Three nodes (because this is using pure T code, there is no need to use the <code>node()</code> constructor), three pure functions, composed in sequence. T resolves the dependency graph (<code>mtcars_mpg</code> depends on <code>filtered_mtcars</code>, which depends on <code>mtcars</code>), builds them in the correct order, and caches each result. If you change only the <code>filter</code> predicate, only <code>filtered_mtcars</code> and <code>mtcars_mpg</code> are rebuilt—<code>mtcars</code> is unchanged, so T does not touch it.</p>
 </section>
 <section id="polyglot-composition-passing-values-across-languages" class="level2" data-number="6.6">
@@ -677,8 +673,6 @@ df_py = node(
 
 p = pipeline { df_r = df_r; df_py = df_py }
 build_pipeline(p)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p><code>df_r</code> is a pure function: it takes nothing, returns a DataFrame. <code>df_py</code> is a pure function: it takes one DataFrame (<code>^ipc</code>), returns a modified DataFrame (<code>^ipc</code>). The fact that one runs in R and the other in Python is invisible to the composition. Purity is what makes this safe: because neither node has side effects, T can route the output of one into the input of the other through the Nix store without any risk of interference.</p>
 </section>
 <section id="errors-as-values-not-exceptions" class="level2" data-number="6.7">
@@ -706,8 +700,6 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 }
 
 build_pipeline(p)</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p><code>risky_node</code> returns an error value. <code>handled_node</code> receives it, checks <code>is_error()</code>, and returns a fallback. The pipeline completes successfully. No try/catch scattered through the code, no implicit exception handling—the error path is as explicit as the success path.</p>
 <p>This matters for reproducibility: if part of a pipeline fails, you know exactly which node failed, what it returned, and which downstream nodes were affected. The error is in the content-addressed store alongside every other output.</p>
 </section>
@@ -754,8 +746,6 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
     serializer   = ^pmml
   )
 }</code></pre>
-<pre class="text t-error"><code>T execution failed:
-Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p><code>utils.R</code> might define <code>clean_colnames()</code>, <code>log_transform()</code>, or whatever helpers your analysis needs. Those functions are written once, tested once, and shared across any node that needs them—inside T or outside it.</p>
 <p>The principle is the same one that runs through this whole chapter: <strong>write your analysis code as if T did not exist.</strong> Pure functions in plain files, with explicit inputs and explicit outputs. T wires them together. If T were replaced tomorrow by a different orchestrator, your functions would survive unchanged.</p>
 </section>
