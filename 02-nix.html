@@ -58,7 +58,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -573,7 +593,7 @@ window.Quarto = {
 <p>The first advantage of Nix is that its repository, <code>nixpkgs</code>, is humongous. As of this writing, it contains over 120,000 pieces of software, including the <em>entirety of CRAN and Bioconductor</em>. This means you can use Nix to handle everything: R, Python, Julia, their respective packages, and any other software available through <code>nixpkgs</code>, making it particularly useful for polyglot pipelines.</p>
 <p>The second and most crucial advantage is that Nix allows you to install software in (relatively) isolated environments. When you start a new project, you can use Nix to install a project-specific version of R and all its packages. These dependencies are used only for that project. If you switch to another project, you switch to a different, independent environment. But this also means that all the dependencies of R and R packages, plus all of their dependencies and so on get installed as well. Your project’s development environment will not depend on anything outside of it (well, there are some caveats which we will explore as we move on).</p>
 <p>This is similar to <code>{renv}</code>, but the difference is profound: you get not only a project-specific library of R packages but also a project-specific R version and all the necessary system dependencies. For example, if you need <code>{xlsx}</code>, Nix automatically figures out that Java is required and installs and configures it for you, without any intervention.</p>
-<p>What’s more, you can <em>pin</em> your project to a specific revision of the <code>nixpkgs</code> repository. This ensures that every package Nix installs will always be at the exact same version, regardless of when or where the project is built. The environment is defined in a simple plain-text file, and anyone using that file will get a byte-for-byte identical environment, even on a different operating system.</p>
+<p>What’s more, you can <em>pin</em> your project to a specific revision of the <code>nixpkgs</code> repository. This ensures that every package Nix installs will always be at the exact same version, regardless of when or where the project is built. The environment is defined in a simple plain-text file, and anyone using that file will get a byte-for-byte identical environment, even on a different operating system <span class="citation" data-cites="dolstra2006">(<a href="references.html#ref-dolstra2006" role="doc-biblioref">Dolstra 2006</a>)</span>.</p>
 </section>
 </section>
 <section id="important-concepts" class="level2" data-number="2.3">
@@ -616,11 +636,11 @@ window.Quarto = {
 <blockquote class="blockquote">
 <p>The idea is to always deploy component closures: if we deploy a component, then we must also deploy its dependencies, their dependencies, and so on. That is, we must always deploy a set of components that is closed under the ‘depends on’ relation.</p>
 </blockquote>
-<p>(<em>Nix: A Safe and Policy-Free System for Software Deployment</em>, Dolstra et al., 2004).</p>
+<p><span class="citation" data-cites="dolstra2004">(<a href="references.html#ref-dolstra2004" role="doc-biblioref">Dolstra, De Jonge, and Visser 2004</a>)</span></p>
 <figure class="figure">
 <img src="https://raw.githubusercontent.com/b-rodrigues/rixpress/refs/heads/main/vignettes/figure_4.png" alt="Figure 4 of Dolstra et al. (2004)" class="figure-img">
 <figcaption aria-hidden="true">
-Figure 4 of Dolstra et al.&nbsp;(2004)
+Figure 4 of <span class="citation" data-cites="dolstra2004">(<a href="references.html#ref-dolstra2004" role="doc-biblioref">Dolstra, De Jonge, and Visser 2004</a>)</span>
 </figcaption>
 </figure>
 <p>In the figure, <code>subversion</code> depends on <code>openssl</code>, which itself depends on <code>glibc</code>. Similarly, if you write a derivation to filter <code>mtcars</code>, it requires an input file, R, <code>{dplyr}</code>, and all of their respective dependencies. All of these must be managed by Nix. If any dependency exists “outside” this closure, the pipeline will only <em>work on your machine</em>, defeating the purpose of reproducibility.</p>
@@ -665,6 +685,14 @@ Figure 4 of Dolstra et al.&nbsp;(2004)
 <p>In the next chapter, we will learn how to install Nix, configure <code>cachix</code>, and set up Positron for a seamless development experience.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-dolstra2006" class="csl-entry" role="listitem">
+Dolstra, Eelco. 2006. <span>“The Purely Functional Software Deployment Model.”</span> PhD thesis, Utrecht University. <a href="https://edolstra.github.io/pubs/phd-thesis.pdf">https://edolstra.github.io/pubs/phd-thesis.pdf</a>.
+</div>
+<div id="ref-dolstra2004" class="csl-entry" role="listitem">
+Dolstra, Eelco, Merijn De Jonge, and Eelco Visser. 2004. <span>“Nix: A Safe and Policy-Free System for Software Deployment.”</span> In <em>18th Large Installation System Administration Conference</em>, 79–92.
+</div>
+</div>
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>

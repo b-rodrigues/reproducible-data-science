@@ -23,7 +23,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -469,7 +489,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Nix is not just another package manager; it is a powerful, declarative system for building and managing software environments. It allows us to define the <em>entire</em> computational environment—from the operating system libraries up to the specific versions of our R and Python packages—in a single, simple text file. When you use Nix, the phrase “it works on my machine” becomes obsolete. It is replaced by the guarantee: “it builds identically, everywhere, every time”—with a few caveats that we will explore, of course.</p>
 <p>Since discovering Nix, I’ve built several packages around it: <code>{rix}</code>, <code>{rixpress}</code>, and its Python counterpart, <code>ryxpress</code>. <code>{rix}</code> has been particularly successful and has received contributions from many people. To me, that validated my original intuition: people want better tools, but they often need help getting started.</p>
 <p>Nix has a steep learning curve for many reasons, so a package like <code>{rix}</code>, which provides a friendlier interface for R users, lowers the barrier considerably.</p>
-<p><code>{rixpress}</code> has had a more modest reception. I suspect that’s because it asks users to fundamentally change the way they structure their work. <code>{rix}</code> simply generates a Nix file describing an environment. <code>{rixpress}</code>, by contrast, asks users to adopt reproducible pipelines. That is a much bigger behavioural shift. It draws heavily on <code>{targets}</code>, and while <code>{targets}</code> is an outstanding package, pipeline-based workflows remain something of a niche. Most people still write long, sequential “spaghetti” scripts, and changing that habit takes more than good tooling.</p>
+<p><code>{rixpress}</code> has had a more modest reception. I suspect that’s because it asks users to fundamentally change the way they structure their work. <code>{rix}</code> simply generates a Nix file describing an environment. <code>{rixpress}</code>, by contrast, asks users to adopt reproducible pipelines. That is a much bigger behavioural shift. It draws heavily on <code>{targets}</code> <span class="citation" data-cites="landau2021">(<a href="references.html#ref-landau2021" role="doc-biblioref">Landau 2021</a>)</span>, and while <code>{targets}</code> is an outstanding package, pipeline-based workflows remain something of a niche. Most people still write long, sequential “spaghetti” scripts, and changing that habit takes more than good tooling.</p>
 <p>But there is now a new opportunity which I think will truly change this: large language models (LLM). I believe that LLMs will be a game changer and help democratize the adoption of tools like <code>{rix}</code>, <code>{rixpress}</code> and more broadly Nix. You, as the data scientist, can now 100% focus on the actual data science and leave setting up the reproducible environment and writing of the pipeline code plumbing to LLMs. These tasks are purely mechanical, low-value added (from a scientific or business perspective) and can also be easily verified: if the pipeline doesn’t run and it’s not because you made a mistake in the scienctific or business logic code, then the issue comes from the pipeline code!</p>
 <p>The idea, then, is that you shouldn’t have to write that code anymore. LLMs can write most of it for you. That said, as capable as today’s models are, they are far from perfect. They make mistakes, and I also believe there is value in giving them tools that reduce the surface area for errors in the first place.</p>
 <p>This is why I decided to build T.</p>
@@ -487,6 +507,11 @@ ul.task-list li input[type="checkbox"] {
 <p>You can submit issues, suggest improvements, and ask questions on the book’s <a href="https://github.com/b-rodrigues/reproducible-data-science">Github repository</a>.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-landau2021" class="csl-entry" role="listitem">
+Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959.
+</div>
+</div>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

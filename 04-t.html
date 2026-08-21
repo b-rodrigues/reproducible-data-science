@@ -58,7 +58,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -525,6 +545,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="the-reproducibility-puzzle"><span class="header-section-number">4.1.1</span> The Reproducibility Puzzle</h3>
 <p>Reproducibility in research and data science exists on a continuum. At one end, authors might only describe their methods in prose. Moving along the spectrum, they might share code, then data, and finally what we call a <em>computational environment</em>: the complete set of software required to execute an analysis.</p>
 <p>Even when researchers share code and data, they rarely specify the full software stack: the exact version of R, all package versions, and crucially, the system-level dependencies. Yet differences in any of these can lead to divergent results from the same code.</p>
+<p>The stakes are well documented. Large-scale replication studies have consistently found that a substantial fraction of published results cannot be reproduced <span class="citation" data-cites="openscience2015">Brodeur et al. (<a href="references.html#ref-brodeur2026" role="doc-biblioref">2026</a>)</span>, and reproducibility has become a first-class concern for computational science <span class="citation" data-cites="stodden2016">(<a href="references.html#ref-stodden2016" role="doc-biblioref">Stodden et al. 2016</a>)</span>.</p>
 <p>Tools like <code>{renv}</code> address part of the puzzle: they capture R package versions in a lockfile. But <code>{renv}</code> does not manage the R version itself (you need <code>rig</code> for that), and neither handles system libraries. If <code>{sf}</code> requires GDAL 3.0 but your system has 2.4, <code>{renv}</code> can’t help. And if your project uses both R and Python? Now you’re coordinating multiple package managers, each with its own configuration.</p>
 </section>
 <section id="reproducibility-is-not-just-about-the-environment" class="level3" data-number="4.1.2">
@@ -542,6 +563,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The second thinks in <strong>rules</strong>: <em>What are the general rules that govern this analysis? What are the inputs? What are the outputs? What depends on what? If the data changes, which steps need to re-run? If a colleague on a different machine runs this, will he get the same result?</em> He writes code that describes the <em>system</em>, not just the individual actions.</p>
 <p>This is not a question of technical sophistication. It is a question of mental model. The first person sees the computer as a place where tasks happen. The second sees the computer as a machine that can be taught to follow rules repeatably, consistently, and at scale.</p>
 <p>The shift matters enormously for reproducibility. If your analysis is a sequence of manual tasks, it is inherently fragile: it depends on you remembering the order, running the right scripts, and not making any ad hoc changes along the way. If your analysis is a system of explicit rules—a formal description of what produces what—then it can be re-executed by anyone (including AI agents), on any machine, at any point in the future, with a single command.</p>
+<p>This framing is not unique to data science. Institutional economics argues that the rules of the game—formal and informal—shape collective outcomes more than individual talent <span class="citation" data-cites="north1990">(<a href="references.html#ref-north1990" role="doc-biblioref">North 1990</a>)</span>. Behavioural economics shows that the design of the choice environment steers behaviour as much as persuasion does <span class="citation" data-cites="thalersunstein2008">(<a href="references.html#ref-thalersunstein2008" role="doc-biblioref">Thaler and Sunstein 2008</a>)</span>. Legal scholars have noted that code itself regulates, because constraints written in software are harder to ignore than rules written in prose <span class="citation" data-cites="lessig2006">(<a href="references.html#ref-lessig2006" role="doc-biblioref">Lessig 2006</a>)</span>. And design research has catalogued how the affordances of everyday tools silently determine what their users can and cannot do <span class="citation" data-cites="norman2013">(<a href="references.html#ref-norman2013" role="doc-biblioref">Norman 2013</a>)</span>.</p>
+<p>A pipeline is the same idea applied to an analysis: the institutional design of the computation, a choice architecture that makes the reproducible path the path of least resistance.</p>
 <p>This is the insight that motivates the pipeline-first approach in this book. Before we even talk about packages and environments, we are asking: <em>what is the structure of this computation?</em> Making that structure explicit, formal, and machine-readable is the only approach that delivers genuine computational reproducibility—and, as we will see, it is also the approach that works best with AI-assisted development.</p>
 </section>
 <section id="thinking-in-systems-in-an-ai-first-world" class="level3" data-number="4.1.4">
@@ -775,6 +798,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In the next chapter, we will get our hands on the machinery and <strong>build our first pipeline</strong>.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-baker2016" class="csl-entry" role="listitem">
+Baker, Monya. 2016. <span>“1,500 Scientists Lift the Lid on Reproducibility.”</span> <em>Nature</em> 533 (7604): 452–54. <a href="https://doi.org/10.1038/533452a">https://doi.org/10.1038/533452a</a>.
+</div>
+<div id="ref-brodeur2026" class="csl-entry" role="listitem">
+Brodeur, Abel, D. Mikola, Nicholas Cook, et al. 2026. <span>“Reproducibility and Robustness of Economics and Political Science Research.”</span> <em>Nature</em> 652: 151–56. <a href="https://doi.org/10.1038/s41586-026-10251-x">https://doi.org/10.1038/s41586-026-10251-x</a>.
+</div>
+<div id="ref-lessig2006" class="csl-entry" role="listitem">
+Lessig, Lawrence. 2006. <em>Code: Version 2.0</em>. New York: Basic Books.
+</div>
+<div id="ref-norman2013" class="csl-entry" role="listitem">
+Norman, Donald A. 2013. <em>The Design of Everyday Things</em>. Revised and Expanded. New York: Basic Books.
+</div>
+<div id="ref-north1990" class="csl-entry" role="listitem">
+North, Douglass C. 1990. <em>Institutions, Institutional Change and Economic Performance</em>. Cambridge: Cambridge University Press.
+</div>
+<div id="ref-openscience2015" class="csl-entry" role="listitem">
+Open Science Collaboration. 2015. <span>“Estimating the Reproducibility of Psychological Science.”</span> <em>Science</em> 349 (6251): aac4716. <a href="https://doi.org/10.1126/science.aac4716">https://doi.org/10.1126/science.aac4716</a>.
+</div>
+<div id="ref-pineau2021" class="csl-entry" role="listitem">
+Pineau, Joelle, Philippe Vincent-Lamarre, Koustuv Sinha, Vincent Larivière, Alina Beygelzimer, Florence d’Alché-Buc, Emily Fox, and Hugo Larochelle. 2021. <span>“Improving Reproducibility in Machine Learning Research (a Report from the NeurIPS 2019 Reproducibility Program).”</span> <em>Journal of Machine Learning Research</em> 22 (164): 1–20. <a href="https://jmlr.org/papers/v22/20-303.html">https://jmlr.org/papers/v22/20-303.html</a>.
+</div>
+<div id="ref-stodden2016" class="csl-entry" role="listitem">
+Stodden, Victoria, Marcia McNutt, David H. Bailey, Ewa Deelman, Yolanda Gil, Brooks Hanson, Michael A. Heroux, John P. A. Ioannidis, and Michela Taufer. 2016. <span>“Enhancing Reproducibility for Computational Methods.”</span> <em>Science</em> 354 (6317): 1240–41. <a href="https://doi.org/10.1126/science.aah6168">https://doi.org/10.1126/science.aah6168</a>.
+</div>
+<div id="ref-thalersunstein2008" class="csl-entry" role="listitem">
+Thaler, Richard H., and Cass R. Sunstein. 2008. <em>Nudge: Improving Decisions about Health, Wealth, and Happiness</em>. New Haven: Yale University Press.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

@@ -58,7 +58,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -550,10 +570,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>To understand when and why to use Docker, it helps to distinguish between two types of reproducibility:</p>
 <ul>
 <li><p><strong>Spatial reproducibility</strong>: The ability to execute an analysis identically across different machines <em>right now</em>. Docker excels here: a container runs the same way on your laptop, a colleague’s workstation, and a cloud server.</p></li>
-<li><p><strong>Temporal reproducibility</strong>: The ability to execute an analysis identically <em>over time</em>. Docker is weaker here. The imperative commands in a <code>Dockerfile</code> (like <code>apt-get update</code>) are non-deterministic. Rebuilding the same file at different times can yield different images.</p></li>
+<li><p><strong>Temporal reproducibility</strong>: The ability to execute an analysis identically <em>over time</em>. Docker is weaker here. The imperative commands in a <code>Dockerfile</code> (like <code>apt-get update</code>) are non-deterministic. Rebuilding the same file at different times can yield different images, a temporal drift that is a well-documented weakness of container-based environments <span class="citation" data-cites="malka2024">(<a href="references.html#ref-malka2024" role="doc-biblioref">Malka, Zacchiroli, and Zimmermann 2024</a>)</span>.</p></li>
 </ul>
 <p>This distinction is crucial. Docker’s true reproducibility promise is that a specific, pre-built image will always launch an identical container. It does <em>not</em> promise that building the same <code>Dockerfile</code> twice will yield an identical image.</p>
-<p>As empirical research has shown, achieving deterministic builds requires systems designed for this purpose, like Nix’s functional model, where identical inputs always produce identical outputs. Studies rebuilding historical Nix packages found bit-for-bit reproducibility rates exceeding 90%.</p>
+<p>As empirical research has shown, achieving deterministic builds requires systems designed for this purpose, like Nix’s functional model, where identical inputs always produce identical outputs. Studies rebuilding over 700,000 historical Nix packages from snapshots spanning several years found bit-for-bit reproducibility rates exceeding 90% <span class="citation" data-cites="malka2025">(<a href="references.html#ref-malka2025" role="doc-biblioref">Malka, Zacchiroli, and Zimmermann 2025</a>)</span>.</p>
 </section>
 <section id="the-best-of-both-worlds" class="level3" data-number="11.1.2">
 <h3 data-number="11.1.2" class="anchored" data-anchor-id="the-best-of-both-worlds"><span class="header-section-number">11.1.2</span> The Best of Both Worlds</h3>
@@ -1094,6 +1114,14 @@ build_pipeline(p, verbose = 1)</code></pre>
 </ul>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-malka2024" class="csl-entry" role="listitem">
+Malka, Julien, Stefano Zacchiroli, and Théo Zimmermann. 2024. <span>“Reproducibility of Build Environments Through Space and Time.”</span> In <em>Proceedings of the 2024 ACM/IEEE 44th International Conference on Software Engineering: New Ideas and Emerging Results</em>, 97–101. ICSE-NIER’24. ACM. <a href="https://doi.org/10.1145/3639476.3639767">https://doi.org/10.1145/3639476.3639767</a>.
+</div>
+<div id="ref-malka2025" class="csl-entry" role="listitem">
+———. 2025. <span>“<span class="nocase">Does Functional Package Management Enable Reproducible Builds at Scale? Yes</span>.”</span> In <em><span class="nocase">22nd International Conference on Mining Software Repositories</span></em>. Ottawa, Canada. <a href="https://hal.science/hal-04913007">https://hal.science/hal-04913007</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
