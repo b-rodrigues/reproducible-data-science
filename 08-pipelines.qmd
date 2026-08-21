@@ -294,19 +294,19 @@ report = qn(
 
 The `.qmd` file itself:
 
-```{.markdown filename="src/report.qmd"}
+````{.markdown filename="src/report.qmd"}
 ---
 title: "Penguin Species Model"
 format: pdf
 ---
 
-```{r, eval = FALSE}
+~~~{r, eval = FALSE}
 model <- read_node("model")    # T registers 'model' as a dependency
 clean <- read_node("clean")    # and 'clean' too
 
 summary(model)
-```
-```
+~~~
+````
 
 ::: {.callout-note}
 ## Quarto nodes and their environments
