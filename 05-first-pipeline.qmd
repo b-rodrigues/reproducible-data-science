@@ -127,6 +127,11 @@ This **check → build → inspect → extend** loop is the core iterative devel
 cycle in T. Get comfortable with it before moving on. It is also possible to 
 interactively inspect R, Python or Julia nodes. More on this later.
 
+Once the pipeline is built, you still need to get to the build artifacts. For this,
+use `pipeline_copy()`. This copies all computed node artifacts from the Nix store to a local directory for easy access.
+By default, it copies all nodes from the latest build to the "pipeline-output/" folder. 
+You can specify a custom folder using the `target_dir` argument: `pipeline_copy(target_dir = "outputs")`
+
 ## Node Types: Calling R, Python, and Julia
 
 The power of T is that nodes can run in any runtime. The node wrapper functions
