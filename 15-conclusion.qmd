@@ -211,7 +211,7 @@ packages, pipelines, and automation. But there is another dimension we have not
 covered in depth: literate programming.
 
 Literate programming is the practice of combining code, prose, and outputs into
-a single document. Tools like Quarto, R Markdown, and Jupyter notebooks make
+a single document. Tools like Quarto, R Markdown, and Jupyter notebooks [@kluyver2016] make
 this possible. The idea is that the analysis and its documentation are the same
 thing. You cannot have one without the other.
 

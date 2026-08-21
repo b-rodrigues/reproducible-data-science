@@ -62,7 +62,7 @@ a friendlier interface for R users, lowers the barrier considerably.
 to fundamentally change the way they structure their work. `{rix}` simply generates a 
 Nix file describing an environment. `{rixpress}`, by contrast, asks users to adopt 
 reproducible pipelines. That is a much bigger behavioural shift. It draws heavily on 
-`{targets}`, and while `{targets}` is an outstanding package, pipeline-based workflows remain 
+`{targets}` [@landau2021], and while `{targets}` is an outstanding package, pipeline-based workflows remain 
 something of a niche. Most people still write long, sequential "spaghetti" scripts, 
 and changing that habit takes more than good tooling.
 

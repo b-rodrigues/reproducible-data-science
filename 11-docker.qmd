@@ -42,7 +42,8 @@ types of reproducibility:
 - **Temporal reproducibility**: The ability to execute an analysis identically 
   *over time*. Docker is weaker here. The imperative commands in a `Dockerfile` 
   (like `apt-get update`) are non-deterministic. Rebuilding the same file at 
-  different times can yield different images.
+  different times can yield different images, a temporal drift that is a 
+  well-documented weakness of container-based environments [@malka2024].
 
 This distinction is crucial. Docker's true reproducibility promise is that a 
 specific, pre-built image will always launch an identical container. It does 
@@ -51,8 +52,9 @@ image.
 
 As empirical research has shown, achieving deterministic builds requires systems 
 designed for this purpose, like Nix's functional model, where identical inputs 
-always produce identical outputs. Studies rebuilding historical Nix packages 
-found bit-for-bit reproducibility rates exceeding 90%.
+always produce identical outputs. Studies rebuilding over 700,000 historical 
+Nix packages from snapshots spanning several years found bit-for-bit 
+reproducibility rates exceeding 90% [@malka2025].
 
 ### The Best of Both Worlds
 

@@ -18,6 +18,12 @@ stack: the exact version of R, all package versions, and crucially, the
 system-level dependencies. Yet differences in any of these can lead to divergent
 results from the same code.
 
+The stakes are well documented. Large-scale replication studies have
+consistently found that a substantial fraction of published results cannot be
+reproduced [@openscience2015, @baker2016, @pineau2021, @brodeur2026], and
+reproducibility has become a first-class concern for computational science
+[@stodden2016].
+
 Tools like `{renv}` address part of the puzzle: they capture R package versions
 in a lockfile. But `{renv}` does not manage the R version itself (you need `rig`
 for that), and neither handles system libraries. If `{sf}` requires GDAL 3.0 but
@@ -80,6 +86,20 @@ order, running the right scripts, and not making any ad hoc changes along the
 way. If your analysis is a system of explicit rules—a formal description of what
 produces what—then it can be re-executed by anyone (including AI agents), on any
 machine, at any point in the future, with a single command.
+
+This framing is not unique to data science. Institutional economics argues that
+the rules of the game—formal and informal—shape collective outcomes more than
+individual talent [@north1990]. Behavioural economics shows that the design of
+the choice environment steers behaviour as much as persuasion does
+[@thalersunstein2008]. Legal scholars have noted that code itself regulates,
+because constraints written in software are harder to ignore than rules written
+in prose [@lessig2006]. And design research has catalogued how the affordances
+of everyday tools silently determine what their users can and cannot do
+[@norman2013].
+
+A pipeline is the same idea applied to an analysis: the institutional design of
+the computation, a choice architecture that makes the reproducible path the path
+of least resistance.
 
 This is the insight that motivates the pipeline-first approach in this book.
 Before we even talk about packages and environments, we are asking: *what is the

@@ -88,7 +88,7 @@ repository. This ensures that every package Nix installs will always be at the
 exact same version, regardless of when or where the project is built. The
 environment is defined in a simple plain-text file, and anyone using that file
 will get a byte-for-byte identical environment, even on a different operating
-system.
+system [@dolstra2006].
 
 ## Important Concepts
 
@@ -173,12 +173,12 @@ refers to as a *component closure*:
 > is, we must always deploy a set of components that is closed under the
 > 'depends on' relation.
 
-(*Nix: A Safe and Policy-Free System for Software Deployment*, Dolstra et al., 2004).
+[@dolstra2004]
 
 <figure>
 <img src="https://raw.githubusercontent.com/b-rodrigues/rixpress/refs/heads/main/vignettes/figure_4.png" alt="Figure 4 of Dolstra et al. (2004)" />
 <figcaption aria-hidden="true">
-Figure 4 of Dolstra et al. (2004)
+Figure 4 of [@dolstra2004]
 </figcaption>
 </figure>
 

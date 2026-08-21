@@ -338,8 +338,8 @@ This has an important consequence. When your analysis logic lives in a plain
 script. It can be:
 
 - **Sourced directly** in an interactive R or Python session
-- **Picked up by another orchestrator** (a Makefile, a `targets` plan, a
-  Snakemake rule, a CI pipeline)
+- **Picked up by another orchestrator** (a Makefile, a `targets` [@landau2021]
+  plan, a Snakemake [@koster2012] rule, a CI pipeline)
 - **Run standalone** by a colleague who has never heard of T
 - **Tested** with standard language tools independently of any pipeline
 

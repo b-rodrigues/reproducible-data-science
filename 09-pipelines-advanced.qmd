@@ -4,7 +4,8 @@ By this point you can declare a T pipeline, build it, inspect its outputs, and
 wire it into a CI job. That covers the majority of day-to-day work. This chapter
 goes further: it treats pipelines themselves as data.
 
-In most pipeline tools—`targets`, Snakemake, Airflow—the pipeline *definition*
+In most pipeline tools—`targets` [@landau2021], Snakemake [@koster2012],
+Airflow—the pipeline *definition*
 is code that runs once, produces a build graph, and is then discarded. The graph
 is an internal implementation detail you cannot touch. T takes a different view.
 A pipeline value is a first-class object you can query, filter, transform, and
