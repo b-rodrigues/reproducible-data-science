@@ -33,8 +33,9 @@ book:
     - 11-docker.qmd
     - 12-packaging.qmd
     - 13-ci.qmd
-    - 14-t-in-depth.qmd
-    - 15-conclusion.qmd
+    - 14-data-manipulation.qmd
+    - 15-t-in-depth.qmd
+    - 16-conclusion.qmd
     - references.qmd
 
   page-navigation: true

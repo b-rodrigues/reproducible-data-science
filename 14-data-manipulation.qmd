@@ -1,0 +1,374 @@
+# T for Data Manipulation
+
+So far, when a pipeline node needed to wrangle data, you have reached for R and
+`{dplyr}`. That is a perfectly good habit: `{dplyr}` is mature, and Chapter 5
+showed you exactly how to call it from a node. But it is not the only option.
+
+Remember the promise we made in Chapter 5: T ships with its own data
+manipulation verbs, inspired by `{dplyr}` and `{tidyr}`. This chapter keeps it.
+Those verbs live in T's `colcraft` package. They take a DataFrame as their first
+argument and return a new DataFrame, which makes them composable with the pipe
+operator you already know.
+
+The point is not to replace R. It is to give you a reason to stay in T for the
+quick stuff: a filter here, a column there, a summary you need before you hand
+the data to a model. When the work gets heavy, you still have R and Python. But
+for the small transformations that glue a pipeline together, T is often enough,
+and staying in one language means one fewer serializer in the loop.
+
+Every example in this chapter is written in T and marked so that it does not
+execute during the build. You can paste them into a REPL or a node and run them
+for real.
+
+## The core verbs
+
+The `colcraft` verbs follow the shape you already know from `{dplyr}`: a verb
+takes a DataFrame, does one thing, and hands back a DataFrame. You chain them
+with the pipe.
+
+### select() — choose columns
+
+`select()` keeps only the columns you name, using the `$column` syntax:
+
+```t
+#| eval: false
+df |> select($name, $age)
+df |> select($name)
+```
+
+If you name a column that does not exist, you get a `KeyError` that names the
+missing column, so a typo fails fast rather than silently dropping data.
+
+### filter() — choose rows
+
+`filter()` keeps the rows where a predicate is true. You write the predicate
+against the `$column` syntax, and T turns it into a row-wise function for you:
+
+```t
+#| eval: false
+df |> filter($age > 30)
+df |> filter($dept == "eng")
+```
+
+To combine conditions, use the logical operators `&&` (and) and `||` (or):
+
+```t
+#| eval: false
+df |> filter($dept == "eng" && $age > 25)
+df |> filter($dept == "sales" || $score > 90)
+```
+
+> **No silent magic.** The bitwise operators `&` and `|` are for scalar,
+> element-wise work. If you accidentally use them to combine filter conditions,
+> T raises a `TypeError` that points you at `&&` and `||`.
+
+### mutate() — add or transform columns
+
+`mutate()` adds a new column or replaces an existing one. The new column is
+named with `$` and defined by an expression over the existing columns:
+
+```t
+#| eval: false
+df |> mutate($age_plus_10 = $age + 10)
+df |> mutate($bonus = $salary * 0.1)
+```
+
+### arrange() — sort rows
+
+`arrange()` sorts by one or more columns, in ascending order by default or
+`"desc"` for descending:
+
+```t
+#| eval: false
+df |> arrange($age)
+df |> arrange($score, "desc")
+```
+
+### group_by() and summarize()
+
+`group_by()` marks the columns that define groups. It does not change the data;
+it tells the next verb how to split the work. `summarize()` then collapses each
+group into a single row:
+
+```t
+#| eval: false
+df |> group_by($dept)
+   |> summarize($count = nrow($dept), $avg_score = mean($score))
+```
+
+The result has one row per group, with the grouping column and the aggregates
+you asked for.
+
+### Composing verbs
+
+The power is in the chaining. A filter, a select, a sort, and a count become a
+single readable expression:
+
+```t
+#| eval: false
+df |> filter($age > 25)
+   |> select($name, $score)
+   |> arrange($score, "desc")
+   |> nrow
+```
+
+Read it top to bottom and it describes the analysis in plain language. That is
+the same readability you get from `{dplyr}`, with no runtime switch.
+
+## Reshaping and missing values
+
+Real data is rarely tidy. `colcraft` includes the reshaping verbs you know from
+`{tidyr}`, plus a small set of tools for missing values.
+
+### pivot_longer() and pivot_wider()
+
+`pivot_longer()` turns wide data (several columns holding measurements) into
+long data (a name column and a value column). `pivot_wider()` does the reverse:
+
+```t
+#| eval: false
+-- wide to long
+df |> pivot_longer($age, $score, names_to = "measure", values_to = "val")
+
+-- long to wide
+df |> select($name, $dept, $salary)
+   |> pivot_wider(names_from = $dept, values_from = $salary)
+```
+
+### separate() and unite()
+
+`separate()` splits one column into several on a delimiter; `unite()` joins
+several columns back into one:
+
+```t
+#| eval: false
+df |> separate($date, into = ["year", "month", "day"], sep = "-")
+df |> unite("full_date", $year, $month, $day, sep = "-")
+```
+
+### nest() and unnest()
+
+`nest()` packs selected columns into a single column of nested DataFrames,
+grouping by the columns you leave out. `unnest()` expands them back out. This
+is how you build, and later dissolve, the hierarchical structures that lenses
+(covered at the end of this chapter) are designed to reach:
+
+```t
+#| eval: false
+nested = df |> group_by($cyl) |> nest()
+flat = nested |> unnest($data)
+```
+
+### Missing values
+
+Three verbs handle the gaps. `drop_na()` removes rows with missing values in the
+named columns, `replace_na()` fills them with a constant, and `fill()`
+propagates the last non-missing value forward:
+
+```t
+#| eval: false
+df |> drop_na($score)
+df |> replace_na([score: 0])
+df |> fill($category, .direction = "down")
+```
+
+## Working with strings
+
+Text columns are everywhere, and T names its string helpers with a `str_` prefix
+so they are easy to spot:
+
+```t
+#| eval: false
+str_nchar("hello")              -- 5
+str_substring("hello", 1, 4)    -- "ell"
+str_replace("banana", "a", "o") -- "bonono"
+str_trim("  hello  ")           -- "hello"
+str_join(["a", "b", "c"], "-")  -- "a-b-c"
+str_split("a,b,c", ",")         -- ["a", "b", "c"]
+```
+
+A few helpers intentionally keep their plain names, because they double as
+column-selection helpers in `colcraft`:
+
+```t
+#| eval: false
+contains("petal_width", "width")
+starts_with("petal_width", "petal")
+
+-- the same names select columns in a DataFrame
+df |> select(starts_with("petal"))
+```
+
+That overlap is deliberate: `contains`, `starts_with`, and `ends_with` work as
+string predicates and as selection helpers, so the data-manipulation API stays
+consistent.
+
+## Dates and times
+
+The `chrono` package brings date and time handling to T, modelled on R's
+`{lubridate}`. You can parse strings into dates with shorthand helpers:
+
+```t
+#| eval: false
+d = ymd("2024-01-15")
+dt = ymd_hms("2024-01-15 09:30:00")
+```
+
+Extract components, and do calendar-aware arithmetic with periods:
+
+```t
+#| eval: false
+year(d)
+month(d, label = true)   -- "Jan"
+
+-- adding a month to Jan 31 lands on the last day of February
+ymd("2024-01-31") + months(3)   -- 2024-04-30
+```
+
+The arithmetic is calendar-aware, not just "add a number of days", which is
+exactly what you want when a rule is "the same day next month". A typical
+workflow parses a date column, derives a month, and summarises by month:
+
+```t
+#| eval: false
+df |> mutate(date = ymd($order_date),
+             month = month($date, label = true))
+   |> filter(year($date) == 2024)
+   |> group_by($month)
+   |> summarize($total = sum($sales))
+```
+
+## Factors and categorical data
+
+A factor is categorical data with an explicit list of levels. The level order
+matters: `arrange()` sorts a factor by its levels, not alphabetically. That
+makes factors the right tool for ordered categories such as shirt sizes, survey
+responses, or reporting buckets.
+
+```t
+#| eval: false
+sizes = to_factor(["medium", "small", "large"],
+                  levels = ["small", "medium", "large"])
+levels(sizes)   -- ["small", "medium", "large"]
+```
+
+If you omit `levels`, T derives them from the data and sorts them
+alphabetically. Use `ordered()` when the ordering is meaningful and should be
+preserved.
+
+The `fct_*` helpers (a nod to R's `{forcats}`) let you reorder, relabel, and
+collapse levels after creation:
+
+```t
+#| eval: false
+df |> mutate($segment = fct_infreq($segment))
+df |> mutate($segment = fct_relevel($segment, "enterprise"))
+df |> mutate($segment = fct_lump_n($segment, n = 3))
+```
+
+## Arrays
+
+For heavy numerical work, T has first-class NDArrays. Unlike lists, an NDArray
+has a fixed shape and optimised storage, and it supports element-wise arithmetic
+with broadcasting:
+
+```t
+#| eval: false
+v = ndarray([1, 2, 3, 4, 5])
+m = ndarray([[1, 2, 3], [4, 5, 6]])
+
+shape(m)     -- [2, 3]
+m + 10       -- broadcasts the scalar across the array
+```
+
+A small set of linear-algebra functions is available for matrix work:
+
+```t
+#| eval: false
+a = ndarray([[1, 2], [3, 4]])
+matmul(a, a)
+inv(a)
+diag(a)
+```
+
+Keep one constraint in mind: NDArrays cannot hold `NA` values, so handle missing
+data before you convert.
+
+## Formulas and models
+
+T borrows R's formula syntax for specifying models. The `~` operator builds a
+formula you can pass to a modelling function:
+
+```t
+#| eval: false
+model = lm(data = df, formula = salary ~ age)
+model.r_squared
+model.coefficients.age
+```
+
+Multiple predictors and interactions follow the familiar rules:
+
+```t
+#| eval: false
+model = lm(data = df, formula = y ~ x1 + x2 + x3)
+model = lm(data = df, formula = y ~ x1 * x2)
+```
+
+`lm()` returns a dictionary with the coefficients, standard errors, R², and a
+tidy DataFrame of the results. It is not a replacement for a full statistical
+toolkit, but it covers the quick "does this variable matter" check without
+leaving T.
+
+## Lenses: reaching the nested
+
+The verbs above are built for flat DataFrames. Once your data becomes nested —
+after a `nest()`, or from a hierarchical API — the standard verbs turn into a
+pyramid of nested lambdas. Lenses solve that.
+
+A lens names a *path* into a structure. You build it once with `compose()`,
+then use it to read or transform the value at that path in a single step:
+
+```t
+#| eval: false
+-- path: clients -> projects -> milestones -> pct_int
+pct_l = compose(col_lens("projects"),
+                col_lens("milestones"),
+                col_lens("pct_int"))
+
+-- apply a 10-point uplift to every milestone, everywhere
+updated = clients |> over(pct_l, \(x) min(x .+ 10, 100))
+```
+
+The three core operations are `get()` (read), `set()` (replace), and `over()`
+(transform). `col_lens()` targets a column or key, `row_lens()` and `idx_lens()`
+target a row or index, and `filter_lens()` is a traversal that focuses on every
+element matching a condition:
+
+```t
+#| eval: false
+-- add 10 to every even score
+even_l = filter_lens(\(x) x % 2 == 0)
+scores |> over(even_l, \(x) x + 10)
+```
+
+One detail matters when you transform a whole column: `over()` hands your
+function a Vector, so use the broadcasting operators (`.+`, `.*`) for
+element-wise math rather than the scalar ones.
+
+For flat DataFrames, stick with the ordinary verbs — they are simpler and more
+idiomatic. Lenses earn their keep in nested and polymorphic data, where the
+alternative is a tower of `map` calls.
+
+## Where to go from here
+
+You now have a full data-manipulation toolkit that lives in T itself: the
+`colcraft` verbs for selecting, filtering, mutating, and summarising; reshaping
+and missing-value tools; string, date, and factor helpers; arrays for numerical
+work; formulas for quick models; and lenses for the nested structures the flat
+verbs cannot reach.
+
+None of this is a reason to abandon R. It is a reason to keep the small,
+glue-y transformations in the language that already orchestrates your pipeline,
+and reach for R or Python when the analysis genuinely calls for it. The next
+chapter goes deeper on T itself: the REPL, metaprogramming, serializers,
+plotting, and packaging.

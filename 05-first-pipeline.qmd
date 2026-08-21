@@ -53,7 +53,7 @@ build_pipeline(p)
 
 This pipeline doesn’t use any R, Python or Julia code yet, but is written in pure T.
 T comes with many builtin functions, and even data manipulation verbs inspired
-by `{dplyr}`! But let’s discuss these later.
+by `{dplyr}`! We return to them in Chapter 14.
 
 Now let’s run the pipeline. There are two ways of doing it. From the terminal
 (inside of the environment):
