@@ -128,4 +128,4 @@ You can read this book for free online at
 [https://b-rodrigues.github.io/reproducible-data-science/](https://b-rodrigues.github.io/reproducible-data-science/).
 
 You can submit issues, suggest improvements, and ask questions on the book’s
-[Github repository](https://github.com/b-rodrigues/reproducible-data-science).
+[Github repository](https://github.com/b-rodrigues/reproducible-data-science)^[https://github.com/b-rodrigues/reproducible-data-science].

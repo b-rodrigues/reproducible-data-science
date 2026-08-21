@@ -317,7 +317,7 @@ project root:
 With these files, any AI agent you pair-program with has immediate access to the
 exact technical context it needs to write correct T pipelines. You can also
 supply additional context by pointing your LLM at the [T documentation
-website](https://tstats-project.org).
+website](https://tstats-project.org)^[https://tstats-project.org].
 :::
 
 ## The T Project

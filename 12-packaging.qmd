@@ -632,13 +632,13 @@ resources to guide you:
 *   For R: the "R Packages" (2e) book by Hadley Wickham and Jennifer Bryan is
     the essential, comprehensive guide. It covers everything from initial setup
     with `{usethis}` to testing, documentation, and submission to CRAN. [Read it
-    online here.](https://r-pkgs.org/)
+    online here.](https://r-pkgs.org/)^[https://r-pkgs.org/]
 *   For Python: the official [Python Packaging User
-    Guide](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
+    Guide](https://packaging.python.org/en/latest/tutorials/packaging-projects/)^[https://packaging.python.org/en/latest/tutorials/packaging-projects/]
     is the place to start. For a more modern and streamlined approach that
     handles dependency management and publishing, many developers use tools like
-    [Poetry](https://python-poetry.org/docs/) or
-    [Hatch](https://hatch.pypa.io/latest/).
+    [Poetry](https://python-poetry.org/docs/)^[https://python-poetry.org/docs/] or
+    [Hatch](https://hatch.pypa.io/latest/)^[https://hatch.pypa.io/latest/].
 
 Treating your data analysis project like a small, internal software
 package, complete with functions and tests, is a powerful mindset that will

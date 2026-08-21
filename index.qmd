@@ -10,7 +10,7 @@ library(reticulate)
 *This is still WIP! Expected first finalized release at the end of Q4 2026. This
 book is a complete reimagining of my previous work, "Building Reproducible
 Analytical Pipelines with R." If you're looking for that book, you can find it
-[here](https://www.raps-with-r.dev). But if you're ready for the next step,
+[here](https://www.raps-with-r.dev)^[https://www.raps-with-r.dev]. But if you're ready for the next step,
 you're in the right place.*
 
 ::: {.content-hidden when-format="pdf"}
@@ -105,7 +105,7 @@ and reproducibility of your code.
 
 If you find this book useful, don’t hesitate to let me know! You can submit
 issues, suggest improvements, and ask questions on the book’s [Github
-repository](https://github.com/b-rodrigues/reproducible-data-science).
+repository](https://github.com/b-rodrigues/reproducible-data-science)^[https://github.com/b-rodrigues/reproducible-data-science].
 
 ::: {.content-hidden when-format="pdf"}
 A physical copy of the book is coming soon on Amazon.
@@ -116,7 +116,7 @@ If you want to get to know me better, read my
 
 ::: {.content-hidden when-format="pdf"}
 You'll also be able to buy a physical copy of the book on Amazon once it's done. In the
-meantime, you could buy the [R edition](https://www.amazon.com/dp/B0C87H6MGF/).
+meantime, you could buy the [R edition](https://www.amazon.com/dp/B0C87H6MGF/)^[https://www.amazon.com/dp/B0C87H6MGF/].
 
 If you find this book useful, don’t hesitate to let me know or leave a rating on
 Amazon!

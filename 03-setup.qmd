@@ -17,11 +17,11 @@ wsl --install
 ```
 
 You can find further installation notes at [this official MS
-documentation](https://learn.microsoft.com/en-us/windows/wsl/install).
+documentation](https://learn.microsoft.com/en-us/windows/wsl/install)^[https://learn.microsoft.com/en-us/windows/wsl/install].
 
 I recommend activating `systemd` in Ubuntu WSL2, mainly because this supports
 users other than `root` running Nix. To set this up, please follow [this
-official Ubuntu blog entry](https://ubuntu.com/blog/ubuntu-wsl-enable-systemd):
+official Ubuntu blog entry](https://ubuntu.com/blog/ubuntu-wsl-enable-systemd)^[https://ubuntu.com/blog/ubuntu-wsl-enable-systemd]:
 
 ```sh
 # in WSL2 Ubuntu shell
@@ -48,13 +48,13 @@ wsl --shutdown
 and then relaunch WSL (Ubuntu) from the start menu. For those of you running
 Windows, we will be working exclusively from WSL2 now. If that is not an option,
 then I highly recommend you set up a virtual machine with Ubuntu using
-[VirtualBox](https://www.virtualbox.org/wiki/Downloads) for example, or
+[VirtualBox](https://www.virtualbox.org/wiki/Downloads)^[https://www.virtualbox.org/wiki/Downloads] for example, or
 dual-boot Ubuntu.
 
 ### The Determinate Systems installer
 
 Installing (and uninstalling) Nix is quite simple, thanks to the installer from
-[Determinate Systems](https://github.com/DeterminateSystems/nix-installer), a
+[Determinate Systems](https://github.com/DeterminateSystems/nix-installer)^[https://github.com/DeterminateSystems/nix-installer], a
 company that provides services and tools built on Nix, and works the same way on
 Linux (native or WSL2) and macOS.
 
@@ -93,7 +93,7 @@ If you installed Nix through other means, follow along below.
 ## Already Have Nix?
 
 If you installed Nix through a method other than the Determinate Systems
-installer (e.g., the [official Nix installer](https://nixos.org/download/),
+installer (e.g., the [official Nix installer](https://nixos.org/download/)^[https://nixos.org/download/],
 Homebrew, your Linux distribution's package manager, or you're on NixOS), you
 need to manually configure two more things.
 
@@ -225,13 +225,13 @@ below are going to focus on Positron, which is a fork of VS Code geared towards
 data science. It works well with both Python and R and makes it quite easy to
 choose the right R or Python interpreter (which you'll have to do to make sure
 you're using the one provided by Nix, [see
-here](https://positron.posit.co/managing-interpreters.html)).
+here](https://positron.posit.co/managing-interpreters.html)^[https://positron.posit.co/managing-interpreters.html]).
 
 If you want to use VS Code proper, you can follow all the instructions here, but
 you need to install the
-[REditorSupport](https://marketplace.visualstudio.com/items?itemName=REditorSupport.r)
+[REditorSupport](https://marketplace.visualstudio.com/items?itemName=REditorSupport.r)^[https://marketplace.visualstudio.com/items?itemName=REditorSupport.r]
 and the
-[Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
+[Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)^[https://marketplace.visualstudio.com/items?itemName=ms-python.python]
 extension. You will also need to add the `{languageserver}` R package to your Nix shells.
 
 On Windows, you need to install Positron on Windows, not inside WSL.
@@ -244,10 +244,10 @@ chapter, as it's irrelevant to you. Later, we'll see how to use Nix to install
 RStudio.
 
 Other editors work well with Nix too. Emacs users can use the
-[envrc](https://github.com/purcell/envrc) or
-[emacs-direnv](https://github.com/wbolster/emacs-direnv) packages to
+[envrc](https://github.com/purcell/envrc)^[https://github.com/purcell/envrc] or
+[emacs-direnv](https://github.com/wbolster/emacs-direnv)^[https://github.com/wbolster/emacs-direnv] packages to
 automatically load Nix environments. Neovim users can use
-[direnv.nvim](https://github.com/direnv/direnv.vim). The key is that any editor
+[direnv.nvim](https://github.com/direnv/direnv.vim)^[https://github.com/direnv/direnv.vim]. The key is that any editor
 with `direnv` support will work with the setup described below.
 
 ### direnv
@@ -277,10 +277,10 @@ It is not mandatory to use `nix-direnv` if you already have `direnv`, but it'll
 make loading environments much faster and seamless.
 
 Finally, if you haven't used `direnv` before, don't forget [this last
-step](https://direnv.net/docs/hook.html) to make your terminal detect and load
+step](https://direnv.net/docs/hook.html)^[https://direnv.net/docs/hook.html] to make your terminal detect and load
 `direnv` automatically.
 
-Then, in Positron, install the [direnv](https://github.com/direnv/direnv-vscode)
+Then, in Positron, install the [direnv](https://github.com/direnv/direnv-vscode)^[https://github.com/direnv/direnv-vscode]
 extension. Finally, add a file called `.envrc` and simply write the following
 line in it (this `.envrc` file should be in the same folder as your
 project's `flake.nix`):

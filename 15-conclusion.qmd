@@ -219,7 +219,7 @@ This book itself was written with Quarto. Every code example runs. Every output
 is generated fresh on each build. This is literate programming in action.
 
 If you are interested in this approach, there are excellent resources available.
-The Quarto documentation at [quarto.org](https://quarto.org) is a great starting
+The Quarto documentation at [quarto.org](https://quarto.org)^[https://quarto.org] is a great starting
 point. For R Markdown, "R Markdown: The Definitive Guide" by Xie, Allaire, and
 Grolemund is comprehensive. The principles you have learned in this book apply
 directly: pin your environment with Nix, run your document rendering in CI, and

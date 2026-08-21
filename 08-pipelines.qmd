@@ -23,7 +23,7 @@ it was.
 ## A Realistic Worked Example {#sec-worked-example}
 
 Most toy examples in data science tooling documentation use `mtcars`. We will
-use the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/)
+use the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/)^[https://allisonhorst.github.io/palmerpenguins/]
 dataset instead — still small enough to reason about quickly, but with a real
 modelling task: predict penguin species from morphological measurements.
 
@@ -119,7 +119,7 @@ out of the Nix store. Both work symmetrically across T, R, Python, and Julia.
 **`model`** is an R node. The `deserializer = ^parquet` loads `clean` as an R
 `data.frame`. The R code fits a multinomial logistic regression with `nnet` and
 returns the fitted model object. The `serializer = ^pmml` exports the model to
-[PMML](https://dmg.org/pmml/v4-4-1/GeneralStructure.html), a portable XML
+[PMML](https://dmg.org/pmml/v4-4-1/GeneralStructure.html)^[https://dmg.org/pmml/v4-4-1/GeneralStructure.html], a portable XML
 format that T can load natively for scoring — no R session required downstream.
 
 **`report`** is a Quarto node. The `script` argument points to a `.qmd` file

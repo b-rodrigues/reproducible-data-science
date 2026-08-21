@@ -98,7 +98,7 @@ some Nix-centric concepts, starting with the *derivation*.
 In `Nix` terminology, a derivation is *a specification for running an executable
 on precisely defined input files to repeatably produce output files at uniquely
 determined file system paths.*
-([source](https://nix.dev/manual/nix/2.25/language/derivations))
+([source](https://nix.dev/manual/nix/2.25/language/derivations)^[https://nix.dev/manual/nix/2.25/language/derivations])
 
 In simpler terms, a derivation is a recipe with precisely defined inputs, steps,
 and a fixed output. This means that given identical inputs and build steps, the
