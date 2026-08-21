@@ -6,14 +6,8 @@ learned the core loop: declare nodes, build, inspect, test, and ship. But T is
 a larger language than that loop requires, and this chapter is where we go
 deeper.
 
-The material here is not required for every project. It is the toolkit you
-reach for when a problem outgrows the basics: when you need to script the REPL,
-generate code programmatically, move data between runtimes in a specific
-format, turn a plot into something you can assert on, offload a build to a
-remote machine, package a reusable library in T itself, or harden a function
-against every input it might ever see.
-
-We cover seven topics, in the order you are likely to need them. Each section
+The material here now focuses on more of T’s features.  We cover seven topics, 
+in the order you are likely to need them. Each section
 is self-contained, but it builds on the foundations from the earlier chapters,
 and we point back to them rather than repeating what they already teach.
 
@@ -25,7 +19,7 @@ conveniences that make interactive work faster: the magic commands.
 
 Magic commands are REPL-only shortcuts prefixed with `%`. They give you quick
 access to common operations without parentheses or string quotes. They are not
-part of the language proper — they only work at the REPL prompt — so they will
+part of the language proper (they only work at the REPL prompt) so they will
 never appear in a `pipeline.t` file.
 
 ### Navigating your environment
@@ -64,7 +58,7 @@ df = read_csv("data.csv")
 --  df    DataFrame  150 rows x 5 cols
 ```
 
-`%history` shows the last fifty entries from the REPL command history, stored in
+`%history` shows the entries from the REPL command history, stored in
 `~/.t_history`, which is handy for re-running or copying something you did a few
 minutes ago. `%reset` removes all user-defined variables and returns you to a
 clean base environment.
@@ -82,8 +76,8 @@ enough to keep:
 Execution time: 0.1540 seconds
 ```
 
-The most underrated command is `%save`. It writes a transcript of the session —
-every command and its result — to a file, so you can turn an exploratory session
+`%save` writes a transcript of the session, i.e. 
+every command and its result to a file, so you can turn an exploratory session
 into a starting point for a script. In compact mode it records a one-line
 summary of each result; in verbose mode it records the full pretty-printed
 output:
@@ -275,9 +269,9 @@ Built-in serializers are **symbols** with the `^` prefix. A custom serializer
 you have defined is a **variable**, and you pass its name with no `^`.
 
 ```t
-node(command = read_csv("large.csv"), serializer = ^ipc)      -- built-in
+node(command = read_csv("large.csv"), serializer = ^ipc) -- built-in
 import "src/my_ser.t" [my_ser]
-node(command = ..., serializer = my_ser)                        -- custom
+node(command = ..., serializer = my_ser)                 -- custom
 ```
 
 And here is the trap: in a node constructor (`node`, `rn`, `pyn`, `jln`,
@@ -355,37 +349,91 @@ R or Python functions, it can add the corresponding `[r-dependencies]` or
 ## Plotting in Pipelines
 
 Chapter 8 showed you how to structure a pipeline as data. This section covers
-something that trips people up: what happens when a node's output is not a
-DataFrame but a plot.
+what happens when a node's output is not a DataFrame but a plot.
 
 ### Returning a plot from a node
 
-Any node can return a plot object — a `Plot` from CairoMakie, a ggplot2 object,
+Any node can return a plot object; a `Plot` from CairoMakie, a ggplot2 object,
 a matplotlib figure, and so on. When it does, T serializes the plot and,
 crucially, records **visualization metadata** alongside the artifact. That
 metadata is what lets downstream tools know the output is something to be
 *shown*, not just *read*.
 
+Let’s study this pipeline:
+
 ```t
-plot_node = node(
-  command = \(df) {
-    df |> plot($x, $y)
-  }
-)
+p = pipeline {
+  iris_data = rn(
+    command = <{
+      # Load iris dataset
+      iris <- datasets::iris
+      
+      # Return the data
+      iris
+    }>,
+    serializer = ^csv
+  )
+  iris_ggplot = rn(
+    command = <{
+      # Load ggplot2
+      library(ggplot2)
+      
+      ggplot(iris_data, aes(x = Petal.Length, y = Sepal.Length)) +
+        geom_point() +
+        facet_wrap(~ Species) +
+        labs(title = "Sepal.Length ~ Petal.Length | Species")
+
+    }>,
+    deserializer = ^csv
+  )
+}
 ```
 
 ### Reading a plot back
 
-`read_node()` on a plotting node returns not the raw artifact but a small
-metadata record describing it — the path to the serialized plot, its type, and
-the runtime that produced it. The `show_plot()` function takes that record and
-renders the plot in the current environment.
+Once built, it is possible to *read* the plot using `read_node()`, which on a 
+plotting node returns not the raw artifact but a small
+metadata record describing it: the path to the serialized plot, its type, and
+the runtime that produced it.
 
 ```t
 #| eval: false
-meta = read_node("plot_node")
-show_plot(meta)
+read_node(p.iris_ggplot)
 ```
+
+returns:
+
+```t
+#| eval: false
+ggplot
+├── backend: "R"
+├── title: "Sepal.Length ~ Petal.Length | Species"
+├── mapping
+│   ├── x: "Petal.Length"
+│   └── y: "Sepal.Length"
+├── labels
+│   └── title: "Sepal.Length ~ Petal.Length | Species"
+└── layers
+    └── geom_point: "Point"
+```
+
+and to actually see the plot in your browser, use `show_plot()`:
+
+```t
+#| eval: false
+T> show_plot(p.iris_plot)
+```
+
+This should open the plot in your browser, if not, the path is emitted and you can simply open 
+the generated PNG file using whichever tool your prefer:
+
+```t
+#| eval: false
+_pipeline/show_plot_render_20260821_132239_6808.png
+```
+
+This plot is generated in the actual R environment defined in your pipeline, but should something look off,
+try `debug_node(p.iris_plot)` and built it from the actual R session!
 
 ### Plots in literate documents
 
