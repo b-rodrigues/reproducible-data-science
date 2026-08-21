@@ -479,28 +479,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#shell-nodes-shn" id="toc-shell-nodes-shn" class="nav-link" data-scroll-target="#shell-nodes-shn"><span class="header-section-number">8.3.1</span> Shell Nodes: <code>shn()</code></a></li>
   <li><a href="#julia-nodes-jln" id="toc-julia-nodes-jln" class="nav-link" data-scroll-target="#julia-nodes-jln"><span class="header-section-number">8.3.2</span> Julia Nodes: <code>jln()</code></a></li>
   <li><a href="#quarto-nodes-qn" id="toc-quarto-nodes-qn" class="nav-link" data-scroll-target="#quarto-nodes-qn"><span class="header-section-number">8.3.3</span> Quarto Nodes: <code>qn()</code></a></li>
-  <li><a href="#step-1-prefetch-the-hash" id="toc-step-1-prefetch-the-hash" class="nav-link" data-scroll-target="#step-1-prefetch-the-hash"><span class="header-section-number">8.3.4</span> Step 1: Prefetch the hash</a></li>
-  <li><a href="#step-2-use-fetchurl-in-the-pipeline" id="toc-step-2-use-fetchurl-in-the-pipeline" class="nav-link" data-scroll-target="#step-2-use-fetchurl-in-the-pipeline"><span class="header-section-number">8.3.5</span> Step 2: Use <code>fetchurl</code> in the pipeline</a></li>
   </ul></li>
-  <li><a href="#sec-code-sharing" id="toc-sec-code-sharing" class="nav-link" data-scroll-target="#sec-code-sharing"><span class="header-section-number">8.4</span> Sharing Code Across Nodes</a>
+  <li><a href="#sec-remote-data" id="toc-sec-remote-data" class="nav-link" data-scroll-target="#sec-remote-data"><span class="header-section-number">8.4</span> Fetching Remote Data</a>
   <ul class="collapse">
-  <li><a href="#the-functions-parameter" id="toc-the-functions-parameter" class="nav-link" data-scroll-target="#the-functions-parameter"><span class="header-section-number">8.4.1</span> The <code>functions</code> Parameter</a></li>
-  <li><a href="#the-include-parameter" id="toc-the-include-parameter" class="nav-link" data-scroll-target="#the-include-parameter"><span class="header-section-number">8.4.2</span> The <code>include</code> Parameter</a></li>
-  <li><a href="#global-pipeline-options" id="toc-global-pipeline-options" class="nav-link" data-scroll-target="#global-pipeline-options"><span class="header-section-number">8.4.3</span> Global Pipeline Options</a></li>
+  <li><a href="#step-1-prefetch-the-hash" id="toc-step-1-prefetch-the-hash" class="nav-link" data-scroll-target="#step-1-prefetch-the-hash"><span class="header-section-number">8.4.1</span> Step 1: Prefetch the hash</a></li>
+  <li><a href="#step-2-use-fetchurl-in-the-pipeline" id="toc-step-2-use-fetchurl-in-the-pipeline" class="nav-link" data-scroll-target="#step-2-use-fetchurl-in-the-pipeline"><span class="header-section-number">8.4.2</span> Step 2: Use <code>fetchurl</code> in the pipeline</a></li>
   </ul></li>
-  <li><a href="#sec-env-vars" id="toc-sec-env-vars" class="nav-link" data-scroll-target="#sec-env-vars"><span class="header-section-number">8.5</span> Environment Variables in Nodes</a></li>
-  <li><a href="#sec-logs-artifacts" id="toc-sec-logs-artifacts" class="nav-link" data-scroll-target="#sec-logs-artifacts"><span class="header-section-number">8.6</span> Build Logs and Artifacts</a>
+  <li><a href="#sec-code-sharing" id="toc-sec-code-sharing" class="nav-link" data-scroll-target="#sec-code-sharing"><span class="header-section-number">8.5</span> Sharing Code Across Nodes</a>
   <ul class="collapse">
-  <li><a href="#reading-the-build-log" id="toc-reading-the-build-log" class="nav-link" data-scroll-target="#reading-the-build-log"><span class="header-section-number">8.6.1</span> Reading the Build Log</a></li>
-  <li><a href="#copying-artifacts-out-of-the-store" id="toc-copying-artifacts-out-of-the-store" class="nav-link" data-scroll-target="#copying-artifacts-out-of-the-store"><span class="header-section-number">8.6.2</span> Copying Artifacts Out of the Store</a></li>
-  <li><a href="#garbage-collection" id="toc-garbage-collection" class="nav-link" data-scroll-target="#garbage-collection"><span class="header-section-number">8.6.3</span> Garbage Collection</a></li>
+  <li><a href="#the-functions-parameter" id="toc-the-functions-parameter" class="nav-link" data-scroll-target="#the-functions-parameter"><span class="header-section-number">8.5.1</span> The <code>functions</code> Parameter</a></li>
+  <li><a href="#the-include-parameter" id="toc-the-include-parameter" class="nav-link" data-scroll-target="#the-include-parameter"><span class="header-section-number">8.5.2</span> The <code>include</code> Parameter</a></li>
+  <li><a href="#global-pipeline-options" id="toc-global-pipeline-options" class="nav-link" data-scroll-target="#global-pipeline-options"><span class="header-section-number">8.5.3</span> Global Pipeline Options</a></li>
   </ul></li>
-  <li><a href="#sec-caching" id="toc-sec-caching" class="nav-link" data-scroll-target="#sec-caching"><span class="header-section-number">8.7</span> Incremental Builds and Caching</a>
+  <li><a href="#sec-env-vars" id="toc-sec-env-vars" class="nav-link" data-scroll-target="#sec-env-vars"><span class="header-section-number">8.6</span> Environment Variables in Nodes</a></li>
+  <li><a href="#sec-logs-artifacts" id="toc-sec-logs-artifacts" class="nav-link" data-scroll-target="#sec-logs-artifacts"><span class="header-section-number">8.7</span> Build Logs and Artifacts</a>
   <ul class="collapse">
-  <li><a href="#previewing-cache-hits" id="toc-previewing-cache-hits" class="nav-link" data-scroll-target="#previewing-cache-hits"><span class="header-section-number">8.7.1</span> Previewing Cache Hits</a></li>
+  <li><a href="#reading-the-build-log" id="toc-reading-the-build-log" class="nav-link" data-scroll-target="#reading-the-build-log"><span class="header-section-number">8.7.1</span> Reading the Build Log</a></li>
+  <li><a href="#copying-artifacts-out-of-the-store" id="toc-copying-artifacts-out-of-the-store" class="nav-link" data-scroll-target="#copying-artifacts-out-of-the-store"><span class="header-section-number">8.7.2</span> Copying Artifacts Out of the Store</a></li>
+  <li><a href="#garbage-collection" id="toc-garbage-collection" class="nav-link" data-scroll-target="#garbage-collection"><span class="header-section-number">8.7.3</span> Garbage Collection</a></li>
   </ul></li>
-  <li><a href="#sec-cicd" id="toc-sec-cicd" class="nav-link" data-scroll-target="#sec-cicd"><span class="header-section-number">8.8</span> CI/CD with <code>pipeline_to_ga()</code></a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">8.9</span> Summary</a></li>
+  <li><a href="#sec-caching" id="toc-sec-caching" class="nav-link" data-scroll-target="#sec-caching"><span class="header-section-number">8.8</span> Incremental Builds and Caching</a>
+  <ul class="collapse">
+  <li><a href="#previewing-cache-hits" id="toc-previewing-cache-hits" class="nav-link" data-scroll-target="#previewing-cache-hits"><span class="header-section-number">8.8.1</span> Previewing Cache Hits</a></li>
+  </ul></li>
+  <li><a href="#sec-cicd" id="toc-sec-cicd" class="nav-link" data-scroll-target="#sec-cicd"><span class="header-section-number">8.9</span> CI/CD with <code>pipeline_to_ga()</code></a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">8.10</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/08-pipelines.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -510,7 +513,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building T Pipelines</span></h1>
+<h1 class="title"><span id="sec-building-t-pipelines" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Building T Pipelines</span></span></h1>
 </div>
 
 
@@ -611,7 +614,7 @@ build_pipeline(p)</code></pre>
 </div>
 </div>
 <p><strong><code>model</code></strong> is an R node. The <code>deserializer = ^parquet</code> loads <code>clean</code> as an R <code>data.frame</code>. The R code fits a multinomial logistic regression with <code>nnet</code> and returns the fitted model object. The <code>serializer = ^pmml</code> exports the model to <a href="https://dmg.org/pmml/v4-4-1/GeneralStructure.html">PMML</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, a portable XML format that T can load natively for scoring — no R session required downstream.</p>
-<p><strong><code>report</code></strong> is a Quarto node. The <code>script</code> argument points to a <code>.qmd</code> file that T copies into the sandbox. Inside <code>src/report.qmd</code>, any call to <code>read_node("model")</code> or <code>read_node("clean")</code> is statically analysed by T at pipeline-analysis time and registered as a dependency of <code>report</code>. The rendered HTML is stored in the Nix store; we will copy it out in <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.6</span></a>.</p>
+<p><strong><code>report</code></strong> is a Quarto node. The <code>script</code> argument points to a <code>.qmd</code> file that T copies into the sandbox. Inside <code>src/report.qmd</code>, any call to <code>read_node("model")</code> or <code>read_node("clean")</code> is statically analysed by T at pipeline-analysis time and registered as a dependency of <code>report</code>. The rendered HTML is stored in the Nix store; we will copy it out in <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.7</span></a>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -628,7 +631,7 @@ build_pipeline(p)</code></pre>
 <p>To build, simply run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>or, from inside the REPL:</p>
-<pre class="t"><code>t&gt; build_pipeline(p)</code></pre>
+<pre class="t"><code>build_pipeline(p)</code></pre>
 <p>T resolves the DAG, emits four Nix derivations, and builds them in dependency order. If you rebuild without changing anything, all four nodes are served from the Nix store cache — zero recomputation.</p>
 </section>
 <section id="sec-runtimes" class="level2" data-number="8.3">
@@ -657,7 +660,7 @@ build_pipeline(p)</code></pre>
   )
 
 }</code></pre>
-<p>Inside <code>compress.sh</code> you have access to any executables declared in <code>tproject.toml</code>’s <code>[shell-dependencies]</code> section. The sandbox has no network access, so all inputs must arrive as upstream node artifacts or via <code>include</code> (see <a href="#sec-code-sharing" class="quarto-xref"><span>Section 8.4</span></a>).</p>
+<p>Inside <code>compress.sh</code> you have access to any executables declared in <code>tproject.toml</code>’s <code>[shell-dependencies]</code> section. The sandbox has no network access, so all inputs must arrive as upstream node artifacts or via <code>include</code> (see <a href="#sec-code-sharing" class="quarto-xref"><span>Section 8.5</span></a>).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -717,7 +720,7 @@ build_pipeline(p)</code></pre>
 <ul>
 <li>The <code>.qmd</code> file path goes in the <code>script</code> argument, not <code>command</code>.</li>
 <li>The rendered output (HTML, PDF, or docx depending on the document’s YAML header) is stored in the Nix store like any other artifact.</li>
-<li>Use <code>pipeline_copy()</code> (see <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.6</span></a>) to retrieve the rendered file to a local directory — the Nix store path is opaque and not meant for direct use.</li>
+<li>Use <code>pipeline_copy()</code> (see <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.7</span></a>) to retrieve the rendered file to a local directory — the Nix store path is opaque and not meant for direct use.</li>
 <li><code>read_node("name")</code> calls inside the <code>.qmd</code> are statically scanned by T and register as dependencies automatically.</li>
 </ul>
 <p>A Quarto node that produces a PDF report:</p>
@@ -735,56 +738,49 @@ build_pipeline(p)</code></pre>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> pdf</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>::: {.cell}</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="in">```{.r .cell-code}</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"model"</span>)    <span class="co"># T registers 'model' as a dependency</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>clean <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"clean"</span>)    <span class="co"># and 'clean' too</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="in">~~~{r, eval = FALSE}</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"model"</span>)    <span class="co"># T registers 'model' as a dependency</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>clean <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"clean"</span>)    <span class="co"># and 'clean' too</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="in">~~~</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>:::</p>
-<pre><code>
-::: {.callout-note}
-## Quarto nodes and their environments
-
-Quarto nodes run in a Nix sandbox that contains the Quarto executable and
-whichever R or Python packages are listed in `tproject.toml`. If your report
-uses `knitr` (R code blocks), list the required R packages under
-`[r-dependencies]`. If it uses `jupyter` (Python code blocks), list Python
-packages under `[py-dependencies]`.
-:::
-
-## Fetching Remote Data {#sec-remote-data}
-
-Every T node executes in a Nix **sandbox** — a restricted build environment that
-has no network access. This is intentional: if network calls were permitted
-inside a build, the same pipeline could produce different results on different
-days depending on what a remote server returns. Reproducibility would be broken
-by design.
-
-The practical consequence is that you cannot do this inside a node:
-
-```python
-# This will fail — no network in the sandbox
-import requests
-df = pd.read_csv(requests.get("https://example.com/data.csv").content)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Quarto nodes and their environments
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Quarto nodes run in a Nix sandbox that contains the Quarto executable and whichever R or Python packages are listed in <code>tproject.toml</code>. If your report uses <code>knitr</code> (R code blocks), list the required R packages under <code>[r-dependencies]</code>. If it uses <code>jupyter</code> (Python code blocks), list Python packages under <code>[py-dependencies]</code>.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-remote-data" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="sec-remote-data"><span class="header-section-number">8.4</span> Fetching Remote Data</h2>
+<p>Every T node executes in a Nix <strong>sandbox</strong> — a restricted build environment that has no network access. This is intentional: if network calls were permitted inside a build, the same pipeline could produce different results on different days depending on what a remote server returns. Reproducibility would be broken by design.</p>
+<p>The practical consequence is that you cannot do this inside a node:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will fail — no network in the sandbox</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(requests.get(<span class="st">"https://example.com/data.csv"</span>).content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Nor this in R:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Also fails</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">url</span>(<span class="st">"https://example.com/data.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Instead, T provides a two-step <strong>prefetch and fetch</strong> pattern that lets Nix download the file <em>before</em> the sandbox is created, pin the download to a cryptographic hash, and inject the file as a read-only input.</p>
-</section>
-<section id="step-1-prefetch-the-hash" class="level3" data-number="8.3.4">
-<h3 data-number="8.3.4" class="anchored" data-anchor-id="step-1-prefetch-the-hash"><span class="header-section-number">8.3.4</span> Step 1: Prefetch the hash</h3>
+<section id="step-1-prefetch-the-hash" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="step-1-prefetch-the-hash"><span class="header-section-number">8.4.1</span> Step 1: Prefetch the hash</h3>
 <p>From your project REPL (which <em>does</em> have network access), call:</p>
-<pre class="t"><code>t&gt; hash = prefetch("https://zenodo.org/record/9999/penguins.csv")
-t&gt; hash
+<pre class="t"><code>hash = prefetch("https://zenodo.org/record/9999/penguins.csv")
+hash
 "sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="</code></pre>
 <p><code>prefetch</code> downloads the file, computes its SHA-256 hash in Nix’s standard base64 encoding, and returns the hash string. <strong>Copy this string.</strong> It is your permanent, tamper-evident reference to that exact file.</p>
 </section>
-<section id="step-2-use-fetchurl-in-the-pipeline" class="level3" data-number="8.3.5">
-<h3 data-number="8.3.5" class="anchored" data-anchor-id="step-2-use-fetchurl-in-the-pipeline"><span class="header-section-number">8.3.5</span> Step 2: Use <code>fetchurl</code> in the pipeline</h3>
+<section id="step-2-use-fetchurl-in-the-pipeline" class="level3" data-number="8.4.2">
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="step-2-use-fetchurl-in-the-pipeline"><span class="header-section-number">8.4.2</span> Step 2: Use <code>fetchurl</code> in the pipeline</h3>
 <p>Now declare a node that fetches the same URL, passing the hash you recorded:</p>
 <pre class="t"><code>p_fetchurl = pipeline {
 
@@ -824,16 +820,16 @@ t&gt; hash
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>fetchurl</code> supports HTTP headers for bearer tokens and API keys via the <code>headers</code> argument. The header values should come from environment variables (see <a href="#sec-env-vars" class="quarto-xref"><span>Section 8.5</span></a>) so they are never stored in the pipeline source.</p>
+<p><code>fetchurl</code> supports HTTP headers for bearer tokens and API keys via the <code>headers</code> argument. The header values should come from environment variables (see <a href="#sec-env-vars" class="quarto-xref"><span>Section 8.6</span></a>) so they are never stored in the pipeline source.</p>
 </div>
 </div>
 </section>
 </section>
-<section id="sec-code-sharing" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="sec-code-sharing"><span class="header-section-number">8.4</span> Sharing Code Across Nodes</h2>
+<section id="sec-code-sharing" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="sec-code-sharing"><span class="header-section-number">8.5</span> Sharing Code Across Nodes</h2>
 <p>As pipelines grow, you will find yourself writing the same utility functions in multiple nodes. T provides two complementary mechanisms for sharing code, and a global-options helper for reducing per-node repetition.</p>
-<section id="the-functions-parameter" class="level3" data-number="8.4.1">
-<h3 data-number="8.4.1" class="anchored" data-anchor-id="the-functions-parameter"><span class="header-section-number">8.4.1</span> The <code>functions</code> Parameter</h3>
+<section id="the-functions-parameter" class="level3" data-number="8.5.1">
+<h3 data-number="8.5.1" class="anchored" data-anchor-id="the-functions-parameter"><span class="header-section-number">8.5.1</span> The <code>functions</code> Parameter</h3>
 <p>The <code>functions</code> parameter accepts a path to a source file. T copies that file into the node’s sandbox and executes it before the node’s own <code>command</code>, so every function defined in the file is available to the node.</p>
 <p>The mechanics differ slightly by runtime:</p>
 <ul>
@@ -880,16 +876,16 @@ t&gt; hash
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The key benefit is that your node commands become one-liners that delegate to tested, version-controlled utility functions. When the function changes, every node that lists it under <code>functions</code> is automatically rebuilt by Nix.</p>
 </section>
-<section id="the-include-parameter" class="level3" data-number="8.4.2">
-<h3 data-number="8.4.2" class="anchored" data-anchor-id="the-include-parameter"><span class="header-section-number">8.4.2</span> The <code>include</code> Parameter</h3>
+<section id="the-include-parameter" class="level3" data-number="8.5.2">
+<h3 data-number="8.5.2" class="anchored" data-anchor-id="the-include-parameter"><span class="header-section-number">8.5.2</span> The <code>include</code> Parameter</h3>
 <p><code>functions</code> is designed for executable source files. If your node needs additional <em>non-executable</em> resources — a configuration YAML, a lookup table, a template file — use the <code>include</code> parameter instead. T copies the listed paths into the sandbox without attempting to source or execute them:</p>
 <pre class="t"><code>report = qn(
   script  = "src/report.qmd",
   include = ["src/custom.scss", "src/logo.png", "data/lookups.csv"]
 )</code></pre>
 </section>
-<section id="global-pipeline-options" class="level3" data-number="8.4.3">
-<h3 data-number="8.4.3" class="anchored" data-anchor-id="global-pipeline-options"><span class="header-section-number">8.4.3</span> Global Pipeline Options</h3>
+<section id="global-pipeline-options" class="level3" data-number="8.5.3">
+<h3 data-number="8.5.3" class="anchored" data-anchor-id="global-pipeline-options"><span class="header-section-number">8.5.3</span> Global Pipeline Options</h3>
 <p>Repeating <code>functions = "src/utils.R"</code> on every R node is tedious and error-prone. The <code>set_pipeline_global_options</code> function lets you declare defaults once for all nodes of a given runtime:</p>
 <pre class="t"><code>set_pipeline_global_options(
   r      = [functions = "src/r_utils.R"],
@@ -920,8 +916,8 @@ build_pipeline(p)</code></pre>
 <p>You can also set global <code>include</code> and <code>env_vars</code> here. Node-level settings take precedence over globals: if a node declares its own <code>functions</code>, it overrides the global default for that node (rather than appending to it), so you retain full per-node control.</p>
 </section>
 </section>
-<section id="sec-env-vars" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="sec-env-vars"><span class="header-section-number">8.5</span> Environment Variables in Nodes</h2>
+<section id="sec-env-vars" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="sec-env-vars"><span class="header-section-number">8.6</span> Environment Variables in Nodes</h2>
 <p>The <code>env_vars</code> argument passes named environment variables into a node’s sandbox. This is the correct way to inject secrets, feature flags, and run-mode switches without hardcoding them in the pipeline source.</p>
 <pre class="t"><code>p_env_vars = pipeline {
 
@@ -961,11 +957,11 @@ build_pipeline(p)</code></pre>
 </div>
 </div>
 </section>
-<section id="sec-logs-artifacts" class="level2" data-number="8.6">
-<h2 data-number="8.6" class="anchored" data-anchor-id="sec-logs-artifacts"><span class="header-section-number">8.6</span> Build Logs and Artifacts</h2>
+<section id="sec-logs-artifacts" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="sec-logs-artifacts"><span class="header-section-number">8.7</span> Build Logs and Artifacts</h2>
 <p>After <code>build_pipeline(p)</code> completes, T provides several tools for inspecting what was built, how long it took, and where the artifacts live.</p>
-<section id="reading-the-build-log" class="level3" data-number="8.6.1">
-<h3 data-number="8.6.1" class="anchored" data-anchor-id="reading-the-build-log"><span class="header-section-number">8.6.1</span> Reading the Build Log</h3>
+<section id="reading-the-build-log" class="level3" data-number="8.7.1">
+<h3 data-number="8.7.1" class="anchored" data-anchor-id="reading-the-build-log"><span class="header-section-number">8.7.1</span> Reading the Build Log</h3>
 <p><code>build_log(p)</code> returns the raw log for the most recent build as a T value. The companion <code>build_log_to_frame(log)</code> materialises it as a <code>DataFrame</code> with four columns:</p>
 <table class="caption-top table">
 <thead>
@@ -998,9 +994,9 @@ build_pipeline(p)</code></pre>
 </tr>
 </tbody>
 </table>
-<pre class="t"><code>t&gt; log   = build_log(p)
-t&gt; frame = build_log_to_frame(log)
-t&gt; frame
+<pre class="t"><code>log   = build_log(p)
+frame = build_log_to_frame(log)
+frame
 
 name        status    duration_s  path
 raw         cached    0.00        /nix/store/abc…-raw
@@ -1009,28 +1005,28 @@ model       built     8.74        /nix/store/ghi…-model
 report      built     12.05       /nix/store/jkl…-report</code></pre>
 <p>A <code>status</code> of <code>"cached"</code> means Nix found an existing derivation with the same input hash and served it from the store without rerunning anything. <code>"built"</code> means the node was (re)computed in this run.</p>
 </section>
-<section id="copying-artifacts-out-of-the-store" class="level3" data-number="8.6.2">
-<h3 data-number="8.6.2" class="anchored" data-anchor-id="copying-artifacts-out-of-the-store"><span class="header-section-number">8.6.2</span> Copying Artifacts Out of the Store</h3>
+<section id="copying-artifacts-out-of-the-store" class="level3" data-number="8.7.2">
+<h3 data-number="8.7.2" class="anchored" data-anchor-id="copying-artifacts-out-of-the-store"><span class="header-section-number">8.7.2</span> Copying Artifacts Out of the Store</h3>
 <p>Nix store paths are read-only and content-addressed — they are not meant to be worked with directly. Use <code>pipeline_copy()</code> to copy artifacts to a local directory:</p>
 <pre class="t"><code>-- Copy a single node's artifact
-t&gt; pipeline_copy(p.report, dest = "outputs/")
+pipeline_copy(p.report, dest = "outputs/")
 
 -- Copy every artifact in the pipeline
-t&gt; pipeline_copy(p, dest = "outputs/")</code></pre>
+pipeline_copy(p, dest = "outputs/")</code></pre>
 <p>After copying, <code>outputs/report.html</code> (or whatever format the Quarto node produced) is a regular file you can open, commit to Git, or publish.</p>
 </section>
-<section id="garbage-collection" class="level3" data-number="8.6.3">
-<h3 data-number="8.6.3" class="anchored" data-anchor-id="garbage-collection"><span class="header-section-number">8.6.3</span> Garbage Collection</h3>
+<section id="garbage-collection" class="level3" data-number="8.7.3">
+<h3 data-number="8.7.3" class="anchored" data-anchor-id="garbage-collection"><span class="header-section-number">8.7.3</span> Garbage Collection</h3>
 <p>Over time the Nix store accumulates artifacts from old builds. Two functions help manage this:</p>
 <p><code>pipeline_gc(p)</code> removes store paths that belong to <em>this pipeline’s</em> previous builds but are no longer referenced by the current build graph. Pass <code>dry_run = true</code> first to see what would be deleted:</p>
-<pre class="t"><code>t&gt; pipeline_gc(p, dry_run = true)
+<pre class="t"><code>pipeline_gc(p, dry_run = true)
 
 Would remove:
   /nix/store/xyz…-clean  (superseded by def…-clean)
 
-t&gt; pipeline_gc(p)</code></pre>
+pipeline_gc(p)</code></pre>
 <p><code>t_gc()</code> runs a full Nix garbage collection — it removes every store path that is not referenced by any active GC root on the system. Use this periodically on development machines or CI runners to reclaim disk space:</p>
-<pre class="t"><code>t&gt; t_gc()</code></pre>
+<pre class="t"><code>t_gc()</code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1046,8 +1042,8 @@ t&gt; pipeline_gc(p)</code></pre>
 </div>
 </section>
 </section>
-<section id="sec-caching" class="level2" data-number="8.7">
-<h2 data-number="8.7" class="anchored" data-anchor-id="sec-caching"><span class="header-section-number">8.7</span> Incremental Builds and Caching</h2>
+<section id="sec-caching" class="level2" data-number="8.8">
+<h2 data-number="8.8" class="anchored" data-anchor-id="sec-caching"><span class="header-section-number">8.8</span> Incremental Builds and Caching</h2>
 <p>You have already seen that T caches nodes by input hash: if nothing changes, nothing is rebuilt. There is an important subtlety worth understanding clearly.</p>
 <p><strong>The pipeline is a child of the environment.</strong></p>
 <p>When Nix builds a node, the derivation’s input hash includes not just the node’s code and upstream data, but also the entire closure of packages and tools that the node’s sandbox contains. Those packages come from the date pin and package list in <code>tproject.toml</code>. If you update the date pin — say, from <code>2026-03-01</code> to <code>2026-06-01</code> — the environment closure changes, which changes the hash of every derivation in the pipeline, which means the entire pipeline rebuilds from scratch.</p>
@@ -1057,10 +1053,10 @@ t&gt; pipeline_gc(p)</code></pre>
 <li>Pin the date in <code>tproject.toml</code> deliberately. Do not bump it casually.</li>
 <li>When you do need to update the environment, treat it as an event: rebuild, review the log, commit the new <code>tproject.toml</code> and the updated results together.</li>
 </ul>
-<section id="previewing-cache-hits" class="level3" data-number="8.7.1">
-<h3 data-number="8.7.1" class="anchored" data-anchor-id="previewing-cache-hits"><span class="header-section-number">8.7.1</span> Previewing Cache Hits</h3>
+<section id="previewing-cache-hits" class="level3" data-number="8.8.1">
+<h3 data-number="8.8.1" class="anchored" data-anchor-id="previewing-cache-hits"><span class="header-section-number">8.8.1</span> Previewing Cache Hits</h3>
 <p>Before committing to a full build, you can ask T to report which nodes would be rebuilt versus served from cache by passing <code>dry_run = true</code> to <code>build_pipeline</code>:</p>
-<pre class="t"><code>t&gt; build_pipeline(p, dry_run = true)
+<pre class="t"><code>build_pipeline(p, dry_run = true)
 
 Would build:  [model, report]
 Would cache:  [raw, clean]</code></pre>
@@ -1069,10 +1065,10 @@ Would cache:  [raw, clean]</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t <span class="at">--dry-run</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
-<section id="sec-cicd" class="level2" data-number="8.8">
-<h2 data-number="8.8" class="anchored" data-anchor-id="sec-cicd"><span class="header-section-number">8.8</span> CI/CD with <code>pipeline_to_ga()</code></h2>
+<section id="sec-cicd" class="level2" data-number="8.9">
+<h2 data-number="8.9" class="anchored" data-anchor-id="sec-cicd"><span class="header-section-number">8.9</span> CI/CD with <code>pipeline_to_ga()</code></h2>
 <p>A reproducible pipeline is most valuable when it runs automatically — on every push, on a schedule, or when upstream data changes. T ships with a function that generates a complete GitHub Actions workflow YAML from your pipeline definition:</p>
-<pre class="t"><code>t&gt; pipeline_to_ga(p, file = ".github/workflows/pipeline.yml")</code></pre>
+<pre class="t"><code>pipeline_to_ga(p, file = ".github/workflows/pipeline.yml")</code></pre>
 <p>That single call writes a workflow file that:</p>
 <ol type="1">
 <li>Installs Nix on the runner using the Determinate Systems installer.</li>
@@ -1151,18 +1147,18 @@ pipeline_to_ga(
 </div>
 </div>
 </section>
-<section id="summary" class="level2" data-number="8.9">
-<h2 data-number="8.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">8.9</span> Summary</h2>
+<section id="summary" class="level2" data-number="8.10">
+<h2 data-number="8.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">8.10</span> Summary</h2>
 <p>We have covered a lot of ground in this chapter. Here is what we built:</p>
 <ul>
 <li>A four-stage polyglot pipeline (T → Python → R → Quarto) as a concrete working reference (<a href="#sec-worked-example" class="quarto-xref"><span>Section 8.2</span></a>).</li>
 <li>The full set of node runtimes: <code>node()</code>, <code>rn()</code>, <code>pyn()</code>, <code>jln()</code>, <code>shn()</code>, and <code>qn()</code>, with the practical usage patterns for each (<a href="#sec-runtimes" class="quarto-xref"><span>Section 8.3</span></a>).</li>
-<li>The <code>fetchurl</code> / <code>prefetch</code> pattern for safely pulling remote data into a sandboxed build (<span class="quarto-unresolved-ref">?sec-remote-data</span>).</li>
-<li>The <code>functions</code>, <code>include</code>, and <code>set_pipeline_global_options</code> mechanisms for sharing code without repetition (<a href="#sec-code-sharing" class="quarto-xref"><span>Section 8.4</span></a>).</li>
-<li>The <code>env_vars</code> argument for passing flags and secrets into node sandboxes (<a href="#sec-env-vars" class="quarto-xref"><span>Section 8.5</span></a>).</li>
-<li><code>build_log_to_frame</code>, <code>pipeline_copy</code>, <code>pipeline_gc</code>, and <code>t_gc</code> for inspecting and managing build artifacts (<a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.6</span></a>).</li>
-<li>Why the pipeline rebuilds when <code>tproject.toml</code> changes, and why that is the correct behaviour (<a href="#sec-caching" class="quarto-xref"><span>Section 8.7</span></a>).</li>
-<li><code>pipeline_to_ga()</code> for generating a GitHub Actions workflow in three lines (<a href="#sec-cicd" class="quarto-xref"><span>Section 8.8</span></a>).</li>
+<li>The <code>fetchurl</code> / <code>prefetch</code> pattern for safely pulling remote data into a sandboxed build (<a href="#sec-remote-data" class="quarto-xref"><span>Section 8.4</span></a>).</li>
+<li>The <code>functions</code>, <code>include</code>, and <code>set_pipeline_global_options</code> mechanisms for sharing code without repetition (<a href="#sec-code-sharing" class="quarto-xref"><span>Section 8.5</span></a>).</li>
+<li>The <code>env_vars</code> argument for passing flags and secrets into node sandboxes (<a href="#sec-env-vars" class="quarto-xref"><span>Section 8.6</span></a>).</li>
+<li><code>build_log_to_frame</code>, <code>pipeline_copy</code>, <code>pipeline_gc</code>, and <code>t_gc</code> for inspecting and managing build artifacts (<a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.7</span></a>).</li>
+<li>Why the pipeline rebuilds when <code>tproject.toml</code> changes, and why that is the correct behaviour (<a href="#sec-caching" class="quarto-xref"><span>Section 8.8</span></a>).</li>
+<li><code>pipeline_to_ga()</code> for generating a GitHub Actions workflow in three lines (<a href="#sec-cicd" class="quarto-xref"><span>Section 8.9</span></a>).</li>
 </ul>
 <p>Between Chapter 5 and this chapter you now have a complete picture of the T pipeline model for single-machine analytical workflows. The next chapter takes the pipeline abstraction further: we will look at <em>pipeline manipulation</em> — composing pipelines, branching on parameter grids, mapping nodes over collections, and building reusable pipeline templates that can be shared across projects.</p>
 

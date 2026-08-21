@@ -579,7 +579,7 @@ div.csl-indent {
 
 <p>By this point you can declare a T pipeline, build it, inspect its outputs, and wire it into a CI job. That covers the majority of day-to-day work. This chapter goes further: it treats pipelines themselves as data.</p>
 <p>In most pipeline tools—<code>targets</code> <span class="citation" data-cites="landau2021">(<a href="references.html#ref-landau2021" role="doc-biblioref">Landau 2021</a>)</span>, Snakemake <span class="citation" data-cites="koster2012">(<a href="references.html#ref-koster2012" role="doc-biblioref">Köster and Rahmann 2012</a>)</span>, Airflow—the pipeline <em>definition</em> is code that runs once, produces a build graph, and is then discarded. The graph is an internal implementation detail you cannot touch. T takes a different view. A pipeline value is a first-class object you can query, filter, transform, and compose using the same functional idioms you apply to any other value. This opens up meta-programming patterns that simply are not possible in other tools: running only a subgraph, swapping one node’s implementation for another, generating dozens of branches from a list, or assembling a production pipeline from tested sub-components.</p>
-<p>We cover these patterns in order of complexity, starting with the simplest read-only queries and working up to dynamic branching and composable meta-pipelines. All examples build on the project layout introduced in <a href="./08-pipelines.html">Chapter 8</a>.</p>
+<p>We cover these patterns in order of complexity, starting with the simplest read-only queries and working up to dynamic branching and composable meta-pipelines. All examples build on the project layout introduced in <a href="08-pipelines.html" class="quarto-xref"><span>Chapter 8</span></a>.</p>
 <section id="pipelines-as-data" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="pipelines-as-data"><span class="header-section-number">9.1</span> Pipelines as Data</h2>
 <p>The pipeline value you construct inside a <code>pipeline { ... }</code> block is an ordinary T record. It carries the DAG structure, the node metadata, and enough information for T’s build engine to emit Nix derivations. Because it is a record, all the standard higher-order functions—<code>filter</code>, <code>map</code>, <code>fold</code>, <code>select</code>—work on it just as they do on any other collection.</p>
@@ -930,7 +930,7 @@ both       = parallel(report_en, report_fr2)
 print(pipeline_nodes(both))</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-fc9865d1f6841fe7/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-53ba72892b9211c7/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="pipeline_of-meta-pipelines" class="level3" data-number="9.6.3">
@@ -978,8 +978,8 @@ both = parallel(p1 |&gt; rename_node("report", "report_1x"),
 print(pipeline_nodes(both))</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-945dff8df24994f4/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-945dff8df24994f4/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-c7f4a04e1e6d703b/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-c7f4a04e1e6d703b/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 </section>
@@ -998,8 +998,8 @@ Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-945dff8df24994f4/chunk.
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-a05589d034375ec0/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-a05589d034375ec0/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-4644b3c72e04fd16/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-4644b3c72e04fd16/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>This expands into three nodes—<code>results_branch_1</code>, <code>results_branch_2</code>, and <code>results_branch_3</code>—where branch <code>i</code> runs the command with element <code>i</code> of <code>params</code>. Multiple dependencies can be mapped at once; they must all have the same length, and branch <code>i</code> receives element <code>i</code> from each:</p>
 <pre class="t"><code>p_map2 = pipeline {
@@ -1009,8 +1009,8 @@ Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-a05589d034375ec0/chunk.
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-0d51eb33687b8985/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-0d51eb33687b8985/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-70fa0ad0834c0957/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-70fa0ad0834c0957/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="cross_pattern" class="level3" data-number="9.7.2">
@@ -1026,8 +1026,8 @@ Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-0d51eb33687b8985/chunk.
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-4c8b1b0d612eac81/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-4c8b1b0d612eac81/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-8066ebd8052096ac/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-8066ebd8052096ac/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>This produces four branches, <code>spiro_branch_1</code> through <code>spiro_branch_4</code>, covering <code>(1,3)</code>, <code>(1,4)</code>, <code>(2,3)</code>, and <code>(2,4)</code>. The spirograph example in the T demos does exactly this: three values of angular frequency crossed with three values of petal count produce nine data-generation branches and nine R-based plot branches, each built in parallel.</p>
 </section>
@@ -1049,8 +1049,8 @@ Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-4c8b1b0d612eac81/chunk.
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-9f3c82a148650968/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-9f3c82a148650968/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-e6d31c32d562c279/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-e6d31c32d562c279/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><code>head_pattern</code> and <code>tail_pattern</code> cap at the dependency length, so <code>head_pattern(x, 10)</code> on a five-element list still yields five branches. <code>sample_pattern</code> is deterministic: it seeds a partial Fisher–Yates shuffle from the node name, so re-expanding the same pipeline always makes the same draw, while different node names make different draws.</p>
 </section>
@@ -1068,8 +1068,8 @@ pipeline_nodes(expanded)
 expanded.first_two_branch_1  -- the first branch's node</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-ebaa31f73d66a9e2/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-ebaa31f73d66a9e2/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-1dd0e2ade5717c37/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-1dd0e2ade5717c37/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 node&lt;T&gt;(...)
 </code></pre>
 <p>Each branch is a regular node named <code>&lt;node&gt;_branch_&lt;i&gt;</code> with a 1-based index, so you can read it with the usual <code>read_node()</code> or dot access.</p>
@@ -1101,8 +1101,8 @@ Tip
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-8325422f663a0451/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-8325422f663a0451/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-38b137e1b37e8d51/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-38b137e1b37e8d51/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><code>get(node_lens("node_a"))</code> deserializes <code>node_a</code>’s artifact and returns it as a T value, so <code>node_b</code> can use it directly even though the value is produced elsewhere in the pipeline. This is the canonical way to reach across the dependency graph when a plain <code>deps</code> list is not enough.</p>
 </section>
@@ -1260,8 +1260,8 @@ model = rn(&lt;{
 }&gt;)</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-8d7fb508d9f730dd/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-8d7fb508d9f730dd/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-0f8debd378d6194e/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-0f8debd378d6194e/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><strong>Second</strong>, shell nodes that read files created by other nodes. The file name is a runtime string and the node name never appears in the command text:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="ex">summarise_outputs</span> = shell {</span>
@@ -1280,8 +1280,8 @@ summarise_outputs = shn(
 )</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-cd005690ef57cc7a/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-128123-864908218/tlang-cd005690ef57cc7a/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-132b368d868c2612/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127550-2508137045/tlang-132b368d868c2612/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>Declared dependencies are merged with inferred ones. You do not need to re-declare dependencies that T already finds; <code>deps</code> only adds what would otherwise be missing.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1328,7 +1328,7 @@ log    = build_log_to_frame(res)</code></pre>
 <li>Use <code>node_fork</code> to select an implementation based on an environment variable.</li>
 <li>Validate with <code>pipeline_validate</code> before any Nix work begins.</li>
 </ul>
-<p>The next chapter covers debugging and error handling—what to do when a node can <em>fail in an expected way</em> and you want to propagate that failure gracefully rather than aborting the whole build. <a href="./12-packaging.html">Chapter 12</a> then covers how to package a mature pipeline as a distributable artefact.</p>
+<p>The next chapter covers debugging and error handling—what to do when a node can <em>fail in an expected way</em> and you want to propagate that failure gracefully rather than aborting the whole build. <a href="12-packaging.html" class="quarto-xref"><span>Chapter 12</span></a> then covers how to package a mature pipeline as a distributable artefact.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">

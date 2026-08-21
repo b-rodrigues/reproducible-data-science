@@ -553,9 +553,9 @@ build_pipeline(p)</code></pre>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>or inside an interactive T session, using <code>t_make()</code>.</p>
 <p>T resolves the dependency graph (<code>total</code> depends on <code>x</code> and <code>y</code>), builds each node, and caches the results. Access any node’s value with dot notation in the REPL:</p>
-<pre class="t"><code>t&gt; p.x      -- 10
-t&gt; p.y      -- 20
-t&gt; p.total  -- 30</code></pre>
+<pre class="t"><code>p.x      -- 10
+p.y      -- 20
+p.total  -- 30</code></pre>
 <p>The pipeline itself prints as:</p>
 <pre><code>Pipeline(3 nodes: [x, y, total])</code></pre>
 <p>Note that the order of node declarations does <strong>not</strong> matter. T infers the execution order from the data dependencies. You could write <code>total</code> before <code>x</code> and <code>y</code> and the result would be identical.</p>
@@ -566,8 +566,8 @@ t&gt; p.total  -- 30</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> check src/pipeline.t   <span class="co"># validate cheaply, catches errors in milliseconds</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t     <span class="co"># build when clean</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Inside the REPL (<code>t</code> or <code>t repl</code>) you can inspect results immediately after a build:</p>
-<pre class="t"><code>t&gt; read_node(p.total)    -- reads the serialized artifact back from the Nix store
-t&gt; show_plot(p)          -- visualise the DAG</code></pre>
+<pre class="t"><code>read_node(p.total)    -- reads the serialized artifact back from the Nix store
+show_plot(p)          -- visualise the DAG</code></pre>
 <p>Add a node and rebuild:</p>
 <pre class="t"><code>p = pipeline {
   x     = 10
@@ -578,6 +578,7 @@ t&gt; show_plot(p)          -- visualise the DAG</code></pre>
 build_pipeline(p)</code></pre>
 <p>Because <code>x</code>, <code>y</code>, and <code>total</code> were already built and cached, Nix skips them and only computes the new <code>label</code> node. Run <code>build_pipeline(p, dry_run = true)</code> to preview which nodes will be rebuilt versus served from cache before committing to a full build.</p>
 <p>This <strong>check → build → inspect → extend</strong> loop is the core iterative development cycle in T. Get comfortable with it before moving on. It is also possible to interactively inspect R, Python or Julia nodes. More on this later.</p>
+<p>Once the pipeline is built, you still need to get to the build artifacts. For this, use <code>pipeline_copy()</code>. This copies all computed node artifacts from the Nix store to a local directory for easy access. By default, it copies all nodes from the latest build to the “pipeline-output/” folder. You can specify a custom folder using the <code>target_dir</code> argument: <code>pipeline_copy(target_dir = "outputs")</code></p>
 </section>
 <section id="node-types-calling-r-python-and-julia" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="node-types-calling-r-python-and-julia"><span class="header-section-number">5.5</span> Node Types: Calling R, Python, and Julia</h2>
@@ -891,7 +892,7 @@ model         Changed   T        T</code></pre>
 <h3 data-number="5.11.2" class="anchored" data-anchor-id="inspecting-historical-builds-read_past_node"><span class="header-section-number">5.11.2</span> Inspecting Historical Builds: <code>read_past_node()</code></h3>
 <p>What if you want to inspect a node’s output from a previous build, or examine artifacts when the pipeline object <code>p</code> is no longer in your active REPL memory?</p>
 <p>T provides <code>read_past_node()</code> for temporal introspection:</p>
-<pre class="t"><code>t&gt; read_past_node(p.data, which_log = "2026-08-14")</code></pre>
+<pre class="t"><code>read_past_node(p.data, which_log = "2026-08-14")</code></pre>
 <p>Unlike <code>read_node()</code>, which looks up live in-scope nodes from the active pipeline object, <code>read_past_node()</code> captures the node identifier non-evaluatively and queries T’s historical build logs in <code>_pipeline/logs/</code>. The mandatory <code>which_log</code> parameter specifies a timestamp or log identifier pattern. This allows you to inspect past run outputs, audit how dataset values evolved over time, or inspect artifacts from previous sessions without re-running the pipeline.</p>
 </section>
 <section id="high-fidelity-representation-of-foreign-objects" class="level3" data-number="5.11.3">
@@ -909,7 +910,7 @@ model         Changed   T        T</code></pre>
 <h3 data-number="5.11.4" class="anchored" data-anchor-id="stepping-into-guest-runtimes-debug_node-a-debugging-appetizer"><span class="header-section-number">5.11.4</span> Stepping into Guest Runtimes: <code>debug_node()</code> (A Debugging Appetizer)</h3>
 <p>Sometimes inspecting an output from the T REPL isn’t enough—especially when a foreign script throws an unexpected runtime error or requires step-by-step code execution.</p>
 <p>T provides <code>debug_node()</code> to drop you directly from the T REPL into an interactive guest subshell for that specific language:</p>
-<pre class="t"><code>t&gt; debug_node(p.stats)</code></pre>
+<pre class="t"><code>debug_node(p.stats)</code></pre>
 <p>Calling <code>debug_node()</code> automatically:</p>
 <ol type="1">
 <li>Resolves all upstream dependency artifacts for <code>p.stats</code> from the Nix store.</li>
