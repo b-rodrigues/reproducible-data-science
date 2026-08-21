@@ -181,7 +181,7 @@ collaborators can iterate on together.
 
 Modern data science is increasingly polyglot. Research shows that data
 scientists use, on average, nearly two programming languages in their work, with
-R and Python being the most common combination. Python dominates machine
+R and Python being the most common combination [see @chen2025]. Python dominates machine
 learning, R excels at statistical modelling, and Julia offers high-performance
 numerics. Projects increasingly combine these strengths.
 
