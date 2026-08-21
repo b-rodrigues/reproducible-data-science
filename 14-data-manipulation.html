@@ -502,18 +502,18 @@ ul.task-list li input[type="checkbox"] {
 <section id="select-choose-columns" class="level3" data-number="14.1.1">
 <h3 data-number="14.1.1" class="anchored" data-anchor-id="select-choose-columns"><span class="header-section-number">14.1.1</span> select() — choose columns</h3>
 <p><code>select()</code> keeps only the columns you name, using the <code>$column</code> syntax:</p>
-<pre class="t"><code>df |&gt; select($name, $age)
-df |&gt; select($name)</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name, <span class="sc">$</span>age)
+df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name)</code></pre>
 <p>If you name a column that does not exist, you get a <code>KeyError</code> that names the missing column, so a typo fails fast rather than silently dropping data.</p>
 </section>
 <section id="filter-choose-rows" class="level3" data-number="14.1.2">
 <h3 data-number="14.1.2" class="anchored" data-anchor-id="filter-choose-rows"><span class="header-section-number">14.1.2</span> filter() — choose rows</h3>
 <p><code>filter()</code> keeps the rows where a predicate is true. You write the predicate against the <code>$column</code> syntax, and T turns it into a row-wise function for you:</p>
-<pre class="t"><code>df |&gt; filter($age &gt; 30)
-df |&gt; filter($dept == "eng")</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">30</span>)
+df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"eng"</span>)</code></pre>
 <p>To combine conditions, use the logical operators <code>&amp;&amp;</code> (and) and <code>||</code> (or):</p>
-<pre class="t"><code>df |&gt; filter($dept == "eng" &amp;&amp; $age &gt; 25)
-df |&gt; filter($dept == "sales" || $score &gt; 90)</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"eng"</span> <span class="sc">&amp;&amp;</span> <span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">25</span>)
+df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"sales"</span> <span class="sc">||</span> <span class="sc">$</span>score <span class="sc">&gt;</span> <span class="dv">90</span>)</code></pre>
 <blockquote class="blockquote">
 <p><strong>No silent magic.</strong> The bitwise operators <code>&amp;</code> and <code>|</code> are for scalar, element-wise work. If you accidentally use them to combine filter conditions, T raises a <code>TypeError</code> that points you at <code>&amp;&amp;</code> and <code>||</code>.</p>
 </blockquote>
@@ -521,29 +521,29 @@ df |&gt; filter($dept == "sales" || $score &gt; 90)</code></pre>
 <section id="mutate-add-or-transform-columns" class="level3" data-number="14.1.3">
 <h3 data-number="14.1.3" class="anchored" data-anchor-id="mutate-add-or-transform-columns"><span class="header-section-number">14.1.3</span> mutate() — add or transform columns</h3>
 <p><code>mutate()</code> adds a new column or replaces an existing one. The new column is named with <code>$</code> and defined by an expression over the existing columns:</p>
-<pre class="t"><code>df |&gt; mutate($age_plus_10 = $age + 10)
-df |&gt; mutate($bonus = $salary * 0.1)</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>age_plus_10 <span class="sc">=</span> <span class="sc">$</span>age <span class="sc">+</span> <span class="dv">10</span>)
+df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>bonus <span class="sc">=</span> <span class="sc">$</span>salary <span class="sc">*</span> <span class="fl">0.1</span>)</code></pre>
 </section>
 <section id="arrange-sort-rows" class="level3" data-number="14.1.4">
 <h3 data-number="14.1.4" class="anchored" data-anchor-id="arrange-sort-rows"><span class="header-section-number">14.1.4</span> arrange() — sort rows</h3>
 <p><code>arrange()</code> sorts by one or more columns, in ascending order by default or <code>"desc"</code> for descending:</p>
-<pre class="t"><code>df |&gt; arrange($age)
-df |&gt; arrange($score, "desc")</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>age)
+df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>score, <span class="st">"desc"</span>)</code></pre>
 </section>
 <section id="group_by-and-summarize" class="level3" data-number="14.1.5">
 <h3 data-number="14.1.5" class="anchored" data-anchor-id="group_by-and-summarize"><span class="header-section-number">14.1.5</span> group_by() and summarize()</h3>
 <p><code>group_by()</code> marks the columns that define groups. It does not change the data; it tells the next verb how to split the work. <code>summarize()</code> then collapses each group into a single row:</p>
-<pre class="t"><code>df |&gt; group_by($dept)
-   |&gt; summarize($count = nrow($dept), $avg_score = mean($score))</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>dept)
+   <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="sc">$</span>count <span class="sc">=</span> <span class="fu">nrow</span>(<span class="sc">$</span>dept), <span class="sc">$</span>avg_score <span class="sc">=</span> <span class="fu">mean</span>(<span class="sc">$</span>score))</code></pre>
 <p>The result has one row per group, with the grouping column and the aggregates you asked for.</p>
 </section>
 <section id="composing-verbs" class="level3" data-number="14.1.6">
 <h3 data-number="14.1.6" class="anchored" data-anchor-id="composing-verbs"><span class="header-section-number">14.1.6</span> Composing verbs</h3>
 <p>The power is in the chaining. A filter, a select, a sort, and a count become a single readable expression:</p>
-<pre class="t"><code>df |&gt; filter($age &gt; 25)
-   |&gt; select($name, $score)
-   |&gt; arrange($score, "desc")
-   |&gt; nrow</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">25</span>)
+   <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name, <span class="sc">$</span>score)
+   <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>score, <span class="st">"desc"</span>)
+   <span class="sc">|&gt;</span> nrow</code></pre>
 <p>Read it top to bottom and it describes the analysis in plain language. That is the same readability you get from <code>{dplyr}</code>, with no runtime switch.</p>
 </section>
 </section>
@@ -553,121 +553,121 @@ df |&gt; arrange($score, "desc")</code></pre>
 <section id="pivot_longer-and-pivot_wider" class="level3" data-number="14.2.1">
 <h3 data-number="14.2.1" class="anchored" data-anchor-id="pivot_longer-and-pivot_wider"><span class="header-section-number">14.2.1</span> pivot_longer() and pivot_wider()</h3>
 <p><code>pivot_longer()</code> turns wide data (several columns holding measurements) into long data (a name column and a value column). <code>pivot_wider()</code> does the reverse:</p>
-<pre class="t"><code>-- wide to long
-df |&gt; pivot_longer($age, $score, names_to = "measure", values_to = "val")
+<pre class="t"><code><span class="co">-- wide to long</span>
+df <span class="sc">|&gt;</span> <span class="fu">pivot_longer</span>(<span class="sc">$</span>age, <span class="sc">$</span>score, names_to <span class="sc">=</span> <span class="st">"measure"</span>, values_to <span class="sc">=</span> <span class="st">"val"</span>)
 
--- long to wide
-df |&gt; select($name, $dept, $salary)
-   |&gt; pivot_wider(names_from = $dept, values_from = $salary)</code></pre>
+<span class="co">-- long to wide</span>
+df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name, <span class="sc">$</span>dept, <span class="sc">$</span>salary)
+   <span class="sc">|&gt;</span> <span class="fu">pivot_wider</span>(names_from <span class="sc">=</span> <span class="sc">$</span>dept, values_from <span class="sc">=</span> <span class="sc">$</span>salary)</code></pre>
 </section>
 <section id="separate-and-unite" class="level3" data-number="14.2.2">
 <h3 data-number="14.2.2" class="anchored" data-anchor-id="separate-and-unite"><span class="header-section-number">14.2.2</span> separate() and unite()</h3>
 <p><code>separate()</code> splits one column into several on a delimiter; <code>unite()</code> joins several columns back into one:</p>
-<pre class="t"><code>df |&gt; separate($date, into = ["year", "month", "day"], sep = "-")
-df |&gt; unite("full_date", $year, $month, $day, sep = "-")</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">separate</span>(<span class="sc">$</span>date, into <span class="sc">=</span> [<span class="st">"year"</span>, <span class="st">"month"</span>, <span class="st">"day"</span>], sep <span class="sc">=</span> <span class="st">"-"</span>)
+df <span class="sc">|&gt;</span> <span class="fu">unite</span>(<span class="st">"full_date"</span>, <span class="sc">$</span>year, <span class="sc">$</span>month, <span class="sc">$</span>day, sep <span class="sc">=</span> <span class="st">"-"</span>)</code></pre>
 </section>
 <section id="nest-and-unnest" class="level3" data-number="14.2.3">
 <h3 data-number="14.2.3" class="anchored" data-anchor-id="nest-and-unnest"><span class="header-section-number">14.2.3</span> nest() and unnest()</h3>
 <p><code>nest()</code> packs selected columns into a single column of nested DataFrames, grouping by the columns you leave out. <code>unnest()</code> expands them back out. This is how you build, and later dissolve, the hierarchical structures that lenses (covered at the end of this chapter) are designed to reach:</p>
-<pre class="t"><code>nested = df |&gt; group_by($cyl) |&gt; nest()
-flat = nested |&gt; unnest($data)</code></pre>
+<pre class="t"><code>nested <span class="sc">=</span> df <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>cyl) <span class="sc">|&gt;</span> <span class="fu">nest</span>()
+flat <span class="sc">=</span> nested <span class="sc">|&gt;</span> <span class="fu">unnest</span>(<span class="sc">$</span>data)</code></pre>
 </section>
 <section id="missing-values" class="level3" data-number="14.2.4">
 <h3 data-number="14.2.4" class="anchored" data-anchor-id="missing-values"><span class="header-section-number">14.2.4</span> Missing values</h3>
 <p>Three verbs handle the gaps. <code>drop_na()</code> removes rows with missing values in the named columns, <code>replace_na()</code> fills them with a constant, and <code>fill()</code> propagates the last non-missing value forward:</p>
-<pre class="t"><code>df |&gt; drop_na($score)
-df |&gt; replace_na([score: 0])
-df |&gt; fill($category, .direction = "down")</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(<span class="sc">$</span>score)
+df <span class="sc">|&gt;</span> <span class="fu">replace_na</span>([score<span class="sc">:</span> <span class="dv">0</span>])
+df <span class="sc">|&gt;</span> <span class="fu">fill</span>(<span class="sc">$</span>category, .direction <span class="sc">=</span> <span class="st">"down"</span>)</code></pre>
 </section>
 </section>
 <section id="working-with-strings" class="level2" data-number="14.3">
 <h2 data-number="14.3" class="anchored" data-anchor-id="working-with-strings"><span class="header-section-number">14.3</span> Working with strings</h2>
 <p>Text columns are everywhere, and T names its string helpers with a <code>str_</code> prefix so they are easy to spot:</p>
-<pre class="t"><code>str_nchar("hello")              -- 5
-str_substring("hello", 1, 4)    -- "ell"
-str_replace("banana", "a", "o") -- "bonono"
-str_trim("  hello  ")           -- "hello"
-str_join(["a", "b", "c"], "-")  -- "a-b-c"
-str_split("a,b,c", ",")         -- ["a", "b", "c"]</code></pre>
+<pre class="t"><code><span class="fu">str_nchar</span>(<span class="st">"hello"</span>)              <span class="co">-- 5</span>
+<span class="fu">str_substring</span>(<span class="st">"hello"</span>, <span class="dv">1</span>, <span class="dv">4</span>)    <span class="co">-- "ell"</span>
+<span class="fu">str_replace</span>(<span class="st">"banana"</span>, <span class="st">"a"</span>, <span class="st">"o"</span>) <span class="co">-- "bonono"</span>
+<span class="fu">str_trim</span>(<span class="st">"  hello  "</span>)           <span class="co">-- "hello"</span>
+<span class="fu">str_join</span>([<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>], <span class="st">"-"</span>)  <span class="co">-- "a-b-c"</span>
+<span class="fu">str_split</span>(<span class="st">"a,b,c"</span>, <span class="st">","</span>)         <span class="co">-- ["a", "b", "c"]</span></code></pre>
 <p>A few helpers intentionally keep their plain names, because they double as column-selection helpers in <code>colcraft</code>:</p>
-<pre class="t"><code>contains("petal_width", "width")
-starts_with("petal_width", "petal")
+<pre class="t"><code><span class="fu">contains</span>(<span class="st">"petal_width"</span>, <span class="st">"width"</span>)
+<span class="fu">starts_with</span>(<span class="st">"petal_width"</span>, <span class="st">"petal"</span>)
 
--- the same names select columns in a DataFrame
-df |&gt; select(starts_with("petal"))</code></pre>
+<span class="co">-- the same names select columns in a DataFrame</span>
+df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"petal"</span>))</code></pre>
 <p>That overlap is deliberate: <code>contains</code>, <code>starts_with</code>, and <code>ends_with</code> work as string predicates and as selection helpers, so the data-manipulation API stays consistent.</p>
 </section>
 <section id="dates-and-times" class="level2" data-number="14.4">
 <h2 data-number="14.4" class="anchored" data-anchor-id="dates-and-times"><span class="header-section-number">14.4</span> Dates and times</h2>
 <p>The <code>chrono</code> package brings date and time handling to T, modelled on R’s <code>{lubridate}</code>. You can parse strings into dates with shorthand helpers:</p>
-<pre class="t"><code>d = ymd("2024-01-15")
-dt = ymd_hms("2024-01-15 09:30:00")</code></pre>
+<pre class="t"><code>d <span class="sc">=</span> <span class="fu">ymd</span>(<span class="st">"2024-01-15"</span>)
+dt <span class="sc">=</span> <span class="fu">ymd_hms</span>(<span class="st">"2024-01-15 09:30:00"</span>)</code></pre>
 <p>Extract components, and do calendar-aware arithmetic with periods:</p>
-<pre class="t"><code>year(d)
-month(d, label = true)   -- "Jan"
+<pre class="t"><code><span class="fu">year</span>(d)
+<span class="fu">month</span>(d, label <span class="sc">=</span> <span class="cn">true</span>)   <span class="co">-- "Jan"</span>
 
--- adding a month to Jan 31 lands on the last day of February
-ymd("2024-01-31") + months(3)   -- 2024-04-30</code></pre>
+<span class="co">-- adding a month to Jan 31 lands on the last day of February</span>
+<span class="fu">ymd</span>(<span class="st">"2024-01-31"</span>) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">3</span>)   <span class="co">-- 2024-04-30</span></code></pre>
 <p>The arithmetic is calendar-aware, not just “add a number of days”, which is exactly what you want when a rule is “the same day next month”. A typical workflow parses a date column, derives a month, and summarises by month:</p>
-<pre class="t"><code>df |&gt; mutate(date = ymd($order_date),
-             month = month($date, label = true))
-   |&gt; filter(year($date) == 2024)
-   |&gt; group_by($month)
-   |&gt; summarize($total = sum($sales))</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(date <span class="sc">=</span> <span class="fu">ymd</span>(<span class="sc">$</span>order_date),
+             month <span class="sc">=</span> <span class="fu">month</span>(<span class="sc">$</span>date, label <span class="sc">=</span> <span class="cn">true</span>))
+   <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="fu">year</span>(<span class="sc">$</span>date) <span class="sc">==</span> <span class="dv">2024</span>)
+   <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>month)
+   <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="sc">$</span>total <span class="sc">=</span> <span class="fu">sum</span>(<span class="sc">$</span>sales))</code></pre>
 </section>
 <section id="factors-and-categorical-data" class="level2" data-number="14.5">
 <h2 data-number="14.5" class="anchored" data-anchor-id="factors-and-categorical-data"><span class="header-section-number">14.5</span> Factors and categorical data</h2>
 <p>A factor is categorical data with an explicit list of levels. The level order matters: <code>arrange()</code> sorts a factor by its levels, not alphabetically. That makes factors the right tool for ordered categories such as shirt sizes, survey responses, or reporting buckets.</p>
-<pre class="t"><code>sizes = to_factor(["medium", "small", "large"],
-                  levels = ["small", "medium", "large"])
-levels(sizes)   -- ["small", "medium", "large"]</code></pre>
+<pre class="t"><code>sizes <span class="sc">=</span> <span class="fu">to_factor</span>([<span class="st">"medium"</span>, <span class="st">"small"</span>, <span class="st">"large"</span>],
+                  levels <span class="sc">=</span> [<span class="st">"small"</span>, <span class="st">"medium"</span>, <span class="st">"large"</span>])
+<span class="fu">levels</span>(sizes)   <span class="co">-- ["small", "medium", "large"]</span></code></pre>
 <p>If you omit <code>levels</code>, T derives them from the data and sorts them alphabetically. Use <code>ordered()</code> when the ordering is meaningful and should be preserved.</p>
 <p>The <code>fct_*</code> helpers (a nod to R’s <code>{forcats}</code>) let you reorder, relabel, and collapse levels after creation:</p>
-<pre class="t"><code>df |&gt; mutate($segment = fct_infreq($segment))
-df |&gt; mutate($segment = fct_relevel($segment, "enterprise"))
-df |&gt; mutate($segment = fct_lump_n($segment, n = 3))</code></pre>
+<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>segment <span class="sc">=</span> <span class="fu">fct_infreq</span>(<span class="sc">$</span>segment))
+df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>segment <span class="sc">=</span> <span class="fu">fct_relevel</span>(<span class="sc">$</span>segment, <span class="st">"enterprise"</span>))
+df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>segment <span class="sc">=</span> <span class="fu">fct_lump_n</span>(<span class="sc">$</span>segment, n <span class="sc">=</span> <span class="dv">3</span>))</code></pre>
 </section>
 <section id="arrays" class="level2" data-number="14.6">
 <h2 data-number="14.6" class="anchored" data-anchor-id="arrays"><span class="header-section-number">14.6</span> Arrays</h2>
 <p>For heavy numerical work, T has first-class NDArrays. Unlike lists, an NDArray has a fixed shape and optimised storage, and it supports element-wise arithmetic with broadcasting:</p>
-<pre class="t"><code>v = ndarray([1, 2, 3, 4, 5])
-m = ndarray([[1, 2, 3], [4, 5, 6]])
+<pre class="t"><code>v <span class="sc">=</span> <span class="fu">ndarray</span>([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>])
+m <span class="sc">=</span> <span class="fu">ndarray</span>([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]])
 
-shape(m)     -- [2, 3]
-m + 10       -- broadcasts the scalar across the array</code></pre>
+<span class="fu">shape</span>(m)     <span class="co">-- [2, 3]</span>
+m <span class="sc">+</span> <span class="dv">10</span>       <span class="co">-- broadcasts the scalar across the array</span></code></pre>
 <p>A small set of linear-algebra functions is available for matrix work:</p>
-<pre class="t"><code>a = ndarray([[1, 2], [3, 4]])
-matmul(a, a)
-inv(a)
-diag(a)</code></pre>
+<pre class="t"><code>a <span class="sc">=</span> <span class="fu">ndarray</span>([[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>]])
+<span class="fu">matmul</span>(a, a)
+<span class="fu">inv</span>(a)
+<span class="fu">diag</span>(a)</code></pre>
 <p>Keep one constraint in mind: NDArrays cannot hold <code>NA</code> values, so handle missing data before you convert.</p>
 </section>
 <section id="formulas-and-models" class="level2" data-number="14.7">
 <h2 data-number="14.7" class="anchored" data-anchor-id="formulas-and-models"><span class="header-section-number">14.7</span> Formulas and models</h2>
 <p>T borrows R’s formula syntax for specifying models. The <code>~</code> operator builds a formula you can pass to a modelling function:</p>
-<pre class="t"><code>model = lm(data = df, formula = salary ~ age)
+<pre class="t"><code>model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> salary <span class="sc">~</span> age)
 model.r_squared
 model.coefficients.age</code></pre>
 <p>Multiple predictors and interactions follow the familiar rules:</p>
-<pre class="t"><code>model = lm(data = df, formula = y ~ x1 + x2 + x3)
-model = lm(data = df, formula = y ~ x1 * x2)</code></pre>
+<pre class="t"><code>model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)
+model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1 <span class="sc">*</span> x2)</code></pre>
 <p><code>lm()</code> returns a dictionary with the coefficients, standard errors, R², and a tidy DataFrame of the results. It is not a replacement for a full statistical toolkit, but it covers the quick “does this variable matter” check without leaving T.</p>
 </section>
 <section id="lenses-reaching-the-nested" class="level2" data-number="14.8">
 <h2 data-number="14.8" class="anchored" data-anchor-id="lenses-reaching-the-nested"><span class="header-section-number">14.8</span> Lenses: reaching the nested</h2>
 <p>The verbs above are built for flat DataFrames. Once your data becomes nested — after a <code>nest()</code>, or from a hierarchical API — the standard verbs turn into a pyramid of nested lambdas. Lenses solve that.</p>
 <p>A lens names a <em>path</em> into a structure. You build it once with <code>compose()</code>, then use it to read or transform the value at that path in a single step:</p>
-<pre class="t"><code>-- path: clients -&gt; projects -&gt; milestones -&gt; pct_int
-pct_l = compose(col_lens("projects"),
-                col_lens("milestones"),
-                col_lens("pct_int"))
+<pre class="t"><code><span class="co">-- path: clients -&gt; projects -&gt; milestones -&gt; pct_int</span>
+pct_l <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu">col_lens</span>(<span class="st">"projects"</span>),
+                <span class="fu">col_lens</span>(<span class="st">"milestones"</span>),
+                <span class="fu">col_lens</span>(<span class="st">"pct_int"</span>))
 
--- apply a 10-point uplift to every milestone, everywhere
-updated = clients |&gt; over(pct_l, \(x) min(x .+ 10, 100))</code></pre>
+<span class="co">-- apply a 10-point uplift to every milestone, everywhere</span>
+updated <span class="sc">=</span> clients <span class="sc">|&gt;</span> <span class="fu">over</span>(pct_l, \(x) <span class="fu">min</span>(x <span class="sc">.+</span> <span class="dv">10</span>, <span class="dv">100</span>))</code></pre>
 <p>The three core operations are <code>get()</code> (read), <code>set()</code> (replace), and <code>over()</code> (transform). <code>col_lens()</code> targets a column or key, <code>row_lens()</code> and <code>idx_lens()</code> target a row or index, and <code>filter_lens()</code> is a traversal that focuses on every element matching a condition:</p>
-<pre class="t"><code>-- add 10 to every even score
-even_l = filter_lens(\(x) x % 2 == 0)
-scores |&gt; over(even_l, \(x) x + 10)</code></pre>
+<pre class="t"><code><span class="co">-- add 10 to every even score</span>
+even_l <span class="sc">=</span> <span class="fu">filter_lens</span>(\(x) x <span class="sc">%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span>)
+scores <span class="sc">|&gt;</span> <span class="fu">over</span>(even_l, \(x) x <span class="sc">+</span> <span class="dv">10</span>)</code></pre>
 <p>One detail matters when you transform a whole column: <code>over()</code> hands your function a Vector, so use the broadcasting operators (<code>.+</code>, <code>.*</code>) for element-wise math rather than the scalar ones.</p>
 <p>For flat DataFrames, stick with the ordinary verbs — they are simpler and more idiomatic. Lenses earn their keep in nested and polymorphic data, where the alternative is a tower of <code>map</code> calls.</p>
 </section>

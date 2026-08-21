@@ -533,13 +533,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="10.1" class="anchored" data-anchor-id="errors-are-values"><span class="header-section-number">10.1</span> Errors Are Values</h2>
 <p>In most languages, an exception is an interruption: it unwinds the call stack, and unless someone catches it, the program dies. T takes a different view. An error in T is just another value — a first-class citizen, like a number, a string, or a DataFrame — and, like any other value, it can be passed around, inspected, and transformed.</p>
 <p>Consider the most classic failure of all:</p>
-<pre class="t"><code>err = 1 / 0</code></pre>
+<pre class="t"><code>err <span class="sc">=</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span></code></pre>
 <p>In a strict language this would crash. In T, the expression <em>evaluates</em> to an error value, and the program continues. You can ask the error value questions:</p>
-<pre class="t"><code>err = 1 / 0
-print(is_error(err))
-print(error_code(err))
-print(error_msg(err))
-print(error_context(err))</code></pre>
+<pre class="t"><code>err <span class="sc">=</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span>
+<span class="fu">print</span>(<span class="fu">is_error</span>(err))
+<span class="fu">print</span>(<span class="fu">error_code</span>(err))
+<span class="fu">print</span>(<span class="fu">error_msg</span>(err))
+<span class="fu">print</span>(<span class="fu">error_context</span>(err))</code></pre>
 <pre class="text"><code>true
 DivisionByZero
 Division by zero.
@@ -588,22 +588,22 @@ Division by zero.
 </table>
 <p>The important distinction is between the first two rows. A <code>Completed with error</code> node is a <em>soft</em> failure: the code ran, the error is a value, and the build carries on. An <code>Errored</code> node is a <em>hard</em> failure: Nix’s build machinery itself gave up, and everything downstream is marked <code>Skipped</code>.</p>
 <p>If you want the opposite behaviour — stop at the first error — T has a fail-fast mode:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run <span class="at">--failfast</span> src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run <span class="at">--failfast</span> src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>From the REPL you can set <code>t_run(failfast = true, ...)</code> for a single run, or declare <code>t_make(failfast = true)</code> when defining a pipeline. For most data pipelines the default resilient mode is what you want: you get as many diagnostic outcomes as possible from a single pass, and you decide afterwards which failures actually matter.</p>
 </section>
 <section id="pipes-propagate-or-recover" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="pipes-propagate-or-recover"><span class="header-section-number">10.3</span> Pipes: Propagate or Recover</h2>
 <p>T has two pipe operators, and the difference between them <em>is</em> the error-handling story.</p>
 <p>The ordinary pipe <code>|&gt;</code> is <em>short-circuiting</em>: if the value on the left is an error, the function on the right is not applied, and the error flows through untouched. The maybe-pipe <code>?|&gt;</code> <em>always forwards</em> the value — errors included — to the function on the right, giving that function a chance to look at the error and recover.</p>
-<pre class="t"><code>doubled = 5 |&gt; \(x: Int -&gt; Int) x * 2
-print(doubled)
-e = 10 / 0
-propagated = e |&gt; \(x: Int -&gt; Int) x + 1
-print(is_error(propagated))
-print(error_code(propagated))
-recover = \(x: Any -&gt; Int) if (is_error(x)) 0 else x
-print(e ?|&gt; recover)
-print(5 ?|&gt; recover)</code></pre>
+<pre class="t"><code>doubled <span class="sc">=</span> <span class="dv">5</span> <span class="sc">|&gt;</span> \(x<span class="sc">:</span> Int <span class="sc">-&gt;</span> Int) x <span class="sc">*</span> <span class="dv">2</span>
+<span class="fu">print</span>(doubled)
+e <span class="sc">=</span> <span class="dv">10</span> <span class="sc">/</span> <span class="dv">0</span>
+propagated <span class="sc">=</span> e <span class="sc">|&gt;</span> \(x<span class="sc">:</span> Int <span class="sc">-&gt;</span> Int) x <span class="sc">+</span> <span class="dv">1</span>
+<span class="fu">print</span>(<span class="fu">is_error</span>(propagated))
+<span class="fu">print</span>(<span class="fu">error_code</span>(propagated))
+recover <span class="sc">=</span> \(x<span class="sc">:</span> Any <span class="sc">-&gt;</span> Int) <span class="cf">if</span> (<span class="fu">is_error</span>(x)) <span class="dv">0</span> <span class="cf">else</span> x
+<span class="fu">print</span>(e <span class="sc">?|&gt;</span> recover)
+<span class="fu">print</span>(<span class="dv">5</span> <span class="sc">?|&gt;</span> recover)</code></pre>
 <pre class="text"><code>10
 true
 DivisionByZero
@@ -615,12 +615,12 @@ DivisionByZero
 <section id="recovering-from-errors" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="recovering-from-errors"><span class="header-section-number">10.4</span> Recovering from Errors</h2>
 <p>The most declarative way to recover is pattern matching. <code>match</code> lets you destructure an error value and branch on what went wrong:</p>
-<pre class="t"><code>caught = match(1 / 0) { Error { m } =&gt; str_join(["Caught: ", m], ""), _ =&gt; "no error" }
-print(caught)
-safe = match(1 / 0) { Error { _ } =&gt; 0, _ =&gt; 1 }
-print(safe)
-fallback = match(42) { Error { m } =&gt; str_join(["Caught: ", m], ""), _ =&gt; 99 }
-print(fallback)</code></pre>
+<pre class="t"><code>caught <span class="sc">=</span> <span class="cf">match</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span>) { Error { m } <span class="sc">=&gt;</span> <span class="fu">str_join</span>([<span class="st">"Caught: "</span>, m], <span class="st">""</span>), _ <span class="sc">=&gt;</span> <span class="st">"no error"</span> }
+<span class="fu">print</span>(caught)
+safe <span class="sc">=</span> <span class="cf">match</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span>) { Error { _ } <span class="sc">=&gt;</span> <span class="dv">0</span>, _ <span class="sc">=&gt;</span> <span class="dv">1</span> }
+<span class="fu">print</span>(safe)
+fallback <span class="sc">=</span> <span class="cf">match</span>(<span class="dv">42</span>) { Error { m } <span class="sc">=&gt;</span> <span class="fu">str_join</span>([<span class="st">"Caught: "</span>, m], <span class="st">""</span>), _ <span class="sc">=&gt;</span> <span class="dv">99</span> }
+<span class="fu">print</span>(fallback)</code></pre>
 <pre class="text"><code>Caught: Division by zero.
 0
 99</code></pre>
@@ -637,16 +637,16 @@ print(fallback)</code></pre>
 <section id="when-a-pipeline-node-fails" class="level2" data-number="10.5">
 <h2 data-number="10.5" class="anchored" data-anchor-id="when-a-pipeline-node-fails"><span class="header-section-number">10.5</span> When a Pipeline Node Fails</h2>
 <p>Let’s put it together. The pipeline below has three nodes: one that succeeds, one that divides by zero, and one more that succeeds.</p>
-<pre class="t"><code>p = pipeline {
-  nums = [10, 0, 30]
-  bad = 1 / 0
-  ok = 42
+<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+  nums <span class="sc">=</span> [<span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">30</span>]
+  bad <span class="sc">=</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span>
+  ok <span class="sc">=</span> <span class="dv">42</span>
 }
-build_pipeline(p)
-print(is_error(p.bad))
-print(error_code(p.bad))
-print(error_msg(p.bad))
-print(is_error(read_node(p.bad)))</code></pre>
+<span class="fu">build_pipeline</span>(p)
+<span class="fu">print</span>(<span class="fu">is_error</span>(p.bad))
+<span class="fu">print</span>(<span class="fu">error_code</span>(p.bad))
+<span class="fu">print</span>(<span class="fu">error_msg</span>(p.bad))
+<span class="fu">print</span>(<span class="fu">is_error</span>(<span class="fu">read_node</span>(p.bad)))</code></pre>
 <pre class="text"><code>false
 DivisionByZero
 Division by zero.
@@ -658,15 +658,15 @@ true</code></pre>
 <h2 data-number="10.6" class="anchored" data-anchor-id="inspecting-a-failed-build"><span class="header-section-number">10.6</span> Inspecting a Failed Build</h2>
 <p>Beyond per-node checks, T gives you build-wide views of what went wrong.</p>
 <p><code>collect_exceptions(p)</code> gathers every captured error in the pipeline into a DataFrame with a row per failing node:</p>
-<pre class="t"><code>collect_exceptions(p)</code></pre>
+<pre class="t"><code><span class="fu">collect_exceptions</span>(p)</code></pre>
 <pre class="text"><code>  node  status  code            message
   ----  ------  --------------  -----------------
   bad   Error   DivisionByZero  Division by zero.
 DataFrame: 1 rows x 4 cols</code></pre>
 <p>In a long pipeline with several independent failures, this is the fastest way to see the full damage report in one place.</p>
 <p>Chapter 8 introduced <code>build_log(p)</code> and <code>build_log_to_frame()</code>, which turn the most recent build into a DataFrame with one row per node — name, status, duration, and artifact path:</p>
-<pre class="t"><code>bl = build_log(p)
-build_log_to_frame(bl)</code></pre>
+<pre class="t"><code>bl <span class="sc">=</span> <span class="fu">build_log</span>(p)
+<span class="fu">build_log_to_frame</span>(bl)</code></pre>
 <pre class="text"><code>  name  status                duration  path
   ----  --------------------  --------  -----------------------------------
   nums  Completed             0.8792    /nix/store/ds36srq9gb2q49bhsri1z...
@@ -675,7 +675,7 @@ build_log_to_frame(bl)</code></pre>
 DataFrame: 3 rows x 4 cols</code></pre>
 <p>The <code>status</code> column is exactly the four-state vocabulary from earlier in this chapter, and the <code>duration</code> column tells you which nodes are slow even when they succeed. (One gotcha: assign the log to a variable that is not already a T builtin — <code>log</code> is the natural logarithm — before passing it to <code>build_log_to_frame</code>.)</p>
 <p>Finally, <code>inspect_node</code> reports the metadata T recorded for a single node:</p>
-<pre class="t"><code>inspect_node(p.bad)</code></pre>
+<pre class="t"><code><span class="fu">inspect_node</span>(p.bad)</code></pre>
 <pre class="text"><code>dict
 ├── name: "bad"
 ├── runtime: "T"
@@ -692,9 +692,9 @@ DataFrame: 3 rows x 4 cols</code></pre>
 <section id="the-t-debug-command" class="level3" data-number="10.7.1">
 <h3 data-number="10.7.1" class="anchored" data-anchor-id="the-t-debug-command"><span class="header-section-number">10.7.1</span> The <code>t debug</code> Command</h3>
 <p>From your shell, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug <span class="op">&lt;</span>node_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug <span class="op">&lt;</span>node_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>By default this looks for the pipeline in <code>src/pipeline.t</code>; if your pipeline lives elsewhere, pass the file first:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug src/my_custom_pipeline.t data_cleanup</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug src/my_custom_pipeline.t data_cleanup</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>T evaluates the script up to the requested node, resolves every upstream dependency, locates their latest materialized <code>/nix/store</code> paths, sets up the environment, and launches the runtime’s interactive REPL. Targeting a Python node, for example, produces something like:</p>
 <pre class="text"><code>================================================
 Debugging Node: Y (Runtime: Python)
@@ -712,11 +712,11 @@ Press Ctrl+D or exit to return to T REPL.
 <section id="debug_node-from-the-repl" class="level3" data-number="10.7.2">
 <h3 data-number="10.7.2" class="anchored" data-anchor-id="debug_node-from-the-repl"><span class="header-section-number">10.7.2</span> <code>debug_node()</code> from the REPL</h3>
 <p>If you are already inside a T REPL session with a built pipeline, the same debugger is one call away:</p>
-<pre class="t"><code>debug_node(p.data_cleanup)</code></pre>
+<pre class="t"><code><span class="fu">debug_node</span>(p.data_cleanup)</code></pre>
 <p>This spawns the same subshell environment. Inside it, a <code>tlang</code> companion library lets you load upstream node data live:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df <span class="op">=</span> tlang.read_node(<span class="st">"raw_df"</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df <span class="op">=</span> tlang.read_node(<span class="st">"raw_df"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now you can inspect the exact data that crashed your node, dry-run the offending function line by line, and confirm the fix. Press <code>Ctrl+D</code> (or <code>exit()</code>, or <code>q()</code> in R) to leave the subshell; control returns cleanly to your T session.</p>
 <p>The subshells are customized so you always know where you are: Python starts with a <code>py&gt;</code> prompt, R starts quietly (no welcome banner) with <code>r&gt;</code>, and Julia shows <code>jl&gt;</code>. Interactive debugging is supported for the three REPL-capable runtimes — Python, R, and Julia; debugging a Quarto or Bash node raises a descriptive <code>ValueError</code> instead of dropping you into a raw shell.</p>
 </section>
@@ -734,23 +734,23 @@ Press Ctrl+D or exit to return to T REPL.
 <section id="polyglot-error-handling" class="level2" data-number="10.8">
 <h2 data-number="10.8" class="anchored" data-anchor-id="polyglot-error-handling"><span class="header-section-number">10.8</span> Polyglot Error Handling</h2>
 <p>The same rules apply to nodes written in R, Python, or Julia. When a foreign script raises a native exception — an R <code>stop()</code>, a Python <code>ValueError</code>, a Julia <code>UndefVarError</code> — T captures it exactly as it captures a T error: the node is marked <code>Completed with error</code>, and <code>error_code</code>, <code>error_msg</code>, <code>collect_exceptions</code>, and the build log all work on it as before.</p>
-<pre class="t"><code>p2 = pipeline {
-  data = node(
-    command = to_dataframe([
-      x = [1.0, 2.0, 3.0],
-      y = [0L, 0L, 0L]
+<pre class="t"><code>p2 <span class="sc">=</span> <span class="cf">pipeline</span> {
+  data <span class="sc">=</span> <span class="fu">node</span>(
+    command <span class="sc">=</span> <span class="fu">to_dataframe</span>([
+      x <span class="sc">=</span> [<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>],
+      y <span class="sc">=</span> [<span class="dv">0</span>L, <span class="dv">0</span>L, <span class="dv">0</span>L]
     ])
   )
-  model = rn(
-    command = &lt;{
-      data$y &lt;- as.factor(data$y)
-      glm(y ~ x, data = data, family = binomial(link = "logit"))
-    }&gt;,
-    deserializer = ^ipc,
-    serializer = ^pmml
+  model <span class="sc">=</span> <span class="fu">rn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
+      data<span class="sc">$</span>y <span class="sc">&lt;</span><span class="sc">-</span> as.factor(data<span class="sc">$</span>y)
+      <span class="fu">glm</span>(y <span class="sc">~</span> x, data <span class="sc">=</span> data, family <span class="sc">=</span> <span class="fu">binomial</span>(link <span class="sc">=</span> <span class="st">"logit"</span>))
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^ipc,
+    serializer <span class="sc">=</span> ^pmml
   )
 }
-build_pipeline(p2)</code></pre>
+<span class="fu">build_pipeline</span>(p2)</code></pre>
 <p>Here the response variable has only one level, so the logistic regression fails inside the R sandbox. The build does not abort; <code>model</code> is a soft failure, and <code>error_msg(p2.model)</code> carries R’s original message. And because <code>model</code> is an R node, <code>debug_node(p2.model)</code> drops you into an <code>r&gt;</code> subshell with the exact <code>data</code> frame that caused the trouble.</p>
 <p>The one polyglot-specific habit worth forming: keep error messages in your foreign code informative. A bare <code>stop()</code> in R or a bare <code>raise</code> in Python gives you an <code>Error</code> with little to go on; a message like <code>stop("no rows left after filtering")</code> is what <code>error_msg</code> will hand you later, and what you will thank yourself for at 2 a.m.</p>
 </section>

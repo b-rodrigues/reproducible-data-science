@@ -553,56 +553,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Render a Quarto report that loads the model and produces a summary table.</li>
 </ol>
 <p>Here is the complete <code>src/pipeline.t</code> for that workflow:</p>
-<pre class="t"><code>p = pipeline {
+<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
-  -- Stage 1: load raw CSV in T.
-  -- T's built-in read_csv keeps paths out of foreign code blocks.
-  raw = read_csv("data/penguins.csv")
+  <span class="co">-- Stage 1: load raw CSV in T.</span>
+  <span class="co">-- T's built-in read_csv keeps paths out of foreign code blocks.</span>
+  raw <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/penguins.csv"</span>)
 
-  -- Stage 2: clean in Python.
-  -- The ^ipc deserializer turns raw into a pandas DataFrame automatically.
-  clean = pyn(
-    command      = &lt;{
-      import pandas as pd
+  <span class="co">-- Stage 2: clean in Python.</span>
+  <span class="co">-- The ^ipc deserializer turns raw into a pandas DataFrame automatically.</span>
+  clean <span class="sc">=</span> <span class="fu">pyn</span>(
+    command      <span class="sc">=</span> <span class="sc">&lt;</span>{
+      <span class="cf">import</span> pandas as pd
 
-      df = (
+      df <span class="sc">=</span> (
         raw
           .dropna()
           .assign(
-            species_code = raw["species"].astype("category").cat.codes
+            species_code <span class="sc">=</span> raw[<span class="st">"species"</span>].astype(<span class="st">"category"</span>).cat.codes
           )
-          [["bill_length_mm", "bill_depth_mm",
-            "flipper_length_mm", "body_mass_g", "species_code"]]
+          [[<span class="st">"bill_length_mm"</span>, <span class="st">"bill_depth_mm"</span>,
+            <span class="st">"flipper_length_mm"</span>, <span class="st">"body_mass_g"</span>, <span class="st">"species_code"</span>]]
       )
       df
-    }&gt;,
-    deserializer = ^ipc,
-    serializer   = ^parquet
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^ipc,
+    serializer   <span class="sc">=</span> ^parquet
   )
 
-  -- Stage 3: fit a logistic regression in R.
-  -- ^parquet on the R side becomes a data.frame automatically.
-  model = rn(
-    command = &lt;{
-      library(nnet)
-      m &lt;- multinom(species_code ~ ., data = clean, trace = FALSE)
+  <span class="co">-- Stage 3: fit a logistic regression in R.</span>
+  <span class="co">-- ^parquet on the R side becomes a data.frame automatically.</span>
+  model <span class="sc">=</span> <span class="fu">rn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
+      <span class="fu">library</span>(nnet)
+      m <span class="sc">&lt;</span><span class="sc">-</span> <span class="fu">multinom</span>(species_code <span class="sc">~</span> <span class="sc">.</span>, data <span class="sc">=</span> clean, trace <span class="sc">=</span> FALSE)
       m
-    }&gt;,
-    deserializer = ^parquet,
-    serializer   = ^pmml
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^parquet,
+    serializer   <span class="sc">=</span> ^pmml
   )
 
-  -- Stage 4: render the Quarto report.
-  -- The .qmd file is declared in the script argument.
-  -- read_node("model") inside the .qmd is auto-detected as a dependency.
-  report = qn(
-    script     = "src/report.qmd",
-    serializer = ^html
+  <span class="co">-- Stage 4: render the Quarto report.</span>
+  <span class="co">-- The .qmd file is declared in the script argument.</span>
+  <span class="co">-- read_node("model") inside the .qmd is auto-detected as a dependency.</span>
+  report <span class="sc">=</span> <span class="fu">qn</span>(
+    script     <span class="sc">=</span> <span class="st">"src/report.qmd"</span>,
+    serializer <span class="sc">=</span> ^html
   )
 
 }
 
-build_pipeline(p)</code></pre>
+<span class="fu">build_pipeline</span>(p)</code></pre>
 <p>Let us walk through the data flow step by step.</p>
 <p><strong><code>raw</code></strong> is a native T node — no foreign runtime involved. <code>read_csv</code> is a T built-in that returns a <code>DataFrame</code>. Because it is a native node, it inherits T’s default <code>^ipc</code> serializer: the data is written to the Nix store as an Arrow IPC file.</p>
 <p><strong><code>clean</code></strong> is a Python node. The <code>deserializer = ^ipc</code> instruction tells the generated sandbox wrapper to load the upstream <code>raw</code> artifact from the store as a <code>pandas.DataFrame</code> and bind it to the name <code>raw</code> before executing the <code>&lt;{ ... }&gt;</code> block. The body of the block is plain Python — no argument parsing, no file I/O. It assigns back to <code>df</code> and T reads the last expression as the node’s result. The <code>serializer = ^parquet</code> writes it out as a Parquet file, which is the right choice here: Parquet is compressed, column-oriented, and readable by every runtime T supports.</p>
@@ -635,9 +635,9 @@ build_pipeline(p)</code></pre>
 </div>
 </div>
 <p>To build, simply run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>or, from inside the REPL:</p>
-<pre class="t"><code>build_pipeline(p)</code></pre>
+<pre class="t"><code><span class="fu">build_pipeline</span>(p)</code></pre>
 <p>T resolves the DAG, emits four Nix derivations, and builds them in dependency order. If you rebuild without changing anything, all four nodes are served from the Nix store cache — zero recomputation.</p>
 </section>
 <section id="sec-runtimes" class="level2" data-number="8.3">
@@ -648,21 +648,21 @@ build_pipeline(p)</code></pre>
 <p>Shell nodes run a shell command inside the derivation’s sandbox. They are useful for wrapping command-line tools (data converters, compilers, external binaries) without writing glue code in a scripting language.</p>
 <p><code>shn()</code> operates in two modes:</p>
 <p><strong>Exec mode</strong> (default) — the <code>command</code> argument is a shell string run with <code>bash -c</code>. The node’s serializer is <code>^text</code> by default, and the output is whatever is written to stdout:</p>
-<pre class="t"><code>p_shn_exec = pipeline {
+<pre class="t"><code>p_shn_exec <span class="sc">=</span> <span class="cf">pipeline</span> {
 
-  -- Call an external converter and capture stdout
-  schema = shn(
-    command    = "duckdb :memory: \"SELECT * FROM parquet_schema('data/raw.parquet')\"",
-    serializer = ^text
+  <span class="co">-- Call an external converter and capture stdout</span>
+  schema <span class="sc">=</span> <span class="fu">shn</span>(
+    command    <span class="sc">=</span> <span class="st">"duckdb :memory: \"SELECT * FROM parquet_schema('data/raw.parquet')\""</span>,
+    serializer <span class="sc">=</span> ^text
   )
 
 }</code></pre>
 <p><strong>Script mode</strong> — set <code>script</code> to a path and <code>shn()</code> copies that script into the sandbox and executes it. Use this when the shell logic is more than a one-liner:</p>
-<pre class="t"><code>p = pipeline {
+<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
-  compressed = shn(
-    script     = "scripts/compress.sh",
-    serializer = ^text
+  compressed <span class="sc">=</span> <span class="fu">shn</span>(
+    script     <span class="sc">=</span> <span class="st">"scripts/compress.sh"</span>,
+    serializer <span class="sc">=</span> ^text
   )
 
 }</code></pre>
@@ -685,23 +685,23 @@ build_pipeline(p)</code></pre>
 <h3 data-number="8.3.2" class="anchored" data-anchor-id="julia-nodes-jln"><span class="header-section-number">8.3.2</span> Julia Nodes: <code>jln()</code></h3>
 <p>Julia nodes work exactly like Python and R nodes. The <code>command</code> argument is a <code>&lt;{ ... }&gt;</code> block of Julia code, upstream artifacts are injected as Julia values, and the result is serialized.</p>
 <p>Declare Julia packages in the <code>[jl-dependencies]</code> section of <code>tproject.toml</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[jl-dependencies]</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"DataFrames"</span><span class="op">,</span> <span class="st">"GLM"</span><span class="op">,</span> <span class="st">"CSV"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[jl-dependencies]</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"DataFrames"</span><span class="op">,</span> <span class="st">"GLM"</span><span class="op">,</span> <span class="st">"CSV"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then declare environment in the usual way with <code>t update &amp;&amp; exit &amp;&amp; nix develop</code>.</p>
 <p>A Julia node that fits a linear model:</p>
-<pre class="t"><code>p = pipeline {
+<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
-  raw = read_csv("data/fuel.csv")
+  raw <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/fuel.csv"</span>)
 
-  jl_model = jln(
-    command = &lt;{
+  jl_model <span class="sc">=</span> <span class="fu">jln</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
       using DataFrames, GLM
 
-      m = lm(@formula(mpg ~ disp + hp), clean)
+      m <span class="sc">=</span> <span class="fu">lm</span>(@<span class="fu">formula</span>(mpg <span class="sc">~</span> disp <span class="sc">+</span> hp), clean)
       m
-    }&gt;,
-    deserializer = ^ipc,
-    serializer   = ^json
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^ipc,
+    serializer   <span class="sc">=</span> ^json
   )
 
 }</code></pre>
@@ -730,26 +730,26 @@ build_pipeline(p)</code></pre>
 <li><code>read_node("name")</code> calls inside the <code>.qmd</code> are statically scanned by T and register as dependencies automatically.</li>
 </ul>
 <p>A Quarto node that produces a PDF report:</p>
-<pre class="t"><code>report = qn(
-  script     = "src/report.qmd",
-  serializer = ^pdf
+<pre class="t"><code>report <span class="sc">=</span> <span class="fu">qn</span>(
+  script     <span class="sc">=</span> <span class="st">"src/report.qmd"</span>,
+  serializer <span class="sc">=</span> ^pdf
 )</code></pre>
 <p>The <code>.qmd</code> file itself:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>src/report.qmd</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="src/report.qmd"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Penguin Species Model"</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> pdf</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="in">~~~{r, eval = FALSE}</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"model"</span>)    <span class="co"># T registers 'model' as a dependency</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>clean <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"clean"</span>)    <span class="co"># and 'clean' too</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="in">~~~</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="src/report.qmd"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Penguin Species Model"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> pdf</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="in">~~~{r, eval = FALSE}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"model"</span>)    <span class="co"># T registers 'model' as a dependency</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>clean <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"clean"</span>)    <span class="co"># and 'clean' too</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="in">~~~</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -770,35 +770,35 @@ build_pipeline(p)</code></pre>
 <h2 data-number="8.4" class="anchored" data-anchor-id="sec-remote-data"><span class="header-section-number">8.4</span> Fetching Remote Data</h2>
 <p>Every T node executes in a Nix <strong>sandbox</strong> — a restricted build environment that has no network access. This is intentional: if network calls were permitted inside a build, the same pipeline could produce different results on different days depending on what a remote server returns. Reproducibility would be broken by design.</p>
 <p>The practical consequence is that you cannot do this inside a node:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will fail — no network in the sandbox</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(requests.get(<span class="st">"https://example.com/data.csv"</span>).content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will fail — no network in the sandbox</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(requests.get(<span class="st">"https://example.com/data.csv"</span>).content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Nor this in R:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Also fails</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">url</span>(<span class="st">"https://example.com/data.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Also fails</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">url</span>(<span class="st">"https://example.com/data.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Instead, T provides a two-step <strong>prefetch and fetch</strong> pattern that lets Nix download the file <em>before</em> the sandbox is created, pin the download to a cryptographic hash, and inject the file as a read-only input.</p>
 <section id="step-1-prefetch-the-hash" class="level3" data-number="8.4.1">
 <h3 data-number="8.4.1" class="anchored" data-anchor-id="step-1-prefetch-the-hash"><span class="header-section-number">8.4.1</span> Step 1: Prefetch the hash</h3>
 <p>From your project REPL (which <em>does</em> have network access), call:</p>
-<pre class="t"><code>hash = prefetch("https://zenodo.org/record/9999/penguins.csv")
+<pre class="t"><code>hash <span class="sc">=</span> <span class="fu">prefetch</span>(<span class="st">"https://zenodo.org/record/9999/penguins.csv"</span>)
 hash
-"sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="</code></pre>
+<span class="st">"sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="</span></code></pre>
 <p><code>prefetch</code> downloads the file, computes its SHA-256 hash in Nix’s standard base64 encoding, and returns the hash string. <strong>Copy this string.</strong> It is your permanent, tamper-evident reference to that exact file.</p>
 </section>
 <section id="step-2-use-fetchurl-in-the-pipeline" class="level3" data-number="8.4.2">
 <h3 data-number="8.4.2" class="anchored" data-anchor-id="step-2-use-fetchurl-in-the-pipeline"><span class="header-section-number">8.4.2</span> Step 2: Use <code>fetchurl</code> in the pipeline</h3>
 <p>Now declare a node that fetches the same URL, passing the hash you recorded:</p>
-<pre class="t"><code>p_fetchurl = pipeline {
+<pre class="t"><code>p_fetchurl <span class="sc">=</span> <span class="cf">pipeline</span> {
 
-  raw = fetchurl(
-    url   = "https://zenodo.org/record/9999/penguins.csv",
-    sha256 = "sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="
+  raw <span class="sc">=</span> <span class="fu">fetchurl</span>(
+    url   <span class="sc">=</span> <span class="st">"https://zenodo.org/record/9999/penguins.csv"</span>,
+    sha256 <span class="sc">=</span> <span class="st">"sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="</span>
   )
 
-  clean = pyn(
-    command      = &lt;{ raw.dropna() }&gt;,
-    deserializer = ^csv,
-    serializer   = ^parquet
+  clean <span class="sc">=</span> <span class="fu">pyn</span>(
+    command      <span class="sc">=</span> <span class="sc">&lt;</span>{ raw.dropna() }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^csv,
+    serializer   <span class="sc">=</span> ^parquet
   )
 
 }</code></pre>
@@ -844,109 +844,109 @@ hash
 <li><strong>Julia</strong>: T prepends <code>include("utils.jl")</code> before the command.</li>
 </ul>
 <p>A concrete example with Python cleaning and R modelling sharing utility functions:</p>
-<pre class="t"><code>p = pipeline {
+<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
-  raw = read_csv("data/penguins.csv")
+  raw <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/penguins.csv"</span>)
 
-  clean = pyn(
-    command      = &lt;{ clean_penguins(raw) }&gt;,
-    deserializer = ^ipc,
-    serializer   = ^parquet,
-    functions    = "src/py_utils.py"   -- defines clean_penguins()
+  clean <span class="sc">=</span> <span class="fu">pyn</span>(
+    command      <span class="sc">=</span> <span class="sc">&lt;</span>{ <span class="fu">clean_penguins</span>(raw) }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^ipc,
+    serializer   <span class="sc">=</span> ^parquet,
+    functions    <span class="sc">=</span> <span class="st">"src/py_utils.py"</span>   <span class="co">-- defines clean_penguins()</span>
   )
 
-  model = rn(
-    command      = &lt;{ fit_model(clean) }&gt;,
-    deserializer = ^parquet,
-    serializer   = ^pmml,
-    functions    = "src/r_utils.R"     -- defines fit_model()
+  model <span class="sc">=</span> <span class="fu">rn</span>(
+    command      <span class="sc">=</span> <span class="sc">&lt;</span>{ <span class="fu">fit_model</span>(clean) }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^parquet,
+    serializer   <span class="sc">=</span> ^pmml,
+    functions    <span class="sc">=</span> <span class="st">"src/r_utils.R"</span>     <span class="co">-- defines fit_model()</span>
   )
 
 }</code></pre>
 <p><code>src/py_utils.py</code> is a plain Python file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># src/py_utils.py</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_penguins(df):</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        df</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        .dropna()</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        .assign(species_code<span class="op">=</span>df[<span class="st">"species"</span>].astype(<span class="st">"category"</span>).cat.codes)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        [[<span class="st">"bill_length_mm"</span>, <span class="st">"bill_depth_mm"</span>,</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>          <span class="st">"flipper_length_mm"</span>, <span class="st">"body_mass_g"</span>, <span class="st">"species_code"</span>]]</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># src/py_utils.py</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_penguins(df):</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        df</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        .dropna()</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        .assign(species_code<span class="op">=</span>df[<span class="st">"species"</span>].astype(<span class="st">"category"</span>).cat.codes)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        [[<span class="st">"bill_length_mm"</span>, <span class="st">"bill_depth_mm"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>          <span class="st">"flipper_length_mm"</span>, <span class="st">"body_mass_g"</span>, <span class="st">"species_code"</span>]]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>And <code>src/r_utils.R</code> is plain R:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># src/r_utils.R</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>fit_model <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  nnet<span class="sc">::</span><span class="fu">multinom</span>(species_code <span class="sc">~</span> ., <span class="at">data =</span> df, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># src/r_utils.R</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fit_model <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  nnet<span class="sc">::</span><span class="fu">multinom</span>(species_code <span class="sc">~</span> ., <span class="at">data =</span> df, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The key benefit is that your node commands become one-liners that delegate to tested, version-controlled utility functions. When the function changes, every node that lists it under <code>functions</code> is automatically rebuilt by Nix.</p>
 </section>
 <section id="the-include-parameter" class="level3" data-number="8.5.2">
 <h3 data-number="8.5.2" class="anchored" data-anchor-id="the-include-parameter"><span class="header-section-number">8.5.2</span> The <code>include</code> Parameter</h3>
 <p><code>functions</code> is designed for executable source files. If your node needs additional <em>non-executable</em> resources — a configuration YAML, a lookup table, a template file — use the <code>include</code> parameter instead. T copies the listed paths into the sandbox without attempting to source or execute them:</p>
-<pre class="t"><code>report = qn(
-  script  = "src/report.qmd",
-  include = ["src/custom.scss", "src/logo.png", "data/lookups.csv"]
+<pre class="t"><code>report <span class="sc">=</span> <span class="fu">qn</span>(
+  script  <span class="sc">=</span> <span class="st">"src/report.qmd"</span>,
+  include <span class="sc">=</span> [<span class="st">"src/custom.scss"</span>, <span class="st">"src/logo.png"</span>, <span class="st">"data/lookups.csv"</span>]
 )</code></pre>
 </section>
 <section id="global-pipeline-options" class="level3" data-number="8.5.3">
 <h3 data-number="8.5.3" class="anchored" data-anchor-id="global-pipeline-options"><span class="header-section-number">8.5.3</span> Global Pipeline Options</h3>
 <p>Repeating <code>functions = "src/utils.R"</code> on every R node is tedious and error-prone. The <code>set_pipeline_global_options</code> function lets you declare defaults once for all nodes of a given runtime:</p>
-<pre class="t"><code>set_pipeline_global_options(
-  r      = [functions = "src/r_utils.R"],
-  python = [functions = "src/py_utils.py"],
-  julia  = [functions = "src/jl_utils.jl"]
+<pre class="t"><code><span class="fu">set_pipeline_global_options</span>(
+  r      <span class="sc">=</span> [functions <span class="sc">=</span> <span class="st">"src/r_utils.R"</span>],
+  python <span class="sc">=</span> [functions <span class="sc">=</span> <span class="st">"src/py_utils.py"</span>],
+  julia  <span class="sc">=</span> [functions <span class="sc">=</span> <span class="st">"src/jl_utils.jl"</span>]
 )
 
-p = pipeline {
+p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
-  raw = read_csv("data/penguins.csv")
+  raw <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/penguins.csv"</span>)
 
-  -- r_utils.R is automatically sourced in every rn() node
-  clean_r = rn(
-    command      = &lt;{ prepare(raw) }&gt;,
-    deserializer = ^ipc,
-    serializer   = ^parquet
+  <span class="co">-- r_utils.R is automatically sourced in every rn() node</span>
+  clean_r <span class="sc">=</span> <span class="fu">rn</span>(
+    command      <span class="sc">=</span> <span class="sc">&lt;</span>{ <span class="fu">prepare</span>(raw) }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^ipc,
+    serializer   <span class="sc">=</span> ^parquet
   )
 
-  model = rn(
-    command      = &lt;{ fit_model(clean_r) }&gt;,
-    deserializer = ^parquet,
-    serializer   = ^pmml
+  model <span class="sc">=</span> <span class="fu">rn</span>(
+    command      <span class="sc">=</span> <span class="sc">&lt;</span>{ <span class="fu">fit_model</span>(clean_r) }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^parquet,
+    serializer   <span class="sc">=</span> ^pmml
   )
 
 }
 
-build_pipeline(p)</code></pre>
+<span class="fu">build_pipeline</span>(p)</code></pre>
 <p>You can also set global <code>include</code> and <code>env_vars</code> here. Node-level settings take precedence over globals: if a node declares its own <code>functions</code>, it overrides the global default for that node (rather than appending to it), so you retain full per-node control.</p>
 </section>
 </section>
 <section id="sec-env-vars" class="level2" data-number="8.6">
 <h2 data-number="8.6" class="anchored" data-anchor-id="sec-env-vars"><span class="header-section-number">8.6</span> Environment Variables in Nodes</h2>
 <p>The <code>env_vars</code> argument passes named environment variables into a node’s sandbox. This is the correct way to inject secrets, feature flags, and run-mode switches without hardcoding them in the pipeline source.</p>
-<pre class="t"><code>p_env_vars = pipeline {
+<pre class="t"><code>p_env_vars <span class="sc">=</span> <span class="cf">pipeline</span> {
 
-  model = rn(
-    command  = &lt;{
-      mode &lt;- Sys.getenv("MODEL_MODE", unset = "production")
-      if (mode == "debug") {
-        message("Debug mode — using 100 trees")
-        ntree &lt;- 100L
-      } else {
-        ntree &lt;- 500L
+  model <span class="sc">=</span> <span class="fu">rn</span>(
+    command  <span class="sc">=</span> <span class="sc">&lt;</span>{
+      mode <span class="sc">&lt;</span><span class="sc">-</span> Sys.getenv(<span class="st">"MODEL_MODE"</span>, unset <span class="sc">=</span> <span class="st">"production"</span>)
+      <span class="cf">if</span> (mode <span class="sc">==</span> <span class="st">"debug"</span>) {
+        <span class="fu">message</span>(<span class="st">"Debug mode — using 100 trees"</span>)
+        ntree <span class="sc">&lt;</span><span class="sc">-</span> <span class="dv">100</span>L
+      } <span class="cf">else</span> {
+        ntree <span class="sc">&lt;</span><span class="sc">-</span> <span class="dv">500</span>L
       }
-      randomForest::randomForest(species ~ ., data = clean, ntree = ntree)
-    }&gt;,
-    deserializer = ^parquet,
-    serializer   = ^pmml,
-    env_vars     = [MODEL_MODE: "debug", SEED: "42"]
+      randomForest<span class="sc">::</span><span class="fu">randomForest</span>(species <span class="sc">~</span> <span class="sc">.</span>, data <span class="sc">=</span> clean, ntree <span class="sc">=</span> ntree)
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^parquet,
+    serializer   <span class="sc">=</span> ^pmml,
+    env_vars     <span class="sc">=</span> [MODEL_MODE<span class="sc">:</span> <span class="st">"debug"</span>, SEED<span class="sc">:</span> <span class="st">"42"</span>]
   )
 
 }</code></pre>
 <p>In Python nodes, read variables with <code>os.environ</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>mode <span class="op">=</span> os.environ.get(<span class="st">"MODEL_MODE"</span>, <span class="st">"production"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mode <span class="op">=</span> os.environ.get(<span class="st">"MODEL_MODE"</span>, <span class="st">"production"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In Julia nodes, use <code>ENV["MODEL_MODE"]</code>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1000,39 +1000,39 @@ build_pipeline(p)</code></pre>
 </tr>
 </tbody>
 </table>
-<pre class="t"><code>log   = build_log(p)
-frame = build_log_to_frame(log)
+<pre class="t"><code>log   <span class="sc">=</span> <span class="fu">build_log</span>(p)
+frame <span class="sc">=</span> <span class="fu">build_log_to_frame</span>(log)
 frame
 
 name        status    duration_s  path
-raw         cached    0.00        /nix/store/abc…-raw
-clean       built     3.21        /nix/store/def…-clean
-model       built     8.74        /nix/store/ghi…-model
-report      built     12.05       /nix/store/jkl…-report</code></pre>
+raw         cached    <span class="fl">0.00</span>        <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>abc…<span class="sc">-</span>raw
+clean       built     <span class="fl">3.21</span>        <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>def…<span class="sc">-</span>clean
+model       built     <span class="fl">8.74</span>        <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>ghi…<span class="sc">-</span>model
+report      built     <span class="fl">12.05</span>       <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>jkl…<span class="sc">-</span>report</code></pre>
 <p>A <code>status</code> of <code>"cached"</code> means Nix found an existing derivation with the same input hash and served it from the store without rerunning anything. <code>"built"</code> means the node was (re)computed in this run.</p>
 </section>
 <section id="copying-artifacts-out-of-the-store" class="level3" data-number="8.7.2">
 <h3 data-number="8.7.2" class="anchored" data-anchor-id="copying-artifacts-out-of-the-store"><span class="header-section-number">8.7.2</span> Copying Artifacts Out of the Store</h3>
 <p>Nix store paths are read-only and content-addressed — they are not meant to be worked with directly. Use <code>pipeline_copy()</code> to copy artifacts to a local directory:</p>
-<pre class="t"><code>-- Copy a single node's artifact
-pipeline_copy(p.report, dest = "outputs/")
+<pre class="t"><code><span class="co">-- Copy a single node's artifact</span>
+<span class="fu">pipeline_copy</span>(p.report, dest <span class="sc">=</span> <span class="st">"outputs/"</span>)
 
--- Copy every artifact in the pipeline
-pipeline_copy(p, dest = "outputs/")</code></pre>
+<span class="co">-- Copy every artifact in the pipeline</span>
+<span class="fu">pipeline_copy</span>(p, dest <span class="sc">=</span> <span class="st">"outputs/"</span>)</code></pre>
 <p>After copying, <code>outputs/report.html</code> (or whatever format the Quarto node produced) is a regular file you can open, commit to Git, or publish.</p>
 </section>
 <section id="garbage-collection" class="level3" data-number="8.7.3">
 <h3 data-number="8.7.3" class="anchored" data-anchor-id="garbage-collection"><span class="header-section-number">8.7.3</span> Garbage Collection</h3>
 <p>Over time the Nix store accumulates artifacts from old builds. Two functions help manage this:</p>
 <p><code>pipeline_gc(p)</code> removes store paths that belong to <em>this pipeline’s</em> previous builds but are no longer referenced by the current build graph. Pass <code>dry_run = true</code> first to see what would be deleted:</p>
-<pre class="t"><code>pipeline_gc(p, dry_run = true)
+<pre class="t"><code><span class="fu">pipeline_gc</span>(p, dry_run <span class="sc">=</span> <span class="cn">true</span>)
 
-Would remove:
-  /nix/store/xyz…-clean  (superseded by def…-clean)
+Would remove<span class="sc">:</span>
+  <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>xyz…<span class="sc">-</span>clean  (superseded by def…<span class="sc">-</span>clean)
 
-pipeline_gc(p)</code></pre>
+<span class="fu">pipeline_gc</span>(p)</code></pre>
 <p><code>t_gc()</code> runs a full Nix garbage collection — it removes every store path that is not referenced by any active GC root on the system. Use this periodically on development machines or CI runners to reclaim disk space:</p>
-<pre class="t"><code>t_gc()</code></pre>
+<pre class="t"><code><span class="fu">t_gc</span>()</code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1062,19 +1062,19 @@ pipeline_gc(p)</code></pre>
 <section id="previewing-cache-hits" class="level3" data-number="8.8.1">
 <h3 data-number="8.8.1" class="anchored" data-anchor-id="previewing-cache-hits"><span class="header-section-number">8.8.1</span> Previewing Cache Hits</h3>
 <p>Before committing to a full build, you can ask T to report which nodes would be rebuilt versus served from cache by passing <code>dry_run = true</code> to <code>build_pipeline</code>:</p>
-<pre class="t"><code>build_pipeline(p, dry_run = true)
+<pre class="t"><code><span class="fu">build_pipeline</span>(p, dry_run <span class="sc">=</span> <span class="cn">true</span>)
 
-Would build:  [model, report]
-Would cache:  [raw, clean]</code></pre>
+Would build<span class="sc">:</span>  [model, report]
+Would cache<span class="sc">:</span>  [raw, clean]</code></pre>
 <p>This is useful when iterating on a slow node (a model fit, a long render) and you want to confirm that only the nodes downstream of your change will run.</p>
 <p>The equivalent from the shell:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t <span class="at">--dry-run</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t <span class="at">--dry-run</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="sec-cicd" class="level2" data-number="8.9">
 <h2 data-number="8.9" class="anchored" data-anchor-id="sec-cicd"><span class="header-section-number">8.9</span> CI/CD with <code>pipeline_to_ga()</code></h2>
 <p>A reproducible pipeline is most valuable when it runs automatically — on every push, on a schedule, or when upstream data changes. T ships with a function that generates a complete GitHub Actions workflow YAML from your pipeline definition:</p>
-<pre class="t"><code>pipeline_to_ga(p, file = ".github/workflows/pipeline.yml")</code></pre>
+<pre class="t"><code><span class="fu">pipeline_to_ga</span>(p, file <span class="sc">=</span> <span class="st">".github/workflows/pipeline.yml"</span>)</code></pre>
 <p>That single call writes a workflow file that:</p>
 <ol type="1">
 <li>Installs Nix on the runner using the Determinate Systems installer.</li>
@@ -1085,47 +1085,47 @@ Would cache:  [raw, clean]</code></pre>
 </ol>
 <p>The <code>t-runs</code> branch caching approach avoids the GitHub Actions cache size limit by persisting the Nix store as a Git repository. On a typical pipeline, the first CI run downloads and builds everything; subsequent runs restore from cache and only rebuild what changed — the same incremental behaviour you get locally.</p>
 <p>A minimal end-to-end CI setup for our penguin pipeline:</p>
-<pre class="t"><code>-- In src/pipeline.t, add at the bottom:
-pipeline_to_ga(
+<pre class="t"><code><span class="co">-- In src/pipeline.t, add at the bottom:</span>
+<span class="fu">pipeline_to_ga</span>(
   p,
-  file     = ".github/workflows/pipeline.yml",
-  on_push  = ["main"],
-  schedule = "0 6 * * 1"   -- Monday mornings at 06:00 UTC
+  file     <span class="sc">=</span> <span class="st">".github/workflows/pipeline.yml"</span>,
+  on_push  <span class="sc">=</span> [<span class="st">"main"</span>],
+  schedule <span class="sc">=</span> <span class="st">"0 6 * * 1"</span>   <span class="co">-- Monday mornings at 06:00 UTC</span>
 )</code></pre>
 <p>The generated YAML looks roughly like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> T Pipeline</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">schedule</span><span class="kw">:</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">cron</span><span class="kw">:</span><span class="at"> </span><span class="st">"0 6 * * 1"</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">fetch-depth</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> DeterminateSystems/nix-installer-action@main</span></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Restore t-runs cache</span></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/cache@v4</span></span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">path</span><span class="kw">:</span><span class="at"> /nix/store</span></span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">key</span><span class="kw">:</span><span class="at"> t-runs-${{ hashFiles('tproject.toml') }}</span></span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">restore-keys</span><span class="kw">:</span><span class="at"> t-runs-</span></span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build pipeline</span></span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> nix develop --command t run src/pipeline.t</span></span>
-<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Upload artifacts</span></span>
-<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/upload-artifact@v4</span></span>
-<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">name</span><span class="kw">:</span><span class="at"> pipeline-outputs</span></span>
-<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">path</span><span class="kw">:</span><span class="at"> outputs/</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> T Pipeline</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">schedule</span><span class="kw">:</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">cron</span><span class="kw">:</span><span class="at"> </span><span class="st">"0 6 * * 1"</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">fetch-depth</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> DeterminateSystems/nix-installer-action@main</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Restore t-runs cache</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/cache@v4</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">path</span><span class="kw">:</span><span class="at"> /nix/store</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">key</span><span class="kw">:</span><span class="at"> t-runs-${{ hashFiles('tproject.toml') }}</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">restore-keys</span><span class="kw">:</span><span class="at"> t-runs-</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build pipeline</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> nix develop --command t run src/pipeline.t</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Upload artifacts</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/upload-artifact@v4</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">name</span><span class="kw">:</span><span class="at"> pipeline-outputs</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">path</span><span class="kw">:</span><span class="at"> outputs/</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

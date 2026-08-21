@@ -572,33 +572,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="navigating-your-environment" class="level3" data-number="15.1.1">
 <h3 data-number="15.1.1" class="anchored" data-anchor-id="navigating-your-environment"><span class="header-section-number">15.1.1</span> Navigating your environment</h3>
 <p>The first group of commands helps you get your bearings. <code>%pwd</code> prints the current working directory, and <code>%cd</code> changes it (it expands <code>~</code> correctly, and reports an error if the target directory does not exist). <code>%ls</code> lists the contents of the current directory, and <code>%env</code> prints every environment variable, one per line.</p>
-<pre class="t"><code>%pwd
-/home/user/projects
-%cd data
-%ls
+<pre class="t"><code><span class="sc">%</span>pwd
+<span class="sc">/</span>home<span class="sc">/</span>user<span class="sc">/</span>projects
+<span class="sc">%</span>cd data
+<span class="sc">%</span>ls
 raw.csv  clean.csv</code></pre>
 <p>These mirror the shell commands you already know, so the REPL feels less like a foreign object and more like a workspace you can move around in.</p>
 </section>
 <section id="inspecting-what-you-have" class="level3" data-number="15.1.2">
 <h3 data-number="15.1.2" class="anchored" data-anchor-id="inspecting-what-you-have"><span class="header-section-number">15.1.2</span> Inspecting what you have</h3>
 <p>When you have been working in the REPL for a while, it is easy to lose track of what is in scope. <code>%objects</code> (aliased <code>%who</code>) lists every user-defined variable, its type, and a compact summary:</p>
-<pre class="t"><code>x = 42
-df = read_csv("data.csv")
-%objects
---  name  type       summary
---  x     Int        42
---  df    DataFrame  150 rows x 5 cols</code></pre>
+<pre class="t"><code>x <span class="sc">=</span> <span class="dv">42</span>
+df <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data.csv"</span>)
+<span class="sc">%</span>objects
+<span class="co">--  name  type       summary</span>
+<span class="co">--  x     Int        42</span>
+<span class="co">--  df    DataFrame  150 rows x 5 cols</span></code></pre>
 <p><code>%history</code> shows the entries from the REPL command history, stored in <code>~/.t_history</code>, which is handy for re-running or copying something you did a few minutes ago. <code>%reset</code> removes all user-defined variables and returns you to a clean base environment.</p>
 </section>
 <section id="timing-and-capturing-work" class="level3" data-number="15.1.3">
 <h3 data-number="15.1.3" class="anchored" data-anchor-id="timing-and-capturing-work"><span class="header-section-number">15.1.3</span> Timing and capturing work</h3>
 <p><code>%time</code> evaluates any T expression and prints both its result and how long it took. It is the quickest way to get a feel for whether a piece of logic is fast enough to keep:</p>
-<pre class="t"><code>%time df |&gt; filter($x &gt; 10) |&gt; nrow()
-42
-Execution time: 0.1540 seconds</code></pre>
+<pre class="t"><code><span class="sc">%</span>time df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>x <span class="sc">&gt;</span> <span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">nrow</span>()
+<span class="dv">42</span>
+Execution time<span class="sc">:</span> <span class="fl">0.1540</span> seconds</code></pre>
 <p><code>%save</code> writes a transcript of the session, i.e.&nbsp; every command and its result to a file, so you can turn an exploratory session into a starting point for a script. In compact mode it records a one-line summary of each result; in verbose mode it records the full pretty-printed output:</p>
-<pre class="t"><code>%save my_session.t
-%save verbose my_session.t</code></pre>
+<pre class="t"><code><span class="sc">%</span>save my_session.t
+<span class="sc">%</span>save verbose my_session.t</code></pre>
 <p>A common workflow is to run <code>%reset</code> to clear the transcript, then do a clean run and <code>%save</code> it, giving you a tidy record of exactly what you tried. Typing <code>%magic</code> lists every magic command with a description, and if you mistype one, the REPL offers a fuzzy match: <code>%objcts</code> suggests <code>Did you mean: %objects?</code>.</p>
 </section>
 </section>
@@ -615,10 +615,10 @@ Execution time: 0.1540 seconds</code></pre>
 <section id="capturing-code-to_expr-and-quo" class="level3" data-number="15.2.1">
 <h3 data-number="15.2.1" class="anchored" data-anchor-id="capturing-code-to_expr-and-quo"><span class="header-section-number">15.2.1</span> Capturing code: <code>to_expr</code> and <code>quo</code></h3>
 <p>The two ways to capture code differ in whether they remember the surrounding environment. <code>to_expr()</code> captures a bare expression; <code>quo()</code> captures a quosure — the expression plus the environment at the call site.</p>
-<pre class="t"><code>x = 10
-q = quo(1 + x)   -- captures x = 10
-x = 99
-eval(q)          -- 11, not 100: it runs in the captured environment</code></pre>
+<pre class="t"><code>x <span class="sc">=</span> <span class="dv">10</span>
+q <span class="sc">=</span> <span class="fu">quo</span>(<span class="dv">1</span> <span class="sc">+</span> x)   <span class="co">-- captures x = 10</span>
+x <span class="sc">=</span> <span class="dv">99</span>
+<span class="fu">eval</span>(q)          <span class="co">-- 11, not 100: it runs in the captured environment</span></code></pre>
 <pre class="text t-output"><code>11
 </code></pre>
 <p>That distinction is the whole point of a quosure. When <code>eval()</code> runs a quosure, it evaluates it in the environment the quosure captured, not in whatever environment happens to be current. For a bare expression from <code>to_expr()</code>, <code>eval()</code> uses the current environment.</p>
@@ -627,22 +627,22 @@ eval(q)          -- 11, not 100: it runs in the captured environment</code></pre
 <section id="unquoting-and" class="level3" data-number="15.2.2">
 <h3 data-number="15.2.2" class="anchored" data-anchor-id="unquoting-and"><span class="header-section-number">15.2.2</span> Unquoting: <code>!!</code> and <code>!!!</code></h3>
 <p>Quasiquotation is how you fill in the blanks of a captured expression. The <code>!!</code> operator evaluates its operand and injects the result into the surrounding quoted expression. If the operand is a quosure, only the expression part is injected — the environment is stripped.</p>
-<pre class="t"><code>x = 10
-e = to_expr(1 + !!x)
-print(e)         -- to_expr(1 + 10)</code></pre>
+<pre class="t"><code>x <span class="sc">=</span> <span class="dv">10</span>
+e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="sc">!!</span>x)
+<span class="fu">print</span>(e)         <span class="co">-- to_expr(1 + 10)</span></code></pre>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 </code></pre>
 <p>The <code>!!!</code> operator goes further: it evaluates its operand and <em>splices</em> the elements into the surrounding call. The operand must be a list, vector, or dict.</p>
-<pre class="t"><code>vals = [1, 2, 3]
-e = to_expr(sum(!!!vals))
-print(e)         -- to_expr(sum(1, 2, 3))</code></pre>
+<pre class="t"><code>vals <span class="sc">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]
+e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="fu">sum</span>(<span class="sc">!!!</span>vals))
+<span class="fu">print</span>(e)         <span class="co">-- to_expr(sum(1, 2, 3))</span></code></pre>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 </code></pre>
 <p>If you splice a named list, the names become argument names:</p>
-<pre class="t"><code>my_args = [x: 10, y: 20]
-e = to_expr(f(!!!my_args, z: 30))
-print(e)         -- to_expr(f(x = 10, y = 20, z = 30))</code></pre>
+<pre class="t"><code>my_args <span class="sc">=</span> [x<span class="sc">:</span> <span class="dv">10</span>, y<span class="sc">:</span> <span class="dv">20</span>]
+e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="fu">f</span>(<span class="sc">!!!</span>my_args, z<span class="sc">:</span> <span class="dv">30</span>))
+<span class="fu">print</span>(e)         <span class="co">-- to_expr(f(x = 10, y = 20, z = 30))</span></code></pre>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
@@ -651,9 +651,9 @@ to_expr(1 + 10)
 <section id="dynamic-names-and-symbols" class="level3" data-number="15.2.3">
 <h3 data-number="15.2.3" class="anchored" data-anchor-id="dynamic-names-and-symbols"><span class="header-section-number">15.2.3</span> Dynamic names and symbols</h3>
 <p>A frequent need is to use a name that is only known at runtime — a column name stored in a string, say. <code>to_symbol()</code> turns a string into a symbol that <code>!!</code> can inject, and the <code>!!name := value</code> form lets a computed name become an argument or column name.</p>
-<pre class="t"><code>col = "age"
-e = to_expr(mutate(df, !!col := 42))
-print(e)         -- to_expr(mutate(df, age = 42))</code></pre>
+<pre class="t"><code>col <span class="sc">=</span> <span class="st">"age"</span>
+e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="fu">mutate</span>(df, <span class="sc">!!</span>col <span class="sc">:=</span> <span class="dv">42</span>))
+<span class="fu">print</span>(e)         <span class="co">-- to_expr(mutate(df, age = 42))</span></code></pre>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
@@ -667,16 +667,16 @@ to_expr(1 + 10)
 <ol type="1">
 <li><strong>Auto-quoted parameters.</strong> Prefix a parameter with <code>$</code> and the caller can pass a bare column name, which you forward into an NSE-aware verb with <code>!!</code>.</li>
 </ol>
-<pre class="t"><code>my_mean = \(df, $col) {
-  summarize(df, result = mean(!!col))
+<pre class="t"><code>my_mean <span class="sc">=</span> \(df, <span class="sc">$</span>col) {
+  <span class="fu">summarize</span>(df, result <span class="sc">=</span> <span class="fu">mean</span>(<span class="sc">!!</span>col))
 }</code></pre>
 <ol start="2" type="1">
 <li><p><strong><code>enquo(param)</code></strong> captures the caller’s full expression for a named parameter, as a quosure. Use it when you need more than a column name.</p></li>
 <li><p><strong><code>enquos(...)</code></strong> captures all variadic expressions as a list of quosures, which you can splice into a verb.</p></li>
 </ol>
-<pre class="t"><code>my_summarize = \(df: DataFrame, ... -&gt; DataFrame) {
-  cols = enquos(...)
-  eval(to_expr(df |&gt; summarize(!!!cols)))
+<pre class="t"><code>my_summarize <span class="sc">=</span> \(df<span class="sc">:</span> DataFrame, <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span> <span class="sc">-&gt;</span> DataFrame) {
+  cols <span class="sc">=</span> <span class="fu">enquos</span>(<span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>)
+  <span class="fu">eval</span>(<span class="fu">to_expr</span>(df <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="sc">!!!</span>cols)))
 }</code></pre>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
@@ -693,36 +693,36 @@ to_expr(1 + 10)
 <section id="running-a-command" class="level3" data-number="15.3.1">
 <h3 data-number="15.3.1" class="anchored" data-anchor-id="running-a-command"><span class="header-section-number">15.3.1</span> Running a command</h3>
 <p>As a standalone statement, the command is executed and its output is printed straight to <code>stdout</code>. The statement’s value is <code>NA</code>:</p>
-<pre class="t"><code>?&lt;{ls -la}&gt;
-?&lt;{git status}&gt;</code></pre>
+<pre class="t"><code>?<span class="sc">&lt;</span>{ls <span class="sc">-</span>la}<span class="sc">&gt;</span>
+?<span class="sc">&lt;</span>{git status}<span class="sc">&gt;</span></code></pre>
 </section>
 <section id="capturing-the-output" class="level3" data-number="15.3.2">
 <h3 data-number="15.3.2" class="anchored" data-anchor-id="capturing-the-output"><span class="header-section-number">15.3.2</span> Capturing the output</h3>
 <p>When the escape is part of an expression — most often an assignment — T captures the command’s <code>stdout</code> and hands it back as a <code>String</code>, ready to be split, parsed, or passed on:</p>
-<pre class="t"><code>files = ?&lt;{ls}&gt;
-current_user = ?&lt;{whoami}&gt;</code></pre>
+<pre class="t"><code>files <span class="sc">=</span> ?<span class="sc">&lt;</span>{ls}<span class="sc">&gt;</span>
+current_user <span class="sc">=</span> ?<span class="sc">&lt;</span>{whoami}<span class="sc">&gt;</span></code></pre>
 </section>
 <section id="changing-directory" class="level3" data-number="15.3.3">
 <h3 data-number="15.3.3" class="anchored" data-anchor-id="changing-directory"><span class="header-section-number">15.3.3</span> Changing directory</h3>
 <p><code>cd</code> is special-cased. Rather than changing the directory of a throwaway sub-shell, it changes the working directory of the T interpreter itself, so subsequent commands — and <code>?&lt;{pwd}&gt;</code> — see the new location. <code>~</code> is expanded correctly:</p>
-<pre class="t"><code>?&lt;{cd /tmp}&gt;
-?&lt;{pwd}&gt;       -- /tmp
-?&lt;{cd ~}&gt;</code></pre>
+<pre class="t"><code>?<span class="sc">&lt;</span>{cd <span class="sc">/</span>tmp}<span class="sc">&gt;</span>
+?<span class="sc">&lt;</span>{pwd}<span class="sc">&gt;</span>       <span class="co">-- /tmp</span>
+?<span class="sc">&lt;</span>{cd <span class="sc">~</span>}<span class="sc">&gt;</span></code></pre>
 </section>
 <section id="multiline-commands" class="level3" data-number="15.3.4">
 <h3 data-number="15.3.4" class="anchored" data-anchor-id="multiline-commands"><span class="header-section-number">15.3.4</span> Multiline commands</h3>
 <p>A shell escape can span several lines. The indentation common to all non-empty lines is stripped, so you can write a readable block of shell without backslash continuations:</p>
-<pre class="t"><code>?&lt;{
-  git add .
-  git commit -m "update"
+<pre class="t"><code>?<span class="sc">&lt;</span>{
+  git add <span class="sc">.</span>
+  git commit <span class="sc">-</span>m <span class="st">"update"</span>
   git push
-}&gt;</code></pre>
+}<span class="sc">&gt;</span></code></pre>
 </section>
 <section id="errors" class="level3" data-number="15.3.5">
 <h3 data-number="15.3.5" class="anchored" data-anchor-id="errors"><span class="header-section-number">15.3.5</span> Errors</h3>
 <p>If a command exits with a non-zero status, the escape yields a <code>ShellError</code> carrying the command’s <code>stderr</code>, so a failing command is easy to diagnose. You can test for it with <code>is_error()</code>:</p>
-<pre class="t"><code>result = ?&lt;{ls /nonexistent}&gt;
-is_error(result)   -- true</code></pre>
+<pre class="t"><code>result <span class="sc">=</span> ?<span class="sc">&lt;</span>{ls <span class="sc">/</span>nonexistent}<span class="sc">&gt;</span>
+<span class="fu">is_error</span>(result)   <span class="co">-- true</span></code></pre>
 </section>
 </section>
 <section id="serializers-in-depth" class="level2" data-number="15.4">
@@ -788,9 +788,9 @@ is_error(result)   -- true</code></pre>
 <section id="symbols-variables-and-the-string-trap" class="level3" data-number="15.4.2">
 <h3 data-number="15.4.2" class="anchored" data-anchor-id="symbols-variables-and-the-string-trap"><span class="header-section-number">15.4.2</span> Symbols, variables, and the string trap</h3>
 <p>There is a subtle but important distinction in how you name a serializer. Built-in serializers are <strong>symbols</strong> with the <code>^</code> prefix. A custom serializer you have defined is a <strong>variable</strong>, and you pass its name with no <code>^</code>.</p>
-<pre class="t"><code>node(command = read_csv("large.csv"), serializer = ^ipc) -- built-in
-import "src/my_ser.t" [my_ser]
-node(command = ..., serializer = my_ser)                 -- custom</code></pre>
+<pre class="t"><code><span class="fu">node</span>(command <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"large.csv"</span>), serializer <span class="sc">=</span> ^ipc) <span class="co">-- built-in</span>
+<span class="cf">import</span> <span class="st">"src/my_ser.t"</span> [my_ser]
+<span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>, serializer <span class="sc">=</span> my_ser)                 <span class="co">-- custom</span></code></pre>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
@@ -803,34 +803,34 @@ node&lt;T&gt;(...)
 <section id="custom-serializers" class="level3" data-number="15.4.3">
 <h3 data-number="15.4.3" class="anchored" data-anchor-id="custom-serializers"><span class="header-section-number">15.4.3</span> Custom serializers</h3>
 <p>A serializer is a first-class value: a record with a <code>format</code>, a <code>writer</code>, and a <code>reader</code>.</p>
-<pre class="t"><code>type serializer = {
-  format: string,
-  writer: function(path: string, value: any) -&gt; result[NA, string],
-  reader: function(path: string) -&gt; result[any, string]
+<pre class="t"><code>type serializer <span class="sc">=</span> {
+  format<span class="sc">:</span> string,
+  writer<span class="sc">:</span> <span class="cf">function</span>(path<span class="sc">:</span> string, value<span class="sc">:</span> any) <span class="sc">-&gt;</span> result[<span class="cn">NA</span>, string],
+  reader<span class="sc">:</span> <span class="cf">function</span>(path<span class="sc">:</span> string) <span class="sc">-&gt;</span> result[any, string]
 }</code></pre>
 <p>To define one, you write a record that matches that shape. The <code>format</code> field should be a <code>^</code> symbol so it stays consistent with T’s symbol-based serialization.</p>
-<pre class="t"><code>my_log_serializer = {
-  format: ^log,
-  writer: \(path, val) {
-    -- write val to path in your log format
-    Ok(NA)
+<pre class="t"><code>my_log_serializer <span class="sc">=</span> {
+  format<span class="sc">:</span> ^log,
+  writer<span class="sc">:</span> \(path, val) {
+    <span class="co">-- write val to path in your log format</span>
+    <span class="fu">Ok</span>(<span class="cn">NA</span>)
   },
-  reader: \(path) {
-    -- read the log back from path
-    Ok("log content")
+  reader<span class="sc">:</span> \(path) {
+    <span class="co">-- read the log back from path</span>
+    <span class="fu">Ok</span>(<span class="st">"log content"</span>)
   }
 }
 
-node(command = ..., serializer = my_log_serializer)</code></pre>
+<span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>, serializer <span class="sc">=</span> my_log_serializer)</code></pre>
 <p>For a serializer to work across <em>other</em> runtimes, you can add optional <code>r_writer</code>, <code>r_reader</code>, <code>py_writer</code>, and <code>py_reader</code> fields. These are code snippets — plain strings, or foreign code blocks for readability — that T injects into the generated build script for that runtime.</p>
-<pre class="t"><code>my_custom_ser = [
-  format: ^custom,
-  writer: \(path, val) { Ok(NA) },
-  reader: \(path) { Ok(42) },
-  r_writer: &lt;{ function(obj, path) { writeCustom(obj, path) } },
-  r_reader: &lt;{ function(path) { readCustom(path) } },
-  py_writer: &lt;{ def write_custom(obj, path): ... },
-  py_reader: &lt;{ def read_custom(path): ... }
+<pre class="t"><code>my_custom_ser <span class="sc">=</span> [
+  format<span class="sc">:</span> ^custom,
+  writer<span class="sc">:</span> \(path, val) { <span class="fu">Ok</span>(<span class="cn">NA</span>) },
+  reader<span class="sc">:</span> \(path) { <span class="fu">Ok</span>(<span class="dv">42</span>) },
+  r_writer<span class="sc">:</span> <span class="sc">&lt;</span>{ <span class="cf">function</span>(obj, path) { <span class="fu">writeCustom</span>(obj, path) } },
+  r_reader<span class="sc">:</span> <span class="sc">&lt;</span>{ <span class="cf">function</span>(path) { <span class="fu">readCustom</span>(path) } },
+  py_writer<span class="sc">:</span> <span class="sc">&lt;</span>{ def <span class="fu">write_custom</span>(obj, path)<span class="sc">:</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span> },
+  py_reader<span class="sc">:</span> <span class="sc">&lt;</span>{ def <span class="fu">read_custom</span>(path)<span class="sc">:</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span> }
 ]</code></pre>
 <p>T performs <strong>static coherence checks</strong> when you build a pipeline that uses a custom serializer: if a node is declared for the R runtime but the serializer has no <code>r_writer</code> or <code>r_reader</code>, you get an error at build time rather than a mystery failure at run time. And when T detects that your serializer references R or Python functions, it can add the corresponding <code>[r-dependencies]</code> or <code>[py-dependencies]</code> to the generated build automatically (controlled by <code>TLANG_AUTO_ADD_PIPELINE_DEPS</code>).</p>
 </section>
@@ -842,29 +842,29 @@ node(command = ..., serializer = my_log_serializer)</code></pre>
 <h3 data-number="15.5.1" class="anchored" data-anchor-id="returning-a-plot-from-a-node"><span class="header-section-number">15.5.1</span> Returning a plot from a node</h3>
 <p>Any node can return a plot object; a <code>Plot</code> from CairoMakie, a ggplot2 object, a matplotlib figure, and so on. When it does, T serializes the plot and, crucially, records <strong>visualization metadata</strong> alongside the artifact. That metadata is what lets downstream tools know the output is something to be <em>shown</em>, not just <em>read</em>.</p>
 <p>Let’s study this pipeline:</p>
-<pre class="t"><code>p = pipeline {
-  iris_data = rn(
-    command = &lt;{
+<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+  iris_data <span class="sc">=</span> <span class="fu">rn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
       # Load iris dataset
-      iris &lt;- datasets::iris
+      iris <span class="sc">&lt;</span><span class="sc">-</span> datasets<span class="sc">::</span>iris
       
       # Return the data
       iris
-    }&gt;,
-    serializer = ^csv
+    }<span class="sc">&gt;</span>,
+    serializer <span class="sc">=</span> ^csv
   )
-  iris_ggplot = rn(
-    command = &lt;{
+  iris_ggplot <span class="sc">=</span> <span class="fu">rn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
       # Load ggplot2
-      library(ggplot2)
+      <span class="fu">library</span>(ggplot2)
       
-      ggplot(iris_data, aes(x = Petal.Length, y = Sepal.Length)) +
-        geom_point() +
-        facet_wrap(~ Species) +
-        labs(title = "Sepal.Length ~ Petal.Length | Species")
+      <span class="fu">ggplot</span>(iris_data, <span class="fu">aes</span>(x <span class="sc">=</span> Petal.Length, y <span class="sc">=</span> Sepal.Length)) <span class="sc">+</span>
+        <span class="fu">geom_point</span>() <span class="sc">+</span>
+        <span class="fu">facet_wrap</span>(<span class="sc">~</span> Species) <span class="sc">+</span>
+        <span class="fu">labs</span>(title <span class="sc">=</span> <span class="st">"Sepal.Length ~ Petal.Length | Species"</span>)
 
-    }&gt;,
-    deserializer = ^csv
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^csv
   )
 }</code></pre>
 <pre class="text t-output"><code>to_expr(1 + 10) 
@@ -876,22 +876,22 @@ to_expr(1 + 10)
 <section id="reading-a-plot-back" class="level3" data-number="15.5.2">
 <h3 data-number="15.5.2" class="anchored" data-anchor-id="reading-a-plot-back"><span class="header-section-number">15.5.2</span> Reading a plot back</h3>
 <p>Once built, it is possible to <em>read</em> the plot using <code>read_node()</code>, which on a plotting node returns not the raw artifact but a small metadata record describing it: the path to the serialized plot, its type, and the runtime that produced it.</p>
-<pre class="t"><code>read_node(p.iris_ggplot)</code></pre>
+<pre class="t"><code><span class="fu">read_node</span>(p.iris_ggplot)</code></pre>
 <p>returns:</p>
 <pre class="t"><code>ggplot
-├── backend: "R"
-├── title: "Sepal.Length ~ Petal.Length | Species"
+├── backend<span class="sc">:</span> <span class="st">"R"</span>
+├── title<span class="sc">:</span> <span class="st">"Sepal.Length ~ Petal.Length | Species"</span>
 ├── mapping
-│   ├── x: "Petal.Length"
-│   └── y: "Sepal.Length"
+│   ├── x<span class="sc">:</span> <span class="st">"Petal.Length"</span>
+│   └── y<span class="sc">:</span> <span class="st">"Sepal.Length"</span>
 ├── labels
-│   └── title: "Sepal.Length ~ Petal.Length | Species"
+│   └── title<span class="sc">:</span> <span class="st">"Sepal.Length ~ Petal.Length | Species"</span>
 └── layers
-    └── geom_point: "Point"</code></pre>
+    └── geom_point<span class="sc">:</span> <span class="st">"Point"</span></code></pre>
 <p>and to actually see the plot in your browser, use <code>show_plot()</code>:</p>
-<pre class="t"><code>T&gt; show_plot(p.iris_plot)</code></pre>
+<pre class="t"><code>T<span class="sc">&gt;</span> <span class="fu">show_plot</span>(p.iris_plot)</code></pre>
 <p>This should open the plot in your browser, if not, the path is emitted and you can simply open the generated PNG file using whichever tool your prefer:</p>
-<pre class="t"><code>_pipeline/show_plot_render_20260821_132239_6808.png</code></pre>
+<pre class="t"><code>_pipeline<span class="sc">/</span>show_plot_render_20260821_132239_6808.png</code></pre>
 <p>This plot is generated in the actual R environment defined in your pipeline, but should something look off, try <code>debug_node(p.iris_plot)</code> and built it from the actual R session!</p>
 </section>
 <section id="plots-in-literate-documents" class="level3" data-number="15.5.3">
@@ -917,7 +917,7 @@ to_expr(1 + 10)
 <li><code>env_vars</code>: per-node environment variables, set when the node is defined.</li>
 </ul>
 <p>Validation is strict: pass a key that is not a valid option, or a value of the wrong type, and you get a <code>TypeError</code> or <code>ValueError</code> before the build starts.</p>
-<pre class="t"><code>build_pipeline(p, nix_options = { max_jobs = 4, dry_run = true })</code></pre>
+<pre class="t"><code><span class="fu">build_pipeline</span>(p, nix_options <span class="sc">=</span> { max_jobs <span class="sc">=</span> <span class="dv">4</span>, dry_run <span class="sc">=</span> <span class="cn">true</span> })</code></pre>
 </section>
 <section id="dry-runs-and-plans" class="level3" data-number="15.6.2">
 <h3 data-number="15.6.2" class="anchored" data-anchor-id="dry-runs-and-plans"><span class="header-section-number">15.6.2</span> Dry runs and plans</h3>
@@ -931,7 +931,7 @@ to_expr(1 + 10)
 <h3 data-number="15.6.4" class="anchored" data-anchor-id="building-on-other-machines"><span class="header-section-number">15.6.4</span> Building on other machines</h3>
 <p>The <code>builders</code> option is what turns a local build into a distributed one. You can point a build at a remote Nix builder — a faster machine, or a machine with the right architecture — and Nix will ship the build steps there. This is particularly useful when your pipeline has heavy nodes that would take minutes locally but seconds on a larger box. The <code>pipeline_to_drv(p)</code> function returns the underlying Nix derivation, which is the escape hatch for when you need to hand the build to a tool that understands derivations directly.</p>
 <p>The <code>cache</code> option is the companion to <code>builders</code>. Where <code>builders</code> decides <em>where</em> a build runs, <code>cache</code> decides <em>where pre-built artifacts come from</em>. Like <code>builders</code>, it is a key in the <code>nix_options</code> dictionary. Passing a Cachix cache name registers it as an extra Nix binary substituter:</p>
-<pre class="t"><code>build_pipeline(p, nix_options = { cache = "my-team" })</code></pre>
+<pre class="t"><code><span class="fu">build_pipeline</span>(p, nix_options <span class="sc">=</span> { cache <span class="sc">=</span> <span class="st">"my-team"</span> })</code></pre>
 <p>Nix then pulls any matching store paths from <code>my-team.cachix.org</code> before falling back to building them, and can push freshly built artifacts back to the cache. This is how a team shares build results across machines and CI runners without each one recompiling the same R and Python packages from source.</p>
 </section>
 </section>
@@ -941,15 +941,15 @@ to_expr(1 + 10)
 <section id="initialising-a-package" class="level3" data-number="15.7.1">
 <h3 data-number="15.7.1" class="anchored" data-anchor-id="initialising-a-package"><span class="header-section-number">15.7.1</span> Initialising a package</h3>
 <p><code>t init --package</code> scaffolds a T package. The result is a directory with a <code>DESCRIPTION.toml</code> that declares the package’s metadata, its dependencies, and its build inputs, and a <code>flake.nix</code> that makes the package itself a Nix input.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[package]</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"mylib"</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="kw">[dependencies]</span></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="dt">otherlib</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">git</span><span class="op"> =</span> <span class="st">"https://github.com/me/otherlib"</span><span class="op">, </span><span class="dt">tag</span><span class="op"> =</span> <span class="st">"0.3.0"</span><span class="op"> }</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="kw">[additional-tools]</span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co"># extra tools the package needs at build time</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[package]</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">"mylib"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">"0.1.0"</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">[dependencies]</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="dt">otherlib</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">git</span><span class="op"> =</span> <span class="st">"https://github.com/me/otherlib"</span><span class="op">, </span><span class="dt">tag</span><span class="op"> =</span> <span class="st">"0.3.0"</span><span class="op"> }</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">[additional-tools]</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># extra tools the package needs at build time</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Dependencies are declared by git URL and tag, which keeps them reproducible in the same way the rest of T is.</p>
 </section>
 <section id="public-and-private-api" class="level3" data-number="15.7.2">
@@ -963,13 +963,13 @@ to_expr(1 + 10)
 <section id="t-doc-documentation" class="level3" data-number="15.7.4">
 <h3 data-number="15.7.4" class="anchored" data-anchor-id="t-doc-documentation"><span class="header-section-number">15.7.4</span> T-Doc documentation</h3>
 <p>T packages use a lightweight documentation format, T-Doc. A function is documented with a <code>--#</code> block that supports directives:</p>
-<pre class="t"><code>--# @param x The input value.
---# @return A transformed value.
---# @example
---#   myfunc(1)
---# @seealso myotherfunc
---# @family transforms
-myfunc = \(x) { x * 2 }</code></pre>
+<pre class="t"><code><span class="co">--# @param x The input value.</span>
+<span class="co">--# @return A transformed value.</span>
+<span class="co">--# @example</span>
+<span class="co">--#   myfunc(1)</span>
+<span class="co">--# @seealso myotherfunc</span>
+<span class="co">--# @family transforms</span>
+myfunc <span class="sc">=</span> \(x) { x <span class="sc">*</span> <span class="dv">2</span> }</code></pre>
 <p><code>t doc --parse --generate</code> parses these blocks and generates the package’s documentation. <code>t doctor</code> is the linter: it checks that public functions are documented, that <code>@param</code> names match the signature, and that cross-references resolve.</p>
 </section>
 <section id="publishing" class="level3" data-number="15.7.5">
@@ -979,9 +979,9 @@ myfunc = \(x) { x * 2 }</code></pre>
 <section id="importing" class="level3" data-number="15.7.6">
 <h3 data-number="15.7.6" class="anchored" data-anchor-id="importing"><span class="header-section-number">15.7.6</span> Importing</h3>
 <p>Consumers import a T package the same way they import any T module, by name or by path, with optional selective or aliased imports:</p>
-<pre class="t"><code>import "mylib"
-import "mylib" [myfunc]
-import "mylib" [myfunc as transform]</code></pre>
+<pre class="t"><code><span class="cf">import</span> <span class="st">"mylib"</span>
+<span class="cf">import</span> <span class="st">"mylib"</span> [myfunc]
+<span class="cf">import</span> <span class="st">"mylib"</span> [myfunc as transform]</code></pre>
 </section>
 </section>
 <section id="property-based-testing-with-propcraft" class="level2" data-number="15.8">
@@ -991,10 +991,10 @@ import "mylib" [myfunc as transform]</code></pre>
 <h3 data-number="15.8.1" class="anchored" data-anchor-id="the-idea"><span class="header-section-number">15.8.1</span> The idea</h3>
 <p>Instead of testing specific inputs, you describe a <strong>property</strong> that should hold for <em>all</em> inputs in some domain, and Propcraft generates hundreds of random inputs to try to break it. If it finds one that fails, it <strong>shrinks</strong> the failing input down to a minimal, easy-to-read counterexample.</p>
 <p>The entry point is <code>prop_for_all</code>, which takes a generator for each argument and a property function:</p>
-<pre class="t"><code>prop_for_all(
-  prop_gen_int_range(0, 100),
-  prop_gen_int_range(0, 100),
-  \(a, b) { add(a, b) == add(b, a) }
+<pre class="t"><code><span class="fu">prop_for_all</span>(
+  <span class="fu">prop_gen_int_range</span>(<span class="dv">0</span>, <span class="dv">100</span>),
+  <span class="fu">prop_gen_int_range</span>(<span class="dv">0</span>, <span class="dv">100</span>),
+  \(a, b) { <span class="fu">add</span>(a, b) <span class="sc">==</span> <span class="fu">add</span>(b, a) }
 )</code></pre>
 </section>
 <section id="generators" class="level3" data-number="15.8.2">
@@ -1019,9 +1019,9 @@ import "mylib" [myfunc as transform]</code></pre>
 <section id="a-concrete-example" class="level3" data-number="15.8.4">
 <h3 data-number="15.8.4" class="anchored" data-anchor-id="a-concrete-example"><span class="header-section-number">15.8.4</span> A concrete example</h3>
 <p>Here is the kind of bug property-based testing finds. Suppose a function is supposed to drop rows with missing values in a given column:</p>
-<pre class="t"><code>prop_for_all(
-  prop_gen_df(na_prob = 0.3),
-  \(df) { nrow(drop_na(df, $x)) &lt;= nrow(df) }
+<pre class="t"><code><span class="fu">prop_for_all</span>(
+  <span class="fu">prop_gen_df</span>(na_prob <span class="sc">=</span> <span class="fl">0.3</span>),
+  \(df) { <span class="fu">nrow</span>(<span class="fu">drop_na</span>(df, <span class="sc">$</span>x)) <span class="sc">&lt;=</span> <span class="fu">nrow</span>(df) }
 )</code></pre>
 <p>The property — the result has no more rows than the input — is obviously true, yet it fails. Propcraft shrinks the failing input to a tiny DataFrame and shows you the exact rows that broke it, instead of leaving you to guess.</p>
 </section>
