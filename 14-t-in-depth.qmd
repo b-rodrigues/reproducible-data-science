@@ -6,7 +6,7 @@ learned the core loop: declare nodes, build, inspect, test, and ship. But T is
 a larger language than that loop requires, and this chapter is where we go
 deeper.
 
-The material here now focuses on more of T’s features.  We cover seven topics, 
+The material here now focuses on more of T’s features.  We cover eight topics,
 in the order you are likely to need them. Each section
 is self-contained, but it builds on the foundations from the earlier chapters,
 and we point back to them rather than repeating what they already teach.
@@ -222,6 +222,80 @@ looks up `$column` in the mask first, so a global variable or function with the
 same name as a column does not interfere. That is why
 `df |> mutate(new = $score * 2)` works even when a function called `score`
 exists in scope.
+
+## Escaping to the Shell: `?<{ }>`
+
+Chapter 8 introduced `shn()`, the node constructor that runs a shell command
+inside a pipeline's sandbox. That is the right tool when the shell work is a
+first-class step in your pipeline. But there is a lighter way to reach the shell
+from T itself: the shell escape. The `?<{ }>` syntax runs an arbitrary shell
+command directly from within T — at the REPL, in a script, or in a node's T
+code — and is the quickest way to touch the filesystem, drive `git`, or call a
+CLI tool without standing up a whole shell node.
+
+### Running a command
+
+As a standalone statement, the command is executed and its output is printed
+straight to `stdout`. The statement's value is `NA`:
+
+```t
+#| eval: false
+?<{ls -la}>
+?<{git status}>
+```
+
+### Capturing the output
+
+When the escape is part of an expression — most often an assignment — T captures
+the command's `stdout` and hands it back as a `String`, ready to be split,
+parsed, or passed on:
+
+```t
+#| eval: false
+files = ?<{ls}>
+current_user = ?<{whoami}>
+```
+
+### Changing directory
+
+`cd` is special-cased. Rather than changing the directory of a throwaway
+sub-shell, it changes the working directory of the T interpreter itself, so
+subsequent commands — and `?<{pwd}>` — see the new location. `~` is expanded
+correctly:
+
+```t
+#| eval: false
+?<{cd /tmp}>
+?<{pwd}>       -- /tmp
+?<{cd ~}>
+```
+
+### Multiline commands
+
+A shell escape can span several lines. The indentation common to all non-empty
+lines is stripped, so you can write a readable block of shell without
+backslash continuations:
+
+```t
+#| eval: false
+?<{
+  git add .
+  git commit -m "update"
+  git push
+}>
+```
+
+### Errors
+
+If a command exits with a non-zero status, the escape yields a `ShellError`
+carrying the command's `stderr`, so a failing command is easy to diagnose. You
+can test for it with `is_error()`:
+
+```t
+#| eval: false
+result = ?<{ls /nonexistent}>
+is_error(result)   -- true
+```
 
 ## Serializers in Depth
 
@@ -705,8 +779,8 @@ it.
 ## Where to go from here
 
 You now have the full toolkit: the REPL conveniences, the metaprogramming
-primitives, the serializer and plotting machinery, the build orchestration
-knobs, the package toolchain, and property-based testing. None of these are
+primitives, the shell escape, the serializer and plotting machinery, the build
+orchestration knobs, the package toolchain, and property-based testing. None of these are
 required for a simple pipeline, but together they are what let a T project grow
 from a script into a library, a service, or a platform without changing its
 foundations. The next chapter pulls the threads together.
