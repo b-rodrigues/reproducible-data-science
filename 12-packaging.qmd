@@ -1,4 +1,4 @@
-# A Short Intro to Packaging Your Code in R and Python
+# A Short Intro to Packaging Your Code in R and Python {#sec-packaging}
 
 ## Introduction
 

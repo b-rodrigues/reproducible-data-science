@@ -71,9 +71,9 @@ REPL:
 
 ```t
 #| eval: false
-t> p.x      -- 10
-t> p.y      -- 20
-t> p.total  -- 30
+p.x      -- 10
+p.y      -- 20
+p.total  -- 30
 ```
 
 The pipeline itself prints as:
@@ -101,8 +101,8 @@ build:
 
 ```t
 #| eval: false
-t> read_node(p.total)    -- reads the serialized artifact back from the Nix store
-t> show_plot(p)          -- visualise the DAG
+read_node(p.total)    -- reads the serialized artifact back from the Nix store
+show_plot(p)          -- visualise the DAG
 ```
 
 Add a node and rebuild:
@@ -444,7 +444,7 @@ T provides `read_past_node()` for temporal introspection:
 
 ```t
 #| eval: false
-t> read_past_node(p.data, which_log = "2026-08-14")
+read_past_node(p.data, which_log = "2026-08-14")
 ```
 
 Unlike `read_node()`, which looks up live in-scope nodes from the active pipeline object, `read_past_node()` captures the node identifier non-evaluatively and queries T's historical build logs in `_pipeline/logs/`. 
@@ -475,7 +475,7 @@ T provides `debug_node()` to drop you directly from the T REPL into an interacti
 
 ```t
 #| eval: false
-t> debug_node(p.stats)
+debug_node(p.stats)
 ```
 
 Calling `debug_node()` automatically:

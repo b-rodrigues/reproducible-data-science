@@ -1,4 +1,4 @@
-# Building T Pipelines
+# Building T Pipelines {#sec-building-t-pipelines}
 
 ## Introduction
 
@@ -148,7 +148,7 @@ or, from inside the REPL:
 
 ```t
 #| eval: false
-t> build_pipeline(p)
+build_pipeline(p)
 ```
 
 T resolves the DAG, emits four Nix derivations, and builds them in dependency
@@ -351,8 +351,8 @@ From your project REPL (which *does* have network access), call:
 
 ```t
 #| eval: false
-t> hash = prefetch("https://zenodo.org/record/9999/penguins.csv")
-t> hash
+hash = prefetch("https://zenodo.org/record/9999/penguins.csv")
+hash
 "sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="
 ```
 
@@ -605,9 +605,9 @@ columns:
 
 ```t
 #| eval: false
-t> log   = build_log(p)
-t> frame = build_log_to_frame(log)
-t> frame
+log   = build_log(p)
+frame = build_log_to_frame(log)
+frame
 
 name        status    duration_s  path
 raw         cached    0.00        /nix/store/abc…-raw
@@ -629,10 +629,10 @@ directory:
 ```t
 #| eval: false
 -- Copy a single node's artifact
-t> pipeline_copy(p.report, dest = "outputs/")
+pipeline_copy(p.report, dest = "outputs/")
 
 -- Copy every artifact in the pipeline
-t> pipeline_copy(p, dest = "outputs/")
+pipeline_copy(p, dest = "outputs/")
 ```
 
 After copying, `outputs/report.html` (or whatever format the Quarto node
@@ -649,12 +649,12 @@ builds but are no longer referenced by the current build graph. Pass
 
 ```t
 #| eval: false
-t> pipeline_gc(p, dry_run = true)
+pipeline_gc(p, dry_run = true)
 
 Would remove:
   /nix/store/xyz…-clean  (superseded by def…-clean)
 
-t> pipeline_gc(p)
+pipeline_gc(p)
 ```
 
 `t_gc()` runs a full Nix garbage collection — it removes every store path that
@@ -663,7 +663,7 @@ development machines or CI runners to reclaim disk space:
 
 ```t
 #| eval: false
-t> t_gc()
+t_gc()
 ```
 
 ::: {.callout-note}
@@ -714,7 +714,7 @@ rebuilt versus served from cache by passing `dry_run = true` to
 
 ```t
 #| eval: false
-t> build_pipeline(p, dry_run = true)
+build_pipeline(p, dry_run = true)
 
 Would build:  [model, report]
 Would cache:  [raw, clean]
@@ -737,7 +737,7 @@ generates a complete GitHub Actions workflow YAML from your pipeline definition:
 
 ```t
 #| eval: false
-t> pipeline_to_ga(p, file = ".github/workflows/pipeline.yml")
+pipeline_to_ga(p, file = ".github/workflows/pipeline.yml")
 ```
 
 That single call writes a workflow file that:
