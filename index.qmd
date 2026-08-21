@@ -1,5 +1,5 @@
 # Welcome! {.unnumbered}
-## A modern, unified, and language-agnostic workflow for data science using Nix.
+## A modern, unified, and language-agnostic workflow for data science using Nix and T.
 
 ```{r}
 #| include: false
@@ -7,7 +7,7 @@
 library(reticulate)
 ```
 
-*This is still WIP! Expected first finalized release at the end of Q1 2026. This
+*This is still WIP! Expected first finalized release at the end of Q4 2026. This
 book is a complete reimagining of my previous work, "Building Reproducible
 Analytical Pipelines with R." If you're looking for that book, you can find it
 [here](https://www.raps-with-r.dev). But if you're ready for the next step,
@@ -15,7 +15,7 @@ you're in the right place.*
 
 ::: {.content-hidden when-format="pdf"}
 <figure>
-  <a href = "https://leanpub.com/raps-with-python">
+  <a href = "https://leanpub.com/reproducible-data-science">
     <img style="float: right; clear: right" height="200" src="images/cover.png" alt="The Wizard of Nix tames the Serpent of dependency Hell"></img>
 </a>
 </figure>
@@ -73,19 +73,25 @@ workflow where R, Python, and Julia are not competitors, but collaborators in a
 single, cohesive, and perfectly reproducible environment. We will cover:
 
 -   The Nix Philosophy: Why Nix is the ultimate tool for solving the "it
-    works on my machine" problem, once and for all.
--   Declarative Environments with `{rix}`: How to use a simple R interface
-    to define exact, bit-for-bit reproducible software environments that include
-    specific versions of R, Python, Julia, their packages, and any system-level
-    dependencies.
--   Polyglot Pipelines with `{rixpress}` (R) or `ryxpress` (Python): How to
-    orchestrate complex analytical pipelines that seamlessly pass data between
-    different languages, all managed by the Nix build system.
--   Unit Testing and Functional Programming: Core principles for writing
-    robust, testable, and maintainable code, no matter the language.
+    works on my machine" problem, once and for all—derivations, component
+    closures, and hermetic builds.
+-   Declarative Environments with T: How to define exact, bit-for-bit
+    reproducible software environments that include specific versions of R,
+    Python, Julia, their packages, and any system-level dependencies, all in
+    one simple file.
+-   Polyglot Pipelines with T: How to orchestrate complex analytical pipelines
+    that seamlessly pass data between different languages, all managed by the
+    Nix build system.
+-   Functional Programming and Pipelines as Function Composition: Core
+    principles for writing robust, testable, and maintainable code, no matter
+    the language.
+-   Professional Workflows: Unit testing, Git, and debugging techniques that
+    keep your analyses reliable as they grow.
+-   Advanced Pipeline Patterns: Treating pipelines as data—querying,
+    transforming, and composing them.
 -   Distribution and Automation: How to package your entire reproducible
-    pipeline into a Docker container for easy sharing and automate your workflow
-    with GitHub Actions.
+    pipeline into a Docker container for easy sharing and automate your
+    workflow with GitHub Actions.
 
 While this is not a book for beginners (you should be familiar with at least one
 data-centric programming language before reading this), I will not assume that
@@ -99,10 +105,10 @@ and reproducibility of your code.
 
 If you find this book useful, don’t hesitate to let me know! You can submit
 issues, suggest improvements, and ask questions on the book’s [Github
-repository](https://reproducible-data-science.dev/).
+repository](https://github.com/b-rodrigues/reproducible-data-science).
 
 ::: {.content-hidden when-format="pdf"}
-You can also buy a physical copy of the book on [Amazon](https://www.amazon.com/dp/B0C87H6MGF/).
+A physical copy of the book is coming soon on Amazon.
 :::
 
 If you want to get to know me better, read my
