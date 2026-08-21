@@ -310,14 +310,19 @@ COPY flake.nix flake.lock tproject.toml .
 # Build the environment from the flake
 RUN nix build --accept-flake-config .
 
-# Run nix-shell when container starts
-CMD nix-shell
+# Enter the flake development shell when the container starts
+CMD ["nix", "develop", "--command", "bash"]
 ```
 
 Every `Dockerfile` starts with a `FROM` statement specifying the base image. 
 Then, every command starts with `RUN`. We install and configure Nix, copy the 
-T project's Nix files, and build the environment from the flake. Finally, we 
-run `nix-shell` when executing a container (the `CMD` statement).
+T project's Nix files, and build the environment from the flake. Finally, when 
+the container starts, `nix develop` drops you into the project's development 
+shell (the `CMD` statement). This is the flake-native command: unlike the 
+legacy `nix-shell`, which looks for a `shell.nix` or `default.nix` file, 
+`nix develop` uses your `flake.nix`, consistent with the 
+`nix build --accept-flake-config .` step above. Note that it expects an 
+interactive terminal, so run the container with `docker run -it`.
 
 ### Splitting Into a Reusable Base Image
 
@@ -360,7 +365,7 @@ COPY flake.nix flake.lock tproject.toml .
 
 RUN nix build --accept-flake-config .
 
-CMD ["nix-shell"]
+CMD ["nix", "develop", "--command", "bash"]
 ```
 
 In a T project, the environment is declared in `tproject.toml` rather than

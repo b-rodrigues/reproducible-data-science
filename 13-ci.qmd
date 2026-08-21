@@ -163,7 +163,7 @@ developing a package, you could run unit tests on each push:
 `stop_on_failure = TRUE` is needed to make the step fail if there’s an error,
 otherwise, the step would run successfully, even with failing tests.
 
-Of course, if you’re developing a Python package, use `nix-shell --run "pytest"`
+Of course, if you’re developing a Python package, use `nix develop --command pytest`
 instead to run the tests.
 
 I highly recommend you run tests when pull requests get opened:
@@ -709,7 +709,7 @@ You can also generate the summary dynamically from your R or Python code:
 ```yaml
 - name: Generate summary from R
   run: |
-    nix-shell --run "Rscript -e '
+    nix develop --command Rscript -e '
       results <- readRDS(\"results.rds\")
       cat(\"## Analysis Complete\n\n\", file = Sys.getenv(\"GITHUB_STEP_SUMMARY\"), append = TRUE)
       cat(paste(\"Processed\", nrow(results), \"observations\n\"), file = Sys.getenv(\"GITHUB_STEP_SUMMARY\"), append = TRUE)
