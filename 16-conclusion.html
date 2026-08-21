@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>15&nbsp; Conclusion: Adopting Reproducibility in the Real World – Reproducible Polyglot Data Science</title>
+<title>16&nbsp; Conclusion: Adopting Reproducibility in the Real World – Reproducible Polyglot Data Science</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -54,7 +54,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./references.html" rel="next">
-<link href="./14-t-in-depth.html" rel="prev">
+<link href="./15-t-in-depth.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -276,7 +276,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./15-conclusion.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./16-conclusion.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -431,14 +431,20 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14-t-in-depth.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></span></a>
+  <a href="./14-data-manipulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">T for Data Manipulation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15-conclusion.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./15-t-in-depth.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-conclusion.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -457,18 +463,18 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">15.1</span> Introduction</a></li>
-  <li><a href="#start-with-yourself" id="toc-start-with-yourself" class="nav-link" data-scroll-target="#start-with-yourself"><span class="header-section-number">15.2</span> Start with yourself</a></li>
-  <li><a href="#the-two-minute-demo" id="toc-the-two-minute-demo" class="nav-link" data-scroll-target="#the-two-minute-demo"><span class="header-section-number">15.3</span> The two-minute demo</a></li>
-  <li><a href="#make-it-easy-for-others" id="toc-make-it-easy-for-others" class="nav-link" data-scroll-target="#make-it-easy-for-others"><span class="header-section-number">15.4</span> Make it easy for others</a></li>
-  <li><a href="#pick-your-battles" id="toc-pick-your-battles" class="nav-link" data-scroll-target="#pick-your-battles"><span class="header-section-number">15.5</span> Pick your battles</a></li>
-  <li><a href="#the-gradual-adoption-path" id="toc-the-gradual-adoption-path" class="nav-link" data-scroll-target="#the-gradual-adoption-path"><span class="header-section-number">15.6</span> The gradual adoption path</a></li>
-  <li><a href="#common-objections-and-how-to-address-them" id="toc-common-objections-and-how-to-address-them" class="nav-link" data-scroll-target="#common-objections-and-how-to-address-them"><span class="header-section-number">15.7</span> Common objections and how to address them</a></li>
-  <li><a href="#llms-as-adoption-accelerators" id="toc-llms-as-adoption-accelerators" class="nav-link" data-scroll-target="#llms-as-adoption-accelerators"><span class="header-section-number">15.8</span> LLMs as adoption accelerators</a></li>
-  <li><a href="#a-note-on-literate-programming" id="toc-a-note-on-literate-programming" class="nav-link" data-scroll-target="#a-note-on-literate-programming"><span class="header-section-number">15.9</span> A note on literate programming</a></li>
-  <li><a href="#final-thoughts" id="toc-final-thoughts" class="nav-link" data-scroll-target="#final-thoughts"><span class="header-section-number">15.10</span> Final thoughts</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">16.1</span> Introduction</a></li>
+  <li><a href="#start-with-yourself" id="toc-start-with-yourself" class="nav-link" data-scroll-target="#start-with-yourself"><span class="header-section-number">16.2</span> Start with yourself</a></li>
+  <li><a href="#the-two-minute-demo" id="toc-the-two-minute-demo" class="nav-link" data-scroll-target="#the-two-minute-demo"><span class="header-section-number">16.3</span> The two-minute demo</a></li>
+  <li><a href="#make-it-easy-for-others" id="toc-make-it-easy-for-others" class="nav-link" data-scroll-target="#make-it-easy-for-others"><span class="header-section-number">16.4</span> Make it easy for others</a></li>
+  <li><a href="#pick-your-battles" id="toc-pick-your-battles" class="nav-link" data-scroll-target="#pick-your-battles"><span class="header-section-number">16.5</span> Pick your battles</a></li>
+  <li><a href="#the-gradual-adoption-path" id="toc-the-gradual-adoption-path" class="nav-link" data-scroll-target="#the-gradual-adoption-path"><span class="header-section-number">16.6</span> The gradual adoption path</a></li>
+  <li><a href="#common-objections-and-how-to-address-them" id="toc-common-objections-and-how-to-address-them" class="nav-link" data-scroll-target="#common-objections-and-how-to-address-them"><span class="header-section-number">16.7</span> Common objections and how to address them</a></li>
+  <li><a href="#llms-as-adoption-accelerators" id="toc-llms-as-adoption-accelerators" class="nav-link" data-scroll-target="#llms-as-adoption-accelerators"><span class="header-section-number">16.8</span> LLMs as adoption accelerators</a></li>
+  <li><a href="#a-note-on-literate-programming" id="toc-a-note-on-literate-programming" class="nav-link" data-scroll-target="#a-note-on-literate-programming"><span class="header-section-number">16.9</span> A note on literate programming</a></li>
+  <li><a href="#final-thoughts" id="toc-final-thoughts" class="nav-link" data-scroll-target="#final-thoughts"><span class="header-section-number">16.10</span> Final thoughts</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/15-conclusion.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/16-conclusion.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -476,7 +482,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></h1>
+<h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></h1>
 </div>
 
 
@@ -493,27 +499,27 @@ div.csl-indent {
 </header>
 
 
-<section id="introduction" class="level2" data-number="15.1">
-<h2 data-number="15.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">15.1</span> Introduction</h2>
+<section id="introduction" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">16.1</span> Introduction</h2>
 <p>If you have made it this far, you now have a powerful toolkit at your disposal. You understand how Nix provides truly reproducible environments, how functional programming leads to testable and predictable code, how packages bundle your work for sharing, and how CI/CD automates the boring parts. But knowing these tools is only half the battle. The harder question is: how do you actually start using them?</p>
 <p>If you work alone, the answer is simple: just start. Pick one project and commit to doing it the “right” way. You will make mistakes, you will get frustrated, and you will learn. But if you work in a team, the challenge is different. You cannot simply mandate that everyone learns Nix by next Tuesday. Change management is a skill in itself, and this final chapter offers some practical strategies for introducing reproducible practices to yourself, your team, and your organisation.</p>
 <p>The philosophy here is simple: show, don’t tell. Nobody was ever convinced to adopt a new tool by a slideshow. They are convinced when they see it solve a real problem.</p>
 </section>
-<section id="start-with-yourself" class="level2" data-number="15.2">
-<h2 data-number="15.2" class="anchored" data-anchor-id="start-with-yourself"><span class="header-section-number">15.2</span> Start with yourself</h2>
+<section id="start-with-yourself" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="start-with-yourself"><span class="header-section-number">16.2</span> Start with yourself</h2>
 <p>Before you try to convince anyone else, you need to become proficient yourself. Pick a small, low-stakes project and use it as your learning ground. A perfect candidate is a personal side project or an internal analysis that nobody else depends on.</p>
 <p>Your goal in this phase is to build muscle memory. You want to reach the point where writing a <code>pipeline.t</code> feels as natural as opening RStudio. You want to be able to troubleshoot common Nix errors without panic. You want to have a working CI pipeline that you understand inside and out.</p>
 <p>This investment pays dividends later. When a colleague asks “Why is this so complicated?”, you will have a ready answer because you asked yourself the same question two months ago.</p>
 </section>
-<section id="the-two-minute-demo" class="level2" data-number="15.3">
-<h2 data-number="15.3" class="anchored" data-anchor-id="the-two-minute-demo"><span class="header-section-number">15.3</span> The two-minute demo</h2>
+<section id="the-two-minute-demo" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="the-two-minute-demo"><span class="header-section-number">16.3</span> The two-minute demo</h2>
 <p>Once you are comfortable, look for opportunities to demonstrate value. The best opportunities are problems that everyone recognises but nobody has solved.</p>
 <p>“It works on my machine” is the classic. The next time a colleague struggles to run your code, don’t just send them a fixed script. Send them the T project and a one-liner: <code>nix develop --command t run</code>. When the whole pipeline runs on the first try, you will have their attention.</p>
 <p>Another opportunity is the dreaded “update everything and pray” scenario. When a project breaks after a package update, you can show how Nix lets you pin exact versions. “This analysis will run the same way in five years” is a powerful statement.</p>
 <p>The key is to solve real problems, not hypothetical ones. Do not lecture your colleagues about reproducibility in the abstract. Show them how it saved you two hours of debugging on Tuesday.</p>
 </section>
-<section id="make-it-easy-for-others" class="level2" data-number="15.4">
-<h2 data-number="15.4" class="anchored" data-anchor-id="make-it-easy-for-others"><span class="header-section-number">15.4</span> Make it easy for others</h2>
+<section id="make-it-easy-for-others" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="make-it-easy-for-others"><span class="header-section-number">16.4</span> Make it easy for others</h2>
 <p>If you want your team to adopt these practices, you need to lower the barrier to entry as much as possible. This means:</p>
 <ol type="1">
 <li><p>Write excellent documentation. Not for yourself, but for the colleague who has never heard of Nix. Assume they will spend five minutes reading before giving up.</p></li>
@@ -522,15 +528,15 @@ div.csl-indent {
 <li><p>Be available. When someone tries your approach and hits a wall, they need help within minutes, not days. If you are not responsive, they will abandon the effort and go back to their old ways.</p></li>
 </ol>
 </section>
-<section id="pick-your-battles" class="level2" data-number="15.5">
-<h2 data-number="15.5" class="anchored" data-anchor-id="pick-your-battles"><span class="header-section-number">15.5</span> Pick your battles</h2>
+<section id="pick-your-battles" class="level2" data-number="16.5">
+<h2 data-number="16.5" class="anchored" data-anchor-id="pick-your-battles"><span class="header-section-number">16.5</span> Pick your battles</h2>
 <p>You cannot change everything at once. Be strategic about where you focus your energy.</p>
 <p>Some projects are not worth the effort to convert. If an analysis was run once three years ago and will never be touched again, leave it alone. Focus on new projects and on projects that are actively maintained.</p>
 <p>Some colleagues will never be convinced. That is fine. You do not need everyone on board. You need a few early adopters who will become advocates themselves. Focus on the curious ones, the ones who ask “how did you do that?” when they see your workflow.</p>
 <p>Some organisations have constraints you cannot change. Maybe you cannot install Nix on the production server. Maybe you are stuck with Windows machines. Work within these constraints rather than fighting them. Docker can bridge many gaps. WSL2 makes Nix possible on Windows. Find the path of least resistance.</p>
 </section>
-<section id="the-gradual-adoption-path" class="level2" data-number="15.6">
-<h2 data-number="15.6" class="anchored" data-anchor-id="the-gradual-adoption-path"><span class="header-section-number">15.6</span> The gradual adoption path</h2>
+<section id="the-gradual-adoption-path" class="level2" data-number="16.6">
+<h2 data-number="16.6" class="anchored" data-anchor-id="the-gradual-adoption-path"><span class="header-section-number">16.6</span> The gradual adoption path</h2>
 <p>Here is a realistic roadmap for introducing reproducibility to a team:</p>
 <p><strong>Month 1-2: Personal mastery.</strong> Use Nix and the tools from this book on your own projects. Get comfortable. Build your own templates and workflows.</p>
 <p><strong>Month 3-4: Show and tell.</strong> Start sharing your work. When you give a code review, mention that the project runs in a Nix shell. When someone asks how to add a package, show them that it is a line in <code>tproject.toml</code> followed by <code>t update</code>. Let people discover the value organically.</p>
@@ -538,8 +544,8 @@ div.csl-indent {
 <p><strong>Month 7-12: Expand.</strong> Use the pilot project as a template for new work. Gradually, “the new way” becomes “the way we do things here.” Update onboarding documentation to include Nix setup.</p>
 <p>This is slow. It takes patience. But lasting change always does.</p>
 </section>
-<section id="common-objections-and-how-to-address-them" class="level2" data-number="15.7">
-<h2 data-number="15.7" class="anchored" data-anchor-id="common-objections-and-how-to-address-them"><span class="header-section-number">15.7</span> Common objections and how to address them</h2>
+<section id="common-objections-and-how-to-address-them" class="level2" data-number="16.7">
+<h2 data-number="16.7" class="anchored" data-anchor-id="common-objections-and-how-to-address-them"><span class="header-section-number">16.7</span> Common objections and how to address them</h2>
 <p><strong>“This is too complicated.”</strong></p>
 <p>It is more complicated than doing nothing. But it is simpler than debugging environment issues at 3am before a deadline. Complexity is a trade-off. You are trading upfront learning for long-term reliability. Acknowledge the learning curve, but emphasise that you are there to help.</p>
 <p><strong>“We don’t have time for this.”</strong></p>
@@ -549,8 +555,8 @@ div.csl-indent {
 <p><strong>“I’ll learn it later.”</strong></p>
 <p>Later never comes. Start with one small project. Commit to using one new tool. You can learn incrementally. You do not need to master everything before you begin.</p>
 </section>
-<section id="llms-as-adoption-accelerators" class="level2" data-number="15.8">
-<h2 data-number="15.8" class="anchored" data-anchor-id="llms-as-adoption-accelerators"><span class="header-section-number">15.8</span> LLMs as adoption accelerators</h2>
+<section id="llms-as-adoption-accelerators" class="level2" data-number="16.8">
+<h2 data-number="16.8" class="anchored" data-anchor-id="llms-as-adoption-accelerators"><span class="header-section-number">16.8</span> LLMs as adoption accelerators</h2>
 <p>Throughout this book, we have seen how LLMs can assist with writing tests, generating documentation, and even drafting functions. But there is a bigger point to make here: T was designed with LLMs in mind, and that design choice changes how you adopt everything else in this book.</p>
 <p>The old objection to tools like Nix was that the learning curve was too steep. You had to understand a new language, a new paradigm, and a lot of unfamiliar syntax. T softens that objection in two ways. First, its syntax is simple enough that a human can read and write it comfortably, without a manual. Second, and more importantly, it was designed from the start to be written by LLMs. The nodes, the dependencies, the data flow: all of it maps cleanly onto the kind of structured, declarative description that language models are good at producing.</p>
 <p>So who writes your pipeline? In practice, both. You can open a <code>pipeline.t</code> file and understand it. You can also hand a problem to an LLM and get a working pipeline back. The same file can be edited by a human on Monday and regenerated by a model on Tuesday, and both versions stay legible to both of you. That is a rare property, and it is what makes T a good fit for AI-assisted work.</p>
@@ -559,15 +565,15 @@ div.csl-indent {
 <p>And there is a lot you can do, as a human, to make the model’s life easier. You do not have to ask the LLM to do everything. If downloading and cleaning the raw data into a tidy, ready-to-use format is something you can do once by hand, do it, and store the result in the project. Now the model starts from clean input instead of spending its effort, and your review time, writing a script to scrape and wrangle data you could have prepared yourself. The same goes for pinning a tricky dependency, sketching the first version of the pipeline’s nodes, or writing the hard function yourself. You are not offloading your thinking to the model; you are clearing the path so that when it does think, it thinks about the right things.</p>
 <p>The human’s job, then, shifts from writing every line to reviewing and directing. The bottleneck is no longer “I need to learn everything”; it is “I need to understand enough to verify the output.” That is a much smaller ask, and it is why the combination works. T provides the structure and the reproducibility. The LLM provides the speed and the accessibility. And the context you invest provides the accuracy. Together, they make best practices achievable for teams that would never have adopted them otherwise.</p>
 </section>
-<section id="a-note-on-literate-programming" class="level2" data-number="15.9">
-<h2 data-number="15.9" class="anchored" data-anchor-id="a-note-on-literate-programming"><span class="header-section-number">15.9</span> A note on literate programming</h2>
+<section id="a-note-on-literate-programming" class="level2" data-number="16.9">
+<h2 data-number="16.9" class="anchored" data-anchor-id="a-note-on-literate-programming"><span class="header-section-number">16.9</span> A note on literate programming</h2>
 <p>This book has focused on the plumbing of reproducibility: environments, packages, pipelines, and automation. But there is another dimension we have not covered in depth: literate programming.</p>
 <p>Literate programming is the practice of combining code, prose, and outputs into a single document. Tools like Quarto, R Markdown, and Jupyter notebooks <span class="citation" data-cites="kluyver2016">(<a href="references.html#ref-kluyver2016" role="doc-biblioref">Kluyver et al. 2016</a>)</span> make this possible. The idea is that the analysis and its documentation are the same thing. You cannot have one without the other.</p>
 <p>This book itself was written with Quarto. Every code example runs. Every output is generated fresh on each build. This is literate programming in action.</p>
 <p>If you are interested in this approach, there are excellent resources available. The Quarto documentation at <a href="https://quarto.org">quarto.org</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is a great starting point. For R Markdown, “R Markdown: The Definitive Guide” by Xie, Allaire, and Grolemund is comprehensive. The principles you have learned in this book apply directly: pin your environment with Nix, run your document rendering in CI, and your reports become just as reproducible as your analyses.</p>
 </section>
-<section id="final-thoughts" class="level2" data-number="15.10">
-<h2 data-number="15.10" class="anchored" data-anchor-id="final-thoughts"><span class="header-section-number">15.10</span> Final thoughts</h2>
+<section id="final-thoughts" class="level2" data-number="16.10">
+<h2 data-number="16.10" class="anchored" data-anchor-id="final-thoughts"><span class="header-section-number">16.10</span> Final thoughts</h2>
 <p>Reproducibility is not a destination. It is a practice. You will never have a perfectly reproducible workflow because requirements change, tools evolve, and you learn new things. The goal is not perfection but continuous improvement.</p>
 <p>Start where you are. Use what you have. Do what you can.</p>
 <p>If this book has given you one new tool or one new idea, it has done its job. If it has changed how you think about your work, even better. And if you go on to share these practices with your colleagues and build a culture of reproducibility in your team, then you have not only learned but taught. That is the highest compliment.</p>
@@ -1003,8 +1009,8 @@ Kluyver, Thomas, Benjamin Ragan-Kelley, Fernando Pérez, Brian E. Granger, Matth
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./14-t-in-depth.html" class="pagination-link" aria-label="Beyond the Basics: T in Depth">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></span>
+      <a href="./15-t-in-depth.html" class="pagination-link" aria-label="Beyond the Basics: T in Depth">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -1018,4 +1024,4 @@ Kluyver, Thomas, Benjamin Ragan-Kelley, Fernando Pérez, Brian E. Granger, Matth
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/15-conclusion.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/16-conclusion.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

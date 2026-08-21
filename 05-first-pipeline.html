@@ -446,14 +446,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14-t-in-depth.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></span></a>
+  <a href="./14-data-manipulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">T for Data Manipulation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15-conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
+  <a href="./15-t-in-depth.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Conclusion: Adopting Reproducibility in the Real World</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -547,7 +553,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 
 build_pipeline(p)</code></pre>
-<p>This pipeline doesn’t use any R, Python or Julia code yet, but is written in pure T. T comes with many builtin functions, and even data manipulation verbs inspired by <code>{dplyr}</code>! But let’s discuss these later.</p>
+<p>This pipeline doesn’t use any R, Python or Julia code yet, but is written in pure T. T comes with many builtin functions, and even data manipulation verbs inspired by <code>{dplyr}</code>! We return to them in Chapter 14.</p>
 <p>Now let’s run the pipeline. There are two ways of doing it. From the terminal (inside of the environment):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> developt</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Bruno Rodrigues">
-<meta name="dcterms.date" content="2026-02-01">
 
-<title>Reproducible Polyglot Data Science</title>
+<title>14&nbsp; T for Data Manipulation – Reproducible Polyglot Data Science</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -35,7 +33,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./preface.html" rel="next">
+<link href="./15-t-in-depth.html" rel="next">
+<link href="./13-ci.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -257,7 +256,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome!</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14-data-manipulation.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">T for Data Manipulation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -322,7 +321,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Welcome!</span></a>
   </div>
 </li>
@@ -412,7 +411,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14-data-manipulation.html" class="sidebar-item-text sidebar-link">
+  <a href="./14-data-manipulation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">T for Data Manipulation</span></span></a>
   </div>
 </li>
@@ -444,12 +443,31 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome!</a>
+  <li><a href="#the-core-verbs" id="toc-the-core-verbs" class="nav-link active" data-scroll-target="#the-core-verbs"><span class="header-section-number">14.1</span> The core verbs</a>
   <ul class="collapse">
-  <li><a href="#a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t." id="toc-a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t." class="nav-link" data-scroll-target="#a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t.">A modern, unified, and language-agnostic workflow for data science using Nix and T.</a></li>
+  <li><a href="#select-choose-columns" id="toc-select-choose-columns" class="nav-link" data-scroll-target="#select-choose-columns"><span class="header-section-number">14.1.1</span> select() — choose columns</a></li>
+  <li><a href="#filter-choose-rows" id="toc-filter-choose-rows" class="nav-link" data-scroll-target="#filter-choose-rows"><span class="header-section-number">14.1.2</span> filter() — choose rows</a></li>
+  <li><a href="#mutate-add-or-transform-columns" id="toc-mutate-add-or-transform-columns" class="nav-link" data-scroll-target="#mutate-add-or-transform-columns"><span class="header-section-number">14.1.3</span> mutate() — add or transform columns</a></li>
+  <li><a href="#arrange-sort-rows" id="toc-arrange-sort-rows" class="nav-link" data-scroll-target="#arrange-sort-rows"><span class="header-section-number">14.1.4</span> arrange() — sort rows</a></li>
+  <li><a href="#group_by-and-summarize" id="toc-group_by-and-summarize" class="nav-link" data-scroll-target="#group_by-and-summarize"><span class="header-section-number">14.1.5</span> group_by() and summarize()</a></li>
+  <li><a href="#composing-verbs" id="toc-composing-verbs" class="nav-link" data-scroll-target="#composing-verbs"><span class="header-section-number">14.1.6</span> Composing verbs</a></li>
   </ul></li>
+  <li><a href="#reshaping-and-missing-values" id="toc-reshaping-and-missing-values" class="nav-link" data-scroll-target="#reshaping-and-missing-values"><span class="header-section-number">14.2</span> Reshaping and missing values</a>
+  <ul class="collapse">
+  <li><a href="#pivot_longer-and-pivot_wider" id="toc-pivot_longer-and-pivot_wider" class="nav-link" data-scroll-target="#pivot_longer-and-pivot_wider"><span class="header-section-number">14.2.1</span> pivot_longer() and pivot_wider()</a></li>
+  <li><a href="#separate-and-unite" id="toc-separate-and-unite" class="nav-link" data-scroll-target="#separate-and-unite"><span class="header-section-number">14.2.2</span> separate() and unite()</a></li>
+  <li><a href="#nest-and-unnest" id="toc-nest-and-unnest" class="nav-link" data-scroll-target="#nest-and-unnest"><span class="header-section-number">14.2.3</span> nest() and unnest()</a></li>
+  <li><a href="#missing-values" id="toc-missing-values" class="nav-link" data-scroll-target="#missing-values"><span class="header-section-number">14.2.4</span> Missing values</a></li>
+  </ul></li>
+  <li><a href="#working-with-strings" id="toc-working-with-strings" class="nav-link" data-scroll-target="#working-with-strings"><span class="header-section-number">14.3</span> Working with strings</a></li>
+  <li><a href="#dates-and-times" id="toc-dates-and-times" class="nav-link" data-scroll-target="#dates-and-times"><span class="header-section-number">14.4</span> Dates and times</a></li>
+  <li><a href="#factors-and-categorical-data" id="toc-factors-and-categorical-data" class="nav-link" data-scroll-target="#factors-and-categorical-data"><span class="header-section-number">14.5</span> Factors and categorical data</a></li>
+  <li><a href="#arrays" id="toc-arrays" class="nav-link" data-scroll-target="#arrays"><span class="header-section-number">14.6</span> Arrays</a></li>
+  <li><a href="#formulas-and-models" id="toc-formulas-and-models" class="nav-link" data-scroll-target="#formulas-and-models"><span class="header-section-number">14.7</span> Formulas and models</a></li>
+  <li><a href="#lenses-reaching-the-nested" id="toc-lenses-reaching-the-nested" class="nav-link" data-scroll-target="#lenses-reaching-the-nested"><span class="header-section-number">14.8</span> Lenses: reaching the nested</a></li>
+  <li><a href="#where-to-go-from-here" id="toc-where-to-go-from-here" class="nav-link" data-scroll-target="#where-to-go-from-here"><span class="header-section-number">14.9</span> Where to go from here</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/14-data-manipulation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -457,26 +475,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Reproducible Polyglot Data Science</h1>
+<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">T for Data Manipulation</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Bruno Rodrigues </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">February 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -486,52 +492,191 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="welcome" class="level1 unnumbered">
-<h1 class="unnumbered">Welcome!</h1>
-<section id="a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t." class="level2">
-<h2 class="anchored" data-anchor-id="a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t.">A modern, unified, and language-agnostic workflow for data science using Nix and T.</h2>
-<p><em>This is still WIP! Expected first finalized release at the end of Q4 2026. This book is a complete reimagining of my previous work, “Building Reproducible Analytical Pipelines with R.” If you’re looking for that book, you can find it <a href="https://www.raps-with-r.dev">here</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. But if you’re ready for the next step, you’re in the right place.</em></p>
-<figure class="figure">
-<a href="https://leanpub.com/reproducible-data-science"> <img style="float: right; clear: right" height="200" src="images/cover.png" alt="The Wizard of Nix tames the Serpent of dependency Hell" class="figure-img"> </a>
-</figure>
-<p>Data scientists, statisticians, analysts, researchers, and many other professionals write a lot of code.</p>
-<p>Not only do they write a lot of code, but they must also read and review a lot of code as well. They either work in teams and need to review each other’s code, or need to be able to reproduce results from past projects, be it for peer review or auditing purposes. And yet, they never, or very rarely, get taught the tools and techniques that would make the process of writing, collaborating, reviewing and reproducing projects possible.</p>
-<p>Which is truly unfortunate because software engineers face the same challenges and solved them decades ago.</p>
-<p>The aim of this book is to teach you how to use some of the best practices from software engineering and DevOps to make your projects robust, reliable and reproducible. It doesn’t matter if you work alone, in a small or in a big team. It doesn’t matter if your work gets (peer-)reviewed or audited: the techniques presented in this book will make your projects more reliable and save you a lot of frustration!</p>
-<p>As someone whose primary job is analysing data, you might think that you are not a developer. It seems as if developers are these genius types that write extremely high-quality code and create these super useful packages. The truth is that you are a developer as well. It’s just that your focus is on writing code for your purposes to get your analyses going instead of writing code for others. Or at least, that’s what you think. Because in others, your team-mates are included. Reviewers and auditors are included. Any people that will read your code are included, and there will be people that will read your code. At the very least future you will read your code. By learning how to set up projects and write code in a way that future you will understand and not want to murder you, you will actually work towards improving the quality of your work, naturally.</p>
-<p>The book can be read for free on <a href="https://b-rodrigues.github.io/reproducible-data-science/">https://b-rodrigues.github.io/reproducible-data-science/</a> and you’ll be able buy a DRM-free Epub or PDF on <a href="https://leanpub.com/">Leanpub</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> once there’s more content.</p>
-<p>This book is the culmination of my previous works. I started by writing a book focused on R, and then began working on a Python edition. During that process, I had a realization: tackling reproducibility one language at a time was solving the symptoms, not the root cause. The real solution needed to be universal, powerful, and capable of handling any language or tool we might need.</p>
-<p><strong>That universal solution is Nix.</strong></p>
-<p>This book moves beyond language-specific tooling. It presents a holistic workflow where R, Python, and Julia are not competitors, but collaborators in a single, cohesive, and perfectly reproducible environment. We will cover:</p>
-<ul>
-<li>The Nix Philosophy: Why Nix is the ultimate tool for solving the “it works on my machine” problem, once and for all—derivations, component closures, and hermetic builds.</li>
-<li>Declarative Environments with T: How to define exact, bit-for-bit reproducible software environments that include specific versions of R, Python, Julia, their packages, and any system-level dependencies, all in one simple file.</li>
-<li>Polyglot Pipelines with T: How to orchestrate complex analytical pipelines that seamlessly pass data between different languages, all managed by the Nix build system.</li>
-<li>Functional Programming and Pipelines as Function Composition: Core principles for writing robust, testable, and maintainable code, no matter the language.</li>
-<li>Professional Workflows: Unit testing, Git, and debugging techniques that keep your analyses reliable as they grow.</li>
-<li>Advanced Pipeline Patterns: Treating pipelines as data—querying, transforming, and composing them.</li>
-<li>Distribution and Automation: How to package your entire reproducible pipeline into a Docker container for easy sharing and automate your workflow with GitHub Actions.</li>
-</ul>
-<p>While this is not a book for beginners (you should be familiar with at least one data-centric programming language before reading this), I will not assume that you have any knowledge of the tools discussed. But be warned, this book will require you to take the time to read it, and then type on your computer. Type <em>a lot</em>.</p>
-<p>I hope that you will enjoy reading this book and applying the ideas in your day-to-day, ideas which hopefully should improve the reliability, traceability and reproducibility of your code.</p>
-<p>If you find this book useful, don’t hesitate to let me know! You can submit issues, suggest improvements, and ask questions on the book’s <a href="https://github.com/b-rodrigues/reproducible-data-science">Github repository</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
-<p>A physical copy of the book is coming soon on Amazon.</p>
-<p>If you want to get to know me better, read my <a href="https://brodrigues.co/about.html">bio</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
-<p>You’ll also be able to buy a physical copy of the book on Amazon once it’s done. In the meantime, you could buy the <a href="https://www.amazon.com/dp/B0C87H6MGF/">R edition</a><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p>
-<p>If you find this book useful, don’t hesitate to let me know or leave a rating on Amazon!</p>
-
-
+<p>So far, when a pipeline node needed to wrangle data, you have reached for R and <code>{dplyr}</code>. That is a perfectly good habit: <code>{dplyr}</code> is mature, and Chapter 5 showed you exactly how to call it from a node. But it is not the only option.</p>
+<p>Remember the promise we made in Chapter 5: T ships with its own data manipulation verbs, inspired by <code>{dplyr}</code> and <code>{tidyr}</code>. This chapter keeps it. Those verbs live in T’s <code>colcraft</code> package. They take a DataFrame as their first argument and return a new DataFrame, which makes them composable with the pipe operator you already know.</p>
+<p>The point is not to replace R. It is to give you a reason to stay in T for the quick stuff: a filter here, a column there, a summary you need before you hand the data to a model. When the work gets heavy, you still have R and Python. But for the small transformations that glue a pipeline together, T is often enough, and staying in one language means one fewer serializer in the loop.</p>
+<p>Every example in this chapter is written in T and marked so that it does not execute during the build. You can paste them into a REPL or a node and run them for real.</p>
+<section id="the-core-verbs" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="the-core-verbs"><span class="header-section-number">14.1</span> The core verbs</h2>
+<p>The <code>colcraft</code> verbs follow the shape you already know from <code>{dplyr}</code>: a verb takes a DataFrame, does one thing, and hands back a DataFrame. You chain them with the pipe.</p>
+<section id="select-choose-columns" class="level3" data-number="14.1.1">
+<h3 data-number="14.1.1" class="anchored" data-anchor-id="select-choose-columns"><span class="header-section-number">14.1.1</span> select() — choose columns</h3>
+<p><code>select()</code> keeps only the columns you name, using the <code>$column</code> syntax:</p>
+<pre class="t"><code>df |&gt; select($name, $age)
+df |&gt; select($name)</code></pre>
+<p>If you name a column that does not exist, you get a <code>KeyError</code> that names the missing column, so a typo fails fast rather than silently dropping data.</p>
+</section>
+<section id="filter-choose-rows" class="level3" data-number="14.1.2">
+<h3 data-number="14.1.2" class="anchored" data-anchor-id="filter-choose-rows"><span class="header-section-number">14.1.2</span> filter() — choose rows</h3>
+<p><code>filter()</code> keeps the rows where a predicate is true. You write the predicate against the <code>$column</code> syntax, and T turns it into a row-wise function for you:</p>
+<pre class="t"><code>df |&gt; filter($age &gt; 30)
+df |&gt; filter($dept == "eng")</code></pre>
+<p>To combine conditions, use the logical operators <code>&amp;&amp;</code> (and) and <code>||</code> (or):</p>
+<pre class="t"><code>df |&gt; filter($dept == "eng" &amp;&amp; $age &gt; 25)
+df |&gt; filter($dept == "sales" || $score &gt; 90)</code></pre>
+<blockquote class="blockquote">
+<p><strong>No silent magic.</strong> The bitwise operators <code>&amp;</code> and <code>|</code> are for scalar, element-wise work. If you accidentally use them to combine filter conditions, T raises a <code>TypeError</code> that points you at <code>&amp;&amp;</code> and <code>||</code>.</p>
+</blockquote>
+</section>
+<section id="mutate-add-or-transform-columns" class="level3" data-number="14.1.3">
+<h3 data-number="14.1.3" class="anchored" data-anchor-id="mutate-add-or-transform-columns"><span class="header-section-number">14.1.3</span> mutate() — add or transform columns</h3>
+<p><code>mutate()</code> adds a new column or replaces an existing one. The new column is named with <code>$</code> and defined by an expression over the existing columns:</p>
+<pre class="t"><code>df |&gt; mutate($age_plus_10 = $age + 10)
+df |&gt; mutate($bonus = $salary * 0.1)</code></pre>
+</section>
+<section id="arrange-sort-rows" class="level3" data-number="14.1.4">
+<h3 data-number="14.1.4" class="anchored" data-anchor-id="arrange-sort-rows"><span class="header-section-number">14.1.4</span> arrange() — sort rows</h3>
+<p><code>arrange()</code> sorts by one or more columns, in ascending order by default or <code>"desc"</code> for descending:</p>
+<pre class="t"><code>df |&gt; arrange($age)
+df |&gt; arrange($score, "desc")</code></pre>
+</section>
+<section id="group_by-and-summarize" class="level3" data-number="14.1.5">
+<h3 data-number="14.1.5" class="anchored" data-anchor-id="group_by-and-summarize"><span class="header-section-number">14.1.5</span> group_by() and summarize()</h3>
+<p><code>group_by()</code> marks the columns that define groups. It does not change the data; it tells the next verb how to split the work. <code>summarize()</code> then collapses each group into a single row:</p>
+<pre class="t"><code>df |&gt; group_by($dept)
+   |&gt; summarize($count = nrow($dept), $avg_score = mean($score))</code></pre>
+<p>The result has one row per group, with the grouping column and the aggregates you asked for.</p>
+</section>
+<section id="composing-verbs" class="level3" data-number="14.1.6">
+<h3 data-number="14.1.6" class="anchored" data-anchor-id="composing-verbs"><span class="header-section-number">14.1.6</span> Composing verbs</h3>
+<p>The power is in the chaining. A filter, a select, a sort, and a count become a single readable expression:</p>
+<pre class="t"><code>df |&gt; filter($age &gt; 25)
+   |&gt; select($name, $score)
+   |&gt; arrange($score, "desc")
+   |&gt; nrow</code></pre>
+<p>Read it top to bottom and it describes the analysis in plain language. That is the same readability you get from <code>{dplyr}</code>, with no runtime switch.</p>
 </section>
 </section>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr>
-<ol>
-<li id="fn1"><p>https://www.raps-with-r.dev<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>https://leanpub.com/<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>https://github.com/b-rodrigues/reproducible-data-science<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>https://brodrigues.co/about.html<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>https://www.amazon.com/dp/B0C87H6MGF/<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
+<section id="reshaping-and-missing-values" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="reshaping-and-missing-values"><span class="header-section-number">14.2</span> Reshaping and missing values</h2>
+<p>Real data is rarely tidy. <code>colcraft</code> includes the reshaping verbs you know from <code>{tidyr}</code>, plus a small set of tools for missing values.</p>
+<section id="pivot_longer-and-pivot_wider" class="level3" data-number="14.2.1">
+<h3 data-number="14.2.1" class="anchored" data-anchor-id="pivot_longer-and-pivot_wider"><span class="header-section-number">14.2.1</span> pivot_longer() and pivot_wider()</h3>
+<p><code>pivot_longer()</code> turns wide data (several columns holding measurements) into long data (a name column and a value column). <code>pivot_wider()</code> does the reverse:</p>
+<pre class="t"><code>-- wide to long
+df |&gt; pivot_longer($age, $score, names_to = "measure", values_to = "val")
+
+-- long to wide
+df |&gt; select($name, $dept, $salary)
+   |&gt; pivot_wider(names_from = $dept, values_from = $salary)</code></pre>
+</section>
+<section id="separate-and-unite" class="level3" data-number="14.2.2">
+<h3 data-number="14.2.2" class="anchored" data-anchor-id="separate-and-unite"><span class="header-section-number">14.2.2</span> separate() and unite()</h3>
+<p><code>separate()</code> splits one column into several on a delimiter; <code>unite()</code> joins several columns back into one:</p>
+<pre class="t"><code>df |&gt; separate($date, into = ["year", "month", "day"], sep = "-")
+df |&gt; unite("full_date", $year, $month, $day, sep = "-")</code></pre>
+</section>
+<section id="nest-and-unnest" class="level3" data-number="14.2.3">
+<h3 data-number="14.2.3" class="anchored" data-anchor-id="nest-and-unnest"><span class="header-section-number">14.2.3</span> nest() and unnest()</h3>
+<p><code>nest()</code> packs selected columns into a single column of nested DataFrames, grouping by the columns you leave out. <code>unnest()</code> expands them back out. This is how you build, and later dissolve, the hierarchical structures that lenses (covered at the end of this chapter) are designed to reach:</p>
+<pre class="t"><code>nested = df |&gt; group_by($cyl) |&gt; nest()
+flat = nested |&gt; unnest($data)</code></pre>
+</section>
+<section id="missing-values" class="level3" data-number="14.2.4">
+<h3 data-number="14.2.4" class="anchored" data-anchor-id="missing-values"><span class="header-section-number">14.2.4</span> Missing values</h3>
+<p>Three verbs handle the gaps. <code>drop_na()</code> removes rows with missing values in the named columns, <code>replace_na()</code> fills them with a constant, and <code>fill()</code> propagates the last non-missing value forward:</p>
+<pre class="t"><code>df |&gt; drop_na($score)
+df |&gt; replace_na([score: 0])
+df |&gt; fill($category, .direction = "down")</code></pre>
+</section>
+</section>
+<section id="working-with-strings" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="working-with-strings"><span class="header-section-number">14.3</span> Working with strings</h2>
+<p>Text columns are everywhere, and T names its string helpers with a <code>str_</code> prefix so they are easy to spot:</p>
+<pre class="t"><code>str_nchar("hello")              -- 5
+str_substring("hello", 1, 4)    -- "ell"
+str_replace("banana", "a", "o") -- "bonono"
+str_trim("  hello  ")           -- "hello"
+str_join(["a", "b", "c"], "-")  -- "a-b-c"
+str_split("a,b,c", ",")         -- ["a", "b", "c"]</code></pre>
+<p>A few helpers intentionally keep their plain names, because they double as column-selection helpers in <code>colcraft</code>:</p>
+<pre class="t"><code>contains("petal_width", "width")
+starts_with("petal_width", "petal")
+
+-- the same names select columns in a DataFrame
+df |&gt; select(starts_with("petal"))</code></pre>
+<p>That overlap is deliberate: <code>contains</code>, <code>starts_with</code>, and <code>ends_with</code> work as string predicates and as selection helpers, so the data-manipulation API stays consistent.</p>
+</section>
+<section id="dates-and-times" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="dates-and-times"><span class="header-section-number">14.4</span> Dates and times</h2>
+<p>The <code>chrono</code> package brings date and time handling to T, modelled on R’s <code>{lubridate}</code>. You can parse strings into dates with shorthand helpers:</p>
+<pre class="t"><code>d = ymd("2024-01-15")
+dt = ymd_hms("2024-01-15 09:30:00")</code></pre>
+<p>Extract components, and do calendar-aware arithmetic with periods:</p>
+<pre class="t"><code>year(d)
+month(d, label = true)   -- "Jan"
+
+-- adding a month to Jan 31 lands on the last day of February
+ymd("2024-01-31") + months(3)   -- 2024-04-30</code></pre>
+<p>The arithmetic is calendar-aware, not just “add a number of days”, which is exactly what you want when a rule is “the same day next month”. A typical workflow parses a date column, derives a month, and summarises by month:</p>
+<pre class="t"><code>df |&gt; mutate(date = ymd($order_date),
+             month = month($date, label = true))
+   |&gt; filter(year($date) == 2024)
+   |&gt; group_by($month)
+   |&gt; summarize($total = sum($sales))</code></pre>
+</section>
+<section id="factors-and-categorical-data" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="factors-and-categorical-data"><span class="header-section-number">14.5</span> Factors and categorical data</h2>
+<p>A factor is categorical data with an explicit list of levels. The level order matters: <code>arrange()</code> sorts a factor by its levels, not alphabetically. That makes factors the right tool for ordered categories such as shirt sizes, survey responses, or reporting buckets.</p>
+<pre class="t"><code>sizes = to_factor(["medium", "small", "large"],
+                  levels = ["small", "medium", "large"])
+levels(sizes)   -- ["small", "medium", "large"]</code></pre>
+<p>If you omit <code>levels</code>, T derives them from the data and sorts them alphabetically. Use <code>ordered()</code> when the ordering is meaningful and should be preserved.</p>
+<p>The <code>fct_*</code> helpers (a nod to R’s <code>{forcats}</code>) let you reorder, relabel, and collapse levels after creation:</p>
+<pre class="t"><code>df |&gt; mutate($segment = fct_infreq($segment))
+df |&gt; mutate($segment = fct_relevel($segment, "enterprise"))
+df |&gt; mutate($segment = fct_lump_n($segment, n = 3))</code></pre>
+</section>
+<section id="arrays" class="level2" data-number="14.6">
+<h2 data-number="14.6" class="anchored" data-anchor-id="arrays"><span class="header-section-number">14.6</span> Arrays</h2>
+<p>For heavy numerical work, T has first-class NDArrays. Unlike lists, an NDArray has a fixed shape and optimised storage, and it supports element-wise arithmetic with broadcasting:</p>
+<pre class="t"><code>v = ndarray([1, 2, 3, 4, 5])
+m = ndarray([[1, 2, 3], [4, 5, 6]])
+
+shape(m)     -- [2, 3]
+m + 10       -- broadcasts the scalar across the array</code></pre>
+<p>A small set of linear-algebra functions is available for matrix work:</p>
+<pre class="t"><code>a = ndarray([[1, 2], [3, 4]])
+matmul(a, a)
+inv(a)
+diag(a)</code></pre>
+<p>Keep one constraint in mind: NDArrays cannot hold <code>NA</code> values, so handle missing data before you convert.</p>
+</section>
+<section id="formulas-and-models" class="level2" data-number="14.7">
+<h2 data-number="14.7" class="anchored" data-anchor-id="formulas-and-models"><span class="header-section-number">14.7</span> Formulas and models</h2>
+<p>T borrows R’s formula syntax for specifying models. The <code>~</code> operator builds a formula you can pass to a modelling function:</p>
+<pre class="t"><code>model = lm(data = df, formula = salary ~ age)
+model.r_squared
+model.coefficients.age</code></pre>
+<p>Multiple predictors and interactions follow the familiar rules:</p>
+<pre class="t"><code>model = lm(data = df, formula = y ~ x1 + x2 + x3)
+model = lm(data = df, formula = y ~ x1 * x2)</code></pre>
+<p><code>lm()</code> returns a dictionary with the coefficients, standard errors, R², and a tidy DataFrame of the results. It is not a replacement for a full statistical toolkit, but it covers the quick “does this variable matter” check without leaving T.</p>
+</section>
+<section id="lenses-reaching-the-nested" class="level2" data-number="14.8">
+<h2 data-number="14.8" class="anchored" data-anchor-id="lenses-reaching-the-nested"><span class="header-section-number">14.8</span> Lenses: reaching the nested</h2>
+<p>The verbs above are built for flat DataFrames. Once your data becomes nested — after a <code>nest()</code>, or from a hierarchical API — the standard verbs turn into a pyramid of nested lambdas. Lenses solve that.</p>
+<p>A lens names a <em>path</em> into a structure. You build it once with <code>compose()</code>, then use it to read or transform the value at that path in a single step:</p>
+<pre class="t"><code>-- path: clients -&gt; projects -&gt; milestones -&gt; pct_int
+pct_l = compose(col_lens("projects"),
+                col_lens("milestones"),
+                col_lens("pct_int"))
+
+-- apply a 10-point uplift to every milestone, everywhere
+updated = clients |&gt; over(pct_l, \(x) min(x .+ 10, 100))</code></pre>
+<p>The three core operations are <code>get()</code> (read), <code>set()</code> (replace), and <code>over()</code> (transform). <code>col_lens()</code> targets a column or key, <code>row_lens()</code> and <code>idx_lens()</code> target a row or index, and <code>filter_lens()</code> is a traversal that focuses on every element matching a condition:</p>
+<pre class="t"><code>-- add 10 to every even score
+even_l = filter_lens(\(x) x % 2 == 0)
+scores |&gt; over(even_l, \(x) x + 10)</code></pre>
+<p>One detail matters when you transform a whole column: <code>over()</code> hands your function a Vector, so use the broadcasting operators (<code>.+</code>, <code>.*</code>) for element-wise math rather than the scalar ones.</p>
+<p>For flat DataFrames, stick with the ordinary verbs — they are simpler and more idiomatic. Lenses earn their keep in nested and polymorphic data, where the alternative is a tower of <code>map</code> calls.</p>
+</section>
+<section id="where-to-go-from-here" class="level2" data-number="14.9">
+<h2 data-number="14.9" class="anchored" data-anchor-id="where-to-go-from-here"><span class="header-section-number">14.9</span> Where to go from here</h2>
+<p>You now have a full data-manipulation toolkit that lives in T itself: the <code>colcraft</code> verbs for selecting, filtering, mutating, and summarising; reshaping and missing-value tools; string, date, and factor helpers; arrays for numerical work; formulas for quick models; and lenses for the nested structures the flat verbs cannot reach.</p>
+<p>None of this is a reason to abandon R. It is a reason to keep the small, glue-y transformations in the language that already orchestrates your pipeline, and reach for R or Python when the analysis genuinely calls for it. The next chapter goes deeper on T itself: the REPL, metaprogramming, serializers, plotting, and packaging.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -950,10 +1095,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./13-ci.html" class="pagination-link" aria-label="Continuous Integration with GitHub Actions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Continuous Integration with GitHub Actions</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./preface.html" class="pagination-link" aria-label="Preface">
-        <span class="nav-page-text">Preface</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./15-t-in-depth.html" class="pagination-link" aria-label="Beyond the Basics: T in Depth">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Beyond the Basics: T in Depth</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -962,4 +1110,4 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/14-data-manipulation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
