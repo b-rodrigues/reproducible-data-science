@@ -535,7 +535,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="sec-worked-example" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="sec-worked-example"><span class="header-section-number">8.2</span> A Realistic Worked Example</h2>
-<p>Most toy examples in data science tooling documentation use <code>mtcars</code>. We will use the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a> dataset instead — still small enough to reason about quickly, but with a real modelling task: predict penguin species from morphological measurements.</p>
+<p>Most toy examples in data science tooling documentation use <code>mtcars</code>. We will use the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> dataset instead — still small enough to reason about quickly, but with a real modelling task: predict penguin species from morphological measurements.</p>
 <p>The pipeline has four stages:</p>
 <ol type="1">
 <li>Read the raw CSV in T.</li>
@@ -610,7 +610,7 @@ build_pipeline(p)</code></pre>
 <p><code>^ipc</code> is fastest for passing data <em>between adjacent nodes in the same build</em>. <code>^parquet</code> is the right serializer when the artifact will be read by a subsequent node in a <em>different runtime</em> (here, R) or when you want the artifact to be directly usable by external tools like DuckDB or Polars after you copy it out of the Nix store. Both work symmetrically across T, R, Python, and Julia.</p>
 </div>
 </div>
-<p><strong><code>model</code></strong> is an R node. The <code>deserializer = ^parquet</code> loads <code>clean</code> as an R <code>data.frame</code>. The R code fits a multinomial logistic regression with <code>nnet</code> and returns the fitted model object. The <code>serializer = ^pmml</code> exports the model to <a href="https://dmg.org/pmml/v4-4-1/GeneralStructure.html">PMML</a>, a portable XML format that T can load natively for scoring — no R session required downstream.</p>
+<p><strong><code>model</code></strong> is an R node. The <code>deserializer = ^parquet</code> loads <code>clean</code> as an R <code>data.frame</code>. The R code fits a multinomial logistic regression with <code>nnet</code> and returns the fitted model object. The <code>serializer = ^pmml</code> exports the model to <a href="https://dmg.org/pmml/v4-4-1/GeneralStructure.html">PMML</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, a portable XML format that T can load natively for scoring — no R session required downstream.</p>
 <p><strong><code>report</code></strong> is a Quarto node. The <code>script</code> argument points to a <code>.qmd</code> file that T copies into the sandbox. Inside <code>src/report.qmd</code>, any call to <code>read_node("model")</code> or <code>read_node("clean")</code> is statically analysed by T at pipeline-analysis time and registered as a dependency of <code>report</code>. The rendered HTML is stored in the Nix store; we will copy it out in <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.6</span></a>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1167,6 +1167,13 @@ pipeline_to_ga(
 <p>Between Chapter 5 and this chapter you now have a complete picture of the T pipeline model for single-machine analytical workflows. The next chapter takes the pipeline abstraction further: we will look at <em>pipeline manipulation</em> — composing pipelines, branching on parameter grids, mapping nodes over collections, and building reusable pipeline templates that can be shared across projects.</p>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>https://allisonhorst.github.io/palmerpenguins/<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>https://dmg.org/pmml/v4-4-1/GeneralStructure.html<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->

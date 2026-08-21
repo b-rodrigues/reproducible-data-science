@@ -440,7 +440,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome!</a>
   <ul class="collapse">
-  <li><a href="#a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix." id="toc-a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix." class="nav-link" data-scroll-target="#a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix.">A modern, unified, and language-agnostic workflow for data science using Nix.</a></li>
+  <li><a href="#a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t." id="toc-a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t." class="nav-link" data-scroll-target="#a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t.">A modern, unified, and language-agnostic workflow for data science using Nix and T.</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -482,34 +482,36 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="welcome" class="level1 unnumbered">
 <h1 class="unnumbered">Welcome!</h1>
-<section id="a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix." class="level2">
-<h2 class="anchored" data-anchor-id="a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix.">A modern, unified, and language-agnostic workflow for data science using Nix.</h2>
-<p><em>This is still WIP! Expected first finalized release at the end of Q1 2026. This book is a complete reimagining of my previous work, “Building Reproducible Analytical Pipelines with R.” If you’re looking for that book, you can find it <a href="https://www.raps-with-r.dev">here</a>. But if you’re ready for the next step, you’re in the right place.</em></p>
+<section id="a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t." class="level2">
+<h2 class="anchored" data-anchor-id="a-modern-unified-and-language-agnostic-workflow-for-data-science-using-nix-and-t.">A modern, unified, and language-agnostic workflow for data science using Nix and T.</h2>
+<p><em>This is still WIP! Expected first finalized release at the end of Q4 2026. This book is a complete reimagining of my previous work, “Building Reproducible Analytical Pipelines with R.” If you’re looking for that book, you can find it <a href="https://www.raps-with-r.dev">here</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. But if you’re ready for the next step, you’re in the right place.</em></p>
 <figure class="figure">
-<a href="https://leanpub.com/raps-with-python"> <img style="float: right; clear: right" height="200" src="images/cover.png" alt="The Wizard of Nix tames the Serpent of dependency Hell" class="figure-img"> </a>
+<a href="https://leanpub.com/reproducible-data-science"> <img style="float: right; clear: right" height="200" src="images/cover.png" alt="The Wizard of Nix tames the Serpent of dependency Hell" class="figure-img"> </a>
 </figure>
 <p>Data scientists, statisticians, analysts, researchers, and many other professionals write a lot of code.</p>
 <p>Not only do they write a lot of code, but they must also read and review a lot of code as well. They either work in teams and need to review each other’s code, or need to be able to reproduce results from past projects, be it for peer review or auditing purposes. And yet, they never, or very rarely, get taught the tools and techniques that would make the process of writing, collaborating, reviewing and reproducing projects possible.</p>
 <p>Which is truly unfortunate because software engineers face the same challenges and solved them decades ago.</p>
 <p>The aim of this book is to teach you how to use some of the best practices from software engineering and DevOps to make your projects robust, reliable and reproducible. It doesn’t matter if you work alone, in a small or in a big team. It doesn’t matter if your work gets (peer-)reviewed or audited: the techniques presented in this book will make your projects more reliable and save you a lot of frustration!</p>
 <p>As someone whose primary job is analysing data, you might think that you are not a developer. It seems as if developers are these genius types that write extremely high-quality code and create these super useful packages. The truth is that you are a developer as well. It’s just that your focus is on writing code for your purposes to get your analyses going instead of writing code for others. Or at least, that’s what you think. Because in others, your team-mates are included. Reviewers and auditors are included. Any people that will read your code are included, and there will be people that will read your code. At the very least future you will read your code. By learning how to set up projects and write code in a way that future you will understand and not want to murder you, you will actually work towards improving the quality of your work, naturally.</p>
-<p>The book can be read for free on <a href="https://b-rodrigues.github.io/reproducible-data-science/">https://b-rodrigues.github.io/reproducible-data-science/</a> and you’ll be able buy a DRM-free Epub or PDF on <a href="https://leanpub.com/">Leanpub</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> once there’s more content.</p>
+<p>The book can be read for free on <a href="https://b-rodrigues.github.io/reproducible-data-science/">https://b-rodrigues.github.io/reproducible-data-science/</a> and you’ll be able buy a DRM-free Epub or PDF on <a href="https://leanpub.com/">Leanpub</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> once there’s more content.</p>
 <p>This book is the culmination of my previous works. I started by writing a book focused on R, and then began working on a Python edition. During that process, I had a realization: tackling reproducibility one language at a time was solving the symptoms, not the root cause. The real solution needed to be universal, powerful, and capable of handling any language or tool we might need.</p>
 <p><strong>That universal solution is Nix.</strong></p>
 <p>This book moves beyond language-specific tooling. It presents a holistic workflow where R, Python, and Julia are not competitors, but collaborators in a single, cohesive, and perfectly reproducible environment. We will cover:</p>
 <ul>
-<li>The Nix Philosophy: Why Nix is the ultimate tool for solving the “it works on my machine” problem, once and for all.</li>
-<li>Declarative Environments with <code>{rix}</code>: How to use a simple R interface to define exact, bit-for-bit reproducible software environments that include specific versions of R, Python, Julia, their packages, and any system-level dependencies.</li>
-<li>Polyglot Pipelines with <code>{rixpress}</code> (R) or <code>ryxpress</code> (Python): How to orchestrate complex analytical pipelines that seamlessly pass data between different languages, all managed by the Nix build system.</li>
-<li>Unit Testing and Functional Programming: Core principles for writing robust, testable, and maintainable code, no matter the language.</li>
+<li>The Nix Philosophy: Why Nix is the ultimate tool for solving the “it works on my machine” problem, once and for all—derivations, component closures, and hermetic builds.</li>
+<li>Declarative Environments with T: How to define exact, bit-for-bit reproducible software environments that include specific versions of R, Python, Julia, their packages, and any system-level dependencies, all in one simple file.</li>
+<li>Polyglot Pipelines with T: How to orchestrate complex analytical pipelines that seamlessly pass data between different languages, all managed by the Nix build system.</li>
+<li>Functional Programming and Pipelines as Function Composition: Core principles for writing robust, testable, and maintainable code, no matter the language.</li>
+<li>Professional Workflows: Unit testing, Git, and debugging techniques that keep your analyses reliable as they grow.</li>
+<li>Advanced Pipeline Patterns: Treating pipelines as data—querying, transforming, and composing them.</li>
 <li>Distribution and Automation: How to package your entire reproducible pipeline into a Docker container for easy sharing and automate your workflow with GitHub Actions.</li>
 </ul>
 <p>While this is not a book for beginners (you should be familiar with at least one data-centric programming language before reading this), I will not assume that you have any knowledge of the tools discussed. But be warned, this book will require you to take the time to read it, and then type on your computer. Type <em>a lot</em>.</p>
 <p>I hope that you will enjoy reading this book and applying the ideas in your day-to-day, ideas which hopefully should improve the reliability, traceability and reproducibility of your code.</p>
-<p>If you find this book useful, don’t hesitate to let me know! You can submit issues, suggest improvements, and ask questions on the book’s <a href="https://reproducible-data-science.dev/">Github repository</a>.</p>
-<p>You can also buy a physical copy of the book on <a href="https://www.amazon.com/dp/B0C87H6MGF/">Amazon</a>.</p>
-<p>If you want to get to know me better, read my <a href="https://www.brodrigues.co/about/me/">bio</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
-<p>You’ll also be able to buy a physical copy of the book on Amazon once it’s done. In the meantime, you could buy the <a href="https://www.amazon.com/dp/B0C87H6MGF/">R edition</a>.</p>
+<p>If you find this book useful, don’t hesitate to let me know! You can submit issues, suggest improvements, and ask questions on the book’s <a href="https://github.com/b-rodrigues/reproducible-data-science">Github repository</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>A physical copy of the book is coming soon on Amazon.</p>
+<p>If you want to get to know me better, read my <a href="https://brodrigues.co/about.html">bio</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+<p>You’ll also be able to buy a physical copy of the book on Amazon once it’s done. In the meantime, you could buy the <a href="https://www.amazon.com/dp/B0C87H6MGF/">R edition</a><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p>
 <p>If you find this book useful, don’t hesitate to let me know or leave a rating on Amazon!</p>
 
 
@@ -518,8 +520,11 @@ ul.task-list li input[type="checkbox"] {
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>https://leanpub.com/<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>https://www.brodrigues.co/about/me/<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>https://www.raps-with-r.dev<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>https://leanpub.com/<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>https://github.com/b-rodrigues/reproducible-data-science<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>https://brodrigues.co/about.html<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>https://www.amazon.com/dp/B0C87H6MGF/<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

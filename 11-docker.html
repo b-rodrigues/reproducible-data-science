@@ -597,15 +597,15 @@ div.csl-indent {
 <li><p><strong>Use Nix directly</strong> for interactive development. It integrates seamlessly with your IDE and filesystem. No volume mounts, no port forwarding, no graphical application headaches.</p></li>
 <li><p><strong>Use Docker</strong> for distributing finished data products. Package your T pipeline into an image that anyone can run with a single command.</p></li>
 </ul>
-<p>If you’ve never heard of Docker before, this chapter will provide the basic knowledge required to get started. Let’s start by watching <a href="https://www.youtube.com/watch?v=-X3AeROGmOw">this very short video</a> that introduces the core concepts.</p>
-<p>The <a href="https://rocker-project.org/">Rocker Project</a> provides a large collection of ready-to-use Docker images for R users.</p>
+<p>If you’ve never heard of Docker before, this chapter will provide the basic knowledge required to get started. Let’s start by watching <a href="https://www.youtube.com/watch?v=-X3AeROGmOw">this very short video</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> that introduces the core concepts.</p>
+<p>The <a href="https://rocker-project.org/">Rocker Project</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> provides a large collection of ready-to-use Docker images for R users.</p>
 </section>
 </section>
 <section id="docker-essentials" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="docker-essentials"><span class="header-section-number">11.2</span> Docker Essentials</h2>
 <section id="installing-docker" class="level3" data-number="11.2.1">
 <h3 data-number="11.2.1" class="anchored" data-anchor-id="installing-docker"><span class="header-section-number">11.2.1</span> Installing Docker</h3>
-<p>The first step is to install Docker. You’ll find the instructions for Ubuntu <a href="https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository">here</a>, for Windows <a href="https://docs.docker.com/desktop/install/windows-install/">here</a> (read the system requirements section as well!) and for macOS <a href="https://docs.docker.com/desktop/install/mac-install/">here</a> (make sure to choose the right version for the architecture of your Mac, if you have an M1 Mac use <em>Mac with Apple silicon</em>).</p>
+<p>The first step is to install Docker. You’ll find the instructions for Ubuntu <a href="https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository">here</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, for Windows <a href="https://docs.docker.com/desktop/install/windows-install/">here</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> (read the system requirements section as well!) and for macOS <a href="https://docs.docker.com/desktop/install/mac-install/">here</a><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> (make sure to choose the right version for the architecture of your Mac, if you have an M1 Mac use <em>Mac with Apple silicon</em>).</p>
 <p>After installation, it might be a good idea to restart your computer, if the installation wizard does not invite you to do so. To check whether Docker was installed successfully, run the following command in a terminal:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> hello-world</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This should print the following message:</p>
@@ -631,7 +631,7 @@ For more examples and ideas, visit:
  https://docs.docker.com/get-started/</code></pre>
 <p>If you see this message, congratulations, you are ready to run Docker. If you see an error message about permissions, this means that something went wrong. If you’re running Linux, make sure that your user is in the Docker group by running:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">groups</span> <span class="va">$USER</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see your username and a list of groups that your user belongs to. If a group called <code>docker</code> is not listed, then you should add yourself to the group by following <a href="https://docs.docker.com/engine/install/linux-postinstall/">these steps</a>.</p>
+<p>You should see your username and a list of groups that your user belongs to. If a group called <code>docker</code> is not listed, then you should add yourself to the group by following <a href="https://docs.docker.com/engine/install/linux-postinstall/">these steps</a><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
 </section>
 <section id="the-rocker-project-and-image-registries" class="level3" data-number="11.2.2">
 <h3 data-number="11.2.2" class="anchored" data-anchor-id="the-rocker-project-and-image-registries"><span class="header-section-number">11.2.2</span> The Rocker Project and Image Registries</h3>
@@ -1108,9 +1108,9 @@ build_pipeline(p, verbose = 1)</code></pre>
 <section id="further-reading" class="level2" data-number="11.9">
 <h2 data-number="11.9" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">11.9</span> Further Reading</h2>
 <ul>
-<li><a href="https://www.r-bloggers.com/2019/02/running-your-r-script-in-docker/">Running Your R Script in Docker</a></li>
-<li><a href="https://colinfay.me/docker-r-reproducibility/">Docker &amp; R Reproducibility</a></li>
-<li><a href="https://jsta.github.io/r-docker-tutorial/">R Docker Tutorial</a></li>
+<li><a href="https://www.r-bloggers.com/2019/02/running-your-r-script-in-docker/">Running Your R Script in Docker</a><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></li>
+<li><a href="https://colinfay.me/docker-r-reproducibility/">Docker &amp; R Reproducibility</a><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></li>
+<li><a href="https://jsta.github.io/r-docker-tutorial/">R Docker Tutorial</a><a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></li>
 </ul>
 
 
@@ -1122,6 +1122,20 @@ Malka, Julien, Stefano Zacchiroli, and Théo Zimmermann. 2024. <span>“Reproduc
 ———. 2025. <span>“<span class="nocase">Does Functional Package Management Enable Reproducible Builds at Scale? Yes</span>.”</span> In <em><span class="nocase">22nd International Conference on Mining Software Repositories</span></em>. Ottawa, Canada. <a href="https://hal.science/hal-04913007">https://hal.science/hal-04913007</a>.
 </div>
 </div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>https://www.youtube.com/watch?v=-X3AeROGmOw<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>https://rocker-project.org/<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>https://docs.docker.com/desktop/install/windows-install/<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>https://docs.docker.com/desktop/install/mac-install/<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>https://docs.docker.com/engine/install/linux-postinstall/<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>https://www.r-bloggers.com/2019/02/running-your-r-script-in-docker/<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>https://colinfay.me/docker-r-reproducibility/<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>https://jsta.github.io/r-docker-tutorial/<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
