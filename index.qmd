@@ -112,7 +112,7 @@ A physical copy of the book is coming soon on Amazon.
 :::
 
 If you want to get to know me better, read my
-[bio](https://www.brodrigues.co/about/me/)^[https://www.brodrigues.co/about/me/].
+[bio](https://brodrigues.co/about.html)^[https://brodrigues.co/about.html].
 
 ::: {.content-hidden when-format="pdf"}
 You'll also be able to buy a physical copy of the book on Amazon once it's done. In the
