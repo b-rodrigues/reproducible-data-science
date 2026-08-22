@@ -347,6 +347,102 @@ seq(5)                -- [1, 2, 3, 4, 5]
 seq(1, 10, by = 2)    -- [1, 3, 5, 7, 9]
 ```
 
+### Operators at a glance
+
+The tour so far has met operators one at a time. Here is the whole set in one
+place, listed in order of precedence — loosest first — so a pipe chain reads
+left to right without parentheses, and `1 + 2 * 3` still means `1 + (2 * 3)`.
+
+| Operator | Job | Notes |
+|:--|:--|:--|
+| `=`, `:=` | assign, rebind | `:=` shadows an existing name |
+| `if (c) a else b` | conditional expression | always returns a value |
+| `\|>`, `?\|>` | pipe, maybe-pipe | `\|>` short-circuits on `Error`; `?\|>` forwards it |
+| `~` | formula | `y ~ x`; the language of models and `case_when` |
+| `\|\|` | scalar OR | both sides must be Bool |
+| `&&` | scalar AND | both sides must be Bool |
+| `\|` | scalar bitwise OR | scalar operands only |
+| `.\|` | element-wise OR | Lists, Vectors, NDArrays |
+| `&` | scalar bitwise AND | scalar operands only |
+| `.&` | element-wise AND | Lists, Vectors, NDArrays |
+| `==`, `!=`, `<`, `>`, `<=`, `>=` | scalar comparison | `==` on a collection is a `TypeError` |
+| `in` | membership | `x in [1, 2, 3]`; the right side is a list |
+| `%name%` | custom infix operator | R-style; packages define them, you consume them |
+| `.==`, `.!=`, `.<`, `.>`, `.<=`, `.>=` | element-wise comparison | `1 .== [1, 2]` is `[true, false]` |
+| `+`, `-` | scalar add, subtract | int + float promotes to float |
+| `.+`, `.-` | element-wise add, subtract | the workhorses of column math |
+| `*`, `/`, `%` | scalar multiply, divide, modulo | |
+| `.*`, `./`, `.%` | element-wise multiply, divide, modulo | |
+| `.`, `()` | field access, function call | tightest of all |
+
+Unary operators sit above everything in the table: `-` (negation), `!`
+(logical not), and `!!` / `!!!` (unquote and unquote-splice, the
+metaprogramming tools from Chapter 15).
+
+Two distinctions matter more than any single operator. First, the
+**scalar-versus-broadcast split**: the plain operators (`+`, `==`, `&`, …)
+demand scalar operands and say so with a `TypeError`, while the dotted
+operators (`.+`, `.==`, `.&`, …) do the work element-wise across Lists,
+Vectors, and NDArrays. No silent coercion, no surprises. Second, the pipes
+bind *loosest* of all, which is what lets you write long chains without
+parenthesising anything.
+
+### What can a T value be?
+
+Every expression in T evaluates to a value, and the set of values is small
+enough to hold in your head:
+
+| Value | Example | Where it is covered |
+|:--|:--|:--|
+| Int, Float, Bool, String | `42`, `3.14`, `true`, `"hi"` | everywhere |
+| NA | `NA` | missing data, Chapter 14 |
+| Error | `error("boom")` | errors as values, Chapter 6 |
+| Symbol | a bare name captured as data | non-standard evaluation, Chapter 15 |
+| List / Dict | `[1, 2, 3]`, `[name: "Alice"]` | collections, Chapter 15 |
+| Vector | a typed numeric or text vector | columns, Chapter 14 |
+| NDArray | an n-dimensional array | Chapter 14 |
+| DataFrame | `read_csv("data.csv")` | Chapter 14 |
+| Factor | a categorical column | Chapter 14 |
+| Date / Datetime | `ymd("2024-01-01")` | Chapter 14 |
+| Formula | `mpg ~ wt` | models, Chapter 14 |
+| Lens | `df["mpg"]` | Chapter 15 |
+| Lambda | `\(x) x + 1` | functions, Chapter 15 |
+| Pipeline / Node | `pipeline { ... }` | Chapters 5 and 8 |
+| Intent | `intent { ... }` | Chapter 15 |
+
+Most of the rest of this book is a tour of this table, one row at a time.
+
+### How T evaluates
+
+Three ideas make T's behaviour predictable once you see them.
+
+**The data mask.** Inside a verb, column names resolve against the data the
+verb is operating on. That is why `df |> filter($age > 30)` works even though
+`age` is not a variable in scope: `filter` masks the columns of `df` into the
+expression, and `$age` picks one out. You write expressions *over columns*,
+not over R or Python objects.
+
+**Non-standard evaluation.** Some verbs need the *expression*, not its value.
+`mutate($bonus = $salary * 0.1)` captures the right-hand side and evaluates
+it row-wise later; a bare name in that position is captured as a symbol, not
+looked up. The explicit tools for this — `quo`, `!!`, `!!!` — are in Chapter
+15; the verbs in Chapter 14 use it under the hood.
+
+**Errors as values.** A failing expression does not crash the program; it
+produces an `Error` value you can test with `is_error`, branch on with `if`
+or `match`, or route with `?|>`. That is what makes the two pipes possible,
+and it is why a long pipeline can degrade gracefully instead of dying at the
+first bad row.
+
+### Types, briefly
+
+You will meet annotations like `\(x: Int, y: Int -> Int)` in later chapters.
+T has a light but real type system: parameter and return annotations, generic
+type variables, a strict mode that requires full signatures on top-level
+functions, and semantic types like `DataFrame[schema]`. We take it apart in
+Chapter 15; for now, read an annotation as a promise about what a function
+accepts and returns.
+
 T's functions — how to define them, closures, and higher-order functions — are
 a topic in their own right, and we take them up properly in Chapter 15.
 
