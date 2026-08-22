@@ -236,10 +236,6 @@ for the AI agents we'll increasingly work with: notebooks carry hidden state,
 side effects, and non-linear execution — exactly what makes life hard for a
 model (more on this in Chapter 4).
 
-This doesn't mean never use a notebook. It means the *deliverable* shouldn't be
-one. You can explore in a notebook and then turn that exploration into a clean,
-plain-text pipeline — which is exactly what we'll do with T.
-
 ### Pre-requisites
 
 We now need to configure an IDE to use our Nix shells as development
