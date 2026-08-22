@@ -632,7 +632,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Before we configure an IDE, a quick note on <em>what</em> we’ll be writing in it. You might expect data science to happen in a Jupyter notebook. We’ll mostly be working in plain-text files instead, for a few reasons.</p>
 <p>A notebook is a recording of a conversation between you and the computer: run a cell, look at the output, change something, run it again, restart the kernel, run everything. That’s a fine way to <em>explore</em>, but a poor way to <em>describe a system</em>. Notebooks are JSON rather than plain text, which makes version control, code review, and collaboration painful, and they encourage messy code that mixes data, logic, and results in one file.</p>
 <p>Plain text is the opposite: the simplest, most enduring interface in computing. Git can diff it, and it is easy to review and collaborate on. It also matters for the AI agents we’ll increasingly work with: notebooks carry hidden state, side effects, and non-linear execution — exactly what makes life hard for a model (more on this in Chapter 4).</p>
-<p>This doesn’t mean never use a notebook. It means the <em>deliverable</em> shouldn’t be one. You can explore in a notebook and then turn that exploration into a clean, plain-text pipeline — which is exactly what we’ll do with T.</p>
 </section>
 <section id="pre-requisites" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="pre-requisites"><span class="header-section-number">3.4.2</span> Pre-requisites</h3>
