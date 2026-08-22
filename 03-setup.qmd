@@ -217,6 +217,29 @@ are going to be using Nix.
 
 ## Configuring your IDE
 
+### Why a text editor (and not a notebook)?
+
+Before we configure an IDE, a quick note on *what* we'll be writing in it. You
+might expect data science to happen in a Jupyter notebook. We'll mostly be
+working in plain-text files instead, for a few reasons.
+
+A notebook is a recording of a conversation between you and the computer: run a
+cell, look at the output, change something, run it again, restart the kernel,
+run everything. That's a fine way to *explore*, but a poor way to *describe a
+system*. Notebooks are JSON rather than plain text, which makes version
+control, code review, and collaboration painful, and they encourage messy code
+that mixes data, logic, and results in one file.
+
+Plain text is the opposite: the simplest, most enduring interface in computing.
+Git can diff it, and it is easy to review and collaborate on. It also matters
+for the AI agents we'll increasingly work with: notebooks carry hidden state,
+side effects, and non-linear execution — exactly what makes life hard for a
+model (more on this in Chapter 4).
+
+This doesn't mean never use a notebook. It means the *deliverable* shouldn't be
+one. You can explore in a notebook and then turn that exploration into a clean,
+plain-text pipeline — which is exactly what we'll do with T.
+
 ### Pre-requisites
 
 We now need to configure an IDE to use our Nix shells as development

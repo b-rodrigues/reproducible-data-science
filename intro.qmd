@@ -149,6 +149,11 @@ achieve this, then your workflow is likely reproducible, or can at least be made
 so much more easily than if it required special manipulation by a human
 somewhere in the loop.
 
+This is also, in part, why we will not be working in Jupyter notebooks. A
+notebook is a record of an interactive conversation with the computer; a
+reproducible pipeline is a plain-text description of a system. We return to
+this in Chapter 3.
+
 ## What actually is reproducibility?
 
 A reproducible project means that it can be rerun by anyone at zero (or very

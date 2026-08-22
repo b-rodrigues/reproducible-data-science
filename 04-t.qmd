@@ -227,6 +227,16 @@ pipeline runs in its own hermetic Nix sandbox, and every output is
 content-addressed by design. As far as I know, T is literally the first
 reproducibility by design programming language.
 
+There is a broader current here. The history of computing is a history of
+raising the level of abstraction — from telling the CPU exactly what to do, to
+describing data transformations, to, with AI, describing the *system*, its
+*constraints*, and your *intent*. We are rediscovering that the oldest Unix
+philosophy was right all along: everything should have an explicit, textual
+representation that can be composed into larger systems. And once the design of
+your project is explicit, whether the implementation is R, Python, or Julia
+becomes almost an implementation detail. That is the main design principle
+behind T.
+
 And here is an important reassurance if you already live in R, Python, or
 Julia: **you do not have to use T's own built-in functions at all.** T is a
 superset, not a replacement. You can write every node's logic in the language
@@ -252,7 +262,10 @@ T is also designed to treat pair-programming with LLMs, or even delegating the e
 pipeline-writing process to an LLM, as a first-class programming model. 
 To support this, T provides built-in mechanisms for LLMs to introspect and query build artifacts with ease. 
 Each T project also includes a dedicated `AGENTS.md` file that guides the LLM on how to properly write and work with T pipelines.
-Pair programming with LLMs will be studied later though.
+Pair programming with LLMs will be studied later though. A plain-text,
+explicit pipeline is what makes this work: it is far easier for a model to
+read, write, and verify a diffable description of the computation than to
+reason about the hidden state of an interactive notebook (see Chapter 3).
 
 The workflow is simple:
 
