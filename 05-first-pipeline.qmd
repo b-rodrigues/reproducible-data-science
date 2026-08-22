@@ -308,6 +308,10 @@ The `path` field is the escape hatch: the absolute path to the node's output in
 the Nix store. You can pass this to any external tool, or use the companion
 helper packages for R or Python to read T artifacts outside of T.
 
+`explain()` reaches further than nodes — it describes any value, including
+DataFrames, errors, formulas, and whole pipelines. Chapter 15 takes it apart,
+alongside the `intent` blocks that record *why* a piece of code exists.
+
 ## Comparing Builds with `t diff`
 
 After a build you can compare it against any previous build to see exactly what

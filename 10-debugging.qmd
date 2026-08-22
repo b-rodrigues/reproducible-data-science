@@ -146,9 +146,55 @@ any error to keep propagating until something explicitly handles it. Use `?|>`
 at the specific points where you want to *act* on an error — log it, replace
 it with a fallback, or transform it.
 
-## Recovering from Errors
+## Pattern Matching
 
-The most declarative way to recover is pattern matching. `match` lets you
+You will first meet `match` as a way to recover from errors, but it is a general
+tool: it branches on the *shape* of a value rather than its equality, and it
+works on lists, missing values, errors, and plain values alike.
+
+A `match` expression takes a scrutinee and a set of cases. The cases are tried
+in order, and the first pattern that fits determines the result:
+
+```t
+#| output: false
+describe = \(x: Any -> Any) match(x) {
+  [] => "empty list",
+  [h, ..rest] => str_join(["head ", h, ", ", length(rest), " more"], ""),
+  _ => "not a non-empty list"
+}
+print(describe([]))
+print(describe([1, 2, 3]))
+print(describe(42))
+```
+
+```{.text}
+empty list
+head 1, 2 more
+not a non-empty list
+```
+
+The patterns you can write are:
+
+| Pattern | Matches |
+| --- | --- |
+| `NA` | a missing value |
+| `[]` | the empty list |
+| `[a, b]` | a list of exactly two elements, binding `a` and `b` |
+| `[h, ..rest]` | a non-empty list, binding the head `h` and the remaining list `rest` |
+| `Error { m }` | an error value, binding its message to `m` |
+| `x` | any value, binding it to `x` |
+| `_` | any value, without binding it |
+
+There are no literal patterns — a bare `42` is not a valid pattern, so use a
+variable and test it if you need to. Patterns nest, so `[a, [b, c]]` matches a
+list whose second element is itself a two-element list. Because cases are tried
+top to bottom, put specific patterns before general ones: a bare `x` or `_` at
+the end catches everything that did not match above, exactly as the `describe`
+example does.
+
+### Matching errors
+
+The most common use in a data pipeline is recovery. `match` lets you
 destructure an error value and branch on what went wrong:
 
 ```t
@@ -171,6 +217,8 @@ The `Error { m }` pattern binds the error's message to `m`, so you can build a
 diagnostic string, write it to a log, or feed it into a fallback computation.
 The `_` pattern catches everything else — in the last example, the successful
 value `42` — and returns it (or a default) unchanged.
+
+### Recovery patterns
 
 From there, the recovery patterns fall out naturally:
 
