@@ -157,6 +157,84 @@ my_select = \(df, $col) select(df, col)
 my_select(df, salary)    -- 'salary' is captured as a symbol
 ```
 
+## The Type System
+
+Chapter 4 introduced annotations in passing — read them as a promise about what a
+function accepts and returns. Here is what is actually going on.
+
+### Lambda signatures
+
+A lambda is either untyped or typed. The typed form annotates every parameter
+and the return type. The return type is written *inside* the parameter
+parentheses, which keeps the whole signature on one line:
+
+```t
+#| eval: false
+add     = \(x, y) x + y                          -- untyped
+add_int = \(x: Int, y: Int -> Int) (x + y)       -- typed
+```
+
+Generic lambdas declare their type variables explicitly with `<...>`:
+
+```t
+#| eval: false
+id   = \<T>(x: T -> T) x
+pair = \<A, B>(x: A, y: B -> Tuple[A, B]) [x, y]
+```
+
+The annotation grammar covers the base types (`Int`, `Float`, `Bool`, `String`,
+`NA`) and the composite forms `List[T]`, `Dict[K, V]`, `Tuple[T1, T2, ...]`, and
+`DataFrame[schema]`, where the schema names the columns the DataFrame is
+promised to carry.
+
+### Two modes: repl and strict
+
+The same code can be checked differently depending on how you run it:
+
+- `t repl` runs in **repl mode**, which is permissive: untyped top-level
+  functions are fine, which is what you want while exploring.
+- `t run <file.t>` runs in **strict mode** by default. For every top-level
+  function assignment, strict mode requires all parameter types to be annotated,
+  a return type to be present, and any type variables to be declared. Miss one
+  and the script fails before it runs:
+
+```t
+#| eval: false
+add = \(x, y) x + y
+```
+
+```{.text}
+Error(TypeError): [add.t:L1:C7] Strict mode: top-level function 'add'
+must annotate all parameter types.
+```
+
+`--mode repl|strict` overrides the default in either direction, so a script can
+opt into leniency and a REPL session into rigor.
+
+### How far it goes today
+
+Be clear-eyed about what strict mode is: a **signature validation layer**, not
+yet a full static typechecker. It checks that top-level functions carry
+complete, well-formed signatures; it does not (yet) infer types across
+expressions, check function applications end to end, or enforce
+`DataFrame[schema]` column by column. That is planned, and the practical advice
+follows from it: put explicit signatures on your top-level and exported
+functions now, so the code is ready when the checker grows into the promises you
+wrote.
+
+### Semantic type names
+
+Annotations accept several spellings for the same type, so signatures can read
+naturally: `int`/`integer`, `string`/`text`, `bool`/`boolean`/`logical`,
+`float`/`double`/`number`/`numeric`, and `to_dataframe`/`table`. The name `any`
+(synonyms `value`, `all`, `mixed`) is a wildcard meaning "no constraint."
+
+The most concrete payoff today is schema checking. `t check --schema`
+propagates column names and types across nodes and flags a reference that cannot
+be resolved, in milliseconds — before the pipeline ever runs. Chapter 5 covers
+the full tiered `t check` story; this is the tier that turns a `DataFrame`
+schema annotation into an actual guarantee.
+
 ## Metaprogramming: Quotation and Quasiquotation
 
 Chapter 6 introduced T's functional core — pure functions and function
@@ -355,6 +433,96 @@ get(data_updated, l_deep) -- 99
 Pipeline lenses are serializable: you can pass them between nodes and apply them
 with `mutate_node()` or `set_pipeline_global_options()`, which is how you make
 cross-node data operations part of the reproducible build.
+
+## Introspection: `explain()` and `intent`
+
+A language that can describe its own values is easier to debug, easier to test,
+and — increasingly — easier to work on alongside an agent. T has both halves of
+that story: `explain()`, which turns any value into a structured description,
+and `intent`, a block that records *why* a piece of code exists.
+
+### `explain()`: a value's self-description
+
+`explain(x)` works on any value and returns a `Dict` describing it. The first
+field is always `kind`, and the rest depend on what you handed it:
+
+```t
+#| eval: false
+explain(42)
+-- { `kind`: "value", `type`: "Int", `value`: 42 }
+
+explain([1, 2, 3])
+-- { `kind`: "value", `type`: "List", `length`: 3, `na_count`: 0, `examples`: [1, 2, 3] }
+```
+
+For a DataFrame, the description is a compact summary — row and column counts,
+the storage backend, the schema, and per-column missingness — and you can drill
+into individual fields with dot access:
+
+```t
+#| eval: false
+df = to_dataframe([x: [1, 2, 3], y: ["a", "b", "c"]])
+explain(df).nrow
+-- 3
+explain(df).schema
+-- [{`name`: "x", `type`: "Int"}, {`name`: "y", `type`: "String"}]
+explain(df).na_stats
+-- { `x`: 0, `y`: 0 }
+```
+
+Errors are values too, and `explain` sees through them, surfacing the code, the
+message, and where it happened:
+
+```t
+#| eval: false
+explain(1 / 0)
+-- { `kind`: "value", `type`: "Error", `error_code`: "DivisionByZero",
+--   `error_message`: "Division by zero.", ... }
+```
+
+The same function reaches the rest of the language. `explain(y ~ x)` reports a
+formula's response and predictors; `explain(add_int)` reports a function's
+argument names and types; `explain(p)` reports a pipeline's node count and a
+per-node summary, while `explain(p.b)` inspects a single node — its name,
+runtime, dependencies, and configuration. And `explain_json(x)` returns the same
+description as a single string, which is handy when you want to log a value's
+shape or hand it to another tool.
+
+The point is that introspection is *first-class*: the same call that describes a
+scalar also describes a DataFrame, an error, a formula, and a whole pipeline.
+You do not need a separate debugging API per type.
+
+### `intent`: code says what, intent says why
+
+T has a small, dedicated syntax for recording *why* a piece of code exists — a
+block of key-value pairs that travels with the code:
+
+```t
+#| eval: false
+intent {
+  description: "Analyze customer churn"
+  goal: "Identify segments at risk of leaving"
+}
+```
+
+An intent block is inert at runtime — it does not change what the code does —
+but you can read it back programmatically:
+
+```t
+#| eval: false
+i = intent { description: "Analyze customer churn", goal: "Find at-risk segments" }
+intent_get(i, "description")
+-- "Analyze customer churn"
+intent_fields(i)
+-- { `description`: "Analyze customer churn", `goal`: "Find at-risk segments" }
+```
+
+The payoff is provenance. When a pipeline is a collaboration between a human and
+an agent — or between you today and you in six months — the *why* is the first
+thing to be lost. `intent` keeps it in the source, versioned in git and
+queryable by the tools that read it. It is the line-level companion to the
+`AGENTS.md` convention from Chapter 4: that file states the project's intent,
+and an `intent` block states the intent of the code right next to it.
 
 ## Escaping to the Shell: `?<{ }>`
 
