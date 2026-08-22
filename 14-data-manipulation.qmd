@@ -115,6 +115,92 @@ df |> filter($age > 25)
 Read it top to bottom and it describes the analysis in plain language. That is
 the same readability you get from `{dplyr}`, with no runtime switch.
 
+## Joins, duplicates, and conditional values
+
+The core verbs work on a single table. Real analyses usually involve several,
+so `colcraft` brings the join family, duplicate handling, and conditional
+values.
+
+### Joining tables
+
+The join verbs take the other table first and the key columns second; if you
+name no key, T joins on the columns the two tables share:
+
+```t
+#| eval: false
+employees |> inner_join(projects, $emp_id)
+employees |> left_join(projects, $emp_id)
+employees |> anti_join(projects, $emp_id)
+employees |> full_join(projects, $emp_id)
+```
+
+`inner_join` keeps rows whose key appears in both tables; `left_join` keeps
+every row of the left table and fills in what it can from the right;
+`anti_join` keeps the left rows with *no* match — the workhorse for "who has
+no record yet?"; `full_join` keeps everything from both sides.
+
+### Duplicates and counts
+
+`distinct()` drops duplicate rows, optionally restricted to the columns you
+name as the uniqueness key. `count()` collapses a table into one row per group
+with a count column:
+
+```t
+#| eval: false
+df |> distinct()
+df |> distinct($name)
+df |> count($species)
+df |> count($species, $year, name = "freq")
+```
+
+### Conditional values
+
+`ifelse()` is the vectorised ternary: a condition, two outcomes, and an
+optional value for rows where the condition itself is missing. `case_when()`
+generalises it to many branches, written as `condition ~ value` formulas with
+a `.default`:
+
+```t
+#| eval: false
+df |> mutate($status = ifelse($score >= 50, "pass", "fail"))
+df |> mutate($grade = case_when(
+    $score >= 90 ~ "A",
+    $score >= 80 ~ "B",
+    .default = "C"))
+```
+
+`case_when` reuses the `~` from model formulas — one syntax for "this
+predicts that" and "this yields that".
+
+### Operators in data work
+
+A few operators from the Chapter 4 reference earn their place in data work.
+
+`in` tests membership against a list, which makes it the natural filter for
+"any of these":
+
+```t
+#| eval: false
+df |> filter($dept in ["eng", "sales"])
+```
+
+Inside `filter`, the predicate is evaluated row by row, so each `$column` is
+a scalar and the plain operators (`&&`, `||`, `==`, `in`) are the right tools.
+The broadcasting operators come in when you hold a whole Vector or List at
+once — for example, a column pulled out with a lens (Chapter 15):
+
+```t
+#| eval: false
+scores = [72, 85, 91]
+scores .+ 10        -- [82, 95, 101]
+1 .== [1, 2]        -- [true, false]
+```
+
+And `%name%` is the escape hatch for custom infix operators: packages define
+them, and you consume them wherever a named call would be clunkier — the
+chrono package ships `%within%` for testing whether a date falls inside an
+interval.
+
 ## Reshaping and missing values
 
 Real data is rarely tidy. `colcraft` includes the reshaping verbs you know from
@@ -319,6 +405,63 @@ tidy DataFrame of the results. It is not a replacement for a full statistical
 toolkit, but it covers the quick "does this variable matter" check without
 leaving T.
 
+## Quick stats in T
+
+Around `lm()` sits a small stats package for the fast checks you do while
+exploring — the "does this variable matter, and what is its shape?" questions.
+
+Correlation, covariance, and the five-number summary are the usual first
+moves:
+
+```t
+#| eval: false
+cor(df["mpg"], df["wt"])
+cov(df["mpg"], df["wt"])
+fivenum(df["mpg"])
+```
+
+`cut()` discretises a numeric vector into intervals, which is how you turn a
+continuous variable into a categorical one for a table or a plot:
+
+```t
+#| eval: false
+cut(df["mpg"], 4)
+cut(df["mpg"], [10, 20, 30])
+```
+
+Cumulative functions and ranking are available as window functions inside
+`mutate`, so they respect the current grouping:
+
+```t
+#| eval: false
+df |> mutate($cum = cumsum($amount))
+df |> mutate($cum_avg = cummean($amount))
+df |> group_by($dept) |> mutate($rank = dense_rank($score))
+```
+
+When you do fit a model, `conf_int()` gives you confidence intervals for its
+coefficients:
+
+```t
+#| eval: false
+model = lm(data = df, formula = salary ~ age)
+conf_int(model)
+conf_int(model, 0.99)
+```
+
+And when you have two models and want to know whether the bigger one actually
+fits better, `anova()` compares them with an F-test:
+
+```t
+#| eval: false
+m1 = lm(data = df, formula = y ~ x1)
+m2 = lm(data = df, formula = y ~ x1 + x2)
+anova(m1, m2)
+```
+
+None of this replaces a statistics course, but it keeps the exploratory loop
+— look, check, reshape, look again — inside one language.
+
 ## Lenses: reaching the nested
 
 The verbs above are built for flat DataFrames. Once your data becomes nested —
@@ -362,10 +505,11 @@ alternative is a tower of `map` calls.
 ## Where to go from here
 
 You now have a full data-manipulation toolkit that lives in T itself: the
-`colcraft` verbs for selecting, filtering, mutating, and summarising; reshaping
-and missing-value tools; string, date, and factor helpers; arrays for numerical
-work; formulas for quick models; and lenses for the nested structures the flat
-verbs cannot reach.
+`colcraft` verbs for selecting, filtering, mutating, and summarising; joins,
+duplicates, and conditional values; reshaping and missing-value tools; string,
+date, and factor helpers; arrays for numerical work; formulas and a quick
+stats package for models; and lenses for the nested structures the flat verbs
+cannot reach.
 
 None of this is a reason to abandon R. It is a reason to keep the small,
 glue-y transformations in the language that already orchestrates your pipeline,
