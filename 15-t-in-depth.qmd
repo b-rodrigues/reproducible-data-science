@@ -6,7 +6,7 @@ learned the core loop: declare nodes, build, inspect, test, and ship. But T is
 a larger language than that loop requires, and this chapter is where we go
 deeper.
 
-The material here now focuses on more of T’s features.  We cover eight topics,
+The material here now focuses on more of T’s features.  We cover ten topics,
 in the order you are likely to need them. Each section
 is self-contained, but it builds on the foundations from the earlier chapters,
 and we point back to them rather than repeating what they already teach.
@@ -92,6 +92,70 @@ A common workflow is to run `%reset` to clear the transcript, then do a clean
 run and `%save` it, giving you a tidy record of exactly what you tried. Typing
 `%magic` lists every magic command with a description, and if you mistype one,
 the REPL offers a fuzzy match: `%objcts` suggests `Did you mean: %objects?`.
+
+## Functions in Depth
+
+You have already written functions in T: Chapter 6's functional core gave you
+pure functions and composition, which is enough to build a pipeline. But T's
+functions go further — they are first-class values you can build, transform, and
+pass around. This section covers the parts you will reach for as your pipelines
+grow.
+
+### Lambda syntax
+
+T defines functions with a lambda. The preferred style is the R-like `\(...)`
+form, though a `function` keyword is also accepted:
+
+```t
+#| eval: false
+square = \(x) x * x
+square = function(x) x * x    -- equivalent
+```
+
+Multi-argument functions are just as natural:
+
+```t
+#| eval: false
+add = \(a, b) a + b
+add(3, 7)  -- 10
+```
+
+### Closures
+
+A function captures its enclosing environment, which lets you build
+parameterised families of functions:
+
+```t
+#| eval: false
+make_adder = \(n) \(x) x + n
+add5 = make_adder(5)
+add5(10)  -- 15
+```
+
+### Higher-order functions
+
+Because functions are values, you can pass them to other functions. The standard
+library is full of them:
+
+```t
+#| eval: false
+numbers = [1, 2, 3, 4, 5]
+map(numbers, \(x) x * x)     -- [1, 4, 9, 16, 25]
+filter(numbers, \(x) x > 3)  -- [4, 5]
+```
+
+### Auto-quotation (`$param`)
+
+A particularly useful feature when wrapping data verbs: prefix a parameter with
+`$` and the caller can pass a bare name — a column name, say — which is captured
+as a **Symbol** rather than evaluated. This is the same mechanism the data verbs
+themselves use (see the next section):
+
+```t
+#| eval: false
+my_select = \(df, $col) select(df, col)
+my_select(df, salary)    -- 'salary' is captured as a symbol
+```
 
 ## Metaprogramming: Quotation and Quasiquotation
 
@@ -222,6 +286,75 @@ looks up `$column` in the mask first, so a global variable or function with the
 same name as a column does not interfere. That is why
 `df |> mutate(new = $score * 2)` works even when a function called `score`
 exists in scope.
+
+## Data Access and Lenses
+
+T provides a unified way to retrieve data from variables, collections, dicts,
+and pipelines through the `get()` primitive, and a **Lens** library for
+addressing specific parts of complex structures. Lenses matter because they are
+first-class, serializable values: you can pass them between pipeline nodes and
+apply them without rebuilding.
+
+### The `get()` built-in
+
+`get()` is the primary entry point for retrieval. It adapts to what you give it:
+
+```t
+#| eval: false
+salary = 50000
+get("salary")              -- variable lookup, R-style      50000
+
+lst = [10, 20, 30]
+get(lst, 1)                -- 0-based collection indexing   20
+
+d = [a: 1, b: 2]
+get(d, "a")                -- dict key lookup               1
+get(d, "missing", 99)      -- default when key is absent    99
+```
+
+Inside an NSE data verb (`mutate`, `filter`, `summarize`, …), `get()` checks the
+**data mask** first: a name that is a column in the current row or DataFrame is
+resolved there, and only if not found does it fall back to the global
+environment. That is what makes `get("a")` inside a `mutate` refer to the column
+`a`, not a global variable.
+
+### Lenses
+
+Where `get()` takes an ad-hoc index, a **lens** is a structured, reusable
+"address" you can compose and pass around. The built-in lens creators are:
+
+| Creator | Target | Description |
+|---------|--------|-------------|
+| `col_lens(name)` | `DataFrame`, `Dict`, `List` | Targets a column or key by name. |
+| `idx_lens(i)` | `List`, `Vector` | Targets an element by index. |
+| `row_lens(i)` | `DataFrame` | Targets a specific row as a dictionary. |
+| `node_lens(name)` | `Pipeline` | Targets a specific node within a pipeline. |
+| `env_var_lens(n, v)` | `Pipeline` | Targets an environment variable `v` from node `n`. |
+
+You focus a lens with `get()` and compose lenses with `compose()` to reach deep
+into nested structures:
+
+```t
+#| eval: false
+l = col_lens("mpg")
+get(mtcars, l)            -- the 'mpg' column as a Vector
+
+data = [users: [Alice: [id: 1], Bob: [id: 2]]]
+l_deep = compose(col_lens("users"), col_lens("Alice"), col_lens("id"))
+get(data, l_deep)         -- 1
+```
+
+To *update* data through a lens, use `over()`:
+
+```t
+#| eval: false
+data_updated = over(data, l_deep, \(x) 99)
+get(data_updated, l_deep) -- 99
+```
+
+Pipeline lenses are serializable: you can pass them between nodes and apply them
+with `mutate_node()` or `set_pipeline_global_options()`, which is how you make
+cross-node data operations part of the reproducible build.
 
 ## Escaping to the Shell: `?<{ }>`
 

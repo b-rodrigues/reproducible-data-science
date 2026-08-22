@@ -227,6 +227,27 @@ pipeline runs in its own hermetic Nix sandbox, and every output is
 content-addressed by design. As far as I know, T is literally the first
 reproducibility by design programming language.
 
+And here is an important reassurance if you already live in R, Python, or
+Julia: **you do not have to use T's own built-in functions at all.** T is a
+superset, not a replacement. You can write every node's logic in the language
+you already know — pure R, pure Python, or pure Julia — and let T do exactly
+what it is best at: orchestrating those nodes into a reproducible pipeline. T's
+data-manipulation verbs and other builtins are there when you want them, but
+for pure orchestration they are entirely optional.
+
+A crucial point to internalise: **the primary way to work with T is to write
+Pipelines.** T is not, first and foremost, a scripting language. If you write
+a plain script full of commands and try to execute it with `t run`, it will
+not run at all: non-interactive execution requires a pipeline. You can
+override this with the `--unsafe` flag (`t run --unsafe script.t`), but that
+is really not recommended — think of it as a workaround for little helper
+scripts, for example on CI.
+
+That said, T does come with a REPL. In the REPL you can run commands
+interactively, exactly the way you would in R or Python. Later in the book
+(Chapter 14), we will see how T's own data-manipulation verbs let you wrangle
+data, and you can do all of that right inside the REPL.
+
 T is also designed to treat pair-programming with LLMs, or even delegating the entire 
 pipeline-writing process to an LLM, as a first-class programming model. 
 To support this, T provides built-in mechanisms for LLMs to introspect and query build artifacts with ease. 
@@ -244,6 +265,77 @@ The workflow is simple:
 This chapter covers everything you need to know to create project-specific,
 reproducible development environments and pipelines for your polyglot data
 science projects.
+
+## A Quick Tour of T Syntax
+
+Before we build our first pipeline, here is a fast tour of T's syntax. T is a
+small, functional language, so the surface area is modest. You do not need to
+memorise any of this now — treat it as a map you can return to as the chapters
+unfold.
+
+### Variables and assignment
+
+T binds variables with `=`. Values are immutable by default; to rebind an
+existing name (shadowing), use `:=`:
+
+```t
+#| eval: false
+x = 10
+name = "Alice"
+x := 20    -- rebinds x to 20
+```
+
+### Conditionals
+
+Conditionals are expressions — they return values:
+
+```t
+#| eval: false
+result = if (x > 5) "high" else "low"
+```
+
+### The two pipes
+
+T has two pipe operators, and the difference between them is one of the
+language's defining ideas: **errors are values**.
+
+- `|>` passes the left-hand value to the right-hand function and
+  **short-circuits on error**: if the left-hand value is an `Error`, the
+  pipeline stops and the error is returned without calling the function.
+- `?|>` (the maybe-pipe) **always forwards** the left-hand value to the
+  right-hand function, even if it is an `Error`. This is how you write
+  explicit recovery.
+
+```t
+#| eval: false
+[1, 2, 3] |> map(\(v) v * v) |> sum      -- 14
+error("boom") |> double                   -- Error: short-circuits
+
+handle = \(x) if (is_error(x)) "recovered" else x
+error("boom") ?|> handle                  -- "recovered"
+```
+
+### Imports
+
+Import a whole package, or specific names from a package or another `.t` file:
+
+```t
+#| eval: false
+import mypackage
+import mypackage [fn1, fn2]
+import "helpers.t" [clean_data, normalize]
+```
+
+### Sequence generation
+
+```t
+#| eval: false
+seq(5)                -- [1, 2, 3, 4, 5]
+seq(1, 10, by = 2)    -- [1, 3, 5, 7, 9]
+```
+
+T's functions — how to define them, closures, and higher-order functions — are
+a topic in their own right, and we take them up properly in Chapter 15.
 
 ## Transitioning to Nix-Managed R
 
