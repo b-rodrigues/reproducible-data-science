@@ -275,6 +275,49 @@ The workflow is simple:
 4. **Write** (or better, yet, have your AI agent write for you) your reproducible pipeline as a T pipeline in `src/pipeline.t`
 4. **Build** and run with `t run`
 
+### A candid note: who this is for (and who it isn't)
+
+Before we get hands-on, let me be straight with you about where T stands.
+
+**T is young.** It is new, still in beta, and honestly niche. Its API and some
+of its behaviour will keep changing as it matures. If you are looking for a
+battle-worn tool with a decade of production scars and a huge community, T is
+not it yet.
+
+**I built it for myself first.** I designed T to solve my own problems — the
+polyglot reproducibility pain I kept hitting in my own work, where R, Python
+and Julia all had to coexist in one reproducible environment. That is also why
+I am so motivated to keep building it: it is the tool I wish I had had, and I
+use it every day. This book is, in a sense, the documentation I wanted to
+exist. I am writing it for myself first, and making it available in the hope
+that you find it useful too.
+
+**You do not have to switch.** If `{targets}` [@landau2021] (for pure-R work)
+or Snakemake [@koster2012] (for polyglot work) already serve you well, that is
+a perfectly good choice — both are robust, well documented, and backed by
+large communities. The core ideas in this book — Nix-managed environments, an
+explicit pipeline, and testing — apply no matter which orchestrator you pick.
+T is an option, not a requirement.
+
+**What T adds** is that the *environment* and the *pipeline* are the same
+language: one file defines your exact, bit-for-bit reproducible stack *and*
+the computation that runs on it, and the pipeline is a first-class value you
+can inspect and transform. It is also designed to be written and verified by
+LLMs. Here is a fair comparison:
+
+| | **T** | **targets** | **Snakemake** | **rix / rixpress** |
+|---|---|---|---|---|
+| Languages | R, Python, Julia, Shell | R (mostly) | Python rules + any via envs | R (Python via `ryxpress`) |
+| Environment management | Yes — Nix-based, env + pipeline in one | No — pair with `{renv}` | Partial — conda envs | Yes — Nix-based |
+| Pipeline as first-class data | Yes — query, filter, transform, compose | Limited | Limited | Limited |
+| Maturity / community | Young, in beta, small | Very mature, large | Very mature, large | Moderate |
+| Learning curve | Low for R users (new DSL) | Low for R users | Moderate (Snakefile) | Moderate |
+| Designed for LLMs | Yes | No | No | No |
+
+So read this book as one person's answer to the reproducibility puzzle. Take
+what helps; and if T itself is not for you, the Nix and pipeline ideas still
+are.
+
 This chapter covers everything you need to know to create project-specific,
 reproducible development environments and pipelines for your polyglot data
 science projects.
