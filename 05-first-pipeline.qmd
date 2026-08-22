@@ -543,6 +543,249 @@ The recommended loop:
 7. Agent runs: t diff src/pipeline.t  ← confirms what actually changed
 ```
 
+### A worked example: building a pipeline with an agent
+
+Let's watch the loop in action on a small project. You have a CSV of sales and
+you want to filter out non-positive amounts and summarise total sales per region.
+
+**Step 0 — set up the project.** Create the project and a sample data file:
+
+```bash
+t init --project sales-analysis
+```
+
+Create `data/sales.csv`:
+
+```csv
+id,region,amount,date,product
+1,North,250.00,2026-01-15,Widget
+2,South,-12.50,2026-01-16,Gadget
+3,North,180.75,2026-01-17,Widget
+4,East,420.00,2026-01-18,Gadget
+5,West,95.00,2026-01-19,Widget
+6,North,310.25,2026-01-20,Gadget
+7,South,0.00,2026-01-21,Widget
+8,East,175.50,2026-01-22,Gadget
+```
+
+Add the packages you need to `tproject.toml` and run `t update` yourself before
+you start — telling the agent exactly what you need (and to add nothing else)
+reduces friction. One thing worth checking up front: make sure the agent actually
+sees the project's `SKILL.md`. A quick *"What skills are available to you in this
+project?"* confirms it has the T context loaded before you ask it to write
+anything.
+
+**Step 1 — the agent generates the pipeline.** Ask for what you want:
+
+> "Create a T pipeline that reads `data/sales.csv` with a T node, then uses Python
+> nodes to filter out zero and negative amounts, convert the date column, group by
+> region, and summarize total sales per region."
+
+The agent writes `pipeline.t`:
+
+```t
+#| eval: false
+p = pipeline {
+  raw = node(
+    command = read_csv("data/sales.csv"),
+    serializer = ^csv
+  )
+
+  clean = pyn(
+    command = <{
+import pandas as pd
+df = raw.copy()
+df = df[df["amount"] > 0]
+df["date"] = pd.to_datetme(df["date"])
+df
+    }>,
+    deserializer = ^csv,
+    serializer = ^csv
+  )
+
+  summary_node = pyn(
+    command = <{
+import pandas as pd
+result = clean.groupby("region")["amunt"].sum().reset_index()
+result.columns = ["region", "total"]
+result
+    }>,
+    deserializer = ^csv,
+    serializer = ^csv
+  )
+}
+
+build_pipeline(p)
+```
+
+Notice the structure: `raw` is a native T node (T reads the CSV itself), while
+`clean` and `summary_node` are Python nodes. Each Python node receives its
+upstream data as a pandas DataFrame via `deserializer = ^csv`, and the bare names
+`raw` and `clean` inside the `<{ ... }>` blocks are auto-detected as
+dependencies. And remember the hermetic-sandbox rule from above: any data that
+must be downloaded belongs in `fetchurl()`/`prefetch()`, not inside a node.
+
+::: {.callout-note}
+**What the human reviews.** Skim the pipeline before anything runs. Does it do what
+you asked? Are the node names clear and the data flow obvious? If the agent
+misunderstood the goal, correct it now — regenerating two nodes is far cheaper
+than regenerating ten.
+:::
+
+**Step 2 — the agent validates with `t check --json`.** This is where the
+cheap/expensive split pays off. The first check catches a typo in the Python code:
+
+```json
+{
+  "status": "error",
+  "phase": "parse",
+  "tier": 1,
+  "diagnostics": [
+    {
+      "id": "T0101",
+      "error_class": "name_error",
+      "severity": "error",
+      "node": { "id": "clean", "lang": "python", "span": { "start": [12, 14], "end": [12, 30] } },
+      "message": "Name 'pd.to_datetme' is not defined in node 'clean'"
+    }
+  ]
+}
+```
+
+The agent reads `error_class: "name_error"`, locates node `clean`, and fixes
+`pd.to_datetme` to `pd.to_datetime`. Re-checking now surfaces a *different*,
+deeper error — one that only appears once the parse phase is clean:
+
+```json
+{
+  "status": "error",
+  "phase": "schema",
+  "tier": 2,
+  "diagnostics": [
+    {
+      "id": "T0142",
+      "error_class": "schema_mismatch",
+      "severity": "error",
+      "node": { "id": "summary_node", "lang": "python" },
+      "message": "Column 'amunt' not found. Did you mean 'amount'?",
+      "caused_by": ["clean"],
+      "suggested_fix": { "kind": "rename_column", "old_name": "amunt", "new_name": "amount" }
+    }
+  ]
+}
+```
+
+`caused_by: ["clean"]` tells the agent the bad column name is inherited from
+upstream, and the `suggested_fix` names the exact rename. The agent corrects the
+reference and re-checks:
+
+```json
+{ "status": "ok", "phase": "wire", "tier": 2, "diagnostics": [] }
+```
+
+Clean. The pipeline is structurally sound.
+
+::: {.callout-note}
+**What the human reviews.** Ask the agent to show what it changed and *why*. A
+rename touches column references throughout the file — make sure the agent
+understands the root cause of the mismatch, not just how to silence it.
+:::
+
+**Step 3 — apply mechanical fixes.** In this case the agent edited the code
+directly, so no `t fix` was needed. When a `suggested_fix` *is* applicable,
+preview before applying, as covered above:
+
+```bash
+t fix --dry-run pipeline.t   # preview
+t fix pipeline.t             # apply
+```
+
+**Step 4 — the human approves, the agent builds.** Only now is `t run` triggered
+— the step that downloads dependencies and builds each node's Nix sandbox:
+
+```
+$ t run pipeline.t
+Node 'raw' building...
+Node 'raw' completed (0.3s)
+Node 'clean' building... (Python environment)
+Node 'clean' completed (4.2s)
+Node 'summary_node' building... (Python environment)
+Node 'summary_node' completed (2.1s)
+Pipeline complete. 3/3 nodes succeeded.
+```
+
+::: {.callout-note}
+**What the human reviews.** Confirm every node succeeded. If one failed, the
+message names the node and the reason — the agent should parse it and explain
+what went wrong rather than retry blindly.
+:::
+
+**Step 5 — the agent diffs with `t diff`.** After a build, `t diff` shows the
+blast radius of the last edit:
+
+```
+$ t diff pipeline.t
+Name          Status    Class_a  Class_b
+raw           Unchanged T        T
+clean         Unchanged T        T
+summary_node  Unchanged T        T
+```
+
+On the first build there is nothing to compare, so everything is `Unchanged`.
+After an edit you would see the affected nodes (and their downstream dependents)
+marked `Changed`.
+
+**Iterating.** Say you now want a per-product breakdown. You tell the agent:
+
+> "Add a fourth node that groups by product and sums the amount, same pattern as
+> the region summary."
+
+The agent adds a `by_product` Python node, re-runs `t check --json`, and only
+when clean runs `t run`. The diff then shows the new node:
+
+```
+Name          Status    Class_a  Class_b
+raw           Unchanged T        T
+clean         Unchanged T        T
+summary_node  Unchanged T        T
+by_product    Added     -        T
+```
+
+The whole loop stays fast because `t check` catches structural errors in
+milliseconds; the agent only pays for `t run` once the pipeline is known to be
+well-formed.
+
+### Streaming build events with `t run --json`
+
+For long pipelines, `t run` can stream NDJSON events so an agent can react to the
+first failure instead of waiting for the whole build to finish:
+
+```bash
+$ t run --json pipeline.t 2>/dev/null
+```
+
+Each line is a JSON object. The run begins with a `run_started` event listing the
+nodes and their dependencies:
+
+```json
+{"seq":1,"event":"run_started","file":"pipeline.t","nodes":[{"id":"raw","lang":"t"},{"id":"clean","lang":"python","depends_on":["raw"]},{"id":"summary_node","lang":"python","depends_on":["clean"]}]}
+```
+
+If a node fails, a `node_failed` event carries a `log_tail` — the last 200 lines
+of the build log — enough to see the real traceback without flooding the output:
+
+```json
+{"seq":2,"event":"node_failed","node":{"id":"clean","lang":"python"},"error_class":"nix_error","message":"Nix build failed for node 'clean'","log_tail":"pandas.errors.ParserError: Error tokenizing data..."}
+```
+
+When the run finishes, `run_finished` reports the overall status and, crucially,
+`root_causes` — the node(s) that actually caused the failure, i.e. the one the
+agent should fix first:
+
+```json
+{"seq":4,"event":"run_finished","file":"pipeline.t","status":"failed","total_nodes":3,"failed":1,"skipped":1,"root_causes":["clean"]}
+```
+
 When working with an agent, a few things to keep in mind:
 
 **Tell the agent to check before running.** Most agents will do this if you set
@@ -570,6 +813,16 @@ sandboxes are hermetic — a Python node cannot call `requests.get()` to pull da
 from the internet. Use `fetchurl(url, sha256 = prefetch(url))` in T to download
 assets before pipeline execution. The agent must understand this constraint;
 mention it when you set up the project.
+
+The most common ways a generated pipeline goes wrong, and the `t check` tier that
+catches each one, are worth memorising:
+
+| Mistake | Caught by |
+|:--------|:----------|
+| Typo in a Python/pandas function name | `t check` — `name_error` |
+| Wrong column name in a downstream node | `t check --schema` — `schema_mismatch` |
+| Missing serializer on a node | `t check` — `structural_error` |
+| Wrong deserializer format | `t check` — `structural_error` |
 
 ::: {.callout-tip}
 ## Quick reference: agent-facing CLI
