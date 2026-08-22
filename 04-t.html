@@ -507,17 +507,25 @@ div.csl-indent {
   <li><a href="#the-polyglot-challenge" id="toc-the-polyglot-challenge" class="nav-link" data-scroll-target="#the-polyglot-challenge"><span class="header-section-number">4.1.5</span> The Polyglot Challenge</a></li>
   <li><a href="#enter-t" id="toc-enter-t" class="nav-link" data-scroll-target="#enter-t"><span class="header-section-number">4.1.6</span> Enter T</a></li>
   </ul></li>
-  <li><a href="#transitioning-to-nix-managed-r" id="toc-transitioning-to-nix-managed-r" class="nav-link" data-scroll-target="#transitioning-to-nix-managed-r"><span class="header-section-number">4.2</span> Transitioning to Nix-Managed R</a>
+  <li><a href="#a-quick-tour-of-t-syntax" id="toc-a-quick-tour-of-t-syntax" class="nav-link" data-scroll-target="#a-quick-tour-of-t-syntax"><span class="header-section-number">4.2</span> A Quick Tour of T Syntax</a>
   <ul class="collapse">
-  <li><a href="#bootstrapping-t-without-a-local-installation" id="toc-bootstrapping-t-without-a-local-installation" class="nav-link" data-scroll-target="#bootstrapping-t-without-a-local-installation"><span class="header-section-number">4.2.1</span> Bootstrapping T without a local installation</a></li>
+  <li><a href="#variables-and-assignment" id="toc-variables-and-assignment" class="nav-link" data-scroll-target="#variables-and-assignment"><span class="header-section-number">4.2.1</span> Variables and assignment</a></li>
+  <li><a href="#conditionals" id="toc-conditionals" class="nav-link" data-scroll-target="#conditionals"><span class="header-section-number">4.2.2</span> Conditionals</a></li>
+  <li><a href="#the-two-pipes" id="toc-the-two-pipes" class="nav-link" data-scroll-target="#the-two-pipes"><span class="header-section-number">4.2.3</span> The two pipes</a></li>
+  <li><a href="#imports" id="toc-imports" class="nav-link" data-scroll-target="#imports"><span class="header-section-number">4.2.4</span> Imports</a></li>
+  <li><a href="#sequence-generation" id="toc-sequence-generation" class="nav-link" data-scroll-target="#sequence-generation"><span class="header-section-number">4.2.5</span> Sequence generation</a></li>
   </ul></li>
-  <li><a href="#the-t-project" id="toc-the-t-project" class="nav-link" data-scroll-target="#the-t-project"><span class="header-section-number">4.3</span> The T Project</a>
+  <li><a href="#transitioning-to-nix-managed-r" id="toc-transitioning-to-nix-managed-r" class="nav-link" data-scroll-target="#transitioning-to-nix-managed-r"><span class="header-section-number">4.3</span> Transitioning to Nix-Managed R</a>
   <ul class="collapse">
-  <li><a href="#declaring-dependencies-with-tproject.toml" id="toc-declaring-dependencies-with-tproject.toml" class="nav-link" data-scroll-target="#declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.1</span> Declaring Dependencies with <code>tproject.toml</code></a></li>
-  <li><a href="#alternative-installation-methods" id="toc-alternative-installation-methods" class="nav-link" data-scroll-target="#alternative-installation-methods"><span class="header-section-number">4.3.2</span> Alternative installation methods</a></li>
-  <li><a href="#system-dependencies-and-latex" id="toc-system-dependencies-and-latex" class="nav-link" data-scroll-target="#system-dependencies-and-latex"><span class="header-section-number">4.3.3</span> System Dependencies and LaTeX</a></li>
+  <li><a href="#bootstrapping-t-without-a-local-installation" id="toc-bootstrapping-t-without-a-local-installation" class="nav-link" data-scroll-target="#bootstrapping-t-without-a-local-installation"><span class="header-section-number">4.3.1</span> Bootstrapping T without a local installation</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.4</span> Summary</a></li>
+  <li><a href="#the-t-project" id="toc-the-t-project" class="nav-link" data-scroll-target="#the-t-project"><span class="header-section-number">4.4</span> The T Project</a>
+  <ul class="collapse">
+  <li><a href="#declaring-dependencies-with-tproject.toml" id="toc-declaring-dependencies-with-tproject.toml" class="nav-link" data-scroll-target="#declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.4.1</span> Declaring Dependencies with <code>tproject.toml</code></a></li>
+  <li><a href="#alternative-installation-methods" id="toc-alternative-installation-methods" class="nav-link" data-scroll-target="#alternative-installation-methods"><span class="header-section-number">4.4.2</span> Alternative installation methods</a></li>
+  <li><a href="#system-dependencies-and-latex" id="toc-system-dependencies-and-latex" class="nav-link" data-scroll-target="#system-dependencies-and-latex"><span class="header-section-number">4.4.3</span> System Dependencies and LaTeX</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.5</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/04-t.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -596,6 +604,9 @@ div.csl-indent {
 <p>I know this problem well. My first attempt at solving it was <code>{rix}</code>: an R package that generates Nix expressions from intuitive R function calls. You describe <em>what</em> you want, and <code>{rix}</code> figures out <em>how</em> to express it in Nix. I then built <code>{rixpress}</code> on top of it, an R package for defining reproducible, polyglot analytical pipelines. Both packages solved real problems, but they were fundamentally R-focused. <code>{rix}</code> needed R to run, and the pipeline syntax of <code>{rixpress}</code> was R code. If you worked in Python or Julia primarily, you were a second-class citizen.</p>
 <p><strong>T</strong> is what I built next, and it goes far beyond both. T is a reproducibility-first domain-specific language (DSL) for polyglot data science. It is <em>not</em> an R package. It is its own language, with its own runtime, its own REPL, and its own ecosystem of packages, built from the ground up to treat R, Python, Julia, and Shell as equals. T is meant to orchestrate R, Python and Julia, but critically, T does not just <em>orchestrate</em> environments defined elsewhere: it <em>is</em> the environment definition system. Every T project is a Nix flake, and T manages the entire stack: language runtimes, system dependencies, and pipeline execution under one roof.</p>
 <p>T provides a functional, immutable language for constructing composable <em>micropipelines</em>: first-class, introspectable computation graphs that coordinate R, Python, Julia, Quarto, and Shell execution within a unified system. Pipelines in T are not configuration artifacts but executable program structures with explicit dataflow, typed nodes, and content-addressed outputs. And unlike any other language used for data science, where reproducibility is more often than not bolted on, T makes reproducibility impossible to opt out of: every node in a T pipeline runs in its own hermetic Nix sandbox, and every output is content-addressed by design. As far as I know, T is literally the first reproducibility by design programming language.</p>
+<p>And here is an important reassurance if you already live in R, Python, or Julia: <strong>you do not have to use T’s own built-in functions at all.</strong> T is a superset, not a replacement. You can write every node’s logic in the language you already know — pure R, pure Python, or pure Julia — and let T do exactly what it is best at: orchestrating those nodes into a reproducible pipeline. T’s data-manipulation verbs and other builtins are there when you want them, but for pure orchestration they are entirely optional.</p>
+<p>A crucial point to internalise: <strong>the primary way to work with T is to write Pipelines.</strong> T is not, first and foremost, a scripting language. If you write a plain script full of commands and try to execute it with <code>t run</code>, it will not run at all: non-interactive execution requires a pipeline. You can override this with the <code>--unsafe</code> flag (<code>t run --unsafe script.t</code>), but that is really not recommended — think of it as a workaround for little helper scripts, for example on CI.</p>
+<p>That said, T does come with a REPL. In the REPL you can run commands interactively, exactly the way you would in R or Python. Later in the book (Chapter 14), we will see how T’s own data-manipulation verbs let you wrangle data, and you can do all of that right inside the REPL.</p>
 <p>T is also designed to treat pair-programming with LLMs, or even delegating the entire pipeline-writing process to an LLM, as a first-class programming model. To support this, T provides built-in mechanisms for LLMs to introspect and query build artifacts with ease. Each T project also includes a dedicated <code>AGENTS.md</code> file that guides the LLM on how to properly write and work with T pipelines. Pair programming with LLMs will be studied later though.</p>
 <p>The workflow is simple:</p>
 <ol type="1">
@@ -608,12 +619,54 @@ div.csl-indent {
 <p>This chapter covers everything you need to know to create project-specific, reproducible development environments and pipelines for your polyglot data science projects.</p>
 </section>
 </section>
-<section id="transitioning-to-nix-managed-r" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="transitioning-to-nix-managed-r"><span class="header-section-number">4.2</span> Transitioning to Nix-Managed R</h2>
+<section id="a-quick-tour-of-t-syntax" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="a-quick-tour-of-t-syntax"><span class="header-section-number">4.2</span> A Quick Tour of T Syntax</h2>
+<p>Before we build our first pipeline, here is a fast tour of T’s syntax. T is a small, functional language, so the surface area is modest. You do not need to memorise any of this now — treat it as a map you can return to as the chapters unfold.</p>
+<section id="variables-and-assignment" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="variables-and-assignment"><span class="header-section-number">4.2.1</span> Variables and assignment</h3>
+<p>T binds variables with <code>=</code>. Values are immutable by default; to rebind an existing name (shadowing), use <code>:=</code>:</p>
+<pre class="t"><code>x <span class="sc">=</span> <span class="dv">10</span>
+name <span class="sc">=</span> <span class="st">"Alice"</span>
+x <span class="sc">:=</span> <span class="dv">20</span>    <span class="co">-- rebinds x to 20</span></code></pre>
+</section>
+<section id="conditionals" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="conditionals"><span class="header-section-number">4.2.2</span> Conditionals</h3>
+<p>Conditionals are expressions — they return values:</p>
+<pre class="t"><code>result <span class="sc">=</span> <span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="dv">5</span>) <span class="st">"high"</span> <span class="cf">else</span> <span class="st">"low"</span></code></pre>
+</section>
+<section id="the-two-pipes" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="the-two-pipes"><span class="header-section-number">4.2.3</span> The two pipes</h3>
+<p>T has two pipe operators, and the difference between them is one of the language’s defining ideas: <strong>errors are values</strong>.</p>
+<ul>
+<li><code>|&gt;</code> passes the left-hand value to the right-hand function and <strong>short-circuits on error</strong>: if the left-hand value is an <code>Error</code>, the pipeline stops and the error is returned without calling the function.</li>
+<li><code>?|&gt;</code> (the maybe-pipe) <strong>always forwards</strong> the left-hand value to the right-hand function, even if it is an <code>Error</code>. This is how you write explicit recovery.</li>
+</ul>
+<pre class="t"><code>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>] <span class="sc">|&gt;</span> <span class="fu">map</span>(\(v) v <span class="sc">*</span> v) <span class="sc">|&gt;</span> sum      <span class="co">-- 14</span>
+<span class="fu">error</span>(<span class="st">"boom"</span>) <span class="sc">|&gt;</span> double                   <span class="co">-- Error: short-circuits</span>
+
+handle <span class="sc">=</span> \(x) <span class="cf">if</span> (<span class="fu">is_error</span>(x)) <span class="st">"recovered"</span> <span class="cf">else</span> x
+<span class="fu">error</span>(<span class="st">"boom"</span>) <span class="sc">?|&gt;</span> handle                  <span class="co">-- "recovered"</span></code></pre>
+</section>
+<section id="imports" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="imports"><span class="header-section-number">4.2.4</span> Imports</h3>
+<p>Import a whole package, or specific names from a package or another <code>.t</code> file:</p>
+<pre class="t"><code><span class="cf">import</span> mypackage
+<span class="cf">import</span> mypackage [fn1, fn2]
+<span class="cf">import</span> <span class="st">"helpers.t"</span> [clean_data, normalize]</code></pre>
+</section>
+<section id="sequence-generation" class="level3" data-number="4.2.5">
+<h3 data-number="4.2.5" class="anchored" data-anchor-id="sequence-generation"><span class="header-section-number">4.2.5</span> Sequence generation</h3>
+<pre class="t"><code><span class="fu">seq</span>(<span class="dv">5</span>)                <span class="co">-- [1, 2, 3, 4, 5]</span>
+<span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, by <span class="sc">=</span> <span class="dv">2</span>)    <span class="co">-- [1, 3, 5, 7, 9]</span></code></pre>
+<p>T’s functions — how to define them, closures, and higher-order functions — are a topic in their own right, and we take them up properly in Chapter 15.</p>
+</section>
+</section>
+<section id="transitioning-to-nix-managed-r" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="transitioning-to-nix-managed-r"><span class="header-section-number">4.3</span> Transitioning to Nix-Managed R</h2>
 <p>Now that Nix is installed, I strongly recommend uninstalling any system-wide R installation and removing the packages in your user library (typically found in <code>~/R</code> on Linux or <code>~/Library/R</code> on macOS). From this point forward, let T and Nix handle everything. If you are using Windows, you can keep your Windows-specific R installation, since Nix will not interfere with it (remember, Nix is installed inside WSL and Positron will automatically load Nix environments installed in WSL as well).</p>
 <p>If you are not ready to take this step, you can still use T: it manages its own Nix-sandboxed R environment per project node, so it will not interfere with any existing R installation. However, for the cleanest experience and to avoid potential subtle conflicts, I recommend fully committing to Nix.</p>
-<section id="bootstrapping-t-without-a-local-installation" class="level3" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="bootstrapping-t-without-a-local-installation"><span class="header-section-number">4.2.1</span> Bootstrapping T without a local installation</h3>
+<section id="bootstrapping-t-without-a-local-installation" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="bootstrapping-t-without-a-local-installation"><span class="header-section-number">4.3.1</span> Bootstrapping T without a local installation</h3>
 <p>T is distributed exclusively via Nix. You don’t need to install it in the traditional sense. Instead, you launch a temporary shell that provides the <code>t</code> executable, use it to scaffold a new project, and then let the project itself manage the T version it uses, which is pinned in the project’s <code>flake.lock</code>.</p>
 <p>Running the following line in a terminal will drop you into an ephemeral shell with <code>t</code> available:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> shell <span class="at">--accept-flake-config</span> github:b-rodrigues/tlang</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -645,8 +698,8 @@ div.csl-indent {
 </div>
 </section>
 </section>
-<section id="the-t-project" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="the-t-project"><span class="header-section-number">4.3</span> The T Project</h2>
+<section id="the-t-project" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="the-t-project"><span class="header-section-number">4.4</span> The T Project</h2>
 <p>Every T project has the following directory structure:</p>
 <pre><code>my-analysis/
 ├── tproject.toml       # Project configuration and dependencies
@@ -661,8 +714,8 @@ div.csl-indent {
 ├── outputs/            # Output directory for results
 └── tests/              # Unit tests for your analysis</code></pre>
 <p>The two most important files are <code>tproject.toml</code> and <code>src/pipeline.t</code>.</p>
-<section id="declaring-dependencies-with-tproject.toml" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.3.1</span> Declaring Dependencies with <code>tproject.toml</code></h3>
+<section id="declaring-dependencies-with-tproject.toml" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.4.1</span> Declaring Dependencies with <code>tproject.toml</code></h3>
 <p>T projects are explicit: R, Python, and Julia packages belong in <code>tproject.toml</code>, not in ad-hoc <code>install.packages()</code>, <code>pip install</code>, or <code>Pkg.add()</code> calls. Open <code>tproject.toml</code> and add the runtime packages you need:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"dplyr"</span><span class="op">,</span> <span class="st">"ggplot2"</span><span class="op">]</span></span>
@@ -697,8 +750,8 @@ div.csl-indent {
 <p>Then exit the temporary shell, and re-enter the development shell so the updated package set is active:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="why-not-to-use-install.packages-pip-install-pkg.add" class="level4" data-number="4.3.1.1">
-<h4 data-number="4.3.1.1" class="anchored" data-anchor-id="why-not-to-use-install.packages-pip-install-pkg.add"><span class="header-section-number">4.3.1.1</span> Why NOT to use <code>install.packages()</code> / <code>pip install</code> / <code>Pkg.add()</code></h4>
+<section id="why-not-to-use-install.packages-pip-install-pkg.add" class="level4" data-number="4.4.1.1">
+<h4 data-number="4.4.1.1" class="anchored" data-anchor-id="why-not-to-use-install.packages-pip-install-pkg.add"><span class="header-section-number">4.4.1.1</span> Why NOT to use <code>install.packages()</code> / <code>pip install</code> / <code>Pkg.add()</code></h4>
 <p>It’s crucial to understand: <strong>never call imperative installation commands from within a T project</strong>. Here’s why:</p>
 <ol type="1">
 <li><strong>Technically, it won’t work:</strong> Computations defined in your pipeline run inside hermetic Nix sandboxes. Anything not declared through Nix simply will not be available during pipeline execution.</li>
@@ -707,8 +760,8 @@ div.csl-indent {
 <p>Instead, add packages to <code>tproject.toml</code> and run <code>t update</code>. Calling <code>install.packages()</code> (or equivalent commands for Python and Julia) will raise an error.</p>
 </section>
 </section>
-<section id="alternative-installation-methods" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="alternative-installation-methods"><span class="header-section-number">4.3.2</span> Alternative installation methods</h3>
+<section id="alternative-installation-methods" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="alternative-installation-methods"><span class="header-section-number">4.4.2</span> Alternative installation methods</h3>
 <p>T provides several other ways to install packages, using <code>uv</code> for Python or <code>{renv}</code> for R. By default, T uses Nix to resolve packages directly. We recommend sticking to the default resolver as much as possible. The default approach works exceptionally well for <strong>Julia</strong> and <strong>R</strong> because virtually all packages in their ecosystems are available through Nix. This is not the case for <strong>Python</strong>.</p>
 <p>Python’s PyPI contains hundreds of thousands of packages of varying quality. If you use Python for data analysis, you’ve likely hit this issue: you try to install one package that requires <code>numpy &lt; 2</code>, and another that requires <code>numpy &gt;= 2</code>. You’re <em>cooked</em>, as the youths say. The resolver can’t help you because the requirements are literally incompatible. No amount of Rust-written package managers can solve this, the underlying issue is PyPI’s ecosystem model.</p>
 <p>In R, this situation rarely happens. CRAN enforces a system where packages are continuously tested against their reverse dependencies. If <code>{ggplot2}</code> or <code>{dplyr}</code> updates in a way that breaks other packages, CRAN catches it. Authors have two weeks to fix the issue, or their package gets archived. As a result, if a package is on CRAN, it works. CRAN manages this consistency across ~27,000 packages.</p>
@@ -717,8 +770,8 @@ div.csl-indent {
 <ul>
 <li><strong>For R (<code>renv</code>):</strong> Allows you to reuse existing <code>renv.lock</code> files for collaboration or legacy workflows.</li>
 </ul>
-<section id="alternative-python-resolver-uv" class="level4" data-number="4.3.2.1">
-<h4 data-number="4.3.2.1" class="anchored" data-anchor-id="alternative-python-resolver-uv"><span class="header-section-number">4.3.2.1</span> Alternative Python Resolver: <code>uv</code></h4>
+<section id="alternative-python-resolver-uv" class="level4" data-number="4.4.2.1">
+<h4 data-number="4.4.2.1" class="anchored" data-anchor-id="alternative-python-resolver-uv"><span class="header-section-number">4.4.2.1</span> Alternative Python Resolver: <code>uv</code></h4>
 <p>Instead of declaring Python packages directly in <code>tproject.toml</code>, you can delegate dependency management to <code>uv</code>.</p>
 <p>First, configure <code>tproject.toml</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[py-dependencies]</span></span>
@@ -756,8 +809,8 @@ div.csl-indent {
 </ol>
 <p>This reads the <code>uv</code> workspace, adds <code>pyproject-nix</code>, <code>uv2nix</code>, and <code>pyproject-build-systems</code> inputs to <code>flake.nix</code>, and configures the Python environment to use <code>pySet.mkVirtualEnv</code>.</p>
 </section>
-<section id="alternative-r-options-renv-git-repositories" class="level4" data-number="4.3.2.2">
-<h4 data-number="4.3.2.2" class="anchored" data-anchor-id="alternative-r-options-renv-git-repositories"><span class="header-section-number">4.3.2.2</span> Alternative R Options: <code>{renv}</code> &amp; Git Repositories</h4>
+<section id="alternative-r-options-renv-git-repositories" class="level4" data-number="4.4.2.2">
+<h4 data-number="4.4.2.2" class="anchored" data-anchor-id="alternative-r-options-renv-git-repositories"><span class="header-section-number">4.4.2.2</span> Alternative R Options: <code>{renv}</code> &amp; Git Repositories</h4>
 <p>If your project already contains an <code>renv.lock</code> file, set:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="dt">resolver</span> <span class="op">=</span> <span class="st">"renv"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -779,25 +832,25 @@ div.csl-indent {
 <p>The <code>rev</code> field must be a full Git commit hash. Each Git package is injected into every R pipeline node’s <code>buildInputs</code>. When using <code>resolver = "renv"</code>, Git packages declared in <code>tproject.toml</code> are automatically merged with those in <code>renv.lock</code>.</p>
 </section>
 </section>
-<section id="system-dependencies-and-latex" class="level3" data-number="4.3.3">
-<h3 data-number="4.3.3" class="anchored" data-anchor-id="system-dependencies-and-latex"><span class="header-section-number">4.3.3</span> System Dependencies and LaTeX</h3>
+<section id="system-dependencies-and-latex" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="system-dependencies-and-latex"><span class="header-section-number">4.4.3</span> System Dependencies and LaTeX</h3>
 <p>Beyond language packages, you can declare system tools and LaTeX packages required by your project.</p>
-<section id="additional-tools" class="level4" data-number="4.3.3.1">
-<h4 data-number="4.3.3.1" class="anchored" data-anchor-id="additional-tools"><span class="header-section-number">4.3.3.1</span> Additional Tools</h4>
+<section id="additional-tools" class="level4" data-number="4.4.3.1">
+<h4 data-number="4.4.3.1" class="anchored" data-anchor-id="additional-tools"><span class="header-section-number">4.4.3.1</span> Additional Tools</h4>
 <p>Use <code>[additional-tools]</code> to make CLI utilities, compilers, or system libraries available in your shell and pipeline sandboxes:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[additional-tools]</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"git"</span><span class="op">,</span> <span class="st">"jq"</span><span class="op">,</span> <span class="st">"gawk"</span><span class="op">,</span> <span class="st">"pandoc"</span><span class="op">,</span> <span class="st">"typst"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="latex-support" class="level4" data-number="4.3.3.2">
-<h4 data-number="4.3.3.2" class="anchored" data-anchor-id="latex-support"><span class="header-section-number">4.3.3.2</span> LaTeX Support</h4>
+<section id="latex-support" class="level4" data-number="4.4.3.2">
+<h4 data-number="4.4.3.2" class="anchored" data-anchor-id="latex-support"><span class="header-section-number">4.4.3.2</span> LaTeX Support</h4>
 <p>If your project generates PDFs or reports, use the <code>[latex]</code> section. T automatically provides a <code>texlive</code> environment (starting from <code>scheme-small</code>). Simply list any extra LaTeX packages needed:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[latex]</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"amsmath"</span><span class="op">,</span> <span class="st">"blindtext"</span><span class="op">,</span> <span class="st">"physics"</span><span class="op">,</span> <span class="st">"hyperref"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 </section>
-<section id="summary" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.4</span> Summary</h2>
+<section id="summary" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.5</span> Summary</h2>
 <p>Traditional tools like <code>{renv}</code> or Python’s <code>venv</code> only capture part of the reproducibility puzzle. They track package versions but not the language version itself, nor system-level dependencies like GDAL or Java. This means your project can still break on a different machine, or even on your own machine after a system update.</p>
 <p>Nix solves this by managing <em>everything</em>: R, Python, all packages, and all system dependencies. T builds on top of Nix to solve the <em>orchestration</em> problem: it provides a language for describing <em>how</em> computations in different runtimes interact, and it enforces reproducibility at every step.</p>
 <p>When you define a pipeline with T, you get a complete, self-contained specification that anyone can use to recreate the exact same results, on any machine, at any point in the future.</p>
