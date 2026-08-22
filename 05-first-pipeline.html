@@ -496,7 +496,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#stepping-into-guest-runtimes-debug_node-a-debugging-appetizer" id="toc-stepping-into-guest-runtimes-debug_node-a-debugging-appetizer" class="nav-link" data-scroll-target="#stepping-into-guest-runtimes-debug_node-a-debugging-appetizer"><span class="header-section-number">5.11.4</span> Stepping into Guest Runtimes: <code>debug_node()</code> (A Debugging Appetizer)</a></li>
   </ul></li>
   <li><a href="#pointing-nodes-at-external-scripts" id="toc-pointing-nodes-at-external-scripts" class="nav-link" data-scroll-target="#pointing-nodes-at-external-scripts"><span class="header-section-number">5.12</span> Pointing Nodes at External Scripts</a></li>
-  <li><a href="#pairing-with-an-ai-agent" id="toc-pairing-with-an-ai-agent" class="nav-link" data-scroll-target="#pairing-with-an-ai-agent"><span class="header-section-number">5.13</span> Pairing with an AI Agent</a></li>
+  <li><a href="#pairing-with-an-ai-agent" id="toc-pairing-with-an-ai-agent" class="nav-link" data-scroll-target="#pairing-with-an-ai-agent"><span class="header-section-number">5.13</span> Pairing with an AI Agent</a>
+  <ul class="collapse">
+  <li><a href="#a-worked-example-building-a-pipeline-with-an-agent" id="toc-a-worked-example-building-a-pipeline-with-an-agent" class="nav-link" data-scroll-target="#a-worked-example-building-a-pipeline-with-an-agent"><span class="header-section-number">5.13.1</span> A worked example: building a pipeline with an agent</a></li>
+  <li><a href="#streaming-build-events-with-t-run---json" id="toc-streaming-build-events-with-t-run---json" class="nav-link" data-scroll-target="#streaming-build-events-with-t-run---json"><span class="header-section-number">5.13.2</span> Streaming build events with <code>t run --json</code></a></li>
+  </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">5.14</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/05-first-pipeline.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -955,12 +959,211 @@ model         Changed   T        T</code></pre>
 5. Human reviews the pipeline
 6. Agent runs: t run src/pipeline.t
 7. Agent runs: t diff src/pipeline.t  ← confirms what actually changed</code></pre>
+<section id="a-worked-example-building-a-pipeline-with-an-agent" class="level3" data-number="5.13.1">
+<h3 data-number="5.13.1" class="anchored" data-anchor-id="a-worked-example-building-a-pipeline-with-an-agent"><span class="header-section-number">5.13.1</span> A worked example: building a pipeline with an agent</h3>
+<p>Let’s watch the loop in action on a small project. You have a CSV of sales and you want to filter out non-positive amounts and summarise total sales per region.</p>
+<p><strong>Step 0 — set up the project.</strong> Create the project and a sample data file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> init <span class="at">--project</span> sales-analysis</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Create <code>data/sales.csv</code>:</p>
+<pre class="csv"><code>id,region,amount,date,product
+1,North,250.00,2026-01-15,Widget
+2,South,-12.50,2026-01-16,Gadget
+3,North,180.75,2026-01-17,Widget
+4,East,420.00,2026-01-18,Gadget
+5,West,95.00,2026-01-19,Widget
+6,North,310.25,2026-01-20,Gadget
+7,South,0.00,2026-01-21,Widget
+8,East,175.50,2026-01-22,Gadget</code></pre>
+<p>Add the packages you need to <code>tproject.toml</code> and run <code>t update</code> yourself before you start — telling the agent exactly what you need (and to add nothing else) reduces friction. One thing worth checking up front: make sure the agent actually sees the project’s <code>SKILL.md</code>. A quick <em>“What skills are available to you in this project?”</em> confirms it has the T context loaded before you ask it to write anything.</p>
+<p><strong>Step 1 — the agent generates the pipeline.</strong> Ask for what you want:</p>
+<blockquote class="blockquote">
+<p>“Create a T pipeline that reads <code>data/sales.csv</code> with a T node, then uses Python nodes to filter out zero and negative amounts, convert the date column, group by region, and summarize total sales per region.”</p>
+</blockquote>
+<p>The agent writes <code>pipeline.t</code>:</p>
+<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+  raw <span class="sc">=</span> <span class="fu">node</span>(
+    command <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/sales.csv"</span>),
+    serializer <span class="sc">=</span> ^csv
+  )
+
+  clean <span class="sc">=</span> <span class="fu">pyn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
+<span class="cf">import</span> pandas as pd
+df <span class="sc">=</span> raw.copy()
+df <span class="sc">=</span> df[df[<span class="st">"amount"</span>] <span class="sc">&gt;</span> <span class="dv">0</span>]
+df[<span class="st">"date"</span>] <span class="sc">=</span> pd.to_datetme(df[<span class="st">"date"</span>])
+df
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^csv,
+    serializer <span class="sc">=</span> ^csv
+  )
+
+  summary_node <span class="sc">=</span> <span class="fu">pyn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
+<span class="cf">import</span> pandas as pd
+result <span class="sc">=</span> clean.groupby(<span class="st">"region"</span>)[<span class="st">"amunt"</span>].sum().reset_index()
+result.columns <span class="sc">=</span> [<span class="st">"region"</span>, <span class="st">"total"</span>]
+result
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^csv,
+    serializer <span class="sc">=</span> ^csv
+  )
+}
+
+<span class="fu">build_pipeline</span>(p)</code></pre>
+<p>Notice the structure: <code>raw</code> is a native T node (T reads the CSV itself), while <code>clean</code> and <code>summary_node</code> are Python nodes. Each Python node receives its upstream data as a pandas DataFrame via <code>deserializer = ^csv</code>, and the bare names <code>raw</code> and <code>clean</code> inside the <code>&lt;{ ... }&gt;</code> blocks are auto-detected as dependencies. And remember the hermetic-sandbox rule from above: any data that must be downloaded belongs in <code>fetchurl()</code>/<code>prefetch()</code>, not inside a node.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>What the human reviews.</strong> Skim the pipeline before anything runs. Does it do what you asked? Are the node names clear and the data flow obvious? If the agent misunderstood the goal, correct it now — regenerating two nodes is far cheaper than regenerating ten.</p>
+</div>
+</div>
+<p><strong>Step 2 — the agent validates with <code>t check --json</code>.</strong> This is where the cheap/expensive split pays off. The first check catches a typo in the Python code:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"error"</span><span class="fu">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"phase"</span><span class="fu">:</span> <span class="st">"parse"</span><span class="fu">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"tier"</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"diagnostics"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"T0101"</span><span class="fu">,</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"error_class"</span><span class="fu">:</span> <span class="st">"name_error"</span><span class="fu">,</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"severity"</span><span class="fu">:</span> <span class="st">"error"</span><span class="fu">,</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"node"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"clean"</span><span class="fu">,</span> <span class="dt">"lang"</span><span class="fu">:</span> <span class="st">"python"</span><span class="fu">,</span> <span class="dt">"span"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"start"</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">12</span><span class="ot">,</span> <span class="dv">14</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">"end"</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">12</span><span class="ot">,</span> <span class="dv">30</span><span class="ot">]</span> <span class="fu">}</span> <span class="fu">},</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Name 'pd.to_datetme' is not defined in node 'clean'"</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The agent reads <code>error_class: "name_error"</code>, locates node <code>clean</code>, and fixes <code>pd.to_datetme</code> to <code>pd.to_datetime</code>. Re-checking now surfaces a <em>different</em>, deeper error — one that only appears once the parse phase is clean:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"error"</span><span class="fu">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"phase"</span><span class="fu">:</span> <span class="st">"schema"</span><span class="fu">,</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"tier"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"diagnostics"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"T0142"</span><span class="fu">,</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"error_class"</span><span class="fu">:</span> <span class="st">"schema_mismatch"</span><span class="fu">,</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"severity"</span><span class="fu">:</span> <span class="st">"error"</span><span class="fu">,</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"node"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"summary_node"</span><span class="fu">,</span> <span class="dt">"lang"</span><span class="fu">:</span> <span class="st">"python"</span> <span class="fu">},</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Column 'amunt' not found. Did you mean 'amount'?"</span><span class="fu">,</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"caused_by"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"clean"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"suggested_fix"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"kind"</span><span class="fu">:</span> <span class="st">"rename_column"</span><span class="fu">,</span> <span class="dt">"old_name"</span><span class="fu">:</span> <span class="st">"amunt"</span><span class="fu">,</span> <span class="dt">"new_name"</span><span class="fu">:</span> <span class="st">"amount"</span> <span class="fu">}</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>caused_by: ["clean"]</code> tells the agent the bad column name is inherited from upstream, and the <code>suggested_fix</code> names the exact rename. The agent corrects the reference and re-checks:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"ok"</span><span class="fu">,</span> <span class="dt">"phase"</span><span class="fu">:</span> <span class="st">"wire"</span><span class="fu">,</span> <span class="dt">"tier"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> <span class="dt">"diagnostics"</span><span class="fu">:</span> <span class="ot">[]</span> <span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Clean. The pipeline is structurally sound.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>What the human reviews.</strong> Ask the agent to show what it changed and <em>why</em>. A rename touches column references throughout the file — make sure the agent understands the root cause of the mismatch, not just how to silence it.</p>
+</div>
+</div>
+<p><strong>Step 3 — apply mechanical fixes.</strong> In this case the agent edited the code directly, so no <code>t fix</code> was needed. When a <code>suggested_fix</code> <em>is</em> applicable, preview before applying, as covered above:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> fix <span class="at">--dry-run</span> pipeline.t   <span class="co"># preview</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> fix pipeline.t             <span class="co"># apply</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Step 4 — the human approves, the agent builds.</strong> Only now is <code>t run</code> triggered — the step that downloads dependencies and builds each node’s Nix sandbox:</p>
+<pre><code>$ t run pipeline.t
+Node 'raw' building...
+Node 'raw' completed (0.3s)
+Node 'clean' building... (Python environment)
+Node 'clean' completed (4.2s)
+Node 'summary_node' building... (Python environment)
+Node 'summary_node' completed (2.1s)
+Pipeline complete. 3/3 nodes succeeded.</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>What the human reviews.</strong> Confirm every node succeeded. If one failed, the message names the node and the reason — the agent should parse it and explain what went wrong rather than retry blindly.</p>
+</div>
+</div>
+<p><strong>Step 5 — the agent diffs with <code>t diff</code>.</strong> After a build, <code>t diff</code> shows the blast radius of the last edit:</p>
+<pre><code>$ t diff pipeline.t
+Name          Status    Class_a  Class_b
+raw           Unchanged T        T
+clean         Unchanged T        T
+summary_node  Unchanged T        T</code></pre>
+<p>On the first build there is nothing to compare, so everything is <code>Unchanged</code>. After an edit you would see the affected nodes (and their downstream dependents) marked <code>Changed</code>.</p>
+<p><strong>Iterating.</strong> Say you now want a per-product breakdown. You tell the agent:</p>
+<blockquote class="blockquote">
+<p>“Add a fourth node that groups by product and sums the amount, same pattern as the region summary.”</p>
+</blockquote>
+<p>The agent adds a <code>by_product</code> Python node, re-runs <code>t check --json</code>, and only when clean runs <code>t run</code>. The diff then shows the new node:</p>
+<pre><code>Name          Status    Class_a  Class_b
+raw           Unchanged T        T
+clean         Unchanged T        T
+summary_node  Unchanged T        T
+by_product    Added     -        T</code></pre>
+<p>The whole loop stays fast because <code>t check</code> catches structural errors in milliseconds; the agent only pays for <code>t run</code> once the pipeline is known to be well-formed.</p>
+</section>
+<section id="streaming-build-events-with-t-run---json" class="level3" data-number="5.13.2">
+<h3 data-number="5.13.2" class="anchored" data-anchor-id="streaming-build-events-with-t-run---json"><span class="header-section-number">5.13.2</span> Streaming build events with <code>t run --json</code></h3>
+<p>For long pipelines, <code>t run</code> can stream NDJSON events so an agent can react to the first failure instead of waiting for the whole build to finish:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> t run <span class="at">--json</span> pipeline.t <span class="dv">2</span><span class="op">&gt;</span>/dev/null</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each line is a JSON object. The run begins with a <code>run_started</code> event listing the nodes and their dependencies:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">"seq"</span><span class="fu">:</span><span class="dv">1</span><span class="fu">,</span><span class="dt">"event"</span><span class="fu">:</span><span class="st">"run_started"</span><span class="fu">,</span><span class="dt">"file"</span><span class="fu">:</span><span class="st">"pipeline.t"</span><span class="fu">,</span><span class="dt">"nodes"</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">"id"</span><span class="fu">:</span><span class="st">"raw"</span><span class="fu">,</span><span class="dt">"lang"</span><span class="fu">:</span><span class="st">"t"</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">"id"</span><span class="fu">:</span><span class="st">"clean"</span><span class="fu">,</span><span class="dt">"lang"</span><span class="fu">:</span><span class="st">"python"</span><span class="fu">,</span><span class="dt">"depends_on"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"raw"</span><span class="ot">]</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">"id"</span><span class="fu">:</span><span class="st">"summary_node"</span><span class="fu">,</span><span class="dt">"lang"</span><span class="fu">:</span><span class="st">"python"</span><span class="fu">,</span><span class="dt">"depends_on"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"clean"</span><span class="ot">]</span><span class="fu">}</span><span class="ot">]</span><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If a node fails, a <code>node_failed</code> event carries a <code>log_tail</code> — the last 200 lines of the build log — enough to see the real traceback without flooding the output:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">"seq"</span><span class="fu">:</span><span class="dv">2</span><span class="fu">,</span><span class="dt">"event"</span><span class="fu">:</span><span class="st">"node_failed"</span><span class="fu">,</span><span class="dt">"node"</span><span class="fu">:{</span><span class="dt">"id"</span><span class="fu">:</span><span class="st">"clean"</span><span class="fu">,</span><span class="dt">"lang"</span><span class="fu">:</span><span class="st">"python"</span><span class="fu">},</span><span class="dt">"error_class"</span><span class="fu">:</span><span class="st">"nix_error"</span><span class="fu">,</span><span class="dt">"message"</span><span class="fu">:</span><span class="st">"Nix build failed for node 'clean'"</span><span class="fu">,</span><span class="dt">"log_tail"</span><span class="fu">:</span><span class="st">"pandas.errors.ParserError: Error tokenizing data..."</span><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When the run finishes, <code>run_finished</code> reports the overall status and, crucially, <code>root_causes</code> — the node(s) that actually caused the failure, i.e.&nbsp;the one the agent should fix first:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">"seq"</span><span class="fu">:</span><span class="dv">4</span><span class="fu">,</span><span class="dt">"event"</span><span class="fu">:</span><span class="st">"run_finished"</span><span class="fu">,</span><span class="dt">"file"</span><span class="fu">:</span><span class="st">"pipeline.t"</span><span class="fu">,</span><span class="dt">"status"</span><span class="fu">:</span><span class="st">"failed"</span><span class="fu">,</span><span class="dt">"total_nodes"</span><span class="fu">:</span><span class="dv">3</span><span class="fu">,</span><span class="dt">"failed"</span><span class="fu">:</span><span class="dv">1</span><span class="fu">,</span><span class="dt">"skipped"</span><span class="fu">:</span><span class="dv">1</span><span class="fu">,</span><span class="dt">"root_causes"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"clean"</span><span class="ot">]</span><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>When working with an agent, a few things to keep in mind:</p>
 <p><strong>Tell the agent to check before running.</strong> Most agents will do this if you set the expectation explicitly: <em>“Always run <code>t check --json</code> and confirm it exits with code 0 before running <code>t run</code>”</em>. Without this instruction, agents sometimes skip straight to <code>t run</code> and waste several minutes on a build that fails immediately.</p>
 <p><strong>Ask for <code>--dry-run</code> before <code>t fix</code>.</strong> When the agent proposes applying a <code>suggested_fix</code>, ask it to preview first: <code>t fix --dry-run src/pipeline.t</code>. A rename fix modifies column references throughout the file — mechanical and correct, but you should confirm it matches your intent before applying.</p>
 <p><strong>Correct misunderstandings early.</strong> If the agent generates a pipeline that misunderstands the goal, fix it before it generates ten more nodes. Regenerating two nodes is cheap; regenerating ten is not.</p>
 <p><strong>The diff is your audit trail.</strong> After every <code>t run</code>, ask the agent to show you <code>t diff</code>. If only the nodes you intended to change show <code>Changed</code>, everything is working as expected. If something you did not touch shows <code>Changed</code>, investigate before accepting the build.</p>
 <p><strong>Data that needs to be downloaded belongs in <code>fetchurl</code>, not in a node.</strong> Build sandboxes are hermetic — a Python node cannot call <code>requests.get()</code> to pull data from the internet. Use <code>fetchurl(url, sha256 = prefetch(url))</code> in T to download assets before pipeline execution. The agent must understand this constraint; mention it when you set up the project.</p>
+<p>The most common ways a generated pipeline goes wrong, and the <code>t check</code> tier that catches each one, are worth memorising:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 45%">
+<col style="width: 55%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Mistake</th>
+<th style="text-align: left;">Caught by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Typo in a Python/pandas function name</td>
+<td style="text-align: left;"><code>t check</code> — <code>name_error</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wrong column name in a downstream node</td>
+<td style="text-align: left;"><code>t check --schema</code> — <code>schema_mismatch</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Missing serializer on a node</td>
+<td style="text-align: left;"><code>t check</code> — <code>structural_error</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wrong deserializer format</td>
+<td style="text-align: left;"><code>t check</code> — <code>structural_error</code></td>
+</tr>
+</tbody>
+</table>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1039,6 +1242,7 @@ model         Changed   T        T</code></pre>
 </table>
 </div>
 </div>
+</section>
 </section>
 <section id="summary" class="level2" data-number="5.14">
 <h2 data-number="5.14" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.14</span> Summary</h2>

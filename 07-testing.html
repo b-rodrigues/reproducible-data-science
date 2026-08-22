@@ -495,11 +495,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#part-3-testing-t-pipelines-with-testcraft" id="toc-part-3-testing-t-pipelines-with-testcraft" class="nav-link" data-scroll-target="#part-3-testing-t-pipelines-with-testcraft"><span class="header-section-number">7.4</span> Part 3: Testing T Pipelines with Testcraft</a>
   <ul class="collapse">
   <li><a href="#the-t-test-command" id="toc-the-t-test-command" class="nav-link" data-scroll-target="#the-t-test-command"><span class="header-section-number">7.4.1</span> The <code>t test</code> Command</a></li>
-  <li><a href="#the-expect_-primitives" id="toc-the-expect_-primitives" class="nav-link" data-scroll-target="#the-expect_-primitives"><span class="header-section-number">7.4.2</span> The <code>expect_*</code> Primitives</a></li>
-  <li><a href="#testing-node-outputs" id="toc-testing-node-outputs" class="nav-link" data-scroll-target="#testing-node-outputs"><span class="header-section-number">7.4.3</span> Testing Node Outputs</a></li>
-  <li><a href="#testing-the-pipeline-structure" id="toc-testing-the-pipeline-structure" class="nav-link" data-scroll-target="#testing-the-pipeline-structure"><span class="header-section-number">7.4.4</span> Testing the Pipeline Structure</a></li>
-  <li><a href="#the-fixture-chain-pattern" id="toc-the-fixture-chain-pattern" class="nav-link" data-scroll-target="#the-fixture-chain-pattern"><span class="header-section-number">7.4.5</span> The Fixture-Chain Pattern</a></li>
-  <li><a href="#summary-of-testing-levels" id="toc-summary-of-testing-levels" class="nav-link" data-scroll-target="#summary-of-testing-levels"><span class="header-section-number">7.4.6</span> Summary of Testing Levels</a></li>
+  <li><a href="#agent--and-ci-friendly-output" id="toc-agent--and-ci-friendly-output" class="nav-link" data-scroll-target="#agent--and-ci-friendly-output"><span class="header-section-number">7.4.2</span> Agent- and CI-friendly output</a></li>
+  <li><a href="#the-expect_-primitives" id="toc-the-expect_-primitives" class="nav-link" data-scroll-target="#the-expect_-primitives"><span class="header-section-number">7.4.3</span> The <code>expect_*</code> Primitives</a></li>
+  <li><a href="#testing-node-outputs" id="toc-testing-node-outputs" class="nav-link" data-scroll-target="#testing-node-outputs"><span class="header-section-number">7.4.4</span> Testing Node Outputs</a></li>
+  <li><a href="#testing-the-pipeline-structure" id="toc-testing-the-pipeline-structure" class="nav-link" data-scroll-target="#testing-the-pipeline-structure"><span class="header-section-number">7.4.5</span> Testing the Pipeline Structure</a></li>
+  <li><a href="#the-fixture-chain-pattern" id="toc-the-fixture-chain-pattern" class="nav-link" data-scroll-target="#the-fixture-chain-pattern"><span class="header-section-number">7.4.6</span> The Fixture-Chain Pattern</a></li>
+  <li><a href="#summary-of-testing-levels" id="toc-summary-of-testing-levels" class="nav-link" data-scroll-target="#summary-of-testing-levels"><span class="header-section-number">7.4.7</span> Summary of Testing Levels</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">7.5</span> Summary</a></li>
   </ul>
@@ -821,8 +822,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is the T equivalent of <code>pytest</code> or <code>testthat::test_dir()</code>. Each test file is a T script that builds a pipeline (or reads from an already-built one), makes assertions using <code>expect_*</code> functions, and fails loudly if any assertion does not hold.</p>
 </section>
-<section id="the-expect_-primitives" class="level3" data-number="7.4.2">
-<h3 data-number="7.4.2" class="anchored" data-anchor-id="the-expect_-primitives"><span class="header-section-number">7.4.2</span> The <code>expect_*</code> Primitives</h3>
+<section id="agent--and-ci-friendly-output" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="agent--and-ci-friendly-output"><span class="header-section-number">7.4.2</span> Agent- and CI-friendly output</h3>
+<p>The <code>t test</code> command can emit machine-readable results, which is exactly what an AI agent or a CI script needs to decide what to do next without parsing human-friendly text. Pass <code>--json</code> for a structured summary of the whole run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test <span class="at">--json</span> tests/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"schema_version"</span><span class="fu">:</span> <span class="st">"1"</span><span class="fu">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"passed"</span><span class="fu">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"total"</span><span class="fu">:</span> <span class="dv">15</span><span class="fu">,</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"passed"</span><span class="fu">:</span> <span class="dv">14</span><span class="fu">,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"failed"</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"duration_ms"</span><span class="fu">:</span> <span class="dv">2340</span><span class="fu">,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"results"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">"file"</span><span class="fu">:</span> <span class="st">"tests/test_arithmetic.t"</span><span class="fu">,</span> <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"passed"</span><span class="fu">,</span> <span class="dt">"duration_ms"</span><span class="fu">:</span> <span class="dv">120</span><span class="fu">,</span> <span class="dt">"error"</span><span class="fu">:</span> <span class="kw">null</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">"file"</span><span class="fu">:</span> <span class="st">"tests/test_strings.t"</span><span class="fu">,</span> <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"failed"</span><span class="fu">,</span> <span class="dt">"duration_ms"</span><span class="fu">:</span> <span class="dv">85</span><span class="fu">,</span> <span class="dt">"error"</span><span class="fu">:</span> <span class="st">"Assertion failed at line 42: expected </span><span class="ch">\"</span><span class="st">hello</span><span class="ch">\"</span><span class="st"> but got </span><span class="ch">\"</span><span class="st">world</span><span class="ch">\"</span><span class="st">"</span> <span class="fu">}</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The agent loop is then straightforward: run <code>t test --json</code>, read the top-level <code>status</code>, and — only if it is <code>"failed"</code> — read the <code>error</code> field of each failing result to decide the fix. For CI, <code>--format junit</code> emits JUnit XML that runners and dashboards understand:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test <span class="at">--format</span> junit tests/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can also filter what runs:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test <span class="at">--only</span> <span class="st">"stats"</span>     <span class="co"># run only tests matching "stats"</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test <span class="at">--not</span> <span class="st">"slow"</span>       <span class="co"># skip tests matching "slow"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test <span class="at">--failfast</span>         <span class="co"># stop on the first failure</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test <span class="at">--list</span>             <span class="co"># list tests without running them</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> test <span class="at">--timeout</span> 30       <span class="co"># mark tests slower than 30s as failed</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To exclude whole files or directories automatically, add a <code>tests/.tignore</code>:</p>
+<pre><code># tests/.tignore
+slow_integration.t
+*_benchmark.t
+legacy/</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>In the REPL.</strong> <code>t_test()</code> returns a DataFrame with the same results, so you can inspect failures interactively:</p>
+<pre class="t"><code>results <span class="sc">=</span> <span class="fu">t_test</span>()
+failed <span class="sc">=</span> results <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>status <span class="sc">==</span> <span class="st">"failed"</span>)
+<span class="fu">nrow</span>(failed)   <span class="co">-- 0 if everything passed</span></code></pre>
+</div>
+</div>
+</section>
+<section id="the-expect_-primitives" class="level3" data-number="7.4.3">
+<h3 data-number="7.4.3" class="anchored" data-anchor-id="the-expect_-primitives"><span class="header-section-number">7.4.3</span> The <code>expect_*</code> Primitives</h3>
 <p>Testcraft’s <code>expect_*</code> functions return a typed <code>Expect</code> value—<code>Expect_pass</code>, <code>Expect_stop</code>, or <code>Expect_hold</code>—rather than a bare boolean. This matters because when you wrap one in <code>assert()</code>, a failure gives you a rich diagnostic message instead of a generic <code>AssertionError: false</code>:</p>
 <pre class="t"><code><span class="co">-- Bare assert: not very helpful on failure</span>
 <span class="fu">assert</span>(<span class="fu">nrow</span>(df) <span class="sc">==</span> <span class="dv">4</span>)          <span class="co">-- AssertionError: expression evaluated to false</span>
@@ -895,8 +942,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="testing-node-outputs" class="level3" data-number="7.4.3">
-<h3 data-number="7.4.3" class="anchored" data-anchor-id="testing-node-outputs"><span class="header-section-number">7.4.3</span> Testing Node Outputs</h3>
+<section id="testing-node-outputs" class="level3" data-number="7.4.4">
+<h3 data-number="7.4.4" class="anchored" data-anchor-id="testing-node-outputs"><span class="header-section-number">7.4.4</span> Testing Node Outputs</h3>
 <p>The typical pattern is: build the pipeline, read each node with <code>read_node()</code>, then assert on the result. Here is a complete test file for the GLM pipeline from the previous chapter:</p>
 <pre class="t"><code><span class="co">-- tests/test-glm-pipeline.t</span>
 <span class="cf">import</span> stats
@@ -937,8 +984,8 @@ model <span class="sc">=</span> <span class="fu">read_node</span>(p.model_node)
 
 <span class="fu">print</span>(<span class="st">"✓ glm pipeline: all assertions passed"</span>)</code></pre>
 </section>
-<section id="testing-the-pipeline-structure" class="level3" data-number="7.4.4">
-<h3 data-number="7.4.4" class="anchored" data-anchor-id="testing-the-pipeline-structure"><span class="header-section-number">7.4.4</span> Testing the Pipeline Structure</h3>
+<section id="testing-the-pipeline-structure" class="level3" data-number="7.4.5">
+<h3 data-number="7.4.5" class="anchored" data-anchor-id="testing-the-pipeline-structure"><span class="header-section-number">7.4.5</span> Testing the Pipeline Structure</h3>
 <p>Testcraft also provides expectations that operate directly on the pipeline DAG, before or after building. These are unique to T and have no equivalent in testthat or pytest: they test the <em>structure</em> of the computation, not just the outputs.</p>
 <pre class="t"><code><span class="co">-- Check that p is a valid Pipeline value</span>
 <span class="fu">assert</span>(<span class="fu">expect_pipeline</span>(p))
@@ -958,8 +1005,8 @@ model <span class="sc">=</span> <span class="fu">read_node</span>(p.model_node)
 <span class="fu">assert</span>(<span class="fu">expect_computed</span>(p.model_node))</code></pre>
 <p>These structural tests are most valuable as a guard against refactoring accidents. If you reorganise the pipeline and accidentally break a dependency, <code>expect_dependency</code> will catch it immediately, before any downstream output has a chance to silently produce wrong results.</p>
 </section>
-<section id="the-fixture-chain-pattern" class="level3" data-number="7.4.5">
-<h3 data-number="7.4.5" class="anchored" data-anchor-id="the-fixture-chain-pattern"><span class="header-section-number">7.4.5</span> The Fixture-Chain Pattern</h3>
+<section id="the-fixture-chain-pattern" class="level3" data-number="7.4.6">
+<h3 data-number="7.4.6" class="anchored" data-anchor-id="the-fixture-chain-pattern"><span class="header-section-number">7.4.6</span> The Fixture-Chain Pattern</h3>
 <p>For more complex test suites, T supports composing pipelines with <code>chain()</code> and <code>parallel()</code>. The pattern is to separate data-producing nodes from assertion nodes, and compose them into a combined pipeline:</p>
 <pre class="t"><code><span class="co">-- A fixture pipeline produces the base data</span>
 fixture <span class="sc">=</span> <span class="cf">pipeline</span> {
@@ -993,8 +1040,8 @@ combined <span class="sc">=</span> <span class="fu">chain</span>(fixture, <span 
 <span class="fu">build_pipeline</span>(combined)</code></pre>
 <p>The <code>check_filter</code> node serializes its result as JSON: a named Dict where each key is the name of an assertion and each value is <code>true</code> on success or an <code>Error</code> on failure. This makes test results inspectable and diffable, not just pass/fail.</p>
 </section>
-<section id="summary-of-testing-levels" class="level3" data-number="7.4.6">
-<h3 data-number="7.4.6" class="anchored" data-anchor-id="summary-of-testing-levels"><span class="header-section-number">7.4.6</span> Summary of Testing Levels</h3>
+<section id="summary-of-testing-levels" class="level3" data-number="7.4.7">
+<h3 data-number="7.4.7" class="anchored" data-anchor-id="summary-of-testing-levels"><span class="header-section-number">7.4.7</span> Summary of Testing Levels</h3>
 <p>In a well-tested T project, you will have tests at three levels:</p>
 <table class="caption-top table">
 <colgroup>
