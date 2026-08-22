@@ -481,7 +481,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#errors-are-values" id="toc-errors-are-values" class="nav-link active" data-scroll-target="#errors-are-values"><span class="header-section-number">10.1</span> Errors Are Values</a></li>
   <li><a href="#resilient-builds-and-fail-fast" id="toc-resilient-builds-and-fail-fast" class="nav-link" data-scroll-target="#resilient-builds-and-fail-fast"><span class="header-section-number">10.2</span> Resilient Builds and Fail-Fast</a></li>
   <li><a href="#pipes-propagate-or-recover" id="toc-pipes-propagate-or-recover" class="nav-link" data-scroll-target="#pipes-propagate-or-recover"><span class="header-section-number">10.3</span> Pipes: Propagate or Recover</a></li>
-  <li><a href="#recovering-from-errors" id="toc-recovering-from-errors" class="nav-link" data-scroll-target="#recovering-from-errors"><span class="header-section-number">10.4</span> Recovering from Errors</a></li>
+  <li><a href="#pattern-matching" id="toc-pattern-matching" class="nav-link" data-scroll-target="#pattern-matching"><span class="header-section-number">10.4</span> Pattern Matching</a>
+  <ul class="collapse">
+  <li><a href="#matching-errors" id="toc-matching-errors" class="nav-link" data-scroll-target="#matching-errors"><span class="header-section-number">10.4.1</span> Matching errors</a></li>
+  <li><a href="#recovery-patterns" id="toc-recovery-patterns" class="nav-link" data-scroll-target="#recovery-patterns"><span class="header-section-number">10.4.2</span> Recovery patterns</a></li>
+  </ul></li>
   <li><a href="#when-a-pipeline-node-fails" id="toc-when-a-pipeline-node-fails" class="nav-link" data-scroll-target="#when-a-pipeline-node-fails"><span class="header-section-number">10.5</span> When a Pipeline Node Fails</a></li>
   <li><a href="#inspecting-a-failed-build" id="toc-inspecting-a-failed-build" class="nav-link" data-scroll-target="#inspecting-a-failed-build"><span class="header-section-number">10.6</span> Inspecting a Failed Build</a></li>
   <li><a href="#interactive-debugging" id="toc-interactive-debugging" class="nav-link" data-scroll-target="#interactive-debugging"><span class="header-section-number">10.7</span> Interactive Debugging</a>
@@ -612,9 +616,68 @@ DivisionByZero
 <p>Three things to notice. First, <code>|&gt;</code> on an error passes the error straight through: <code>propagated</code> is still the original <code>DivisionByZero</code> error, which means the <code>x + 1</code> function was never applied. Second, <code>?|&gt;</code> hands the error to <code>recover</code>, which inspects it with <code>is_error</code> and substitutes a default. Third, <code>?|&gt;</code> is not only for errors: when the value is a normal one, the function runs exactly as it would with <code>|&gt;</code>.</p>
 <p>Use <code>|&gt;</code> for the majority of your pipelines, where you expect success and want any error to keep propagating until something explicitly handles it. Use <code>?|&gt;</code> at the specific points where you want to <em>act</em> on an error — log it, replace it with a fallback, or transform it.</p>
 </section>
-<section id="recovering-from-errors" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="recovering-from-errors"><span class="header-section-number">10.4</span> Recovering from Errors</h2>
-<p>The most declarative way to recover is pattern matching. <code>match</code> lets you destructure an error value and branch on what went wrong:</p>
+<section id="pattern-matching" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="pattern-matching"><span class="header-section-number">10.4</span> Pattern Matching</h2>
+<p>You will first meet <code>match</code> as a way to recover from errors, but it is a general tool: it branches on the <em>shape</em> of a value rather than its equality, and it works on lists, missing values, errors, and plain values alike.</p>
+<p>A <code>match</code> expression takes a scrutinee and a set of cases. The cases are tried in order, and the first pattern that fits determines the result:</p>
+<pre class="t"><code>describe <span class="sc">=</span> \(x<span class="sc">:</span> Any <span class="sc">-&gt;</span> Any) <span class="cf">match</span>(x) {
+  [] <span class="sc">=&gt;</span> <span class="st">"empty list"</span>,
+  [h, <span class="sc">.</span>.rest] <span class="sc">=&gt;</span> <span class="fu">str_join</span>([<span class="st">"head "</span>, h, <span class="st">", "</span>, <span class="fu">length</span>(rest), <span class="st">" more"</span>], <span class="st">""</span>),
+  _ <span class="sc">=&gt;</span> <span class="st">"not a non-empty list"</span>
+}
+<span class="fu">print</span>(<span class="fu">describe</span>([]))
+<span class="fu">print</span>(<span class="fu">describe</span>([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]))
+<span class="fu">print</span>(<span class="fu">describe</span>(<span class="dv">42</span>))</code></pre>
+<pre class="text"><code>empty list
+head 1, 2 more
+not a non-empty list</code></pre>
+<p>The patterns you can write are:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pattern</th>
+<th>Matches</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>NA</code></td>
+<td>a missing value</td>
+</tr>
+<tr class="even">
+<td><code>[]</code></td>
+<td>the empty list</td>
+</tr>
+<tr class="odd">
+<td><code>[a, b]</code></td>
+<td>a list of exactly two elements, binding <code>a</code> and <code>b</code></td>
+</tr>
+<tr class="even">
+<td><code>[h, ..rest]</code></td>
+<td>a non-empty list, binding the head <code>h</code> and the remaining list <code>rest</code></td>
+</tr>
+<tr class="odd">
+<td><code>Error { m }</code></td>
+<td>an error value, binding its message to <code>m</code></td>
+</tr>
+<tr class="even">
+<td><code>x</code></td>
+<td>any value, binding it to <code>x</code></td>
+</tr>
+<tr class="odd">
+<td><code>_</code></td>
+<td>any value, without binding it</td>
+</tr>
+</tbody>
+</table>
+<p>There are no literal patterns — a bare <code>42</code> is not a valid pattern, so use a variable and test it if you need to. Patterns nest, so <code>[a, [b, c]]</code> matches a list whose second element is itself a two-element list. Because cases are tried top to bottom, put specific patterns before general ones: a bare <code>x</code> or <code>_</code> at the end catches everything that did not match above, exactly as the <code>describe</code> example does.</p>
+<section id="matching-errors" class="level3" data-number="10.4.1">
+<h3 data-number="10.4.1" class="anchored" data-anchor-id="matching-errors"><span class="header-section-number">10.4.1</span> Matching errors</h3>
+<p>The most common use in a data pipeline is recovery. <code>match</code> lets you destructure an error value and branch on what went wrong:</p>
 <pre class="t"><code>caught <span class="sc">=</span> <span class="cf">match</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span>) { Error { m } <span class="sc">=&gt;</span> <span class="fu">str_join</span>([<span class="st">"Caught: "</span>, m], <span class="st">""</span>), _ <span class="sc">=&gt;</span> <span class="st">"no error"</span> }
 <span class="fu">print</span>(caught)
 safe <span class="sc">=</span> <span class="cf">match</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span>) { Error { _ } <span class="sc">=&gt;</span> <span class="dv">0</span>, _ <span class="sc">=&gt;</span> <span class="dv">1</span> }
@@ -625,6 +688,9 @@ fallback <span class="sc">=</span> <span class="cf">match</span>(<span class="dv
 0
 99</code></pre>
 <p>The <code>Error { m }</code> pattern binds the error’s message to <code>m</code>, so you can build a diagnostic string, write it to a log, or feed it into a fallback computation. The <code>_</code> pattern catches everything else — in the last example, the successful value <code>42</code> — and returns it (or a default) unchanged.</p>
+</section>
+<section id="recovery-patterns" class="level3" data-number="10.4.2">
+<h3 data-number="10.4.2" class="anchored" data-anchor-id="recovery-patterns"><span class="header-section-number">10.4.2</span> Recovery patterns</h3>
 <p>From there, the recovery patterns fall out naturally:</p>
 <ul>
 <li><strong>Default values</strong>: <code>?|&gt; \(x: Any -&gt; Int) if (is_error(x)) 0 else x</code> replaces any failure with a sensible default.</li>
@@ -633,6 +699,7 @@ fallback <span class="sc">=</span> <span class="cf">match</span>(<span class="dv
 <li><strong>Log and rethrow</strong>: print the message, then <code>error(error_code(x), error_msg(x))</code> to keep the failure visible to whoever is upstream of you.</li>
 </ul>
 <p>For a single, uniform recovery, a <code>?|&gt;</code> with an <code>if (is_error(x))</code> is the lightest tool. When different error types need different responses, or when the recovery logic has more than one branch, <code>match</code> is clearer.</p>
+</section>
 </section>
 <section id="when-a-pipeline-node-fails" class="level2" data-number="10.5">
 <h2 data-number="10.5" class="anchored" data-anchor-id="when-a-pipeline-node-fails"><span class="header-section-number">10.5</span> When a Pipeline Node Fails</h2>
@@ -692,9 +759,9 @@ DataFrame: 3 rows x 4 cols</code></pre>
 <section id="the-t-debug-command" class="level3" data-number="10.7.1">
 <h3 data-number="10.7.1" class="anchored" data-anchor-id="the-t-debug-command"><span class="header-section-number">10.7.1</span> The <code>t debug</code> Command</h3>
 <p>From your shell, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug <span class="op">&lt;</span>node_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug <span class="op">&lt;</span>node_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>By default this looks for the pipeline in <code>src/pipeline.t</code>; if your pipeline lives elsewhere, pass the file first:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug src/my_custom_pipeline.t data_cleanup</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug src/my_custom_pipeline.t data_cleanup</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>T evaluates the script up to the requested node, resolves every upstream dependency, locates their latest materialized <code>/nix/store</code> paths, sets up the environment, and launches the runtime’s interactive REPL. Targeting a Python node, for example, produces something like:</p>
 <pre class="text"><code>================================================
 Debugging Node: Y (Runtime: Python)
@@ -714,9 +781,9 @@ Press Ctrl+D or exit to return to T REPL.
 <p>If you are already inside a T REPL session with a built pipeline, the same debugger is one call away:</p>
 <pre class="t"><code><span class="fu">debug_node</span>(p.data_cleanup)</code></pre>
 <p>This spawns the same subshell environment. Inside it, a <code>tlang</code> companion library lets you load upstream node data live:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df <span class="op">=</span> tlang.read_node(<span class="st">"raw_df"</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df <span class="op">=</span> tlang.read_node(<span class="st">"raw_df"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now you can inspect the exact data that crashed your node, dry-run the offending function line by line, and confirm the fix. Press <code>Ctrl+D</code> (or <code>exit()</code>, or <code>q()</code> in R) to leave the subshell; control returns cleanly to your T session.</p>
 <p>The subshells are customized so you always know where you are: Python starts with a <code>py&gt;</code> prompt, R starts quietly (no welcome banner) with <code>r&gt;</code>, and Julia shows <code>jl&gt;</code>. Interactive debugging is supported for the three REPL-capable runtimes — Python, R, and Julia; debugging a Quarto or Bash node raises a descriptive <code>ValueError</code> instead of dropping you into a raw shell.</p>
 </section>

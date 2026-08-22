@@ -514,6 +514,10 @@ div.csl-indent {
   <li><a href="#the-two-pipes" id="toc-the-two-pipes" class="nav-link" data-scroll-target="#the-two-pipes"><span class="header-section-number">4.2.3</span> The two pipes</a></li>
   <li><a href="#imports" id="toc-imports" class="nav-link" data-scroll-target="#imports"><span class="header-section-number">4.2.4</span> Imports</a></li>
   <li><a href="#sequence-generation" id="toc-sequence-generation" class="nav-link" data-scroll-target="#sequence-generation"><span class="header-section-number">4.2.5</span> Sequence generation</a></li>
+  <li><a href="#operators-at-a-glance" id="toc-operators-at-a-glance" class="nav-link" data-scroll-target="#operators-at-a-glance"><span class="header-section-number">4.2.6</span> Operators at a glance</a></li>
+  <li><a href="#what-can-a-t-value-be" id="toc-what-can-a-t-value-be" class="nav-link" data-scroll-target="#what-can-a-t-value-be"><span class="header-section-number">4.2.7</span> What can a T value be?</a></li>
+  <li><a href="#how-t-evaluates" id="toc-how-t-evaluates" class="nav-link" data-scroll-target="#how-t-evaluates"><span class="header-section-number">4.2.8</span> How T evaluates</a></li>
+  <li><a href="#types-briefly" id="toc-types-briefly" class="nav-link" data-scroll-target="#types-briefly"><span class="header-section-number">4.2.9</span> Types, briefly</a></li>
   </ul></li>
   <li><a href="#transitioning-to-nix-managed-r" id="toc-transitioning-to-nix-managed-r" class="nav-link" data-scroll-target="#transitioning-to-nix-managed-r"><span class="header-section-number">4.3</span> Transitioning to Nix-Managed R</a>
   <ul class="collapse">
@@ -659,6 +663,230 @@ handle <span class="sc">=</span> \(x) <span class="cf">if</span> (<span class="f
 <h3 data-number="4.2.5" class="anchored" data-anchor-id="sequence-generation"><span class="header-section-number">4.2.5</span> Sequence generation</h3>
 <pre class="t"><code><span class="fu">seq</span>(<span class="dv">5</span>)                <span class="co">-- [1, 2, 3, 4, 5]</span>
 <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, by <span class="sc">=</span> <span class="dv">2</span>)    <span class="co">-- [1, 3, 5, 7, 9]</span></code></pre>
+</section>
+<section id="operators-at-a-glance" class="level3" data-number="4.2.6">
+<h3 data-number="4.2.6" class="anchored" data-anchor-id="operators-at-a-glance"><span class="header-section-number">4.2.6</span> Operators at a glance</h3>
+<p>The tour so far has met operators one at a time. Here is the whole set in one place, listed in order of precedence — loosest first — so a pipe chain reads left to right without parentheses, and <code>1 + 2 * 3</code> still means <code>1 + (2 * 3)</code>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Operator</th>
+<th style="text-align: left;">Job</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>=</code>, <code>:=</code></td>
+<td style="text-align: left;">assign, rebind</td>
+<td style="text-align: left;"><code>:=</code> shadows an existing name</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>if (c) a else b</code></td>
+<td style="text-align: left;">conditional expression</td>
+<td style="text-align: left;">always returns a value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\|&gt;</code>, <code>?\|&gt;</code></td>
+<td style="text-align: left;">pipe, maybe-pipe</td>
+<td style="text-align: left;"><code>\|&gt;</code> short-circuits on <code>Error</code>; <code>?\|&gt;</code> forwards it</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>~</code></td>
+<td style="text-align: left;">formula</td>
+<td style="text-align: left;"><code>y ~ x</code>; the language of models and <code>case_when</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\|\|</code></td>
+<td style="text-align: left;">scalar OR</td>
+<td style="text-align: left;">both sides must be Bool</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>&amp;&amp;</code></td>
+<td style="text-align: left;">scalar AND</td>
+<td style="text-align: left;">both sides must be Bool</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\|</code></td>
+<td style="text-align: left;">scalar bitwise OR</td>
+<td style="text-align: left;">scalar operands only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>.\|</code></td>
+<td style="text-align: left;">element-wise OR</td>
+<td style="text-align: left;">Lists, Vectors, NDArrays</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>&amp;</code></td>
+<td style="text-align: left;">scalar bitwise AND</td>
+<td style="text-align: left;">scalar operands only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>.&amp;</code></td>
+<td style="text-align: left;">element-wise AND</td>
+<td style="text-align: left;">Lists, Vectors, NDArrays</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></td>
+<td style="text-align: left;">scalar comparison</td>
+<td style="text-align: left;"><code>==</code> on a collection is a <code>TypeError</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>in</code></td>
+<td style="text-align: left;">membership</td>
+<td style="text-align: left;"><code>x in [1, 2, 3]</code>; the right side is a list</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>%name%</code></td>
+<td style="text-align: left;">custom infix operator</td>
+<td style="text-align: left;">R-style; packages define them, you consume them</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>.==</code>, <code>.!=</code>, <code>.&lt;</code>, <code>.&gt;</code>, <code>.&lt;=</code>, <code>.&gt;=</code></td>
+<td style="text-align: left;">element-wise comparison</td>
+<td style="text-align: left;"><code>1 .== [1, 2]</code> is <code>[true, false]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>+</code>, <code>-</code></td>
+<td style="text-align: left;">scalar add, subtract</td>
+<td style="text-align: left;">int + float promotes to float</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>.+</code>, <code>.-</code></td>
+<td style="text-align: left;">element-wise add, subtract</td>
+<td style="text-align: left;">the workhorses of column math</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>*</code>, <code>/</code>, <code>%</code></td>
+<td style="text-align: left;">scalar multiply, divide, modulo</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>.*</code>, <code>./</code>, <code>.%</code></td>
+<td style="text-align: left;">element-wise multiply, divide, modulo</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>.</code>, <code>()</code></td>
+<td style="text-align: left;">field access, function call</td>
+<td style="text-align: left;">tightest of all</td>
+</tr>
+</tbody>
+</table>
+<p>Unary operators sit above everything in the table: <code>-</code> (negation), <code>!</code> (logical not), and <code>!!</code> / <code>!!!</code> (unquote and unquote-splice, the metaprogramming tools from Chapter 15).</p>
+<p>Two distinctions matter more than any single operator. First, the <strong>scalar-versus-broadcast split</strong>: the plain operators (<code>+</code>, <code>==</code>, <code>&amp;</code>, …) demand scalar operands and say so with a <code>TypeError</code>, while the dotted operators (<code>.+</code>, <code>.==</code>, <code>.&amp;</code>, …) do the work element-wise across Lists, Vectors, and NDArrays. No silent coercion, no surprises. Second, the pipes bind <em>loosest</em> of all, which is what lets you write long chains without parenthesising anything.</p>
+</section>
+<section id="what-can-a-t-value-be" class="level3" data-number="4.2.7">
+<h3 data-number="4.2.7" class="anchored" data-anchor-id="what-can-a-t-value-be"><span class="header-section-number">4.2.7</span> What can a T value be?</h3>
+<p>Every expression in T evaluates to a value, and the set of values is small enough to hold in your head:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Value</th>
+<th style="text-align: left;">Example</th>
+<th style="text-align: left;">Where it is covered</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Int, Float, Bool, String</td>
+<td style="text-align: left;"><code>42</code>, <code>3.14</code>, <code>true</code>, <code>"hi"</code></td>
+<td style="text-align: left;">everywhere</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;"><code>NA</code></td>
+<td style="text-align: left;">missing data, Chapter 14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Error</td>
+<td style="text-align: left;"><code>error("boom")</code></td>
+<td style="text-align: left;">errors as values, Chapter 6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Symbol</td>
+<td style="text-align: left;">a bare name captured as data</td>
+<td style="text-align: left;">non-standard evaluation, Chapter 15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">List / Dict</td>
+<td style="text-align: left;"><code>[1, 2, 3]</code>, <code>[name: "Alice"]</code></td>
+<td style="text-align: left;">collections, Chapter 15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Vector</td>
+<td style="text-align: left;">a typed numeric or text vector</td>
+<td style="text-align: left;">columns, Chapter 14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NDArray</td>
+<td style="text-align: left;">an n-dimensional array</td>
+<td style="text-align: left;">Chapter 14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">DataFrame</td>
+<td style="text-align: left;"><code>read_csv("data.csv")</code></td>
+<td style="text-align: left;">Chapter 14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Factor</td>
+<td style="text-align: left;">a categorical column</td>
+<td style="text-align: left;">Chapter 14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Date / Datetime</td>
+<td style="text-align: left;"><code>ymd("2024-01-01")</code></td>
+<td style="text-align: left;">Chapter 14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Formula</td>
+<td style="text-align: left;"><code>mpg ~ wt</code></td>
+<td style="text-align: left;">models, Chapter 14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lens</td>
+<td style="text-align: left;"><code>df["mpg"]</code></td>
+<td style="text-align: left;">Chapter 15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lambda</td>
+<td style="text-align: left;"><code>\(x) x + 1</code></td>
+<td style="text-align: left;">functions, Chapter 15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pipeline / Node</td>
+<td style="text-align: left;"><code>pipeline { ... }</code></td>
+<td style="text-align: left;">Chapters 5 and 8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Intent</td>
+<td style="text-align: left;"><code>intent { ... }</code></td>
+<td style="text-align: left;">Chapter 15</td>
+</tr>
+</tbody>
+</table>
+<p>Most of the rest of this book is a tour of this table, one row at a time.</p>
+</section>
+<section id="how-t-evaluates" class="level3" data-number="4.2.8">
+<h3 data-number="4.2.8" class="anchored" data-anchor-id="how-t-evaluates"><span class="header-section-number">4.2.8</span> How T evaluates</h3>
+<p>Three ideas make T’s behaviour predictable once you see them.</p>
+<p><strong>The data mask.</strong> Inside a verb, column names resolve against the data the verb is operating on. That is why <code>df |&gt; filter($age &gt; 30)</code> works even though <code>age</code> is not a variable in scope: <code>filter</code> masks the columns of <code>df</code> into the expression, and <code>$age</code> picks one out. You write expressions <em>over columns</em>, not over R or Python objects.</p>
+<p><strong>Non-standard evaluation.</strong> Some verbs need the <em>expression</em>, not its value. <code>mutate($bonus = $salary * 0.1)</code> captures the right-hand side and evaluates it row-wise later; a bare name in that position is captured as a symbol, not looked up. The explicit tools for this — <code>quo</code>, <code>!!</code>, <code>!!!</code> — are in Chapter 15; the verbs in Chapter 14 use it under the hood.</p>
+<p><strong>Errors as values.</strong> A failing expression does not crash the program; it produces an <code>Error</code> value you can test with <code>is_error</code>, branch on with <code>if</code> or <code>match</code>, or route with <code>?|&gt;</code>. That is what makes the two pipes possible, and it is why a long pipeline can degrade gracefully instead of dying at the first bad row.</p>
+</section>
+<section id="types-briefly" class="level3" data-number="4.2.9">
+<h3 data-number="4.2.9" class="anchored" data-anchor-id="types-briefly"><span class="header-section-number">4.2.9</span> Types, briefly</h3>
+<p>You will meet annotations like <code>\(x: Int, y: Int -&gt; Int)</code> in later chapters. T has a light but real type system: parameter and return annotations, generic type variables, a strict mode that requires full signatures on top-level functions, and semantic types like <code>DataFrame[schema]</code>. We take it apart in Chapter 15; for now, read an annotation as a promise about what a function accepts and returns.</p>
 <p>T’s functions — how to define them, closures, and higher-order functions — are a topic in their own right, and we take them up properly in Chapter 15.</p>
 </section>
 </section>

@@ -789,6 +789,7 @@ fitted <span class="sc">=</span> <span class="fu">read_node</span>(p.model)
 <span class="co">--   `dependencies`: ["data"]</span>
 <span class="co">-- }</span></code></pre>
 <p>The <code>path</code> field is the escape hatch: the absolute path to the node’s output in the Nix store. You can pass this to any external tool, or use the companion helper packages for R or Python to read T artifacts outside of T.</p>
+<p><code>explain()</code> reaches further than nodes — it describes any value, including DataFrames, errors, formulas, and whole pipelines. Chapter 15 takes it apart, alongside the <code>intent</code> blocks that record <em>why</em> a piece of code exists.</p>
 </section>
 <section id="comparing-builds-with-t-diff" class="level2" data-number="5.9">
 <h2 data-number="5.9" class="anchored" data-anchor-id="comparing-builds-with-t-diff"><span class="header-section-number">5.9</span> Comparing Builds with <code>t diff</code></h2>
