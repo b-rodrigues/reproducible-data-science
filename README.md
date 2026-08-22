@@ -49,9 +49,13 @@ layer and T as the language that makes it all possible.
     packages, and all system dependencies.
 -   **Orchestrate Polyglot Pipelines:** Use T to build, run, and debug complex
     analytical pipelines that seamlessly pass data between different languages.
--   **Pair with LLMs:** Treat LLMs as first-class collaborators, using T's
-    structured feedback and built-in agent onboarding to let them write and
-    verify the pipeline plumbing for you.
+-   **Think in Plain Text, Not Notebooks:** See why we favour explicit,
+    diffable plain-text pipelines over interactive notebooks — for both humans
+    and the AI agents increasingly writing our code.
+-   **Pair with LLMs:** Treat LLMs as first-class collaborators. T exposes
+    build, test, and debugging feedback as structured JSON and streams build
+    events, so agents can write, run, and verify the pipeline plumbing for you
+    with minimal human parsing.
 -   **Automate and Distribute:** Package your pipelines with Docker and automate
     your entire workflow with GitHub Actions, all built on your reproducible Nix
     foundation.
