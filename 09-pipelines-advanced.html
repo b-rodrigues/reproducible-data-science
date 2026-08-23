@@ -936,7 +936,7 @@ both       <span class="sc">=</span> <span class="fu">parallel</span>(report_en,
 <span class="fu">print</span>(<span class="fu">pipeline_nodes</span>(both))</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-5dcec50adaedffe5/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-d5da2e1d2e9b5138/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="pipeline_of-meta-pipelines" class="level3" data-number="9.6.3">
@@ -984,8 +984,8 @@ both <span class="sc">=</span> <span class="fu">parallel</span>(p1 <span class="
 <span class="fu">print</span>(<span class="fu">pipeline_nodes</span>(both))</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-8dbdb5672a2c3e1d/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-8dbdb5672a2c3e1d/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-87cef807affacab4/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-87cef807affacab4/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 </section>
@@ -1004,8 +1004,8 @@ Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-8dbdb5672a2c3e1d/chunk
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-c2000f03d60f84e6/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-c2000f03d60f84e6/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-f24a1116bd0f7b19/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-f24a1116bd0f7b19/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>This expands into three nodes—<code>results_branch_1</code>, <code>results_branch_2</code>, and <code>results_branch_3</code>—where branch <code>i</code> runs the command with element <code>i</code> of <code>params</code>. Multiple dependencies can be mapped at once; they must all have the same length, and branch <code>i</code> receives element <code>i</code> from each:</p>
 <pre class="t"><code>p_map2 <span class="sc">=</span> <span class="cf">pipeline</span> {
@@ -1015,8 +1015,8 @@ Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-c2000f03d60f84e6/chunk
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-609d573ed2bf6aaf/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-609d573ed2bf6aaf/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-a96062b38af7b6ba/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-a96062b38af7b6ba/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="cross_pattern" class="level3" data-number="9.7.2">
@@ -1032,8 +1032,8 @@ Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-609d573ed2bf6aaf/chunk
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-f7c462f90e4581d0/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-f7c462f90e4581d0/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-e4ecf71f923c9a6a/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-e4ecf71f923c9a6a/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>This produces four branches, <code>spiro_branch_1</code> through <code>spiro_branch_4</code>, covering <code>(1,3)</code>, <code>(1,4)</code>, <code>(2,3)</code>, and <code>(2,4)</code>. The spirograph example in the T demos does exactly this: three values of angular frequency crossed with three values of petal count produce nine data-generation branches and nine R-based plot branches, each built in parallel.</p>
 </section>
@@ -1055,8 +1055,8 @@ Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-f7c462f90e4581d0/chunk
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-e788555c18b74384/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-e788555c18b74384/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-e1b7e8bc59481748/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-e1b7e8bc59481748/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><code>head_pattern</code> and <code>tail_pattern</code> cap at the dependency length, so <code>head_pattern(x, 10)</code> on a five-element list still yields five branches. <code>sample_pattern</code> is deterministic: it seeds a partial Fisher–Yates shuffle from the node name, so re-expanding the same pipeline always makes the same draw, while different node names make different draws.</p>
 </section>
@@ -1074,8 +1074,8 @@ expanded <span class="sc">=</span> <span class="fu">expand_pipeline</span>(demo)
 expanded.first_two_branch_1  <span class="co">-- the first branch's node</span></code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-7a73ef0d9a6d2213/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-7a73ef0d9a6d2213/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-d37d0542e96a0193/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-d37d0542e96a0193/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 node&lt;T&gt;(...)
 </code></pre>
 <p>Each branch is a regular node named <code>&lt;node&gt;_branch_&lt;i&gt;</code> with a 1-based index, so you can read it with the usual <code>read_node()</code> or dot access.</p>
@@ -1107,8 +1107,8 @@ Tip
 }</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-0972559269234d3c/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-0972559269234d3c/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-fae30bc16dbb885d/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-fae30bc16dbb885d/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><code>get(node_lens("node_a"))</code> deserializes <code>node_a</code>’s artifact and returns it as a T value, so <code>node_b</code> can use it directly even though the value is produced elsewhere in the pipeline. This is the canonical way to reach across the dependency graph when a plain <code>deps</code> list is not enough.</p>
 </section>
@@ -1266,8 +1266,8 @@ model <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;
 }<span class="sc">&gt;</span>)</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-64455723111f5db0/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-64455723111f5db0/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-5823895b66754dee/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-5823895b66754dee/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><strong>Second</strong>, shell nodes that read files created by other nodes. The file name is a runtime string and the node name never appears in the command text:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">summarise_outputs</span> = shell {</span>
@@ -1286,8 +1286,8 @@ summarise_outputs <span class="sc">=</span> <span class="fu">shn</span>(
 )</code></pre>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-f400df121bf603b2/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127357-2137449513/tlang-f400df121bf603b2/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-dc3c2d071e917eb7/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-127555-1758116364/tlang-dc3c2d071e917eb7/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>Declared dependencies are merged with inferred ones. You do not need to re-declare dependencies that T already finds; <code>deps</code> only adds what would otherwise be missing.</p>
 <div class="callout callout-style-default callout-note callout-titled">
