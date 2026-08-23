@@ -553,7 +553,7 @@ import "helpers.t" [clean_data, normalize]
 ```
 
 Not that to use R, Python or Julia packages, the import statements of each
-respective language needs to be written inside the required `<{}>` foreign code
+respective language needs to be written inside the required `<{...}>` foreign code
 blocks, as we shall see below.
 
 ### Sequence generation

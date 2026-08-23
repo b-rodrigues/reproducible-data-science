@@ -7,7 +7,7 @@ dependencies in `tproject.toml`, and entered the project's `nix develop` shell.
 Now it is time to actually build something.
 
 This chapter is deliberately hands-on. We will write a pipeline, build it, break
-it, inspect it, fix it, and extend it. Theory comes later—Chapter 6 explains
+it, inspect it, fix it, and extend it. Theory comes later; Chapter 6 explains
 *why* pipelines work the way they do. Here the goal is to get your hands on the
 machinery and get comfortable with the core development loop.
 
@@ -51,15 +51,16 @@ p = pipeline {
 build_pipeline(p)
 ```
 
-This pipeline doesn’t use any R, Python or Julia code yet, but is written in pure T.
-T comes with many builtin functions, and even data manipulation verbs inspired
-by `{dplyr}`! We return to them in Chapter 14.
+This pipeline doesn’t use any R, Python or Julia code yet, but is written in
+pure T. As shown in the previosu chapter, T comes with many builtin functions,
+and even data manipulation verbs inspired by `{dplyr}`! We return to them in
+Chapter 14.
 
 Now let’s run the pipeline. There are two ways of doing it. From the terminal
 (inside of the environment):
 
 ```bash
-nix developt
+nix develop
 t run src/pipeline.t
 ```
 
@@ -101,8 +102,8 @@ build:
 
 ```t
 #| eval: false
-read_node(p.total)    -- reads the serialized artifact back from the Nix store
-show_plot(p)          -- visualise the DAG
+read_node(p.total) -- reads the serialized artifact back from the Nix store
+show_plot(p)       -- visualise the DAG
 ```
 
 Add a node and rebuild:
@@ -127,10 +128,11 @@ This **check → build → inspect → extend** loop is the core iterative devel
 cycle in T. Get comfortable with it before moving on. It is also possible to 
 interactively inspect R, Python or Julia nodes. More on this later.
 
-Once the pipeline is built, you still need to get to the build artifacts. For this,
-use `pipeline_copy()`. This copies all computed node artifacts from the Nix store to a local directory for easy access.
-By default, it copies all nodes from the latest build to the "pipeline-output/" folder. 
-You can specify a custom folder using the `target_dir` argument: `pipeline_copy(target_dir = "outputs")`
+Once the pipeline is built, you still need to get to the build artifacts. For
+this, use `pipeline_copy()`. This copies all computed node artifacts from the
+Nix store to a local directory for easy access. By default, it copies all nodes
+from the latest build to the "pipeline-output/" folder. You can specify a custom
+folder using the `target_dir` argument: `pipeline_copy(target_dir = "outputs")`
 
 ## Node Types: Calling R, Python, and Julia
 
@@ -145,7 +147,7 @@ make this explicit:
 | `jln()` | Julia | High-performance numerics, Flux.jl |
 | `shn()` | Shell | File processing, calling external CLIs |
 
-Foreign-language code lives inside `<{ ... }>` raw code blocks, which pass code
+Foreign-language code lives inside `<{...}>` raw code blocks, which pass code
 verbatim to the target runtime without T parsing it:
 
 ```t
@@ -156,7 +158,11 @@ p = pipeline {
 
   -- Summarise in R using dplyr
   summary_r = rn(
-    command   = <{ data |> dplyr::group_by(cyl) |> dplyr::summarize(avg_mpg = mean(mpg)) }>,
+    command   = <{
+      data |>
+      dplyr::group_by(cyl) |>
+      dplyr::summarize(avg_mpg = mean(mpg))
+    }>,
     deserializer = ^ipc,
     serializer   = ^ipc
   )
@@ -410,21 +416,27 @@ Make it a habit: **`t check` first, `t run` only when clean.**
 
 ## Interactive Development with the T REPL in Positron
 
-Non-interactive batch execution via shell commands like `t run src/pipeline.t` is perfect for automated builds,
-reproducible pipelines, and CI/CD runners. But humans rarely write data science workflows as single monolithic batch runs. 
-Data analysis is inherently iterative: we need to explore intermediate outputs, check data shapes, inspect model coefficients, 
-test function logic, and troubleshoot errors in real time. Thankfully, T provides a REPL (Read-Eval-Print Loop).
+Non-interactive batch execution via shell commands like `t run src/pipeline.t`
+is perfect for automated builds, reproducible pipelines, and CI/CD runners. But
+humans rarely write data science workflows as single monolithic batch runs. Data
+analysis is inherently iterative: we need to explore intermediate outputs, check
+data shapes, inspect model coefficients, test function logic, and troubleshoot
+errors in real time. Thankfully, T provides a REPL (Read-Eval-Print Loop).
 
-When working in Positron (or VS Code with the T extension), you can open an interactive `t` session directly in your editor terminal. 
-Running `t` (or `t repl`) inside Positron gives you a live, interactive environment where you can execute pipeline definitions, 
-evaluate `build_pipeline(p)` on the fly, and inspect nodes immediately. For this, you do need to configure your editor. Please
-follow the instructions over at [https://github.com/b-rodrigues/tlang/blob/main/docs/editors.md](https://github.com/b-rodrigues/tlang/blob/main/docs/editors.md)
+When working in Positron (or VS Code with the T extension), you can open an
+interactive `t` session directly in your editor terminal. Running `t` (or `t
+repl`) inside Positron gives you a live, interactive environment where you can
+execute pipeline definitions, evaluate `build_pipeline(p)` on the fly, and
+inspect nodes immediately. For this, you do need to configure your editor.
+Please follow the instructions over at
+[https://github.com/b-rodrigues/tlang/blob/main/docs/editors.md](https://github.com/b-rodrigues/tlang/blob/main/docs/editors.md)
 to correctly configure your editors.
 
 ### Inspecting Live Nodes: `read_node()`
 
-Once a pipeline is built in your session, you can inspect any node's computed result using `read_node()`. Suppose that we are
-working on the pipeline from before. To run it from the REPL, use `t_make()`:
+Once a pipeline is built in your session, you can inspect any node's computed
+result using `read_node()`. Suppose that we are working on the pipeline from
+before. To run it from the REPL, use `t_make()`:
 
 ```t
 #| eval: false
@@ -438,11 +450,13 @@ You can now read the contents of individual nodes:
 read_node(p.data)
 ```
 
-Note that `read_node()` strictly expects a `ComputedNode` reference (such as `p.data` or `p.stats`), not a raw string name.
+Note that `read_node()` strictly expects a `ComputedNode` reference (such as
+`p.data` or `p.stats`), not a raw string name.
 
 ### Inspecting Historical Builds: `read_past_node()`
 
-What if you want to inspect a node's output from a previous build, or examine artifacts when the pipeline object `p` is no longer in your active REPL memory?
+What if you want to inspect a node's output from a previous build, or examine
+artifacts when the pipeline object `p` is no longer in your active REPL memory?
 
 T provides `read_past_node()` for temporal introspection:
 
@@ -451,31 +465,47 @@ T provides `read_past_node()` for temporal introspection:
 read_past_node(p.data, which_log = "2026-08-14")
 ```
 
-Unlike `read_node()`, which looks up live in-scope nodes from the active pipeline object, `read_past_node()` captures the node identifier non-evaluatively and queries T's historical build logs in `_pipeline/logs/`. 
-The mandatory `which_log` parameter specifies a timestamp or log identifier pattern. 
-This allows you to inspect past run outputs, audit how dataset values evolved over time, or inspect artifacts from previous sessions without re-running the pipeline.
+Unlike `read_node()`, which looks up live in-scope nodes from the active
+pipeline object, `read_past_node()` captures the node identifier
+non-evaluatively and queries T's historical build logs in `_pipeline/logs/`. The
+mandatory `which_log` parameter specifies a timestamp or log identifier pattern.
+This allows you to inspect past run outputs, audit how dataset values evolved
+over time, or inspect artifacts from previous sessions without re-running the
+pipeline.
 
 ### High-Fidelity Representation of Foreign Objects
 
-One of the greatest benefits of the T REPL is how it displays results from foreign runtimes. 
-Whether a node was computed in pure T, R (`rn`), Python (`pyn`), or Julia (`jln`), `read_node()` automatically deserializes the underlying artifact 
-(Parquet, Arrow IPC, JSON, PMML, etc.) and converts it into a native, high-fidelity T representation.
+One of the greatest benefits of the T REPL is how it displays results from
+foreign runtimes. Whether a node was computed in pure T, R (`rn`), Python
+(`pyn`), or Julia (`jln`), `read_node()` automatically deserializes the
+underlying artifact (Parquet, Arrow IPC, JSON, PMML, etc.) and converts it into
+a native, high-fidelity T representation.
 
 When you call `read_node()` on a foreign node from the T REPL, T formats the output cleanly:
 
-- **DataFrames** (from R `tibble`/`data.frame`, Python `pandas`/`polars`, or Julia `DataFrame`) print with column names, data types, and row/column counts.
-- **Models** (such as an R `glm` serialized as PMML or a Python `scikit-learn` model) display structured model metadata and tidy coefficient tables via `fitted.coefficients`.
-- **Structured collections** (Lists and Dicts) display as clean, readable trees without low-level string formatting artifacts.
+- **DataFrames** (from R `tibble`/`data.frame`, Python `pandas`/`polars`, or
+    Julia `DataFrame`) print with column names, data types, and row/column
+    counts.
+- **Models** (such as an R `glm` serialized as PMML or a Python `scikit-learn`
+    model) display structured model metadata and tidy coefficient tables via
+    `fitted.coefficients`.
+- **Structured collections** (Lists and Dicts) display as clean, readable trees
+    without low-level string formatting artifacts.
 
-You get rich, instant feedback inside your interactive Positron session without writing custom glue code or manually serializing objects to temporary files. If the node
-produces an artifact that T doesn’t know how to deserialize, it is still possible to start a temporary R or Python (or Julia) shell to inspect that object, using
-`debug_node()`. Keep reading.
+You get rich, instant feedback inside your interactive Positron session without
+writing custom glue code or manually serializing objects to temporary files. If
+the node produces an artifact that T doesn’t know how to deserialize, it is
+still possible to start a temporary R or Python (or Julia) shell to inspect that
+object, using `debug_node()`. Keep reading.
 
 ### Stepping into Guest Runtimes: `debug_node()` (A Debugging Appetizer)
 
-Sometimes inspecting an output from the T REPL isn't enough—especially when a foreign script throws an unexpected runtime error or requires step-by-step code execution.
+Sometimes inspecting an output from the T REPL isn't enough—especially when a
+foreign script throws an unexpected runtime error or requires step-by-step code
+execution.
 
-T provides `debug_node()` to drop you directly from the T REPL into an interactive guest subshell for that specific language:
+T provides `debug_node()` to drop you directly from the T REPL into an
+interactive guest subshell for that specific language:
 
 ```t
 #| eval: false
@@ -486,9 +516,12 @@ Calling `debug_node()` automatically:
 
 1. Resolves all upstream dependency artifacts for `p.stats` from the Nix store.
 2. Sets up environment variables and imports context.
-3. Spawns an interactive REPL for the target language—a Python subshell with prompt `py> `, an R subshell with prompt `r> `, or a Julia subshell with prompt `jl> `.
+3. Spawns an interactive REPL for the target language—a Python subshell with
+  prompt `py> `, an R subshell with prompt `r> `, or a Julia subshell with prompt
+  `jl> `.
 
-Inside the guest subshell, the `tlang` companion library is available, allowing you to load upstream node data live:
+Inside the guest subshell, the `tlang` companion library is available, allowing
+you to load upstream node data live:
 
 ```python
 py> import tlang
@@ -496,12 +529,18 @@ py> data = tlang.read_node("data")
 py> print(data.head())
 ```
 
-To preserve workspace reproducibility during debugging, imperative package manager commands (such as `install.packages()`, `pip install`, or `Pkg.add()`) are dynamically 
-intercepted and blocked inside `debug_node()` subshells. If your code requires an additional package, simply declare it in `tproject.toml` and re-enter `nix develop`.
+To preserve workspace reproducibility during debugging, imperative package
+manager commands (such as `install.packages()`, `pip install`, or `Pkg.add()`)
+are dynamically intercepted and blocked inside `debug_node()` subshells. If your
+code requires an additional package, simply declare it in `tproject.toml` and
+re-enter `nix develop`.
 
-Pressing `Ctrl+D` (or typing `exit()`) exits the guest subshell and returns control seamlessly back to your parent T REPL session.
+Pressing `Ctrl+D` (or typing `exit()`) exits the guest subshell and returns
+control seamlessly back to your parent T REPL session.
 
-*(We will explore interactive subshells, failure logs, stack trace analysis, and advanced troubleshooting techniques in detail in an upcoming chapter dedicated to debugging).*
+*(We will explore interactive subshells, failure logs, stack trace analysis, and
+ advanced troubleshooting techniques in detail in an upcoming chapter dedicated
+ to debugging).*
 
 ## Pointing Nodes at External Scripts
 
