@@ -113,26 +113,30 @@ with AI-assisted development.
 If the previous section sounded abstract, consider what is happening right now
 to the practice of data science.
 
-AI coding assistants have become genuinely capable. For many routine tasks—data
-cleaning, visualisation, standard modelling—an LLM can write solid R or Python
-code faster than most humans. The cost of *writing* code is collapsing. This
-means the skill of typing correct syntax is becoming less valuable, and the
+AI coding assistants have become genuinely capable. For many routine tasks such
+as data cleaning, visualisation, standard modelling, an LLM can write solid R or
+Python code faster than most humans. The cost of *writing* code is collapsing.
+This means the skill of typing correct syntax is becoming less valuable, and the
 skill of knowing *what to ask for* is becoming more valuable.
 
-But here is the catch: knowing what to ask for requires domain knowledge that
-no LLM reliably has. Take a simple example. You are working with time series
-data on prices. Ask an LLM to clean and graph the data, and it will almost
-certainly produce competent code. But will it suggest deflating nominal prices
-to make them comparable across time? Maybe, maybe not. That depends on whether
-the LLM has encountered enough economic methodology in its training data, and
-whether *you* thought to ask. And crucially, will you recognise when the LLM's
-answer is subtly wrong? You don't know what you don't know. And neither does the
-LLM—but unlike you, it won't flag its own blind spots.
+But here is the catch: knowing what to ask for requires domain knowledge that no
+LLM reliably has, or rather, doesn't reliably surface to you. Take a simple
+example. You are working with time series data on prices. Ask an LLM to clean
+and graph the data, and it will almost certainly produce competent code. But
+will it suggest deflating nominal prices to make them comparable across time?
+Maybe, maybe not. That depends on whether the LLM has encountered enough
+economic methodology in its training data, and whether *you* thought to ask. And
+crucially, will you recognise when the LLM's answer is subtly wrong? You don't
+know what you don't know. And neither does the LLM but, unlike you, it won't flag
+its own blind spots... or perhaps it will, depending on its training. But you can't
+rely on LLMs *perhaps* telling you what you need to pay attention to.
 
 This points to a skill that is going to matter more, not less, as AI matures:
 the ability to interrogate and challenge an LLM's output. An AI assistant is
 confident by default. It will produce plausible-sounding analysis regardless of
-whether the underlying reasoning is sound. The person who gets value from it is
+whether the underlying reasoning is sound, and even when it does provide some
+points you need to pay attention to: how can you be sure those are the right things
+to pay attention to? The person who gets value from it is
 not the one who accepts the first answer, but the one who can ask *"wait, did
 you account for inflation here?"*, or *"why did you choose this model over
 that one?"*, or *"what assumptions are you making about the data generating
@@ -150,7 +154,7 @@ produces, may outperform a narrower specialist who can no longer leverage their
 deep implementation skills because the LLM already has them.
 
 I will close this section with a personal anecdote that I think illustrates the
-point well. Alongside this book, I have been building a Game Boy game—using
+point well. Alongside this book, I have been building a Game Boy game using
 LLMs to write essentially all the code. I know nothing about Game Boy
 development: I do not know the hardware architecture, I have never written a
 line of assembly, and I have certainly never shipped a cartridge. But I
@@ -158,18 +162,19 @@ approached the project exactly as I would approach a data science project.
 
 The first thing I did was set up a reproducible development environment. The
 second was to make the LLM build tooling to *query the game's state
-programmatically*: not just run the game, but interrogate it—what is the
+programmatically*: not just run the game, but interrogate it. What is the
 player's position? What are the active sprites? What is the current game phase?
 With that infrastructure in place, I could instruct the LLM to run test
 scenarios from any point in the game, with any parameters, and get structured
 feedback. The game could be developed and debugged in a principled loop rather
 than by manually playing through it each time.
 
-The result: an actual, running Game Boy game, built by someone who cannot write
-the underlying code. What I contributed was the *systems thinking*: insisting on
-reproducibility, insisting on programmable state inspection, insisting on a
-feedback loop that could be automated. The LLM contributed the implementation.
-Neither of us could have done it alone.
+The result: an actual, running Game Boy game (well, more of a demo really, but
+still), built by someone who cannot write the underlying code. What I
+contributed was the *systems thinking*: insisting on reproducibility, insisting
+on programmable state inspection, insisting on a feedback loop that could be
+automated. The LLM contributed the implementation. Neither of us could have done
+it alone.
 
 This is the approach that this book is trying to teach for data science. The
 specific tools matter less than the underlying mental model:
@@ -220,10 +225,10 @@ T provides a functional, immutable language for constructing composable
 *micropipelines*: first-class, introspectable computation graphs that coordinate
 R, Python, Julia, Quarto, and Shell execution within a unified system. Pipelines
 in T are not configuration artifacts but executable program structures with
-explicit dataflow, typed nodes, and content-addressed outputs. And unlike
-any other language used for data science, where reproducibility is more often
-than not bolted on, T makes reproducibility impossible to opt out of: every node in a T
-pipeline runs in its own hermetic Nix sandbox, and every output is
+explicit dataflow, typed nodes, and content-addressed outputs. And unlike any
+other language used for data science, where reproducibility is more often than
+not bolted on, T makes reproducibility impossible to opt out of: every node in a
+T pipeline runs in its own hermetic Nix sandbox, and every output is
 content-addressed by design. As far as I know, T is literally the first
 reproducibility by design programming language.
 
@@ -237,20 +242,19 @@ your project is explicit, whether the implementation is R, Python, or Julia
 becomes almost an implementation detail. That is the main design principle
 behind T.
 
-And here is an important reassurance if you already live in R, Python, or
-Julia: **you do not have to use T's own built-in functions at all.** T is a
-superset, not a replacement. You can write every node's logic in the language
-you already know — pure R, pure Python, or pure Julia — and let T do exactly
-what it is best at: orchestrating those nodes into a reproducible pipeline. T's
-data-manipulation verbs and other builtins are there when you want them, but
-for pure orchestration they are entirely optional.
+And here is an important reassurance if you already live in R, Python, or Julia:
+**you do not have to use T's own built-in functions at all.** T is a superset,
+not a replacement. You can write every node's logic in the language you already
+know and let T do exactly what it is best at: orchestrating those nodes into a
+reproducible pipeline. T's data-manipulation verbs and other builtins are there
+when you want them, but for pure orchestration they are entirely optional.
 
 A crucial point to internalise: **the primary way to work with T is to write
 Pipelines.** T is not, first and foremost, a scripting language. If you write
 a plain script full of commands and try to execute it with `t run`, it will
 not run at all: non-interactive execution requires a pipeline. You can
 override this with the `--unsafe` flag (`t run --unsafe script.t`), but that
-is really not recommended — think of it as a workaround for little helper
+is really not recommended. Think of it as a workaround for little helper
 scripts, for example on CI.
 
 That said, T does come with a REPL. In the REPL you can run commands
@@ -258,14 +262,15 @@ interactively, exactly the way you would in R or Python. Later in the book
 (Chapter 14), we will see how T's own data-manipulation verbs let you wrangle
 data, and you can do all of that right inside the REPL.
 
-T is also designed to treat pair-programming with LLMs, or even delegating the entire 
-pipeline-writing process to an LLM, as a first-class programming model. 
-To support this, T provides built-in mechanisms for LLMs to introspect and query build artifacts with ease. 
-Each T project also includes a dedicated `AGENTS.md` file that guides the LLM on how to properly write and work with T pipelines.
-Pair programming with LLMs will be studied later though. A plain-text,
-explicit pipeline is what makes this work: it is far easier for a model to
-read, write, and verify a diffable description of the computation than to
-reason about the hidden state of an interactive notebook (see Chapter 3).
+T is also designed to treat pair-programming with LLMs, or even delegating the
+entire pipeline-writing process to an LLM, as a first-class programming model.
+To support this, T provides built-in mechanisms for LLMs to introspect and query
+build artifacts with ease. Each T project also includes a dedicated `AGENTS.md`
+file that guides the LLM on how to properly write and work with T pipelines.
+Pair programming with LLMs will be studied later though. A plain-text, explicit
+pipeline is what makes this work: it is far easier for a model to read, write,
+and verify a diffable description of the computation than to reason about the
+hidden state of an interactive notebook (see Chapter 3).
 
 The workflow is simple:
 
@@ -295,9 +300,11 @@ that you find it useful too.
 **You do not have to switch.** If `{targets}` [@landau2021] (for pure-R work)
 or Snakemake [@koster2012] (for polyglot work) already serve you well, that is
 a perfectly good choice — both are robust, well documented, and backed by
-large communities. The core ideas in this book — Nix-managed environments, an
-explicit pipeline, and testing — apply no matter which orchestrator you pick.
-T is an option, not a requirement.
+large communities. The core ideas in this book (Nix-managed environments, an
+explicit pipeline, and testing) apply no matter which orchestrator you pick.
+T is an option, not a requirement, but one I would urge you to consider, as I
+believe it tackles the problem of reproducibility *correctly*, thanks on being
+built on top of Nix.
 
 **What T adds** is that the *environment* and the *pipeline* are the same
 language: one file defines your exact, bit-for-bit reproducible stack *and*
