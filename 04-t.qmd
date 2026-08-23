@@ -6,6 +6,159 @@ Now that we have Nix installed, and our IDE configured we can actually tackle
 the reproducibility puzzle. This chapter will introduce T, a domain-specific
 language developed to build reproducible analytical pipelines using Python, R or Julia.
 
+Before anything, I think it's important to see what an actual T pipeline looks like,
+to ground the rest of our discussion. Here is an example (you can find this example,
+and many others, in the [T Demos Repository](https://github.com/b-rodrigues/t_demos/tree/master/yanai_lercher_2020_t)^[https://github.com/b-rodrigues/t_demos/tree/master/yanai_lercher_2020_t]):
+
+```t
+p = pipeline {
+  -- 1. Read gorilla image
+  gorilla_pixels = pyn(
+    command = <{
+from PIL import Image
+import numpy
+def read_image(x):
+    im = Image.open(x).convert("L")
+    pixels = numpy.asarray(im)
+    return pixels
+
+gorilla_pixels = read_image("path/to/gorilla-waving-cartoon.jpg")
+    }>,
+    include = ["data/gorilla"]
+  )
+
+  -- 2. Threshold level
+  threshold_level = pyn(command = <{ threshold_level = 50 }>)
+
+  -- 3. Compute coordinates
+  py_coords = pyn(
+    command = <{
+import numpy
+py_coords = numpy.column_stack(numpy.where(gorilla_pixels < threshold_level))
+    }>
+  )
+
+  -- 4. Convert to DataFrame for R (transfer via Arrow)
+  raw_coords = pyn(
+    command = <{
+import pandas as pd
+raw_coords = pd.DataFrame(py_coords, columns=["V1", "V2"])
+    }>,
+    serializer = ^ipc
+  )
+
+  -- 5. Clean coordinates in R
+  coords = rn(
+    command = <{
+library(dplyr)
+coords <- clean_coords(raw_coords)
+    }>,
+    functions = ["src/functions.R"],
+    deserializer = ^ipc,
+    serializer = ^ipc
+  )
+
+  -- 6. Gender distribution
+  gender_dist = rn(
+    command = <{
+library(dplyr)
+gender_dist <- gender_distribution(coords)
+    }>,
+    functions = ["src/functions.R"],
+    deserializer = ^ipc
+  )
+
+  -- 7. Plots
+  plot1 = rn(
+    command = <{
+library(dplyr)
+library(ggplot2)
+plot1 <- make_plot1(coords)
+    }>,
+    functions = ["src/functions.R"],
+    deserializer = ^ipc
+  )
+
+  plot2 = rn(
+    command = <{
+library(dplyr)
+library(ggplot2)
+plot2 <- make_plot2(coords)
+    }>,
+    functions = ["src/functions.R"],
+    deserializer = ^ipc
+  )
+
+  -- Render Quarto report
+  report = node(script = "src/report.qmd", runtime = Quarto)
+}
+
+-- Materialize
+populate_pipeline(p, build = true, verbose=1)
+
+```
+
+You do not need to understand every line yet, but let's walk through it
+together, because this single example contains the whole idea.
+
+**The big picture.** `p = pipeline { ... }` defines a *pipeline*: a directed
+graph of named computation steps called *nodes*. Every name inside the braces
+is a node, and `p` itself is a first-class value you can inspect, transform,
+and pass around. Nothing runs yet — the code in the braces is a description.
+The last line, `populate_pipeline(p, build = true, verbose = 1)`, is what
+actually executes the pipeline: it materializes the graph and builds every
+node in dependency order, printing each node's output as it goes.
+
+**The nodes.** Each node is a computation in a specific runtime:
+
+- `pyn(...)` declares a Python node, `rn(...)` an R node, and
+  `node(script = ..., runtime = Quarto)` a Quarto node that renders the final
+  report.
+- The code inside `<{ ... }>` is the node's body. T stores it verbatim — it
+  does not parse or execute it itself. When the node is built, the code runs
+  inside a hermetic Nix sandbox provisioned for that runtime.
+- `gorilla_pixels` opens the image and converts it to a grayscale array;
+  `include = ["data/gorilla"]` copies the raw image into the sandbox so the
+  code can find it.
+- `threshold_level` is a node that produces a single number. It looks
+  trivial, but that is the point: because the threshold is a node, it is part
+  of the graph. Change it, and only the downstream nodes re-run.
+- The rest follows the data: `py_coords` locates the dark pixels,
+  `raw_coords` turns them into a pandas DataFrame, `coords` cleans them in R,
+  and `gender_dist`, `plot1`, and `plot2` produce the final table and plots.
+
+**How the nodes are wired together.** Notice that no node says "I depend on
+X". T infers the dependencies by scanning each node's code for names:
+`py_coords`'s body mentions `gorilla_pixels` and `threshold_level`, so T
+draws edges from those nodes into `py_coords`; `coords` mentions
+`raw_coords`, and so on. You can declare the nodes in any order and T assembles
+the graph, checks it for cycles, and builds in the right order.
+
+**Crossing the language boundary.** The interesting part of this analysis is
+that data moves from Python to R. That is what `serializer` and
+`deserializer` are for. `serializer = ^ipc` tells T to write the node's
+output as an Arrow IPC file, a columnar format that both pandas and R's
+`{arrow}` package read natively, so the data crosses the language boundary
+without a lossy CSV round-trip. The R node's `deserializer = ^ipc` reads it
+back. And `functions = ["src/functions.R"]` sources a file of R helpers
+(`clean_coords()`, `make_plot1()`, …) into the sandbox before the node's
+command runs.
+
+**Why this is reproducible.** Every node runs in its own Nix sandbox, with
+exactly the packages declared for the project, so no machine-specific state
+can leak in. And every node's output is cached by content: re-run the
+pipeline and T rebuilds only the nodes whose inputs actually changed. The
+whole analysis — image, threshold, cleaning, plots, report — is now a single
+machine-readable description that anyone can execute from raw inputs to final
+outputs.
+
+We will come back to each of these pieces: T's syntax in the next section,
+the project's environment in the rest of this chapter, and building your
+first pipeline in Chapter 5. For now, hold onto the core idea: *a pipeline is
+a named graph of computations, and the dependencies are the names you use.*
+
+Let's go back to some theory before moving on.
+
 ### The Reproducibility Puzzle
 
 Reproducibility in research and data science exists on a continuum. At one end,
@@ -215,11 +368,11 @@ primarily, you were a second-class citizen.
 reproducibility-first domain-specific language (DSL) for polyglot data science.
 It is *not* an R package. It is its own language, with its own runtime, its own
 REPL, and its own ecosystem of packages, built from the ground up to treat R,
-Python, Julia, and Shell as equals. T is meant to orchestrate R, Python and Julia, 
-but critically, T does not just *orchestrate*
-environments defined elsewhere: it *is* the environment definition system. Every
-T project is a Nix flake, and T manages the entire stack: language runtimes,
-system dependencies, and pipeline execution under one roof.
+Python, Julia, and Shell as equals. T is meant to orchestrate R, Python and
+Julia, but critically, T does not just *orchestrate* environments defined
+elsewhere: it *is* the environment definition system. Every T project is a Nix
+flake, and T manages the entire stack: language runtimes, system dependencies,
+and pipeline execution under one roof.
 
 T provides a functional, immutable language for constructing composable
 *micropipelines*: first-class, introspectable computation graphs that coordinate
@@ -327,7 +480,11 @@ are.
 
 This chapter covers everything you need to know to create project-specific,
 reproducible development environments and pipelines for your polyglot data
-science projects.
+science projects. The next section focuses on T, and its syntax; but I want to
+be very clear. You do not need to write your analyses in T! You can continue
+working with R, Python or Julia, and only use T for orchestration. But T also
+has some interesting features as a language, and you might want to take a look
+at its syntax and capabilities.
 
 ## A Quick Tour of T Syntax
 
@@ -371,16 +528,22 @@ language's defining ideas: **errors are values**.
 
 ```t
 #| eval: false
-[1, 2, 3] |> map(\(v) v * v) |> sum      -- 14
-error("boom") |> double                   -- Error: short-circuits
+[1, 2, 3] |> map(\(v) v * v) |> sum -- 14
+error("boom") |> double             -- Error: short-circuits
 
 handle = \(x) if (is_error(x)) "recovered" else x
 error("boom") ?|> handle                  -- "recovered"
 ```
 
+`double()` will not even run, since `|>` short-circuits. However, in the second
+example, `handle()` will get the error object passed to it because of `?|>` and
+will do something with it (whatever you programmed `handle()` to do with
+errors).
+
 ### Imports
 
-Import a whole package, or specific names from a package or another `.t` file:
+If you create a T package, you can import it in a pipeline, or import specific
+functions from it. You can also import functions defined in plain scripts:
 
 ```t
 #| eval: false
@@ -389,7 +552,13 @@ import mypackage [fn1, fn2]
 import "helpers.t" [clean_data, normalize]
 ```
 
+Not that to use R, Python or Julia packages, the import statements of each
+respective language needs to be written inside the required `<{}>` foreign code
+blocks, as we shall see below.
+
 ### Sequence generation
+
+Inspired by R:
 
 ```t
 #| eval: false
@@ -427,7 +596,7 @@ left to right without parentheses, and `1 + 2 * 3` still means `1 + (2 * 3)`.
 
 Unary operators sit above everything in the table: `-` (negation), `!`
 (logical not), and `!!` / `!!!` (unquote and unquote-splice, the
-metaprogramming tools from Chapter 15).
+metaprogramming tools from Chapter 15, heavily inspired by R's `{rlang}`).
 
 Two distinctions matter more than any single operator. First, the
 **scalar-versus-broadcast split**: the plain operators (`+`, `==`, `&`, …)
@@ -455,7 +624,7 @@ enough to hold in your head:
 | Factor | a categorical column | Chapter 14 |
 | Date / Datetime | `ymd("2024-01-01")` | Chapter 14 |
 | Formula | `mpg ~ wt` | models, Chapter 14 |
-| Lens | `df["mpg"]` | Chapter 15 |
+| Lens | `get(mtcars, col_lens("mpg"))` | Chapter 15 |
 | Lambda | `\(x) x + 1` | functions, Chapter 15 |
 | Pipeline / Node | `pipeline { ... }` | Chapters 5 and 8 |
 | Intent | `intent { ... }` | Chapter 15 |
@@ -473,9 +642,9 @@ expression, and `$age` picks one out. You write expressions *over columns*,
 not over R or Python objects.
 
 **Non-standard evaluation.** Some verbs need the *expression*, not its value.
-`mutate($bonus = $salary * 0.1)` captures the right-hand side and evaluates
-it row-wise later; a bare name in that position is captured as a symbol, not
-looked up. The explicit tools for this — `quo`, `!!`, `!!!` — are in Chapter
+`mutate($bonus = $salary * 0.1)` captures the right-hand side and evaluates it
+row-wise later; a bare name in that position is captured as a symbol, not looked
+up. The explicit tools for this (`quo`, `!!`, `!!!`) are disscussed in Chapter
 15; the verbs in Chapter 14 use it under the hood.
 
 **Errors as values.** A failing expression does not crash the program; it
@@ -493,7 +662,7 @@ functions, and semantic types like `DataFrame[schema]`. We take it apart in
 Chapter 15; for now, read an annotation as a promise about what a function
 accepts and returns.
 
-T's functions — how to define them, closures, and higher-order functions — are
+T's functions (how to define them, closures, and higher-order functions) are
 a topic in their own right, and we take them up properly in Chapter 15.
 
 ## Transitioning to Nix-Managed R
@@ -547,18 +716,19 @@ cd my-analysis
 nix develop
 ```
 
-That last command, `nix develop` is going to be very important. It is the 
-command that enters the project's development shell, which provides the pinned version
-of `t` alongside all declared R, Python, and Julia runtimes. All subsequent
-commands should be run inside this shell. To laeve that shell, type `exit` just
-like we did above to leave the temporary shell to bootstrap our project.
+That last command, `nix develop` is going to be very important. It is the
+command that enters the project's development shell, which provides the pinned
+version of `t` alongside all declared R, Python, and Julia runtimes. All
+subsequent commands should be run inside this shell. To leave that shell, type
+`exit` just like we did above to leave the temporary shell to bootstrap our
+project.
 
 ::: {.callout-tip}
 ## Getting LLM assistance with T
 
-As already mentioned, T is designed from the ground up for AI-assisted development. When you
-initialize a new T project, two files are automatically generated in the
-project root:
+As already mentioned, T is designed from the ground up for AI-assisted
+development. When you initialize a new T project, two files are automatically
+generated in the project root:
 
 - **`AGENTS.md`**: A project-specific onboarding guide that tells LLMs how to
   work within your project's architecture.
@@ -594,8 +764,9 @@ The two most important files are `tproject.toml` and `src/pipeline.t`.
 
 ### Declaring Dependencies with `tproject.toml`
 
-T projects are explicit: R, Python, and Julia packages belong in `tproject.toml`, not in ad-hoc `install.packages()`, `pip install`, or `Pkg.add()` calls. 
-Open `tproject.toml` and add the runtime packages you need:
+T projects are explicit: R, Python, and Julia packages belong in
+`tproject.toml`, not in ad-hoc `install.packages()`, `pip install`, or
+`Pkg.add()` calls. Open `tproject.toml` and add the runtime packages you need:
 
 ```toml
 [r-dependencies]
@@ -610,8 +781,9 @@ version = "lts"
 packages = ["DataFrames", "CSV", "GLM"]
 ```
 
-For Julia, the `version` field defaults to `"lts"` (the current Julia long-term-support release). 
-To pin a specific Julia version, use formats like `"1.10"` or `"1.11"`, which map to `julia_1_10` or `julia_1_11` in Nixpkgs.
+For Julia, the `version` field defaults to `"lts"` (the current Julia
+long-term-support release). To pin a specific Julia version, use formats like
+`"1.10"` or `"1.11"`, which map to `julia_1_10` or `julia_1_11` in Nixpkgs.
 
 After editing `tproject.toml`, sync the project environment:
 
@@ -634,18 +806,23 @@ to be tracked by Git. You will get this error again:
 
 ```bash
 bash-5.3$ t update
-No T package dependencies declared in tproject.toml; project defines 3 R dependencies, 4 Python dependencies and 2 additional tools.
-Syncing 0 T dependencies, 3 R dependencies, 4 Python dependencies, 0 Julia dependencies and 2 additional tools from tproject.toml → flake.nix...
-Running nix flake update...
-Error: Failed to update dependencies: Command 'nix flake update --accept-flake-config' failed (exit 1): error: Path 'basic_t/flake.nix' in the repository "/home/user/projects/project-1" is not tracked by Git.
+
+No T package dependencies declared in tproject.toml; project defines 3 R
+dependencies, 4 Python dependencies and 2 additional tools.
+
+Syncing 0 T dependencies, 3 R dependencies, 4 Python dependencies, 0 Julia
+dependencies and 2 additional tools from tproject.toml → flake.nix... Running
+nix flake update... Error: Failed to update dependencies: Command 'nix flake
+update --accept-flake-config' failed (exit 1): error: Path 'basic_t/flake.nix'
+in the repository "/home/user/projects/project-1" is not tracked by Git.
 
        To make it visible to Nix, run:
 
        git -C "/home/user/projects/project-1" add "flake.nix"
 ```
 
-Follow the instructions and then run `t update` again. This is a one-time setup, and if 
-everything goes well, you should see this:
+Follow the instructions and then run `t update` again. This is a one-time setup,
+and if everything goes well, you should see this:
 
 ```bash
 Running nix flake update...
@@ -654,7 +831,8 @@ flake.lock changes:
 Updated.
 ```
 
-Then exit the temporary shell, and re-enter the development shell so the updated package set is active:
+Then exit the temporary shell, and re-enter the development shell so the updated
+package set is active:
 
 ```bash
 exit
@@ -663,43 +841,64 @@ nix develop
 
 #### Why NOT to use `install.packages()` / `pip install` / `Pkg.add()`
 
-It's crucial to understand: **never call imperative installation commands from within a T project**. Here's why:
+It's crucial to understand: **never call imperative installation commands from
+within a T project**. Here's why:
 
-1. **Technically, it won’t work:** Computations defined in your pipeline run inside hermetic Nix sandboxes.
-  Anything not declared through Nix simply will not be available during pipeline execution.
-2. **Conceptually, it defeats reproducibility:** The whole point of T's Nix integration is that your environment is fully defined by `tproject.toml` and `flake.lock`. 
-  Ad-hoc installations break this guarantee.
+1. **Technically, it won’t work:** Computations defined in your pipeline run
+  inside hermetic Nix sandboxes. Anything not declared through Nix simply will
+  not be available during pipeline execution.
+2. **Conceptually, it defeats reproducibility:** The whole point of T's Nix
+  integration is that your environment is fully defined by `tproject.toml` and
+  `flake.lock`. Ad-hoc installations break this guarantee.
 
-Instead, add packages to `tproject.toml` and run `t update`. Calling `install.packages()` (or equivalent commands for Python and Julia) will raise an error.
+Instead, add packages to `tproject.toml` and run `t update`. Calling
+`install.packages()` (or equivalent commands for Python and Julia) will raise an
+error.
 
 ### Alternative installation methods
 
-T provides several other ways to install packages, using `uv` for Python or `{renv}` for R.
-By default, T uses Nix to resolve packages directly. We recommend sticking to the default resolver as much as possible. 
-The default approach works exceptionally well for **Julia** and **R** because virtually all packages in their ecosystems are available through Nix. This is not the case for **Python**. 
+T provides several other ways to install packages, using `uv` for Python or
+`{renv}` for R. By default, T uses Nix to resolve packages directly. We
+recommend sticking to the default resolver as much as possible. The default
+approach works exceptionally well for **Julia** and **R** because virtually all
+packages in their ecosystems are available through Nix. This is not the case for
+**Python**.
 
-Python’s PyPI contains hundreds of thousands of packages of varying quality. 
-If you use Python for data analysis, you’ve likely hit this issue: you try to install one package that requires `numpy < 2`, and another that requires `numpy >= 2`. 
-You're *cooked*, as the youths say. The resolver can't help you because the requirements are literally incompatible. 
-No amount of Rust-written package managers can solve this, the underlying issue is PyPI's ecosystem model.
+Python’s PyPI contains hundreds of thousands of packages of varying quality. If
+you use Python for data analysis, you’ve likely hit this issue: you try to
+install one package that requires `numpy < 2`, and another that requires `numpy
+>= 2`. You're *cooked*, as the youths say. The resolver can't help you because
+the requirements are literally incompatible. No amount of Rust-written package
+managers can solve this, the underlying issue is PyPI's ecosystem model.
 
-In R, this situation rarely happens. CRAN enforces a system where packages are continuously tested against their reverse dependencies. 
-If `{ggplot2}` or `{dplyr}` updates in a way that breaks other packages, CRAN catches it. 
-Authors have two weeks to fix the issue, or their package gets archived. As a result, if a package is on CRAN, it works. CRAN manages this consistency across ~27,000 packages.
+In R, this situation rarely happens. CRAN enforces a system where packages are
+continuously tested against their reverse dependencies. If `{ggplot2}` or
+`{dplyr}` updates in a way that breaks other packages, CRAN catches it. Authors
+have two weeks to fix the issue, or their package gets archived. As a result, if
+a package is on CRAN, it works. CRAN manages this consistency across ~27,000
+packages.
 
-PyPI does not do this. It hosts packages without global consistency checks. If Package A and Package B declare mutually exclusive requirements, PyPI hosts them both anyway. 
-Nix tries to curate Python packages, but because of PyPI's constraints, the entirety of PyPI cannot be made available through Nix in an automated way. 
-Occasionally, you can patch a package's `pyproject.toml` in Nix to relax incompatible constraints (e.g., changing `numpy = "^1"` to `numpy = ">=1"`), but patching isn't a universal solution.
+PyPI does not do this. It hosts packages without global consistency checks. If
+Package A and Package B declare mutually exclusive requirements, PyPI hosts them
+both anyway. Nix tries to curate Python packages, but because of PyPI's
+constraints, the entirety of PyPI cannot be made available through Nix in an
+automated way. Occasionally, you can patch a package's `pyproject.toml` in Nix
+to relax incompatible constraints (e.g., changing `numpy = "^1"` to `numpy =
+">=1"`), but patching isn't a universal solution.
 
-This is why T provides alternative resolvers (`uv` for Python and `{renv}` for R):
-* For Python (`uv`): Allows Nix to build the environment while fetching packages directly from PyPI via `uv`. 
-  This is especially useful if you are collaborating with non-T/Nix users who rely on standard `pyproject.toml` and `uv.lock` files.
-
-* **For R (`renv`):** Allows you to reuse existing `renv.lock` files for collaboration or legacy workflows.
+This is why T provides alternative resolvers (`uv` for Python and `{renv}` for
+R):
+* For Python (`uv`): Allows Nix to build the environment while fetching packages
+  directly from PyPI via `uv`. This is especially useful if you are
+  collaborating with non-T/Nix users who rely on standard `pyproject.toml` and
+  `uv.lock` files.
+* **For R (`renv`):** Allows you to reuse existing `renv.lock` files for
+  collaboration or legacy workflows.
 
 #### Alternative Python Resolver: `uv`
 
-Instead of declaring Python packages directly in `tproject.toml`, you can delegate dependency management to `uv`. 
+Instead of declaring Python packages directly in `tproject.toml`, you can
+delegate dependency management to `uv`.
 
 First, configure `tproject.toml`:
 
@@ -717,13 +916,19 @@ python/
   uv.lock
 ```
 
-The `version` field in `tproject.toml` is **optional** when using the `uv` resolver. If omitted, T infers the Nixpkgs Python attribute (e.g., `python312`) from the `requires-python` field in `python/pyproject.toml`. 
+The `version` field in `tproject.toml` is **optional** when using the `uv`
+resolver. If omitted, T infers the Nixpkgs Python attribute (e.g., `python312`)
+from the `requires-python` field in `python/pyproject.toml`.
 
-The inference accepts specifiers that constrain to a single minor version (`==3.12`, `==3.12.*`, `~=3.12`, `>=3.12,<3.13`) and errors on open-ended ranges (`>=3.12`). 
-If an explicit `version` conflicts with `requires-python`, T prints a warning and uses the explicit version.
+The inference accepts specifiers that constrain to a single minor version
+(`==3.12`, `==3.12.*`, `~=3.12`, `>=3.12,<3.13`) and errors on open-ended ranges
+(`>=3.12`). If an explicit `version` conflicts with `requires-python`, T prints
+a warning and uses the explicit version.
 
-When using `resolver = "uv"`, do **not** set `[py-dependencies].packages`. Python dependencies are declared exclusively in `pyproject.toml` and locked by `uv.lock`. 
-Running `t update` generates `uv2nix`/`pyproject.nix` inputs in `flake.nix` and builds the Python environment as a Nix virtual environment.
+When using `resolver = "uv"`, do **not** set `[py-dependencies].packages`.
+Python dependencies are declared exclusively in `pyproject.toml` and locked by
+`uv.lock`. Running `t update` generates `uv2nix`/`pyproject.nix` inputs in
+`flake.nix` and builds the Python environment as a Nix virtual environment.
 
 If you don't have `uv` installed locally and lack existing metadata:
 
@@ -759,7 +964,9 @@ If you don't have `uv` installed locally and lack existing metadata:
    t update
    ```
 
-This reads the `uv` workspace, adds `pyproject-nix`, `uv2nix`, and `pyproject-build-systems` inputs to `flake.nix`, and configures the Python environment to use `pySet.mkVirtualEnv`.
+This reads the `uv` workspace, adds `pyproject-nix`, `uv2nix`, and
+`pyproject-build-systems` inputs to `flake.nix`, and configures the Python
+environment to use `pySet.mkVirtualEnv`.
 
 #### Alternative R Options: `{renv}` & Git Repositories
 
@@ -772,16 +979,24 @@ resolver = "renv"
 
 When `resolver = "renv"`, T automatically discovers all R dependencies from `renv.lock`:
 
-* **CRAN packages** are read from each entry's `Repository` or `Bioconductor` field and mapped to `pkgs.rPackages.*`.
-* **GitHub/GitLab packages** are fetched via `builtins.fetchGit` using the `RemoteHost`, `RemoteUsername`, `RemoteRepo`, and `RemoteSha` fields (supports `api.github.com` and `gitlab.com`).
-* **Remotes** are parsed and injected as `buildInputs` for dependent Git packages.
+* **CRAN packages** are read from each entry's `Repository` or `Bioconductor`
+  field and mapped to `pkgs.rPackages.*`.
+* **GitHub/GitLab packages** are fetched via `builtins.fetchGit` using the
+  `RemoteHost`, `RemoteUsername`, `RemoteRepo`, and `RemoteSha` fields (supports
+  `api.github.com` and `gitlab.com`).
+* **Remotes** are parsed and injected as `buildInputs` for dependent Git
+  packages.
 * Base R packages (`R`, `methods`, `stats`, etc.) are automatically filtered out.
 
-No `packages` list is required in `tproject.toml`; `renv.lock` serves as the single source of truth. Run `t update` to regenerate `flake.nix`.
+No `packages` list is required in `tproject.toml`; `renv.lock` serves as the
+single source of truth. Run `t update` to regenerate `flake.nix`.
 
-> **Note:** This does not install the *exact* package versions locked in `renv.lock`. Instead, it installs the package versions available in Nixpkgs at the date defined in your `tproject.toml` (`[nixpkgs].date`).
+> **Note:** This does not install the *exact* package versions locked in
+> `renv.lock`. Instead, it installs the package versions available in Nixpkgs at
+> the date defined in your `tproject.toml` (`[nixpkgs].date`).
 
-To install R packages directly from remote Git repositories (e.g., GitHub), declare them directly in `tproject.toml`:
+To install R packages directly from remote Git repositories (e.g., GitHub),
+declare them directly in `tproject.toml`:
 
 ```toml
 [r-dependencies]
@@ -789,15 +1004,20 @@ packages = ["dplyr"]
 my_pkg = { git = "https://github.com/user/my-pkg", rev = "abc123def456" }
 ```
 
-The `rev` field must be a full Git commit hash. Each Git package is injected into every R pipeline node's `buildInputs`. When using `resolver = "renv"`, Git packages declared in `tproject.toml` are automatically merged with those in `renv.lock`.
+The `rev` field must be a full Git commit hash. Each Git package is injected
+into every R pipeline node's `buildInputs`. When using `resolver = "renv"`, Git
+packages declared in `tproject.toml` are automatically merged with those in
+`renv.lock`.
 
 ### System Dependencies and LaTeX
 
-Beyond language packages, you can declare system tools and LaTeX packages required by your project.
+Beyond language packages, you can declare system tools and LaTeX packages
+required by your project.
 
 #### Additional Tools
 
-Use `[additional-tools]` to make CLI utilities, compilers, or system libraries available in your shell and pipeline sandboxes:
+Use `[additional-tools]` to make CLI utilities, compilers, or system libraries
+available in your shell and pipeline sandboxes:
 
 ```toml
 [additional-tools]
@@ -806,7 +1026,9 @@ packages = ["git", "jq", "gawk", "pandoc", "typst"]
 
 #### LaTeX Support
 
-If your project generates PDFs or reports, use the `[latex]` section. T automatically provides a `texlive` environment (starting from `scheme-small`). Simply list any extra LaTeX packages needed:
+If your project generates PDFs or reports, use the `[latex]` section. T
+automatically provides a `texlive` environment (starting from `scheme-small`).
+Simply list any extra LaTeX packages needed:
 
 ```toml
 [latex]
