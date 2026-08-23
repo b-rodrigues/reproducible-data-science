@@ -531,7 +531,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">5.1</span> Introduction</h2>
 <p>In the previous chapter we set up a T project: we bootstrapped T, declared dependencies in <code>tproject.toml</code>, and entered the project’s <code>nix develop</code> shell. Now it is time to actually build something.</p>
-<p>This chapter is deliberately hands-on. We will write a pipeline, build it, break it, inspect it, fix it, and extend it. Theory comes later—Chapter 6 explains <em>why</em> pipelines work the way they do. Here the goal is to get your hands on the machinery and get comfortable with the core development loop.</p>
+<p>This chapter is deliberately hands-on. We will write a pipeline, build it, break it, inspect it, fix it, and extend it. Theory comes later; Chapter 6 explains <em>why</em> pipelines work the way they do. Here the goal is to get your hands on the machinery and get comfortable with the core development loop.</p>
 </section>
 <section id="how-a-t-pipeline-executes" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="how-a-t-pipeline-executes"><span class="header-section-number">5.2</span> How a T Pipeline Executes</h2>
@@ -557,9 +557,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 
 <span class="fu">build_pipeline</span>(p)</code></pre>
-<p>This pipeline doesn’t use any R, Python or Julia code yet, but is written in pure T. T comes with many builtin functions, and even data manipulation verbs inspired by <code>{dplyr}</code>! We return to them in Chapter 14.</p>
+<p>This pipeline doesn’t use any R, Python or Julia code yet, but is written in pure T. As shown in the previosu chapter, T comes with many builtin functions, and even data manipulation verbs inspired by <code>{dplyr}</code>! We return to them in Chapter 14.</p>
 <p>Now let’s run the pipeline. There are two ways of doing it. From the terminal (inside of the environment):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> developt</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nix</span> develop</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>or inside an interactive T session, using <code>t_make()</code>.</p>
 <p>T resolves the dependency graph (<code>total</code> depends on <code>x</code> and <code>y</code>), builds each node, and caches the results. Access any node’s value with dot notation in the REPL:</p>
@@ -576,8 +576,8 @@ p.total  <span class="co">-- 30</span></code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> check src/pipeline.t   <span class="co"># validate cheaply, catches errors in milliseconds</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t     <span class="co"># build when clean</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Inside the REPL (<code>t</code> or <code>t repl</code>) you can inspect results immediately after a build:</p>
-<pre class="t"><code><span class="fu">read_node</span>(p.total)    <span class="co">-- reads the serialized artifact back from the Nix store</span>
-<span class="fu">show_plot</span>(p)          <span class="co">-- visualise the DAG</span></code></pre>
+<pre class="t"><code><span class="fu">read_node</span>(p.total) <span class="co">-- reads the serialized artifact back from the Nix store</span>
+<span class="fu">show_plot</span>(p)       <span class="co">-- visualise the DAG</span></code></pre>
 <p>Add a node and rebuild:</p>
 <pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   x     <span class="sc">=</span> <span class="dv">10</span>
@@ -634,14 +634,18 @@ p.total  <span class="co">-- 30</span></code></pre>
 </tr>
 </tbody>
 </table>
-<p>Foreign-language code lives inside <code>&lt;{ ... }&gt;</code> raw code blocks, which pass code verbatim to the target runtime without T parsing it:</p>
+<p>Foreign-language code lives inside <code>&lt;{...}&gt;</code> raw code blocks, which pass code verbatim to the target runtime without T parsing it:</p>
 <pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   <span class="co">-- Load data in T</span>
   data <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/mtcars.csv"</span>, separator <span class="sc">=</span> <span class="st">"|"</span>)
 
   <span class="co">-- Summarise in R using dplyr</span>
   summary_r <span class="sc">=</span> <span class="fu">rn</span>(
-    command   <span class="sc">=</span> <span class="sc">&lt;</span>{ data <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">group_by</span>(cyl) <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">summarize</span>(avg_mpg <span class="sc">=</span> <span class="fu">mean</span>(mpg)) }<span class="sc">&gt;</span>,
+    command   <span class="sc">=</span> <span class="sc">&lt;</span>{
+      data <span class="sc">|&gt;</span>
+      dplyr<span class="sc">::</span><span class="fu">group_by</span>(cyl) <span class="sc">|&gt;</span>
+      dplyr<span class="sc">::</span><span class="fu">summarize</span>(avg_mpg <span class="sc">=</span> <span class="fu">mean</span>(mpg))
+    }<span class="sc">&gt;</span>,
     deserializer <span class="sc">=</span> ^ipc,
     serializer   <span class="sc">=</span> ^ipc
   )
