@@ -436,3 +436,50 @@ Let's dive in!
 #| label: demo-t-chunk
 "Hello from T!"
 ```
+
+But first, let me show you what we're building. The snippet below is a
+complete **Reproducible Analytical Pipeline** (RAP) written in T:
+
+```t
+#| eval: false
+p = pipeline {
+  -- 1. Load the data
+  data = read_csv("datasets/country_level_data.csv")
+
+  -- 2. Add a derived column in Python
+  derived = pyn(
+    command = <{
+      derived = data.assign(
+        pct_change = data["average_price_m2_nominal_euros"].pct_change() * 100
+      )
+    }>,
+    deserializer = ^ipc,
+    serializer = ^ipc
+  )
+
+  -- 3. Plot the result in R
+  plot = rn(
+    command = <{
+      plot <- ggplot2::ggplot(derived,
+        aes(x = year, y = average_price_m2_nominal_euros)) +
+        ggplot2::geom_line() +
+        ggplot2::geom_point()
+    }>,
+    deserializer = ^ipc
+  )
+}
+
+build_pipeline(p)
+```
+
+You don't need to understand every line yet — just three things. First,
+`p = pipeline { ... }` declares a set of named steps — `data`, `derived`,
+`plot` — and nothing runs yet. Second, each step can run in a different
+language: here Python adds a column and R draws the plot, and T wires each
+step's output into the next step's input automatically, so you never write
+glue code. Third, `build_pipeline(p)` runs every step in dependency order
+and caches each step's output, so rerunning the pipeline only rebuilds what
+changed.
+
+Over the next two chapters, we'll unpack all of this and write our first
+pipeline from scratch.
