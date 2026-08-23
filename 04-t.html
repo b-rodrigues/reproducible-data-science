@@ -506,6 +506,7 @@ div.csl-indent {
   <li><a href="#thinking-in-systems-in-an-ai-first-world" id="toc-thinking-in-systems-in-an-ai-first-world" class="nav-link" data-scroll-target="#thinking-in-systems-in-an-ai-first-world"><span class="header-section-number">4.1.4</span> Thinking in Systems in an AI-First World</a></li>
   <li><a href="#the-polyglot-challenge" id="toc-the-polyglot-challenge" class="nav-link" data-scroll-target="#the-polyglot-challenge"><span class="header-section-number">4.1.5</span> The Polyglot Challenge</a></li>
   <li><a href="#enter-t" id="toc-enter-t" class="nav-link" data-scroll-target="#enter-t"><span class="header-section-number">4.1.6</span> Enter T</a></li>
+  <li><a href="#a-candid-note-who-this-is-for-and-who-it-isnt" id="toc-a-candid-note-who-this-is-for-and-who-it-isnt" class="nav-link" data-scroll-target="#a-candid-note-who-this-is-for-and-who-it-isnt"><span class="header-section-number">4.1.7</span> A candid note: who this is for (and who it isn’t)</a></li>
   </ul></li>
   <li><a href="#a-quick-tour-of-t-syntax" id="toc-a-quick-tour-of-t-syntax" class="nav-link" data-scroll-target="#a-quick-tour-of-t-syntax"><span class="header-section-number">4.2</span> A Quick Tour of T Syntax</a>
   <ul class="collapse">
@@ -588,13 +589,13 @@ div.csl-indent {
 <section id="thinking-in-systems-in-an-ai-first-world" class="level3" data-number="4.1.4">
 <h3 data-number="4.1.4" class="anchored" data-anchor-id="thinking-in-systems-in-an-ai-first-world"><span class="header-section-number">4.1.4</span> Thinking in Systems in an AI-First World</h3>
 <p>If the previous section sounded abstract, consider what is happening right now to the practice of data science.</p>
-<p>AI coding assistants have become genuinely capable. For many routine tasks—data cleaning, visualisation, standard modelling—an LLM can write solid R or Python code faster than most humans. The cost of <em>writing</em> code is collapsing. This means the skill of typing correct syntax is becoming less valuable, and the skill of knowing <em>what to ask for</em> is becoming more valuable.</p>
-<p>But here is the catch: knowing what to ask for requires domain knowledge that no LLM reliably has. Take a simple example. You are working with time series data on prices. Ask an LLM to clean and graph the data, and it will almost certainly produce competent code. But will it suggest deflating nominal prices to make them comparable across time? Maybe, maybe not. That depends on whether the LLM has encountered enough economic methodology in its training data, and whether <em>you</em> thought to ask. And crucially, will you recognise when the LLM’s answer is subtly wrong? You don’t know what you don’t know. And neither does the LLM—but unlike you, it won’t flag its own blind spots.</p>
-<p>This points to a skill that is going to matter more, not less, as AI matures: the ability to interrogate and challenge an LLM’s output. An AI assistant is confident by default. It will produce plausible-sounding analysis regardless of whether the underlying reasoning is sound. The person who gets value from it is not the one who accepts the first answer, but the one who can ask <em>“wait, did you account for inflation here?”</em>, or <em>“why did you choose this model over that one?”</em>, or <em>“what assumptions are you making about the data generating process?”</em>. That requires knowing enough to ask those questions.</p>
+<p>AI coding assistants have become genuinely capable. For many routine tasks such as data cleaning, visualisation, standard modelling, an LLM can write solid R or Python code faster than most humans. The cost of <em>writing</em> code is collapsing. This means the skill of typing correct syntax is becoming less valuable, and the skill of knowing <em>what to ask for</em> is becoming more valuable.</p>
+<p>But here is the catch: knowing what to ask for requires domain knowledge that no LLM reliably has, or rather, doesn’t reliably surface to you. Take a simple example. You are working with time series data on prices. Ask an LLM to clean and graph the data, and it will almost certainly produce competent code. But will it suggest deflating nominal prices to make them comparable across time? Maybe, maybe not. That depends on whether the LLM has encountered enough economic methodology in its training data, and whether <em>you</em> thought to ask. And crucially, will you recognise when the LLM’s answer is subtly wrong? You don’t know what you don’t know. And neither does the LLM but, unlike you, it won’t flag its own blind spots… or perhaps it will, depending on its training. But you can’t rely on LLMs <em>perhaps</em> telling you what you need to pay attention to.</p>
+<p>This points to a skill that is going to matter more, not less, as AI matures: the ability to interrogate and challenge an LLM’s output. An AI assistant is confident by default. It will produce plausible-sounding analysis regardless of whether the underlying reasoning is sound, and even when it does provide some points you need to pay attention to: how can you be sure those are the right things to pay attention to? The person who gets value from it is not the one who accepts the first answer, but the one who can ask <em>“wait, did you account for inflation here?”</em>, or <em>“why did you choose this model over that one?”</em>, or <em>“what assumptions are you making about the data generating process?”</em>. That requires knowing enough to ask those questions.</p>
 <p>This has an interesting implication for how we should think about expertise. The traditional advice has been to specialize: know one language deeply, one domain deeply, one tool deeply. That advice was right when expertise was expensive to acquire and hard to substitute. But in a world where an LLM can write the implementation for you, having some knowledge across many areas may become more valuable than deep specialisation in one. A data scientist who knows a little economics, a little software engineering, a little domain-specific methodology, and can draw on all of it to design and audit what the LLM produces, may outperform a narrower specialist who can no longer leverage their deep implementation skills because the LLM already has them.</p>
-<p>I will close this section with a personal anecdote that I think illustrates the point well. Alongside this book, I have been building a Game Boy game—using LLMs to write essentially all the code. I know nothing about Game Boy development: I do not know the hardware architecture, I have never written a line of assembly, and I have certainly never shipped a cartridge. But I approached the project exactly as I would approach a data science project.</p>
-<p>The first thing I did was set up a reproducible development environment. The second was to make the LLM build tooling to <em>query the game’s state programmatically</em>: not just run the game, but interrogate it—what is the player’s position? What are the active sprites? What is the current game phase? With that infrastructure in place, I could instruct the LLM to run test scenarios from any point in the game, with any parameters, and get structured feedback. The game could be developed and debugged in a principled loop rather than by manually playing through it each time.</p>
-<p>The result: an actual, running Game Boy game, built by someone who cannot write the underlying code. What I contributed was the <em>systems thinking</em>: insisting on reproducibility, insisting on programmable state inspection, insisting on a feedback loop that could be automated. The LLM contributed the implementation. Neither of us could have done it alone.</p>
+<p>I will close this section with a personal anecdote that I think illustrates the point well. Alongside this book, I have been building a Game Boy game using LLMs to write essentially all the code. I know nothing about Game Boy development: I do not know the hardware architecture, I have never written a line of assembly, and I have certainly never shipped a cartridge. But I approached the project exactly as I would approach a data science project.</p>
+<p>The first thing I did was set up a reproducible development environment. The second was to make the LLM build tooling to <em>query the game’s state programmatically</em>: not just run the game, but interrogate it. What is the player’s position? What are the active sprites? What is the current game phase? With that infrastructure in place, I could instruct the LLM to run test scenarios from any point in the game, with any parameters, and get structured feedback. The game could be developed and debugged in a principled loop rather than by manually playing through it each time.</p>
+<p>The result: an actual, running Game Boy game (well, more of a demo really, but still), built by someone who cannot write the underlying code. What I contributed was the <em>systems thinking</em>: insisting on reproducibility, insisting on programmable state inspection, insisting on a feedback loop that could be automated. The LLM contributed the implementation. Neither of us could have done it alone.</p>
 <p>This is the approach that this book is trying to teach for data science. The specific tools matter less than the underlying mental model: make the structure of your computation explicit, build in the ability to inspect and query it at every stage, and create feedback loops that you and your AI collaborators can iterate on together.</p>
 </section>
 <section id="the-polyglot-challenge" class="level3" data-number="4.1.5">
@@ -609,8 +610,8 @@ div.csl-indent {
 <p><strong>T</strong> is what I built next, and it goes far beyond both. T is a reproducibility-first domain-specific language (DSL) for polyglot data science. It is <em>not</em> an R package. It is its own language, with its own runtime, its own REPL, and its own ecosystem of packages, built from the ground up to treat R, Python, Julia, and Shell as equals. T is meant to orchestrate R, Python and Julia, but critically, T does not just <em>orchestrate</em> environments defined elsewhere: it <em>is</em> the environment definition system. Every T project is a Nix flake, and T manages the entire stack: language runtimes, system dependencies, and pipeline execution under one roof.</p>
 <p>T provides a functional, immutable language for constructing composable <em>micropipelines</em>: first-class, introspectable computation graphs that coordinate R, Python, Julia, Quarto, and Shell execution within a unified system. Pipelines in T are not configuration artifacts but executable program structures with explicit dataflow, typed nodes, and content-addressed outputs. And unlike any other language used for data science, where reproducibility is more often than not bolted on, T makes reproducibility impossible to opt out of: every node in a T pipeline runs in its own hermetic Nix sandbox, and every output is content-addressed by design. As far as I know, T is literally the first reproducibility by design programming language.</p>
 <p>There is a broader current here. The history of computing is a history of raising the level of abstraction — from telling the CPU exactly what to do, to describing data transformations, to, with AI, describing the <em>system</em>, its <em>constraints</em>, and your <em>intent</em>. We are rediscovering that the oldest Unix philosophy was right all along: everything should have an explicit, textual representation that can be composed into larger systems. And once the design of your project is explicit, whether the implementation is R, Python, or Julia becomes almost an implementation detail. That is the main design principle behind T.</p>
-<p>And here is an important reassurance if you already live in R, Python, or Julia: <strong>you do not have to use T’s own built-in functions at all.</strong> T is a superset, not a replacement. You can write every node’s logic in the language you already know — pure R, pure Python, or pure Julia — and let T do exactly what it is best at: orchestrating those nodes into a reproducible pipeline. T’s data-manipulation verbs and other builtins are there when you want them, but for pure orchestration they are entirely optional.</p>
-<p>A crucial point to internalise: <strong>the primary way to work with T is to write Pipelines.</strong> T is not, first and foremost, a scripting language. If you write a plain script full of commands and try to execute it with <code>t run</code>, it will not run at all: non-interactive execution requires a pipeline. You can override this with the <code>--unsafe</code> flag (<code>t run --unsafe script.t</code>), but that is really not recommended — think of it as a workaround for little helper scripts, for example on CI.</p>
+<p>And here is an important reassurance if you already live in R, Python, or Julia: <strong>you do not have to use T’s own built-in functions at all.</strong> T is a superset, not a replacement. You can write every node’s logic in the language you already know and let T do exactly what it is best at: orchestrating those nodes into a reproducible pipeline. T’s data-manipulation verbs and other builtins are there when you want them, but for pure orchestration they are entirely optional.</p>
+<p>A crucial point to internalise: <strong>the primary way to work with T is to write Pipelines.</strong> T is not, first and foremost, a scripting language. If you write a plain script full of commands and try to execute it with <code>t run</code>, it will not run at all: non-interactive execution requires a pipeline. You can override this with the <code>--unsafe</code> flag (<code>t run --unsafe script.t</code>), but that is really not recommended. Think of it as a workaround for little helper scripts, for example on CI.</p>
 <p>That said, T does come with a REPL. In the REPL you can run commands interactively, exactly the way you would in R or Python. Later in the book (Chapter 14), we will see how T’s own data-manipulation verbs let you wrangle data, and you can do all of that right inside the REPL.</p>
 <p>T is also designed to treat pair-programming with LLMs, or even delegating the entire pipeline-writing process to an LLM, as a first-class programming model. To support this, T provides built-in mechanisms for LLMs to introspect and query build artifacts with ease. Each T project also includes a dedicated <code>AGENTS.md</code> file that guides the LLM on how to properly write and work with T pipelines. Pair programming with LLMs will be studied later though. A plain-text, explicit pipeline is what makes this work: it is far easier for a model to read, write, and verify a diffable description of the computation than to reason about the hidden state of an interactive notebook (see Chapter 3).</p>
 <p>The workflow is simple:</p>
@@ -621,6 +622,77 @@ div.csl-indent {
 <li><strong>Write</strong> (or better, yet, have your AI agent write for you) your reproducible pipeline as a T pipeline in <code>src/pipeline.t</code></li>
 <li><strong>Build</strong> and run with <code>t run</code></li>
 </ol>
+</section>
+<section id="a-candid-note-who-this-is-for-and-who-it-isnt" class="level3" data-number="4.1.7">
+<h3 data-number="4.1.7" class="anchored" data-anchor-id="a-candid-note-who-this-is-for-and-who-it-isnt"><span class="header-section-number">4.1.7</span> A candid note: who this is for (and who it isn’t)</h3>
+<p>Before we get hands-on, let me be straight with you about where T stands.</p>
+<p><strong>T is young.</strong> It is new, still in beta, and honestly niche. Its API and some of its behaviour will keep changing as it matures. If you are looking for a battle-worn tool with a decade of production scars and a huge community, T is not it yet.</p>
+<p><strong>I built it for myself first.</strong> I designed T to solve my own problems — the polyglot reproducibility pain I kept hitting in my own work, where R, Python and Julia all had to coexist in one reproducible environment. That is also why I am so motivated to keep building it: it is the tool I wish I had had, and I use it every day. This book is, in a sense, the documentation I wanted to exist. I am writing it for myself first, and making it available in the hope that you find it useful too.</p>
+<p><strong>You do not have to switch.</strong> If <code>{targets}</code> <span class="citation" data-cites="landau2021">(<a href="references.html#ref-landau2021" role="doc-biblioref">Landau 2021</a>)</span> (for pure-R work) or Snakemake <span class="citation" data-cites="koster2012">(<a href="references.html#ref-koster2012" role="doc-biblioref">Köster and Rahmann 2012</a>)</span> (for polyglot work) already serve you well, that is a perfectly good choice — both are robust, well documented, and backed by large communities. The core ideas in this book (Nix-managed environments, an explicit pipeline, and testing) apply no matter which orchestrator you pick. T is an option, not a requirement, but one I would urge you to consider, as I believe it tackles the problem of reproducibility <em>correctly</em>, thanks on being built on top of Nix.</p>
+<p><strong>What T adds</strong> is that the <em>environment</em> and the <em>pipeline</em> are the same language: one file defines your exact, bit-for-bit reproducible stack <em>and</em> the computation that runs on it, and the pipeline is a first-class value you can inspect and transform. It is also designed to be written and verified by LLMs. Here is a fair comparison:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>T</strong></th>
+<th><strong>targets</strong></th>
+<th><strong>Snakemake</strong></th>
+<th><strong>rix / rixpress</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Languages</td>
+<td>R, Python, Julia, Shell</td>
+<td>R (mostly)</td>
+<td>Python rules + any via envs</td>
+<td>R (Python via <code>ryxpress</code>)</td>
+</tr>
+<tr class="even">
+<td>Environment management</td>
+<td>Yes — Nix-based, env + pipeline in one</td>
+<td>No — pair with <code>{renv}</code></td>
+<td>Partial — conda envs</td>
+<td>Yes — Nix-based</td>
+</tr>
+<tr class="odd">
+<td>Pipeline as first-class data</td>
+<td>Yes — query, filter, transform, compose</td>
+<td>Limited</td>
+<td>Limited</td>
+<td>Limited</td>
+</tr>
+<tr class="even">
+<td>Maturity / community</td>
+<td>Young, in beta, small</td>
+<td>Very mature, large</td>
+<td>Very mature, large</td>
+<td>Moderate</td>
+</tr>
+<tr class="odd">
+<td>Learning curve</td>
+<td>Low for R users (new DSL)</td>
+<td>Low for R users</td>
+<td>Moderate (Snakefile)</td>
+<td>Moderate</td>
+</tr>
+<tr class="even">
+<td>Designed for LLMs</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>So read this book as one person’s answer to the reproducibility puzzle. Take what helps; and if T itself is not for you, the Nix and pipeline ideas still are.</p>
 <p>This chapter covers everything you need to know to create project-specific, reproducible development environments and pipelines for your polyglot data science projects.</p>
 </section>
 </section>
@@ -1095,6 +1167,12 @@ Brodeur, Abel, D. Mikola, Nicholas Cook, et al. 2026. <span>“Reproducibility a
 </div>
 <div id="ref-chen2025" class="csl-entry" role="listitem">
 Chen, Alyssia, Carol Wong, Bonita Sharif, and Anthony Peruma. 2025. <span>“Exploring Code Comprehension in Scientific Programming: Preliminary Insights from Research Scientists.”</span> <a href="https://arxiv.org/abs/2501.10037">https://arxiv.org/abs/2501.10037</a>.
+</div>
+<div id="ref-koster2012" class="csl-entry" role="listitem">
+Köster, Johannes, and Sven Rahmann. 2012. <span>“Snakemake – a Scalable Bioinformatics Workflow Engine.”</span> <em>Bioinformatics</em> 28 (19): 2520–22. <a href="https://doi.org/10.1093/bioinformatics/bts480">https://doi.org/10.1093/bioinformatics/bts480</a>.
+</div>
+<div id="ref-landau2021" class="csl-entry" role="listitem">
+Landau, William Michael. 2021. <span>“The Targets r Package: A Dynamic Make-Like Function-Oriented Pipeline Toolkit for Reproducibility and High-Performance Computing.”</span> <em>Journal of Open Source Software</em> 6 (57): 2959.
 </div>
 <div id="ref-lessig2006" class="csl-entry" role="listitem">
 Lessig, Lawrence. 2006. <em>Code: Version 2.0</em>. New York: Basic Books.
