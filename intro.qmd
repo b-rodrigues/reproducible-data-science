@@ -26,7 +26,7 @@ now you need to set up Nix and get familiar with it!
 But thankfully we live in the AI age, and LLMs can be quite helpful here. To make this
 even easier, we can combine Nix with T—a domain-specific language (DSL) designed
 specifically for building reproducible pipelines. My goal is for you not to have to
-worry (too much) about project setup, letting LLMs and T handle the heavy lifting.
+worry (too much) about project setup, letting LLMs handle the heavy lifting.
 
 ## Who is this book for?
 
@@ -45,6 +45,12 @@ This book assumes some familiarity with programming, particularly with the R and
 Python languages. I will not discuss Julia in great detail, as I am not familiar
 enough with it to do it justice. That being said, I will show you how to add
 Julia to a project and use it effectively if you need to.
+
+This book is also aimed at people that are not afraid to experiment with brand
+new tools and brand new ways of doing data science. I will talk about T, a new
+domain-specific language I started building from 2025 onwards that is built to
+be used by LLMs and humans alike. T is purpose built for writing reproducible
+analytical pipelines (RAPs) in the age of LLMs.
 
 ## What is the aim of this book?
 
@@ -91,18 +97,18 @@ there truly is no reason not to do it.
 
 Of course, building a RAP is not just a technical challenge; it is also an
 organisational one. I've seen this play out many times in many different
-organisations. It's that time of the year again, and a report needs to be written. Ten people are
-involved, and just gathering the data is already complicated. Some get their
-data from Word documents attached to emails, some from a website, some from a
-PDF report from another department. I remember a story a senior manager at my
-previous job used to tell: once, a client put out a call for a project that
-involved setting up a PDF scraper. They periodically needed data from another
-department that only came in PDFs. The manager asked what was, at least from our
-perspective, an obvious question: "Why can't they send you the underlying data
-in a machine-readable format?" They had never thought to ask. So, my manager
-went to that department and talked to the people putting the PDF together. Their
-answer? "Well, we could send them the data in any format they want, but they've
-asked for the tables in a PDF."
+organisations. It's that time of the year again, and a report needs to be
+written. Ten people are involved, and just gathering the data is already
+complicated. Some get their data from Word documents attached to emails, some
+from a website, some from a PDF report from another department. I remember a
+story a senior manager at my previous job used to tell: once, a client put out a
+call for a project that involved setting up a PDF scraper. They periodically
+needed data from another department that only came in PDFs. The manager asked
+what was, at least from our perspective, an obvious question: "Why can't they
+send you the underlying data in a machine-readable format?" They had never
+thought to ask. So, my manager went to that department and talked to the people
+putting the PDF together. Their answer? "Well, we could send them the data in
+any format they want, but they've asked for the tables in a PDF."
 
 So the first, and probably most important, lesson here is: when starting to
 build a RAP, make sure you talk to all the people involved.
@@ -344,11 +350,12 @@ Depending on the constraints you face, your project can be "not very
 reproducible" or "totally reproducible". Let's consider the following list of
 factors that can influence how reproducible your project truly is:
 
--   Version of the programming language used.
--   Versions of the packages/libraries of said programming language.
--   The operating system and its version.
--   Versions of the underlying system libraries (which often go hand-in-hand with the OS version, but not always).
--   And even the hardware architecture that you run the software stack on.
+- Version of the programming language used.
+- Versions of the packages/libraries of said programming language.
+- The operating system and its version.
+- Versions of the underlying system libraries (which often go hand-in-hand with
+    the OS version, but not always).
+- And even the hardware architecture that you run the software stack on.
 
 By "reproducibility is on a continuum," I mean that you can set up your project
 to take none, one, two, three, four, or all of the preceding items into
@@ -376,13 +383,13 @@ Notice, however, what the spectrum does *not* address: it is concerned entirely
 with the *environment*—whether the same packages and language version are
 available. It says nothing about whether the computation can actually be
 *re-executed*. A project can sit at the far right of Peng's spectrum, with every
-dependency pinned and documented, and still be practically irreproducible because
-nobody can figure out which script to run first, in what order, and with what
-inputs. Environment reproducibility is necessary but not sufficient; you also
-need what we might call *computational reproducibility*: an explicit, runnable
-description of the pipeline itself, not just the software it runs on. We will
-return to this distinction in Chapter 4, where it becomes the central motivation
-for T's mandatory pipeline architecture.
+dependency pinned and documented, and still be practically irreproducible
+because nobody can figure out which script to run first, in what order, and with
+what inputs. Environment reproducibility is necessary but not sufficient; you
+also need what we might call *computational reproducibility*: an explicit,
+runnable description of the pipeline itself, not just the software it runs on.
+We will return to this distinction in Chapter 4, where it becomes the central
+motivation for T's mandatory pipeline architecture.
 
 Let me finish this introduction by discussing the last item on the list:
 hardware architecture. In 2020, Apple changed the hardware architecture of their
