@@ -651,6 +651,37 @@ The reproducibility spectrum from Peng’s 2011 paper.
 <pre class="t"><code><span class="st">"Hello from T!"</span></code></pre>
 <pre class="text t-output"><code>Hello from T!</code></pre>
 </div>
+<p>But first, let me show you what we’re building. The snippet below is a complete <strong>Reproducible Analytical Pipeline</strong> (RAP) written in T:</p>
+<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+  <span class="co">-- 1. Load the data</span>
+  data <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"datasets/country_level_data.csv"</span>)
+
+  <span class="co">-- 2. Add a derived column in Python</span>
+  derived <span class="sc">=</span> <span class="fu">pyn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
+      derived <span class="sc">=</span> data.assign(
+        pct_change <span class="sc">=</span> data[<span class="st">"average_price_m2_nominal_euros"</span>].pct_change() <span class="sc">*</span> <span class="dv">100</span>
+      )
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^ipc,
+    serializer <span class="sc">=</span> ^ipc
+  )
+
+  <span class="co">-- 3. Plot the result in R</span>
+  plot <span class="sc">=</span> <span class="fu">rn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
+      plot <span class="sc">&lt;</span><span class="sc">-</span> ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(derived,
+        <span class="fu">aes</span>(x <span class="sc">=</span> year, y <span class="sc">=</span> average_price_m2_nominal_euros)) <span class="sc">+</span>
+        ggplot2<span class="sc">::</span><span class="fu">geom_line</span>() <span class="sc">+</span>
+        ggplot2<span class="sc">::</span><span class="fu">geom_point</span>()
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^ipc
+  )
+}
+
+<span class="fu">build_pipeline</span>(p)</code></pre>
+<p>You don’t need to understand every line yet — just three things. First, <code>p = pipeline { ... }</code> declares a set of named steps — <code>data</code>, <code>derived</code>, <code>plot</code> — and nothing runs yet. Second, each step can run in a different language: here Python adds a column and R draws the plot, and T wires each step’s output into the next step’s input automatically, so you never write glue code. Third, <code>build_pipeline(p)</code> runs every step in dependency order and caches each step’s output, so rerunning the pipeline only rebuilds what changed.</p>
+<p>Over the next two chapters, we’ll unpack all of this and write our first pipeline from scratch.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
