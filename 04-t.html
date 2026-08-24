@@ -527,8 +527,9 @@ div.csl-indent {
   <li><a href="#the-t-project" id="toc-the-t-project" class="nav-link" data-scroll-target="#the-t-project"><span class="header-section-number">4.4</span> The T Project</a>
   <ul class="collapse">
   <li><a href="#declaring-dependencies-with-tproject.toml" id="toc-declaring-dependencies-with-tproject.toml" class="nav-link" data-scroll-target="#declaring-dependencies-with-tproject.toml"><span class="header-section-number">4.4.1</span> Declaring Dependencies with <code>tproject.toml</code></a></li>
-  <li><a href="#alternative-installation-methods" id="toc-alternative-installation-methods" class="nav-link" data-scroll-target="#alternative-installation-methods"><span class="header-section-number">4.4.2</span> Alternative installation methods</a></li>
-  <li><a href="#system-dependencies-and-latex" id="toc-system-dependencies-and-latex" class="nav-link" data-scroll-target="#system-dependencies-and-latex"><span class="header-section-number">4.4.3</span> System Dependencies and LaTeX</a></li>
+  <li><a href="#working-with-r-python-and-julia" id="toc-working-with-r-python-and-julia" class="nav-link" data-scroll-target="#working-with-r-python-and-julia"><span class="header-section-number">4.4.2</span> Working with R, Python, and Julia</a></li>
+  <li><a href="#alternative-installation-methods" id="toc-alternative-installation-methods" class="nav-link" data-scroll-target="#alternative-installation-methods"><span class="header-section-number">4.4.3</span> Alternative installation methods</a></li>
+  <li><a href="#system-dependencies-and-latex" id="toc-system-dependencies-and-latex" class="nav-link" data-scroll-target="#system-dependencies-and-latex"><span class="header-section-number">4.4.4</span> System Dependencies and LaTeX</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.5</span> Summary</a></li>
   </ul>
@@ -1172,15 +1173,20 @@ handle <span class="sc">=</span> \(x) <span class="cf">if</span> (<span class="f
 <p>Instead, add packages to <code>tproject.toml</code> and run <code>t update</code>. Calling <code>install.packages()</code> (or equivalent commands for Python and Julia) will raise an error.</p>
 </section>
 </section>
-<section id="alternative-installation-methods" class="level3" data-number="4.4.2">
-<h3 data-number="4.4.2" class="anchored" data-anchor-id="alternative-installation-methods"><span class="header-section-number">4.4.2</span> Alternative installation methods</h3>
+<section id="working-with-r-python-and-julia" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="working-with-r-python-and-julia"><span class="header-section-number">4.4.2</span> Working with R, Python, and Julia</h3>
+<p>Declaring dependencies in <code>tproject.toml</code> is not just bookkeeping: it gives you working R, Python, and Julia environments. Once you are inside the development shell, typing <code>R</code>, <code>python</code>, or <code>julia</code> starts the corresponding interpreter, with every package you declared already installed.</p>
+<p>This makes the shell a natural place to do interactive work. You can develop small functions in R, Python, or Julia, test them, and then have your LLM agent wire them into the T pipeline. A setup that works well: start an editor such as Positron from inside the shell (for example, by typing <code>positron</code>), and work on your functions there while a terminal sits next to it, where your LLM agent builds the pipeline incrementally, node by node. Because the editor inherits the shell’s environment, its R, Python, and Julia sessions use exactly the same versions and packages as your pipeline.</p>
+</section>
+<section id="alternative-installation-methods" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="alternative-installation-methods"><span class="header-section-number">4.4.3</span> Alternative installation methods</h3>
 <p>T provides several other ways to install packages, using <code>uv</code> for Python or <code>{renv}</code> for R. By default, T uses Nix to resolve packages directly. We recommend sticking to the default resolver as much as possible. The default approach works exceptionally well for <strong>Julia</strong> and <strong>R</strong> because virtually all packages in their ecosystems are available through Nix. This is not the case for <strong>Python</strong>.</p>
 <p>Python’s PyPI contains hundreds of thousands of packages of varying quality. If you use Python for data analysis, you’ve likely hit this issue: you try to install one package that requires <code>numpy &lt; 2</code>, and another that requires <code>numpy &gt;= 2</code>. You’re <em>cooked</em>, as the youths say. The resolver can’t help you because the requirements are literally incompatible. No amount of Rust-written package managers can solve this. The underlying issue is PyPI’s ecosystem model.</p>
 <p>In R, this situation rarely happens. CRAN enforces a system where packages are continuously tested against their reverse dependencies. If <code>{ggplot2}</code> or <code>{dplyr}</code> updates in a way that breaks other packages, CRAN catches it. Authors have two weeks to fix the issue, or their package gets archived. As a result, if a package is on CRAN, it works. CRAN manages this consistency across ~27,000 packages.</p>
 <p>PyPI does not do this. It hosts packages without global consistency checks. If Package A and Package B declare mutually exclusive requirements, PyPI hosts them both anyway. Nix tries to curate Python packages, but because of PyPI’s constraints, the entirety of PyPI cannot be made available through Nix in an automated way. Occasionally, you can patch a package’s <code>pyproject.toml</code> in Nix to relax incompatible constraints (e.g., changing <code>numpy = "^1"</code> to <code>numpy = "&gt;=1"</code>), but patching isn’t a universal solution.</p>
 <p>This is why T provides alternative resolvers (<code>uv</code> for Python and <code>{renv}</code> for R): * For Python (<code>uv</code>): Allows Nix to build the environment while fetching packages directly from PyPI via <code>uv</code>. This is especially useful if you are collaborating with non-T/Nix users who rely on standard <code>pyproject.toml</code> and <code>uv.lock</code> files. * <strong>For R (<code>renv</code>):</strong> Allows you to reuse existing <code>renv.lock</code> files for collaboration or legacy workflows.</p>
-<section id="alternative-python-resolver-uv" class="level4" data-number="4.4.2.1">
-<h4 data-number="4.4.2.1" class="anchored" data-anchor-id="alternative-python-resolver-uv"><span class="header-section-number">4.4.2.1</span> Alternative Python Resolver: <code>uv</code></h4>
+<section id="alternative-python-resolver-uv" class="level4" data-number="4.4.3.1">
+<h4 data-number="4.4.3.1" class="anchored" data-anchor-id="alternative-python-resolver-uv"><span class="header-section-number">4.4.3.1</span> Alternative Python Resolver: <code>uv</code></h4>
 <p>Instead of declaring Python packages directly in <code>tproject.toml</code>, you can delegate dependency management to <code>uv</code>.</p>
 <p>First, configure <code>tproject.toml</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[py-dependencies]</span></span>
@@ -1218,8 +1224,8 @@ handle <span class="sc">=</span> \(x) <span class="cf">if</span> (<span class="f
 </ol>
 <p>This reads the <code>uv</code> workspace, adds <code>pyproject-nix</code>, <code>uv2nix</code>, and <code>pyproject-build-systems</code> inputs to <code>flake.nix</code>, and configures the Python environment to use <code>pyProject.mkVirtualEnv</code>.</p>
 </section>
-<section id="alternative-r-options-renv-git-repositories" class="level4" data-number="4.4.2.2">
-<h4 data-number="4.4.2.2" class="anchored" data-anchor-id="alternative-r-options-renv-git-repositories"><span class="header-section-number">4.4.2.2</span> Alternative R Options: <code>{renv}</code> &amp; Git Repositories</h4>
+<section id="alternative-r-options-renv-git-repositories" class="level4" data-number="4.4.3.2">
+<h4 data-number="4.4.3.2" class="anchored" data-anchor-id="alternative-r-options-renv-git-repositories"><span class="header-section-number">4.4.3.2</span> Alternative R Options: <code>{renv}</code> &amp; Git Repositories</h4>
 <p>If your project already contains an <code>renv.lock</code> file, set:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[r-dependencies]</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="dt">resolver</span> <span class="op">=</span> <span class="st">"renv"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1241,17 +1247,17 @@ handle <span class="sc">=</span> \(x) <span class="cf">if</span> (<span class="f
 <p>The <code>rev</code> field must be a full Git commit hash. Each Git package is injected into every R pipeline node’s <code>buildInputs</code>. When using <code>resolver = "renv"</code>, Git packages declared in <code>tproject.toml</code> are automatically merged with those in <code>renv.lock</code>.</p>
 </section>
 </section>
-<section id="system-dependencies-and-latex" class="level3" data-number="4.4.3">
-<h3 data-number="4.4.3" class="anchored" data-anchor-id="system-dependencies-and-latex"><span class="header-section-number">4.4.3</span> System Dependencies and LaTeX</h3>
+<section id="system-dependencies-and-latex" class="level3" data-number="4.4.4">
+<h3 data-number="4.4.4" class="anchored" data-anchor-id="system-dependencies-and-latex"><span class="header-section-number">4.4.4</span> System Dependencies and LaTeX</h3>
 <p>Beyond language packages, you can declare system tools and LaTeX packages required by your project.</p>
-<section id="additional-tools" class="level4" data-number="4.4.3.1">
-<h4 data-number="4.4.3.1" class="anchored" data-anchor-id="additional-tools"><span class="header-section-number">4.4.3.1</span> Additional Tools</h4>
+<section id="additional-tools" class="level4" data-number="4.4.4.1">
+<h4 data-number="4.4.4.1" class="anchored" data-anchor-id="additional-tools"><span class="header-section-number">4.4.4.1</span> Additional Tools</h4>
 <p>Use <code>[additional-tools]</code> to make CLI utilities, compilers, or system libraries available in your shell and pipeline sandboxes:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[additional-tools]</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"git"</span><span class="op">,</span> <span class="st">"jq"</span><span class="op">,</span> <span class="st">"gawk"</span><span class="op">,</span> <span class="st">"pandoc"</span><span class="op">,</span> <span class="st">"typst"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="latex-support" class="level4" data-number="4.4.3.2">
-<h4 data-number="4.4.3.2" class="anchored" data-anchor-id="latex-support"><span class="header-section-number">4.4.3.2</span> LaTeX Support</h4>
+<section id="latex-support" class="level4" data-number="4.4.4.2">
+<h4 data-number="4.4.4.2" class="anchored" data-anchor-id="latex-support"><span class="header-section-number">4.4.4.2</span> LaTeX Support</h4>
 <p>If your project generates PDFs or reports, use the <code>[latex]</code> section. T automatically provides a <code>texlive</code> environment (starting from <code>scheme-small</code>). Simply list any extra LaTeX packages needed:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[latex]</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"amsmath"</span><span class="op">,</span> <span class="st">"blindtext"</span><span class="op">,</span> <span class="st">"physics"</span><span class="op">,</span> <span class="st">"hyperref"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
