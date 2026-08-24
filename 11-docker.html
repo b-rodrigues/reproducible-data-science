@@ -1008,7 +1008,7 @@ For more examples and ideas, visit:
 <section id="step-2-the-pipeline" class="level3" data-number="11.7.2">
 <h3 data-number="11.7.2" class="anchored" data-anchor-id="step-2-the-pipeline"><span class="header-section-number">11.7.2</span> Step 2: The Pipeline</h3>
 <p>The pipeline lives in <code>src/pipeline.t</code>. It loads the data in T and produces the result as a node artifact:</p>
-<pre class="t"><code><span class="co">-- src/pipeline.t</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- src/pipeline.t</span>
 p <span class="sc">=</span> <span class="cf">pipeline</span> {
   data <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/mtcars.csv"</span>)
 
@@ -1019,7 +1019,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> {
   )
 }
 
-<span class="fu">build_pipeline</span>(p, verbose <span class="sc">=</span> <span class="dv">1</span>)</code></pre>
+<span class="fu">build_pipeline</span>(p, verbose <span class="sc">=</span> <span class="dv">1</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>When T builds the pipeline, every node’s artifact is written to the <code>_pipeline/</code> directory. The <code>mtcars_head</code> node’s result is stored there as JSON, ready to be exported.</p>
 </section>
 <section id="step-3-build-and-run" class="level3" data-number="11.7.3">

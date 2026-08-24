@@ -562,7 +562,7 @@ div.csl-indent {
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
 <p>Now that we have Nix installed, and our IDE configured, we can actually tackle the reproducibility puzzle. This chapter will introduce T, a domain-specific language developed to build reproducible analytical pipelines using Python, R or Julia.</p>
 <p>Before anything, I think it’s important to see what an actual T pipeline looks like, to ground the rest of our discussion. Here is an example (you can find this example, and many others, in the <a href="https://github.com/b-rodrigues/t_demos/tree/master/yanai_lercher_2020_t">T Demos Repository</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>):</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   <span class="co">-- 1. Read gorilla image</span>
   gorilla_pixels <span class="sc">=</span> <span class="fu">pyn</span>(
     command <span class="sc">=</span> <span class="sc">&lt;</span>{
@@ -646,7 +646,7 @@ plot2 <span class="sc">&lt;</span><span class="sc">-</span> <span class="fu">mak
 
 <span class="co">-- Materialize</span>
 <span class="fu">populate_pipeline</span>(p, build <span class="sc">=</span> <span class="cn">true</span>, verbose<span class="sc">=</span><span class="dv">1</span>)
-</code></pre>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-error"><code>T execution failed:
 Error running t (error code 1): &lt;no output&gt;</code></pre>
 <p>You do not need to understand every line yet, but let’s walk through it together, because this single example contains the whole idea.</p>
@@ -806,14 +806,14 @@ Error running t (error code 1): &lt;no output&gt;</code></pre>
 <section id="variables-and-assignment" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="variables-and-assignment"><span class="header-section-number">4.2.1</span> Variables and assignment</h3>
 <p>T binds variables with <code>=</code>. Values are immutable by default; to rebind an existing name (shadowing), use <code>:=</code>:</p>
-<pre class="t"><code>x <span class="sc">=</span> <span class="dv">10</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>x <span class="sc">=</span> <span class="dv">10</span>
 name <span class="sc">=</span> <span class="st">"Alice"</span>
-x <span class="sc">:=</span> <span class="dv">20</span>    <span class="co">-- rebinds x to 20</span></code></pre>
+x <span class="sc">:=</span> <span class="dv">20</span>    <span class="co">-- rebinds x to 20</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="conditionals" class="level3" data-number="4.2.2">
 <h3 data-number="4.2.2" class="anchored" data-anchor-id="conditionals"><span class="header-section-number">4.2.2</span> Conditionals</h3>
 <p>Conditionals are expressions. They return values:</p>
-<pre class="t"><code>result <span class="sc">=</span> <span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="dv">5</span>) <span class="st">"high"</span> <span class="cf">else</span> <span class="st">"low"</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>result <span class="sc">=</span> <span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="dv">5</span>) <span class="st">"high"</span> <span class="cf">else</span> <span class="st">"low"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="the-two-pipes" class="level3" data-number="4.2.3">
 <h3 data-number="4.2.3" class="anchored" data-anchor-id="the-two-pipes"><span class="header-section-number">4.2.3</span> The two pipes</h3>
@@ -822,26 +822,26 @@ x <span class="sc">:=</span> <span class="dv">20</span>    <span class="co">-- r
 <li><code>|&gt;</code> passes the left-hand value to the right-hand function and <strong>short-circuits on error</strong>: if the left-hand value is an <code>Error</code>, the pipeline stops and the error is returned without calling the function.</li>
 <li><code>?|&gt;</code> (the maybe-pipe) <strong>always forwards</strong> the left-hand value to the right-hand function, even if it is an <code>Error</code>. This is how you write explicit recovery.</li>
 </ul>
-<pre class="t"><code>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>] <span class="sc">|&gt;</span> <span class="fu">map</span>(\(v) v <span class="sc">*</span> v) <span class="sc">|&gt;</span> sum <span class="co">-- 14</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>] <span class="sc">|&gt;</span> <span class="fu">map</span>(\(v) v <span class="sc">*</span> v) <span class="sc">|&gt;</span> sum <span class="co">-- 14</span>
 <span class="fu">error</span>(<span class="st">"boom"</span>) <span class="sc">|&gt;</span> double             <span class="co">-- Error: short-circuits</span>
 
 handle <span class="sc">=</span> \(x) <span class="cf">if</span> (<span class="fu">is_error</span>(x)) <span class="st">"recovered"</span> <span class="cf">else</span> x
-<span class="fu">error</span>(<span class="st">"boom"</span>) <span class="sc">?|&gt;</span> handle                  <span class="co">-- "recovered"</span></code></pre>
+<span class="fu">error</span>(<span class="st">"boom"</span>) <span class="sc">?|&gt;</span> handle                  <span class="co">-- "recovered"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>double()</code> will not even run, since <code>|&gt;</code> short-circuits. However, in the second example, <code>handle()</code> will get the error object passed to it because of <code>?|&gt;</code> and will do something with it (whatever you programmed <code>handle()</code> to do with errors).</p>
 </section>
 <section id="imports" class="level3" data-number="4.2.4">
 <h3 data-number="4.2.4" class="anchored" data-anchor-id="imports"><span class="header-section-number">4.2.4</span> Imports</h3>
 <p>If you create a T package, you can import it in a pipeline, or import specific functions from it. You can also import functions defined in plain scripts:</p>
-<pre class="t"><code><span class="cf">import</span> mypackage
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="cf">import</span> mypackage
 <span class="cf">import</span> mypackage [fn1, fn2]
-<span class="cf">import</span> <span class="st">"helpers.t"</span> [clean_data, normalize]</code></pre>
+<span class="cf">import</span> <span class="st">"helpers.t"</span> [clean_data, normalize]</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note that to use R, Python or Julia packages, the import statements of each respective language need to be written inside the required <code>&lt;{...}&gt;</code> foreign code blocks, as we shall see below.</p>
 </section>
 <section id="sequence-generation" class="level3" data-number="4.2.5">
 <h3 data-number="4.2.5" class="anchored" data-anchor-id="sequence-generation"><span class="header-section-number">4.2.5</span> Sequence generation</h3>
 <p>Inspired by R:</p>
-<pre class="t"><code><span class="fu">seq</span>(<span class="dv">5</span>)                <span class="co">-- [1, 2, 3, 4, 5]</span>
-<span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, by <span class="sc">=</span> <span class="dv">2</span>)    <span class="co">-- [1, 3, 5, 7, 9]</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">seq</span>(<span class="dv">5</span>)                <span class="co">-- [1, 2, 3, 4, 5]</span>
+<span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, by <span class="sc">=</span> <span class="dv">2</span>)    <span class="co">-- [1, 3, 5, 7, 9]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="operators-at-a-glance" class="level3" data-number="4.2.6">
 <h3 data-number="4.2.6" class="anchored" data-anchor-id="operators-at-a-glance"><span class="header-section-number">4.2.6</span> Operators at a glance</h3>

@@ -596,33 +596,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="navigating-your-environment" class="level3" data-number="15.1.1">
 <h3 data-number="15.1.1" class="anchored" data-anchor-id="navigating-your-environment"><span class="header-section-number">15.1.1</span> Navigating your environment</h3>
 <p>The first group of commands helps you get your bearings. <code>%pwd</code> prints the current working directory, and <code>%cd</code> changes it (it expands <code>~</code> correctly, and reports an error if the target directory does not exist). <code>%ls</code> lists the contents of the current directory, and <code>%env</code> prints every environment variable, one per line.</p>
-<pre class="t"><code><span class="sc">%</span>pwd
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="sc">%</span>pwd
 <span class="sc">/</span>home<span class="sc">/</span>user<span class="sc">/</span>projects
 <span class="sc">%</span>cd data
 <span class="sc">%</span>ls
-raw.csv  clean.csv</code></pre>
+raw.csv  clean.csv</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>These mirror the shell commands you already know, so the REPL feels less like a foreign object and more like a workspace you can move around in.</p>
 </section>
 <section id="inspecting-what-you-have" class="level3" data-number="15.1.2">
 <h3 data-number="15.1.2" class="anchored" data-anchor-id="inspecting-what-you-have"><span class="header-section-number">15.1.2</span> Inspecting what you have</h3>
 <p>When you have been working in the REPL for a while, it is easy to lose track of what is in scope. <code>%objects</code> (aliased <code>%who</code>) lists every user-defined variable, its type, and a compact summary:</p>
-<pre class="t"><code>x <span class="sc">=</span> <span class="dv">42</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>x <span class="sc">=</span> <span class="dv">42</span>
 df <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data.csv"</span>)
 <span class="sc">%</span>objects
 <span class="co">--  name  type       summary</span>
 <span class="co">--  x     Int        42</span>
-<span class="co">--  df    DataFrame  150 rows x 5 cols</span></code></pre>
+<span class="co">--  df    DataFrame  150 rows x 5 cols</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>%history</code> shows the entries from the REPL command history, stored in <code>~/.t_history</code>, which is handy for re-running or copying something you did a few minutes ago. <code>%reset</code> removes all user-defined variables and returns you to a clean base environment.</p>
 </section>
 <section id="timing-and-capturing-work" class="level3" data-number="15.1.3">
 <h3 data-number="15.1.3" class="anchored" data-anchor-id="timing-and-capturing-work"><span class="header-section-number">15.1.3</span> Timing and capturing work</h3>
 <p><code>%time</code> evaluates any T expression and prints both its result and how long it took. It is the quickest way to get a feel for whether a piece of logic is fast enough to keep:</p>
-<pre class="t"><code><span class="sc">%</span>time df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>x <span class="sc">&gt;</span> <span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">nrow</span>()
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="sc">%</span>time df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>x <span class="sc">&gt;</span> <span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">nrow</span>()
 <span class="dv">42</span>
-Execution time<span class="sc">:</span> <span class="fl">0.1540</span> seconds</code></pre>
+Execution time<span class="sc">:</span> <span class="fl">0.1540</span> seconds</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>%save</code> writes a transcript of the session, i.e.&nbsp; every command and its result to a file, so you can turn an exploratory session into a starting point for a script. In compact mode it records a one-line summary of each result; in verbose mode it records the full pretty-printed output:</p>
-<pre class="t"><code><span class="sc">%</span>save my_session.t
-<span class="sc">%</span>save verbose my_session.t</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="sc">%</span>save my_session.t
+<span class="sc">%</span>save verbose my_session.t</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A common workflow is to run <code>%reset</code> to clear the transcript, then do a clean run and <code>%save</code> it, giving you a tidy record of exactly what you tried. Typing <code>%magic</code> lists every magic command with a description, and if you mistype one, the REPL offers a fuzzy match: <code>%objcts</code> suggests <code>Did you mean: %objects?</code>.</p>
 </section>
 </section>
@@ -632,31 +632,31 @@ Execution time<span class="sc">:</span> <span class="fl">0.1540</span> seconds</
 <section id="lambda-syntax" class="level3" data-number="15.2.1">
 <h3 data-number="15.2.1" class="anchored" data-anchor-id="lambda-syntax"><span class="header-section-number">15.2.1</span> Lambda syntax</h3>
 <p>T defines functions with a lambda. The preferred style is the R-like <code>\(...)</code> form, though a <code>function</code> keyword is also accepted:</p>
-<pre class="t"><code>square <span class="sc">=</span> \(x) x <span class="sc">*</span> x
-square <span class="sc">=</span> <span class="cf">function</span>(x) x <span class="sc">*</span> x    <span class="co">-- equivalent</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>square <span class="sc">=</span> \(x) x <span class="sc">*</span> x
+square <span class="sc">=</span> <span class="cf">function</span>(x) x <span class="sc">*</span> x    <span class="co">-- equivalent</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Multi-argument functions are just as natural:</p>
-<pre class="t"><code>add <span class="sc">=</span> \(a, b) a <span class="sc">+</span> b
-<span class="fu">add</span>(<span class="dv">3</span>, <span class="dv">7</span>)  <span class="co">-- 10</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>add <span class="sc">=</span> \(a, b) a <span class="sc">+</span> b
+<span class="fu">add</span>(<span class="dv">3</span>, <span class="dv">7</span>)  <span class="co">-- 10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="closures" class="level3" data-number="15.2.2">
 <h3 data-number="15.2.2" class="anchored" data-anchor-id="closures"><span class="header-section-number">15.2.2</span> Closures</h3>
 <p>A function captures its enclosing environment, which lets you build parameterised families of functions:</p>
-<pre class="t"><code>make_adder <span class="sc">=</span> \(n) \(x) x <span class="sc">+</span> n
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>make_adder <span class="sc">=</span> \(n) \(x) x <span class="sc">+</span> n
 add5 <span class="sc">=</span> <span class="fu">make_adder</span>(<span class="dv">5</span>)
-<span class="fu">add5</span>(<span class="dv">10</span>)  <span class="co">-- 15</span></code></pre>
+<span class="fu">add5</span>(<span class="dv">10</span>)  <span class="co">-- 15</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="higher-order-functions" class="level3" data-number="15.2.3">
 <h3 data-number="15.2.3" class="anchored" data-anchor-id="higher-order-functions"><span class="header-section-number">15.2.3</span> Higher-order functions</h3>
 <p>Because functions are values, you can pass them to other functions. The standard library is full of them:</p>
-<pre class="t"><code>numbers <span class="sc">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>numbers <span class="sc">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]
 <span class="fu">map</span>(numbers, \(x) x <span class="sc">*</span> x)     <span class="co">-- [1, 4, 9, 16, 25]</span>
-<span class="fu">filter</span>(numbers, \(x) x <span class="sc">&gt;</span> <span class="dv">3</span>)  <span class="co">-- [4, 5]</span></code></pre>
+<span class="fu">filter</span>(numbers, \(x) x <span class="sc">&gt;</span> <span class="dv">3</span>)  <span class="co">-- [4, 5]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="auto-quotation-param" class="level3" data-number="15.2.4">
 <h3 data-number="15.2.4" class="anchored" data-anchor-id="auto-quotation-param"><span class="header-section-number">15.2.4</span> Auto-quotation (<code>$param</code>)</h3>
 <p>A particularly useful feature when wrapping data verbs: prefix a parameter with <code>$</code> and the caller can pass a bare name, a column name say, which is captured as a <strong>Symbol</strong> rather than evaluated. This is the same mechanism the data verbs themselves use (see the next section):</p>
-<pre class="t"><code>my_select <span class="sc">=</span> \(df, <span class="sc">$</span>col) <span class="fu">select</span>(df, col)
-<span class="fu">my_select</span>(df, salary)    <span class="co">-- 'salary' is captured as a symbol</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>my_select <span class="sc">=</span> \(df, <span class="sc">$</span>col) <span class="fu">select</span>(df, col)
+<span class="fu">my_select</span>(df, salary)    <span class="co">-- 'salary' is captured as a symbol</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="the-type-system" class="level2" data-number="15.3">
@@ -665,11 +665,11 @@ add5 <span class="sc">=</span> <span class="fu">make_adder</span>(<span class="d
 <section id="lambda-signatures" class="level3" data-number="15.3.1">
 <h3 data-number="15.3.1" class="anchored" data-anchor-id="lambda-signatures"><span class="header-section-number">15.3.1</span> Lambda signatures</h3>
 <p>A lambda is either untyped or typed. The typed form annotates every parameter and the return type. The return type is written <em>inside</em> the parameter parentheses, which keeps the whole signature on one line:</p>
-<pre class="t"><code>add     <span class="sc">=</span> \(x, y) x <span class="sc">+</span> y                          <span class="co">-- untyped</span>
-add_int <span class="sc">=</span> \(x<span class="sc">:</span> Int, y<span class="sc">:</span> Int <span class="sc">-&gt;</span> Int) (x <span class="sc">+</span> y)       <span class="co">-- typed</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>add     <span class="sc">=</span> \(x, y) x <span class="sc">+</span> y                          <span class="co">-- untyped</span>
+add_int <span class="sc">=</span> \(x<span class="sc">:</span> Int, y<span class="sc">:</span> Int <span class="sc">-&gt;</span> Int) (x <span class="sc">+</span> y)       <span class="co">-- typed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Generic lambdas declare their type variables explicitly with <code>&lt;...&gt;</code>:</p>
-<pre class="t"><code>id   <span class="sc">=</span> \<span class="sc">&lt;</span>T<span class="sc">&gt;</span>(x<span class="sc">:</span> T <span class="sc">-&gt;</span> T) x
-pair <span class="sc">=</span> \<span class="sc">&lt;</span>A, B<span class="sc">&gt;</span>(x<span class="sc">:</span> A, y<span class="sc">:</span> B <span class="sc">-&gt;</span> Tuple[A, B]) [x, y]</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>id   <span class="sc">=</span> \<span class="sc">&lt;</span>T<span class="sc">&gt;</span>(x<span class="sc">:</span> T <span class="sc">-&gt;</span> T) x
+pair <span class="sc">=</span> \<span class="sc">&lt;</span>A, B<span class="sc">&gt;</span>(x<span class="sc">:</span> A, y<span class="sc">:</span> B <span class="sc">-&gt;</span> Tuple[A, B]) [x, y]</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The annotation grammar covers the base types (<code>Int</code>, <code>Float</code>, <code>Bool</code>, <code>String</code>, <code>NA</code>) and the composite forms <code>List[T]</code>, <code>Dict[K, V]</code>, <code>Tuple[T1, T2, ...]</code>, and <code>DataFrame[schema]</code>, where the schema names the columns the DataFrame is promised to carry.</p>
 </section>
 <section id="two-modes-repl-and-strict" class="level3" data-number="15.3.2">
@@ -679,7 +679,7 @@ pair <span class="sc">=</span> \<span class="sc">&lt;</span>A, B<span class="sc"
 <li><code>t repl</code> runs in <strong>repl mode</strong>, which is permissive: untyped top-level functions are fine, which is what you want while exploring.</li>
 <li><code>t run &lt;file.t&gt;</code> runs in <strong>strict mode</strong> by default. For every top-level function assignment, strict mode requires all parameter types to be annotated, a return type to be present, and any type variables to be declared. Miss one and the script fails before it runs:</li>
 </ul>
-<pre class="t"><code>add <span class="sc">=</span> \(x, y) x <span class="sc">+</span> y</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>add <span class="sc">=</span> \(x, y) x <span class="sc">+</span> y</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text"><code>Error(TypeError): [add.t:L1:C7] Strict mode: top-level function 'add'
 must annotate all parameter types.</code></pre>
 <p><code>--mode repl|strict</code> overrides the default in either direction, so a script can opt into leniency and a REPL session into rigor.</p>
@@ -707,10 +707,10 @@ must annotate all parameter types.</code></pre>
 <section id="capturing-code-to_expr-and-quo" class="level3" data-number="15.4.1">
 <h3 data-number="15.4.1" class="anchored" data-anchor-id="capturing-code-to_expr-and-quo"><span class="header-section-number">15.4.1</span> Capturing code: <code>to_expr</code> and <code>quo</code></h3>
 <p>The two ways to capture code differ in whether they remember the surrounding environment. <code>to_expr()</code> captures a bare expression; <code>quo()</code> captures a quosure: the expression plus the environment at the call site.</p>
-<pre class="t"><code>x <span class="sc">=</span> <span class="dv">10</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>x <span class="sc">=</span> <span class="dv">10</span>
 q <span class="sc">=</span> <span class="fu">quo</span>(<span class="dv">1</span> <span class="sc">+</span> x)   <span class="co">-- captures x = 10</span>
 x <span class="sc">=</span> <span class="dv">99</span>
-<span class="fu">eval</span>(q)          <span class="co">-- 11, not 100: it runs in the captured environment</span></code></pre>
+<span class="fu">eval</span>(q)          <span class="co">-- 11, not 100: it runs in the captured environment</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>11
 </code></pre>
 <p>That distinction is the whole point of a quosure. When <code>eval()</code> runs a quosure, it evaluates it in the environment the quosure captured, not in whatever environment happens to be current. For a bare expression from <code>to_expr()</code>, <code>eval()</code> uses the current environment.</p>
@@ -719,22 +719,22 @@ x <span class="sc">=</span> <span class="dv">99</span>
 <section id="unquoting-and" class="level3" data-number="15.4.2">
 <h3 data-number="15.4.2" class="anchored" data-anchor-id="unquoting-and"><span class="header-section-number">15.4.2</span> Unquoting: <code>!!</code> and <code>!!!</code></h3>
 <p>Quasiquotation is how you fill in the blanks of a captured expression. The <code>!!</code> operator evaluates its operand and injects the result into the surrounding quoted expression. If the operand is a quosure, only the expression part is injected; the environment is stripped.</p>
-<pre class="t"><code>x <span class="sc">=</span> <span class="dv">10</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>x <span class="sc">=</span> <span class="dv">10</span>
 e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="sc">!!</span>x)
-<span class="fu">print</span>(e)         <span class="co">-- to_expr(1 + 10)</span></code></pre>
+<span class="fu">print</span>(e)         <span class="co">-- to_expr(1 + 10)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 </code></pre>
 <p>The <code>!!!</code> operator goes further: it evaluates its operand and <em>splices</em> the elements into the surrounding call. The operand must be a list, vector, or dict.</p>
-<pre class="t"><code>vals <span class="sc">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>vals <span class="sc">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]
 e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="fu">sum</span>(<span class="sc">!!!</span>vals))
-<span class="fu">print</span>(e)         <span class="co">-- to_expr(sum(1, 2, 3))</span></code></pre>
+<span class="fu">print</span>(e)         <span class="co">-- to_expr(sum(1, 2, 3))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 </code></pre>
 <p>If you splice a named list, the names become argument names:</p>
-<pre class="t"><code>my_args <span class="sc">=</span> [x<span class="sc">:</span> <span class="dv">10</span>, y<span class="sc">:</span> <span class="dv">20</span>]
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>my_args <span class="sc">=</span> [x<span class="sc">:</span> <span class="dv">10</span>, y<span class="sc">:</span> <span class="dv">20</span>]
 e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="fu">f</span>(<span class="sc">!!!</span>my_args, z<span class="sc">:</span> <span class="dv">30</span>))
-<span class="fu">print</span>(e)         <span class="co">-- to_expr(f(x = 10, y = 20, z = 30))</span></code></pre>
+<span class="fu">print</span>(e)         <span class="co">-- to_expr(f(x = 10, y = 20, z = 30))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
@@ -743,9 +743,9 @@ to_expr(1 + 10)
 <section id="dynamic-names-and-symbols" class="level3" data-number="15.4.3">
 <h3 data-number="15.4.3" class="anchored" data-anchor-id="dynamic-names-and-symbols"><span class="header-section-number">15.4.3</span> Dynamic names and symbols</h3>
 <p>A frequent need is to use a name that is only known at runtime, a column name stored in a string, say. <code>to_symbol()</code> turns a string into a symbol that <code>!!</code> can inject, and the <code>!!name := value</code> form lets a computed name become an argument or column name.</p>
-<pre class="t"><code>col <span class="sc">=</span> <span class="st">"age"</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>col <span class="sc">=</span> <span class="st">"age"</span>
 e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="fu">mutate</span>(df, <span class="sc">!!</span>col <span class="sc">:=</span> <span class="dv">42</span>))
-<span class="fu">print</span>(e)         <span class="co">-- to_expr(mutate(df, age = 42))</span></code></pre>
+<span class="fu">print</span>(e)         <span class="co">-- to_expr(mutate(df, age = 42))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
@@ -759,17 +759,17 @@ to_expr(1 + 10)
 <ol type="1">
 <li><strong>Auto-quoted parameters.</strong> Prefix a parameter with <code>$</code> and the caller can pass a bare column name, which you forward into an NSE-aware verb with <code>!!</code>.</li>
 </ol>
-<pre class="t"><code>my_mean <span class="sc">=</span> \(df, <span class="sc">$</span>col) {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>my_mean <span class="sc">=</span> \(df, <span class="sc">$</span>col) {
   <span class="fu">summarize</span>(df, result <span class="sc">=</span> <span class="fu">mean</span>(<span class="sc">!!</span>col))
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ol start="2" type="1">
 <li><p><strong><code>enquo(param)</code></strong> captures the caller’s full expression for a named parameter, as a quosure. Use it when you need more than a column name.</p></li>
 <li><p><strong><code>enquos(...)</code></strong> captures all variadic expressions as a list of quosures, which you can splice into a verb.</p></li>
 </ol>
-<pre class="t"><code>my_summarize <span class="sc">=</span> \(df<span class="sc">:</span> DataFrame, <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span> <span class="sc">-&gt;</span> DataFrame) {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>my_summarize <span class="sc">=</span> \(df<span class="sc">:</span> DataFrame, <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span> <span class="sc">-&gt;</span> DataFrame) {
   cols <span class="sc">=</span> <span class="fu">enquos</span>(<span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>)
   <span class="fu">eval</span>(<span class="fu">to_expr</span>(df <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="sc">!!!</span>cols)))
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
@@ -785,7 +785,7 @@ to_expr(1 + 10)
 <section id="the-get-built-in" class="level3" data-number="15.5.1">
 <h3 data-number="15.5.1" class="anchored" data-anchor-id="the-get-built-in"><span class="header-section-number">15.5.1</span> The <code>get()</code> built-in</h3>
 <p><code>get()</code> is the primary entry point for retrieval. It adapts to what you give it:</p>
-<pre class="t"><code>salary <span class="sc">=</span> <span class="dv">50000</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>salary <span class="sc">=</span> <span class="dv">50000</span>
 <span class="fu">get</span>(<span class="st">"salary"</span>)              <span class="co">-- variable lookup, R-style      50000</span>
 
 lst <span class="sc">=</span> [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>]
@@ -793,7 +793,7 @@ lst <span class="sc">=</span> [<span class="dv">10</span>, <span class="dv">20</
 
 d <span class="sc">=</span> [a<span class="sc">:</span> <span class="dv">1</span>, b<span class="sc">:</span> <span class="dv">2</span>]
 <span class="fu">get</span>(d, <span class="st">"a"</span>)                <span class="co">-- dict key lookup               1</span>
-<span class="fu">get</span>(d, <span class="st">"missing"</span>, <span class="dv">99</span>)      <span class="co">-- default when key is absent    99</span></code></pre>
+<span class="fu">get</span>(d, <span class="st">"missing"</span>, <span class="dv">99</span>)      <span class="co">-- default when key is absent    99</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Inside an NSE data verb (<code>mutate</code>, <code>filter</code>, <code>summarize</code>, …), <code>get()</code> checks the <strong>data mask</strong> first: a name that is a column in the current row or DataFrame is resolved there, and only if not found does it fall back to the global environment. That is what makes <code>get("a")</code> inside a <code>mutate</code> refer to the column <code>a</code>, not a global variable.</p>
 </section>
 <section id="lenses" class="level3" data-number="15.5.2">
@@ -841,15 +841,15 @@ d <span class="sc">=</span> [a<span class="sc">:</span> <span class="dv">1</span
 </tbody>
 </table>
 <p>You focus a lens with <code>get()</code> and compose lenses with <code>compose()</code> to reach deep into nested structures:</p>
-<pre class="t"><code>l <span class="sc">=</span> <span class="fu">col_lens</span>(<span class="st">"mpg"</span>)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>l <span class="sc">=</span> <span class="fu">col_lens</span>(<span class="st">"mpg"</span>)
 <span class="fu">get</span>(mtcars, l)            <span class="co">-- the 'mpg' column as a Vector</span>
 
 data <span class="sc">=</span> [users<span class="sc">:</span> [Alice<span class="sc">:</span> [id<span class="sc">:</span> <span class="dv">1</span>], Bob<span class="sc">:</span> [id<span class="sc">:</span> <span class="dv">2</span>]]]
 l_deep <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu">col_lens</span>(<span class="st">"users"</span>), <span class="fu">col_lens</span>(<span class="st">"Alice"</span>), <span class="fu">col_lens</span>(<span class="st">"id"</span>))
-<span class="fu">get</span>(data, l_deep)         <span class="co">-- 1</span></code></pre>
+<span class="fu">get</span>(data, l_deep)         <span class="co">-- 1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>To <em>update</em> data through a lens, use <code>over()</code>:</p>
-<pre class="t"><code>data_updated <span class="sc">=</span> <span class="fu">over</span>(data, l_deep, \(x) <span class="dv">99</span>)
-<span class="fu">get</span>(data_updated, l_deep) <span class="co">-- 99</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>data_updated <span class="sc">=</span> <span class="fu">over</span>(data, l_deep, \(x) <span class="dv">99</span>)
+<span class="fu">get</span>(data_updated, l_deep) <span class="co">-- 99</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Pipeline lenses are serializable: you can pass them between nodes and apply them with <code>mutate_node()</code> or <code>set_pipeline_global_options()</code>, which is how you make cross-node data operations part of the reproducible build.</p>
 </section>
 </section>
@@ -859,39 +859,39 @@ l_deep <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu
 <section id="explain-a-values-self-description" class="level3" data-number="15.6.1">
 <h3 data-number="15.6.1" class="anchored" data-anchor-id="explain-a-values-self-description"><span class="header-section-number">15.6.1</span> <code>explain()</code>: a value’s self-description</h3>
 <p><code>explain(x)</code> works on any value and returns a <code>Dict</code> describing it. The first field is always <code>kind</code>, and the rest depend on what you handed it:</p>
-<pre class="t"><code><span class="fu">explain</span>(<span class="dv">42</span>)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">explain</span>(<span class="dv">42</span>)
 <span class="co">-- { `kind`: "value", `type`: "Int", `value`: 42 }</span>
 
 <span class="fu">explain</span>([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])
-<span class="co">-- { `kind`: "value", `type`: "List", `length`: 3, `na_count`: 0, `examples`: [1, 2, 3] }</span></code></pre>
+<span class="co">-- { `kind`: "value", `type`: "List", `length`: 3, `na_count`: 0, `examples`: [1, 2, 3] }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For a DataFrame, the description is a compact summary (row and column counts, the storage backend, the schema, and per-column missingness), and you can drill into individual fields with dot access:</p>
-<pre class="t"><code>df <span class="sc">=</span> <span class="fu">to_dataframe</span>([x<span class="sc">:</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], y<span class="sc">:</span> [<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>]])
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">=</span> <span class="fu">to_dataframe</span>([x<span class="sc">:</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], y<span class="sc">:</span> [<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>]])
 <span class="fu">explain</span>(df).nrow
 <span class="co">-- 3</span>
 <span class="fu">explain</span>(df).schema
 <span class="co">-- [{`name`: "x", `type`: "Int"}, {`name`: "y", `type`: "String"}]</span>
 <span class="fu">explain</span>(df).na_stats
-<span class="co">-- { `x`: 0, `y`: 0 }</span></code></pre>
+<span class="co">-- { `x`: 0, `y`: 0 }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Errors are values too, and <code>explain</code> sees through them, surfacing the code, the message, and where it happened:</p>
-<pre class="t"><code><span class="fu">explain</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span>)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">explain</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span>)
 <span class="co">-- { `kind`: "value", `type`: "Error", `error_code`: "DivisionByZero",</span>
-<span class="co">--   `error_message`: "Division by zero.", ... }</span></code></pre>
+<span class="co">--   `error_message`: "Division by zero.", ... }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The same function reaches the rest of the language. <code>explain(y ~ x)</code> reports a formula’s response and predictors; <code>explain(add_int)</code> reports a function’s argument names and types; <code>explain(p)</code> reports a pipeline’s node count and a per-node summary, while <code>explain(p.b)</code> inspects a single node: its name, runtime, dependencies, and configuration. And <code>explain_json(x)</code> returns the same description as a single string, which is handy when you want to log a value’s shape or hand it to another tool.</p>
 <p>The point is that introspection is <em>first-class</em>: the same call that describes a scalar also describes a DataFrame, an error, a formula, and a whole pipeline. You do not need a separate debugging API per type.</p>
 </section>
 <section id="intent-code-says-what-intent-says-why" class="level3" data-number="15.6.2">
 <h3 data-number="15.6.2" class="anchored" data-anchor-id="intent-code-says-what-intent-says-why"><span class="header-section-number">15.6.2</span> <code>intent</code>: code says what, intent says why</h3>
 <p>T has a small, dedicated syntax for recording <em>why</em> a piece of code exists: a block of key-value pairs that travels with the code:</p>
-<pre class="t"><code><span class="cf">intent</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="cf">intent</span> {
   description<span class="sc">:</span> <span class="st">"Analyze customer churn"</span>
   goal<span class="sc">:</span> <span class="st">"Identify segments at risk of leaving"</span>
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>An intent block is inert at runtime (it does not change what the code does), but you can read it back programmatically:</p>
-<pre class="t"><code>i <span class="sc">=</span> <span class="cf">intent</span> { description<span class="sc">:</span> <span class="st">"Analyze customer churn"</span>, goal<span class="sc">:</span> <span class="st">"Find at-risk segments"</span> }
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>i <span class="sc">=</span> <span class="cf">intent</span> { description<span class="sc">:</span> <span class="st">"Analyze customer churn"</span>, goal<span class="sc">:</span> <span class="st">"Find at-risk segments"</span> }
 <span class="fu">intent_get</span>(i, <span class="st">"description"</span>)
 <span class="co">-- "Analyze customer churn"</span>
 <span class="fu">intent_fields</span>(i)
-<span class="co">-- { `description`: "Analyze customer churn", `goal`: "Find at-risk segments" }</span></code></pre>
+<span class="co">-- { `description`: "Analyze customer churn", `goal`: "Find at-risk segments" }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The payoff is provenance. When a pipeline is a collaboration between a human and an agent, or between you today and you in six months, the <em>why</em> is the first thing to be lost. <code>intent</code> keeps it in the source, versioned in git and queryable by the tools that read it. It is the line-level companion to the <code>AGENTS.md</code> convention from Chapter 4: that file states the project’s intent, and an <code>intent</code> block states the intent of the code right next to it.</p>
 </section>
 </section>
@@ -901,36 +901,36 @@ l_deep <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu
 <section id="running-a-command" class="level3" data-number="15.7.1">
 <h3 data-number="15.7.1" class="anchored" data-anchor-id="running-a-command"><span class="header-section-number">15.7.1</span> Running a command</h3>
 <p>As a standalone statement, the command is executed and its output is printed straight to <code>stdout</code>. The statement’s value is <code>NA</code>:</p>
-<pre class="t"><code>?<span class="sc">&lt;</span>{ls <span class="sc">-</span>la}<span class="sc">&gt;</span>
-?<span class="sc">&lt;</span>{git status}<span class="sc">&gt;</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>?<span class="sc">&lt;</span>{ls <span class="sc">-</span>la}<span class="sc">&gt;</span>
+?<span class="sc">&lt;</span>{git status}<span class="sc">&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="capturing-the-output" class="level3" data-number="15.7.2">
 <h3 data-number="15.7.2" class="anchored" data-anchor-id="capturing-the-output"><span class="header-section-number">15.7.2</span> Capturing the output</h3>
 <p>When the escape is part of an expression, most often an assignment, T captures the command’s <code>stdout</code> and hands it back as a <code>String</code>, ready to be split, parsed, or passed on:</p>
-<pre class="t"><code>files <span class="sc">=</span> ?<span class="sc">&lt;</span>{ls}<span class="sc">&gt;</span>
-current_user <span class="sc">=</span> ?<span class="sc">&lt;</span>{whoami}<span class="sc">&gt;</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>files <span class="sc">=</span> ?<span class="sc">&lt;</span>{ls}<span class="sc">&gt;</span>
+current_user <span class="sc">=</span> ?<span class="sc">&lt;</span>{whoami}<span class="sc">&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="changing-directory" class="level3" data-number="15.7.3">
 <h3 data-number="15.7.3" class="anchored" data-anchor-id="changing-directory"><span class="header-section-number">15.7.3</span> Changing directory</h3>
 <p><code>cd</code> is special-cased. Rather than changing the directory of a throwaway sub-shell, it changes the working directory of the T interpreter itself, so subsequent commands, and <code>?&lt;{pwd}&gt;</code>, see the new location. <code>~</code> is expanded correctly:</p>
-<pre class="t"><code>?<span class="sc">&lt;</span>{cd <span class="sc">/</span>tmp}<span class="sc">&gt;</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>?<span class="sc">&lt;</span>{cd <span class="sc">/</span>tmp}<span class="sc">&gt;</span>
 ?<span class="sc">&lt;</span>{pwd}<span class="sc">&gt;</span>       <span class="co">-- /tmp</span>
-?<span class="sc">&lt;</span>{cd <span class="sc">~</span>}<span class="sc">&gt;</span></code></pre>
+?<span class="sc">&lt;</span>{cd <span class="sc">~</span>}<span class="sc">&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="multiline-commands" class="level3" data-number="15.7.4">
 <h3 data-number="15.7.4" class="anchored" data-anchor-id="multiline-commands"><span class="header-section-number">15.7.4</span> Multiline commands</h3>
 <p>A shell escape can span several lines. The indentation common to all non-empty lines is stripped, so you can write a readable block of shell without backslash continuations:</p>
-<pre class="t"><code>?<span class="sc">&lt;</span>{
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>?<span class="sc">&lt;</span>{
   git add <span class="sc">.</span>
   git commit <span class="sc">-</span>m <span class="st">"update"</span>
   git push
-}<span class="sc">&gt;</span></code></pre>
+}<span class="sc">&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="errors" class="level3" data-number="15.7.5">
 <h3 data-number="15.7.5" class="anchored" data-anchor-id="errors"><span class="header-section-number">15.7.5</span> Errors</h3>
 <p>If a command exits with a non-zero status, the escape yields a <code>ShellError</code> carrying the command’s <code>stderr</code>, so a failing command is easy to diagnose. You can test for it with <code>is_error()</code>:</p>
-<pre class="t"><code>result <span class="sc">=</span> ?<span class="sc">&lt;</span>{ls <span class="sc">/</span>nonexistent}<span class="sc">&gt;</span>
-<span class="fu">is_error</span>(result)   <span class="co">-- true</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>result <span class="sc">=</span> ?<span class="sc">&lt;</span>{ls <span class="sc">/</span>nonexistent}<span class="sc">&gt;</span>
+<span class="fu">is_error</span>(result)   <span class="co">-- true</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="serializers-in-depth" class="level2" data-number="15.8">
@@ -996,9 +996,9 @@ current_user <span class="sc">=</span> ?<span class="sc">&lt;</span>{whoami}<spa
 <section id="symbols-variables-and-the-string-trap" class="level3" data-number="15.8.2">
 <h3 data-number="15.8.2" class="anchored" data-anchor-id="symbols-variables-and-the-string-trap"><span class="header-section-number">15.8.2</span> Symbols, variables, and the string trap</h3>
 <p>There is a subtle but important distinction in how you name a serializer. Built-in serializers are <strong>symbols</strong> with the <code>^</code> prefix. A custom serializer you have defined is a <strong>variable</strong>, and you pass its name with no <code>^</code>.</p>
-<pre class="t"><code><span class="fu">node</span>(command <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"large.csv"</span>), serializer <span class="sc">=</span> ^ipc) <span class="co">-- built-in</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">node</span>(command <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"large.csv"</span>), serializer <span class="sc">=</span> ^ipc) <span class="co">-- built-in</span>
 <span class="cf">import</span> <span class="st">"src/my_ser.t"</span> [my_ser]
-<span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>, serializer <span class="sc">=</span> my_ser)                 <span class="co">-- custom</span></code></pre>
+<span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>, serializer <span class="sc">=</span> my_ser)                 <span class="co">-- custom</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
@@ -1011,13 +1011,13 @@ node&lt;T&gt;(...)
 <section id="custom-serializers" class="level3" data-number="15.8.3">
 <h3 data-number="15.8.3" class="anchored" data-anchor-id="custom-serializers"><span class="header-section-number">15.8.3</span> Custom serializers</h3>
 <p>A serializer is a first-class value: a record with a <code>format</code>, a <code>writer</code>, and a <code>reader</code>.</p>
-<pre class="t"><code>type serializer <span class="sc">=</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>type serializer <span class="sc">=</span> {
   format<span class="sc">:</span> string,
   writer<span class="sc">:</span> <span class="cf">function</span>(path<span class="sc">:</span> string, value<span class="sc">:</span> any) <span class="sc">-&gt;</span> result[<span class="cn">NA</span>, string],
   reader<span class="sc">:</span> <span class="cf">function</span>(path<span class="sc">:</span> string) <span class="sc">-&gt;</span> result[any, string]
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>To define one, you write a record that matches that shape. The <code>format</code> field should be a <code>^</code> symbol so it stays consistent with T’s symbol-based serialization.</p>
-<pre class="t"><code>my_log_serializer <span class="sc">=</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>my_log_serializer <span class="sc">=</span> {
   format<span class="sc">:</span> ^log,
   writer<span class="sc">:</span> \(path, val) {
     <span class="co">-- write val to path in your log format</span>
@@ -1029,9 +1029,9 @@ node&lt;T&gt;(...)
   }
 }
 
-<span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>, serializer <span class="sc">=</span> my_log_serializer)</code></pre>
+<span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>, serializer <span class="sc">=</span> my_log_serializer)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For a serializer to work across <em>other</em> runtimes, you can add optional <code>r_writer</code>, <code>r_reader</code>, <code>py_writer</code>, and <code>py_reader</code> fields. These are code snippets, plain strings or foreign code blocks for readability, that T injects into the generated build script for that runtime.</p>
-<pre class="t"><code>my_custom_ser <span class="sc">=</span> [
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>my_custom_ser <span class="sc">=</span> [
   format<span class="sc">:</span> ^custom,
   writer<span class="sc">:</span> \(path, val) { <span class="fu">Ok</span>(<span class="cn">NA</span>) },
   reader<span class="sc">:</span> \(path) { <span class="fu">Ok</span>(<span class="dv">42</span>) },
@@ -1039,7 +1039,7 @@ node&lt;T&gt;(...)
   r_reader<span class="sc">:</span> <span class="sc">&lt;</span>{ <span class="cf">function</span>(path) { <span class="fu">readCustom</span>(path) } },
   py_writer<span class="sc">:</span> <span class="sc">&lt;</span>{ def <span class="fu">write_custom</span>(obj, path)<span class="sc">:</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span> },
   py_reader<span class="sc">:</span> <span class="sc">&lt;</span>{ def <span class="fu">read_custom</span>(path)<span class="sc">:</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span> }
-]</code></pre>
+]</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>T performs <strong>static coherence checks</strong> when you build a pipeline that uses a custom serializer: if a node is declared for the R runtime but the serializer has no <code>r_writer</code> or <code>r_reader</code>, you get an error at build time rather than a mystery failure at run time. And when T detects that your serializer references R or Python functions, it can add the corresponding <code>[r-dependencies]</code> or <code>[py-dependencies]</code> to the generated build automatically (controlled by <code>TLANG_AUTO_ADD_PIPELINE_DEPS</code>).</p>
 </section>
 </section>
@@ -1050,7 +1050,7 @@ node&lt;T&gt;(...)
 <h3 data-number="15.9.1" class="anchored" data-anchor-id="returning-a-plot-from-a-node"><span class="header-section-number">15.9.1</span> Returning a plot from a node</h3>
 <p>Any node can return a plot object; a <code>Plot</code> from CairoMakie, a ggplot2 object, a matplotlib figure, and so on. When it does, T serializes the plot and, crucially, records <strong>visualization metadata</strong> alongside the artifact. That metadata is what lets downstream tools know the output is something to be <em>shown</em>, not just <em>read</em>.</p>
 <p>Let’s study this pipeline:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   iris_data <span class="sc">=</span> <span class="fu">rn</span>(
     command <span class="sc">=</span> <span class="sc">&lt;</span>{
       # Load iris dataset
@@ -1074,7 +1074,7 @@ node&lt;T&gt;(...)
     }<span class="sc">&gt;</span>,
     deserializer <span class="sc">=</span> ^csv
   )
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
@@ -1084,9 +1084,9 @@ to_expr(1 + 10)
 <section id="reading-a-plot-back" class="level3" data-number="15.9.2">
 <h3 data-number="15.9.2" class="anchored" data-anchor-id="reading-a-plot-back"><span class="header-section-number">15.9.2</span> Reading a plot back</h3>
 <p>Once built, it is possible to <em>read</em> the plot using <code>read_node()</code>, which on a plotting node returns not the raw artifact but a small metadata record describing it: the path to the serialized plot, its type, and the runtime that produced it.</p>
-<pre class="t"><code><span class="fu">read_node</span>(p.iris_ggplot)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">read_node</span>(p.iris_ggplot)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>returns:</p>
-<pre class="t"><code>ggplot
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>ggplot
 ├── backend<span class="sc">:</span> <span class="st">"R"</span>
 ├── title<span class="sc">:</span> <span class="st">"Sepal.Length ~ Petal.Length | Species"</span>
 ├── mapping
@@ -1095,11 +1095,11 @@ to_expr(1 + 10)
 ├── labels
 │   └── title<span class="sc">:</span> <span class="st">"Sepal.Length ~ Petal.Length | Species"</span>
 └── layers
-    └── geom_point<span class="sc">:</span> <span class="st">"Point"</span></code></pre>
+    └── geom_point<span class="sc">:</span> <span class="st">"Point"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>and to actually see the plot in your browser, use <code>show_plot()</code>:</p>
-<pre class="t"><code>T<span class="sc">&gt;</span> <span class="fu">show_plot</span>(p.iris_plot)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>T<span class="sc">&gt;</span> <span class="fu">show_plot</span>(p.iris_plot)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This should open the plot in your browser, if not, the path is emitted and you can simply open the generated PNG file using whichever tool you prefer:</p>
-<pre class="t"><code>_pipeline<span class="sc">/</span>show_plot_render_20260821_132239_6808.png</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>_pipeline<span class="sc">/</span>show_plot_render_20260821_132239_6808.png</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This plot is generated in the actual R environment defined in your pipeline, but should something look off, try <code>debug_node(p.iris_plot)</code> and build it from the actual R session!</p>
 </section>
 <section id="plots-in-literate-documents" class="level3" data-number="15.9.3">
@@ -1125,7 +1125,7 @@ to_expr(1 + 10)
 <li><code>env_vars</code>: per-node environment variables, set when the node is defined.</li>
 </ul>
 <p>Validation is strict: pass a key that is not a valid option, or a value of the wrong type, and you get a <code>TypeError</code> or <code>ValueError</code> before the build starts.</p>
-<pre class="t"><code><span class="fu">build_pipeline</span>(p, nix_options <span class="sc">=</span> { max_jobs <span class="sc">=</span> <span class="dv">4</span>, dry_run <span class="sc">=</span> <span class="cn">true</span> })</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">build_pipeline</span>(p, nix_options <span class="sc">=</span> { max_jobs <span class="sc">=</span> <span class="dv">4</span>, dry_run <span class="sc">=</span> <span class="cn">true</span> })</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="dry-runs-and-plans" class="level3" data-number="15.10.2">
 <h3 data-number="15.10.2" class="anchored" data-anchor-id="dry-runs-and-plans"><span class="header-section-number">15.10.2</span> Dry runs and plans</h3>
@@ -1139,7 +1139,7 @@ to_expr(1 + 10)
 <h3 data-number="15.10.4" class="anchored" data-anchor-id="building-on-other-machines"><span class="header-section-number">15.10.4</span> Building on other machines</h3>
 <p>The <code>builders</code> option is what turns a local build into a distributed one. You can point a build at a remote Nix builder, a faster machine or a machine with the right architecture, and Nix will ship the build steps there. This is particularly useful when your pipeline has heavy nodes that would take minutes locally but seconds on a larger box. The <code>pipeline_to_drv(p)</code> function returns the underlying Nix derivation, which is the escape hatch for when you need to hand the build to a tool that understands derivations directly.</p>
 <p>The <code>cache</code> option is the companion to <code>builders</code>. Where <code>builders</code> decides <em>where</em> a build runs, <code>cache</code> decides <em>where pre-built artifacts come from</em>. Like <code>builders</code>, it is a key in the <code>nix_options</code> dictionary. Passing a Cachix cache name registers it as an extra Nix binary substituter:</p>
-<pre class="t"><code><span class="fu">build_pipeline</span>(p, nix_options <span class="sc">=</span> { cache <span class="sc">=</span> <span class="st">"my-team"</span> })</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">build_pipeline</span>(p, nix_options <span class="sc">=</span> { cache <span class="sc">=</span> <span class="st">"my-team"</span> })</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Nix then pulls any matching store paths from <code>my-team.cachix.org</code> before falling back to building them, and can push freshly built artifacts back to the cache. This is how a team shares build results across machines and CI runners without each one recompiling the same R and Python packages from source.</p>
 </section>
 </section>
@@ -1171,13 +1171,13 @@ to_expr(1 + 10)
 <section id="t-doc-documentation" class="level3" data-number="15.11.4">
 <h3 data-number="15.11.4" class="anchored" data-anchor-id="t-doc-documentation"><span class="header-section-number">15.11.4</span> T-Doc documentation</h3>
 <p>T packages use a lightweight documentation format, T-Doc. A function is documented with a <code>--#</code> block that supports directives:</p>
-<pre class="t"><code><span class="co">--# @param x The input value.</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">--# @param x The input value.</span>
 <span class="co">--# @return A transformed value.</span>
 <span class="co">--# @example</span>
 <span class="co">--#   myfunc(1)</span>
 <span class="co">--# @seealso myotherfunc</span>
 <span class="co">--# @family transforms</span>
-myfunc <span class="sc">=</span> \(x) { x <span class="sc">*</span> <span class="dv">2</span> }</code></pre>
+myfunc <span class="sc">=</span> \(x) { x <span class="sc">*</span> <span class="dv">2</span> }</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>t doc --parse --generate</code> parses these blocks and generates the package’s documentation. <code>t doctor</code> is the linter: it checks that public functions are documented, that <code>@param</code> names match the signature, and that cross-references resolve.</p>
 </section>
 <section id="publishing" class="level3" data-number="15.11.5">
@@ -1187,9 +1187,9 @@ myfunc <span class="sc">=</span> \(x) { x <span class="sc">*</span> <span class=
 <section id="importing" class="level3" data-number="15.11.6">
 <h3 data-number="15.11.6" class="anchored" data-anchor-id="importing"><span class="header-section-number">15.11.6</span> Importing</h3>
 <p>Consumers import a T package the same way they import any T module, by name or by path, with optional selective or aliased imports:</p>
-<pre class="t"><code><span class="cf">import</span> <span class="st">"mylib"</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="cf">import</span> <span class="st">"mylib"</span>
 <span class="cf">import</span> <span class="st">"mylib"</span> [myfunc]
-<span class="cf">import</span> <span class="st">"mylib"</span> [myfunc as transform]</code></pre>
+<span class="cf">import</span> <span class="st">"mylib"</span> [myfunc as transform]</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="property-based-testing-with-propcraft" class="level2" data-number="15.12">
@@ -1199,11 +1199,11 @@ myfunc <span class="sc">=</span> \(x) { x <span class="sc">*</span> <span class=
 <h3 data-number="15.12.1" class="anchored" data-anchor-id="the-idea"><span class="header-section-number">15.12.1</span> The idea</h3>
 <p>Instead of testing specific inputs, you describe a <strong>property</strong> that should hold for <em>all</em> inputs in some domain, and Propcraft generates hundreds of random inputs to try to break it. If it finds one that fails, it <strong>shrinks</strong> the failing input down to a minimal, easy-to-read counterexample.</p>
 <p>The entry point is <code>prop_for_all</code>, which takes a generator for each argument and a property function:</p>
-<pre class="t"><code><span class="fu">prop_for_all</span>(
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">prop_for_all</span>(
   <span class="fu">prop_gen_int_range</span>(<span class="dv">0</span>, <span class="dv">100</span>),
   <span class="fu">prop_gen_int_range</span>(<span class="dv">0</span>, <span class="dv">100</span>),
   \(a, b) { <span class="fu">add</span>(a, b) <span class="sc">==</span> <span class="fu">add</span>(b, a) }
-)</code></pre>
+)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="generators" class="level3" data-number="15.12.2">
 <h3 data-number="15.12.2" class="anchored" data-anchor-id="generators"><span class="header-section-number">15.12.2</span> Generators</h3>
@@ -1227,10 +1227,10 @@ myfunc <span class="sc">=</span> \(x) { x <span class="sc">*</span> <span class=
 <section id="a-concrete-example" class="level3" data-number="15.12.4">
 <h3 data-number="15.12.4" class="anchored" data-anchor-id="a-concrete-example"><span class="header-section-number">15.12.4</span> A concrete example</h3>
 <p>Here is the kind of bug property-based testing finds. Suppose a function is supposed to drop rows with missing values in a given column:</p>
-<pre class="t"><code><span class="fu">prop_for_all</span>(
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">prop_for_all</span>(
   <span class="fu">prop_gen_df</span>(na_prob <span class="sc">=</span> <span class="fl">0.3</span>),
   \(df) { <span class="fu">nrow</span>(<span class="fu">drop_na</span>(df, <span class="sc">$</span>x)) <span class="sc">&lt;=</span> <span class="fu">nrow</span>(df) }
-)</code></pre>
+)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The property, that the result has no more rows than the input, is obviously true, yet it fails. Propcraft shrinks the failing input to a tiny DataFrame and shows you the exact rows that broke it, instead of leaving you to guess.</p>
 </section>
 <section id="seeding-and-sample-size" class="level3" data-number="15.12.5">

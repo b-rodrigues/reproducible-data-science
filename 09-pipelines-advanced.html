@@ -590,12 +590,12 @@ div.csl-indent {
 <h2 data-number="9.1" class="anchored" data-anchor-id="pipelines-as-data"><span class="header-section-number">9.1</span> Pipelines as Data</h2>
 <p>The pipeline value you construct inside a <code>pipeline { ... }</code> block is an ordinary T record. It carries the DAG structure, the node metadata, and enough information for T’s build engine to emit Nix derivations. Because it is a record, all the standard higher-order functions, <code>filter</code>, <code>map</code>, <code>fold</code>, and <code>select</code>, work on it just as they do on any other collection.</p>
 <p>This has a practical consequence: you write <em>pipeline transformations</em> in the same language as the pipeline itself, without shelling out to a separate tool or reading a build-graph dump. The chapter illustrates this with a running example: a shared ETL pipeline wired to two alternative model pipelines, one linear, one a random forest. We will build it up gradually.</p>
-<pre class="t"><code>etl <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>etl <span class="sc">=</span> <span class="cf">pipeline</span> {
   raw        <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ read.csv(<span class="st">"data/sales.csv"</span>) }<span class="sc">&gt;</span>)
   validated  <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ <span class="fu">validate_schema</span>(raw) }<span class="sc">&gt;</span>)
   cleaned    <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ <span class="fu">clean_missing</span>(validated) }<span class="sc">&gt;</span>)
   features   <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ <span class="fu">engineer_features</span>(cleaned) }<span class="sc">&gt;</span>)
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Keep this pipeline in mind; we will manipulate it throughout the chapter.</p>
 </section>
 <section id="querying-the-dag" class="level2" data-number="9.2">
@@ -660,8 +660,8 @@ div.csl-indent {
 </tbody>
 </table>
 <p>You do not need to memorise those columns; the point is that they are queryable with ordinary data-frame operations.</p>
-<pre class="t"><code>df <span class="sc">=</span> <span class="fu">pipeline_to_frame</span>(etl)
-<span class="fu">print</span>(df)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">=</span> <span class="fu">pipeline_to_frame</span>(etl)
+<span class="fu">print</span>(df)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 </code></pre>
 <pre><code>name        runtime  serializer   noop  depth
@@ -670,11 +670,11 @@ validated   r        rds          false  1
 cleaned     r        rds          false  2
 features    r        rds          false  3</code></pre>
 <p>From here, any standard filter or select applies directly. To find every Python node:</p>
-<pre class="t"><code>py_nodes <span class="sc">=</span> <span class="fu">filter</span>(df, \(row) row.runtime <span class="sc">==</span> <span class="st">"python"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>py_nodes <span class="sc">=</span> <span class="fu">filter</span>(df, \(row) row.runtime <span class="sc">==</span> <span class="st">"python"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 </code></pre>
 <p>To find every node at depth 2 or deeper, which is useful when you want to know which steps are non-trivial downstream work:</p>
-<pre class="t"><code>deep_nodes <span class="sc">=</span> <span class="fu">filter</span>(df, \(row) row.depth <span class="sc">&gt;=</span> <span class="dv">2</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>deep_nodes <span class="sc">=</span> <span class="fu">filter</span>(df, \(row) row.depth <span class="sc">&gt;=</span> <span class="dv">2</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 </code></pre>
 </section>
@@ -687,7 +687,7 @@ features    r        rds          false  3</code></pre>
 <li><code>pipeline_edges(p)</code>: every <code>(from, to)</code> dependency pair as a frame</li>
 <li><code>pipeline_depth(p)</code>: a named record mapping each node name to its depth</li>
 </ul>
-<pre class="t"><code>roots  <span class="sc">=</span> <span class="fu">pipeline_roots</span>(etl)   <span class="co">-- ["raw"]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>roots  <span class="sc">=</span> <span class="fu">pipeline_roots</span>(etl)   <span class="co">-- ["raw"]</span>
 leaves <span class="sc">=</span> <span class="fu">pipeline_leaves</span>(etl)  <span class="co">-- ["features"]</span>
 edges  <span class="sc">=</span> <span class="fu">pipeline_edges</span>(etl)
 
@@ -695,14 +695,14 @@ edges  <span class="sc">=</span> <span class="fu">pipeline_edges</span>(etl)
 <span class="co">-- from         to</span>
 <span class="co">-- raw          validated</span>
 <span class="co">-- validated    cleaned</span>
-<span class="co">-- cleaned      features</span></code></pre>
+<span class="co">-- cleaned      features</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 </code></pre>
 </section>
 <section id="column-projection-with-select_node" class="level3" data-number="9.2.3">
 <h3 data-number="9.2.3" class="anchored" data-anchor-id="column-projection-with-select_node"><span class="header-section-number">9.2.3</span> Column projection with <code>select_node</code></h3>
 <p><code>select_node</code> lets you project specific fields using non-standard evaluation (the <code>$field</code> syntax). It returns a frame restricted to the named columns, which is handy when you want to pass a compact summary to a report or a CI log:</p>
-<pre class="t"><code>etl_summary <span class="sc">=</span> <span class="fu">select_node</span>(etl, <span class="sc">$</span>name, <span class="sc">$</span>runtime, <span class="sc">$</span>depth)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>etl_summary <span class="sc">=</span> <span class="fu">select_node</span>(etl, <span class="sc">$</span>name, <span class="sc">$</span>runtime, <span class="sc">$</span>depth)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 </code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -726,8 +726,8 @@ Note
 <section id="filter_node" class="level3" data-number="9.3.1">
 <h3 data-number="9.3.1" class="anchored" data-anchor-id="filter_node"><span class="header-section-number">9.3.1</span> <code>filter_node</code></h3>
 <p><code>filter_node(p, pred)</code> returns a new pipeline containing only the nodes that satisfy the predicate. DAG validity is <em>not</em> checked until <code>build_pipeline</code> is called, so you can remove nodes freely and let T report missing-dependency errors only when you actually try to build.</p>
-<pre class="t"><code><span class="co">-- Keep only the ETL steps that are not "raw" (already built, skip ingestion)</span>
-no_ingest <span class="sc">=</span> <span class="fu">filter_node</span>(etl, <span class="sc">$</span>name <span class="sc">!=</span> <span class="st">"raw"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Keep only the ETL steps that are not "raw" (already built, skip ingestion)</span>
+no_ingest <span class="sc">=</span> <span class="fu">filter_node</span>(etl, <span class="sc">$</span>name <span class="sc">!=</span> <span class="st">"raw"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 </code></pre>
 <p>This is the simplest way to produce a lighter pipeline for a fast check run.</p>
@@ -736,13 +736,13 @@ no_ingest <span class="sc">=</span> <span class="fu">filter_node</span>(etl, <sp
 <h3 data-number="9.3.2" class="anchored" data-anchor-id="mutate_node"><span class="header-section-number">9.3.2</span> <code>mutate_node</code></h3>
 <p><code>mutate_node(p, pred, field = value)</code> modifies a field on all nodes matching <code>pred</code>. Without a predicate, every node is affected.</p>
 <p><strong>Skipping expensive nodes.</strong> Set <code>$noop = true</code> to mark a node as a no-op at build time. T will resolve the node’s output by reading the most recent cached artifact instead of rebuilding it, so downstream nodes can still reference it. This is the canonical way to skip slow steps during development:</p>
-<pre class="t"><code><span class="co">-- Skip the feature-engineering step while iterating on the model</span>
-fast_etl <span class="sc">=</span> <span class="fu">mutate_node</span>(etl, <span class="sc">$</span>name <span class="sc">==</span> <span class="st">"features"</span>, <span class="sc">$</span>noop <span class="sc">=</span> <span class="cn">true</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Skip the feature-engineering step while iterating on the model</span>
+fast_etl <span class="sc">=</span> <span class="fu">mutate_node</span>(etl, <span class="sc">$</span>name <span class="sc">==</span> <span class="st">"features"</span>, <span class="sc">$</span>noop <span class="sc">=</span> <span class="cn">true</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 </code></pre>
 <p><strong>Swapping runtimes.</strong> You can change the runtime of a node to test whether a Python reimplementation of an R step produces the same result:</p>
-<pre class="t"><code><span class="co">-- Run "cleaned" in Python instead of R, without touching anything else</span>
-py_etl <span class="sc">=</span> <span class="fu">mutate_node</span>(etl, <span class="sc">$</span>name <span class="sc">==</span> <span class="st">"cleaned"</span>, <span class="sc">$</span>runtime <span class="sc">=</span> <span class="st">"python"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Run "cleaned" in Python instead of R, without touching anything else</span>
+py_etl <span class="sc">=</span> <span class="fu">mutate_node</span>(etl, <span class="sc">$</span>name <span class="sc">==</span> <span class="st">"cleaned"</span>, <span class="sc">$</span>runtime <span class="sc">=</span> <span class="st">"python"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 </code></pre>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -762,34 +762,34 @@ Tip
 <section id="rename_node" class="level3" data-number="9.3.3">
 <h3 data-number="9.3.3" class="anchored" data-anchor-id="rename_node"><span class="header-section-number">9.3.3</span> <code>rename_node</code></h3>
 <p><code>rename_node(p, old, new)</code> renames a node and automatically rewires every dependency edge that referenced the old name. You do not have to hunt through the pipeline looking for references; T handles the rewriting:</p>
-<pre class="t"><code><span class="co">-- Rename "features" to "feature_matrix" for a cleaner downstream API</span>
-etl2 <span class="sc">=</span> <span class="fu">rename_node</span>(etl, <span class="st">"features"</span>, <span class="st">"feature_matrix"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Rename "features" to "feature_matrix" for a cleaner downstream API</span>
+etl2 <span class="sc">=</span> <span class="fu">rename_node</span>(etl, <span class="st">"features"</span>, <span class="st">"feature_matrix"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 </code></pre>
 </section>
 <section id="swap" class="level3" data-number="9.3.4">
 <h3 data-number="9.3.4" class="anchored" data-anchor-id="swap"><span class="header-section-number">9.3.4</span> <code>swap</code></h3>
 <p><code>swap(p, name, new_node)</code> replaces a node’s implementation while keeping all its dependency edges intact. The new node inherits the same name and position in the DAG; only its command changes. This is the right tool when you want to test an alternative algorithm without restructuring the pipeline:</p>
-<pre class="t"><code>glm_node <span class="sc">=</span> r { <span class="fu">glm</span>(target <span class="sc">~</span> <span class="sc">.</span>, data <span class="sc">=</span> features, family <span class="sc">=</span> <span class="fu">gaussian</span>()) }
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>glm_node <span class="sc">=</span> r { <span class="fu">glm</span>(target <span class="sc">~</span> <span class="sc">.</span>, data <span class="sc">=</span> features, family <span class="sc">=</span> <span class="fu">gaussian</span>()) }
 
-model_pipeline_glm <span class="sc">=</span> <span class="fu">swap</span>(model_pipeline, <span class="st">"linear_model"</span>, glm_node)</code></pre>
+model_pipeline_glm <span class="sc">=</span> <span class="fu">swap</span>(model_pipeline, <span class="st">"linear_model"</span>, glm_node)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="rewire" class="level3" data-number="9.3.5">
 <h3 data-number="9.3.5" class="anchored" data-anchor-id="rewire"><span class="header-section-number">9.3.5</span> <code>rewire</code></h3>
 <p><code>rewire(p, name, new_deps)</code> reroutes a node’s dependency edges. The node’s command stays the same; only <em>what it reads from</em> changes. Use it when you want to connect the same computation to a different upstream:</p>
-<pre class="t"><code><span class="co">-- Point "linear_model" at "features_v2" instead of "features"</span>
-rewired <span class="sc">=</span> <span class="fu">rewire</span>(model_pipeline, <span class="st">"linear_model"</span>, [<span class="st">"features_v2"</span>])</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Point "linear_model" at "features_v2" instead of "features"</span>
+rewired <span class="sc">=</span> <span class="fu">rewire</span>(model_pipeline, <span class="st">"linear_model"</span>, [<span class="st">"features_v2"</span>])</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="a-realistic-what-if-workflow" class="level3" data-number="9.3.6">
 <h3 data-number="9.3.6" class="anchored" data-anchor-id="a-realistic-what-if-workflow"><span class="header-section-number">9.3.6</span> A realistic “what-if” workflow</h3>
 <p>Putting this together: suppose you have a model step that takes twenty minutes to run, and you want a quick sanity check that only reruns the feature engineering and report steps.</p>
-<pre class="t"><code><span class="co">-- 1. Build the full pipeline once</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- 1. Build the full pipeline once</span>
 res <span class="sc">=</span> <span class="fu">build_pipeline</span>(full_pipeline)
 
 <span class="co">-- 2. For the next iteration, skip the model and go straight to the report</span>
 fast_check <span class="sc">=</span> full_pipeline
   <span class="sc">|&gt;</span> <span class="fu">mutate_node</span>(<span class="sc">$</span>name <span class="sc">==</span> <span class="st">"model"</span>, <span class="sc">$</span>noop <span class="sc">=</span> <span class="cn">true</span>)
-  <span class="sc">|&gt;</span> <span class="fu">build_pipeline</span>()</code></pre>
+  <span class="sc">|&gt;</span> <span class="fu">build_pipeline</span>()</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Because T cached the model node on step 1, step 2 reads that cache and immediately builds the report. No data is lost; no special configuration is required.</p>
 </section>
 </section>
@@ -799,18 +799,18 @@ fast_check <span class="sc">=</span> full_pipeline
 <section id="union" class="level3" data-number="9.4.1">
 <h3 data-number="9.4.1" class="anchored" data-anchor-id="union"><span class="header-section-number">9.4.1</span> <code>union</code></h3>
 <p><code>union(p1, p2)</code> merges two pipelines. If both contain a node with the same name, T raises an error at construction time. Use <code>rename_node</code> on one of the pipelines first if you need to resolve the collision:</p>
-<pre class="t"><code>full <span class="sc">=</span> <span class="fu">union</span>(etl, model_pipeline)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>full <span class="sc">=</span> <span class="fu">union</span>(etl, model_pipeline)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="difference" class="level3" data-number="9.4.2">
 <h3 data-number="9.4.2" class="anchored" data-anchor-id="difference"><span class="header-section-number">9.4.2</span> <code>difference</code></h3>
 <p><code>difference(p1, p2)</code> keeps the nodes in <code>p1</code> that do not appear in <code>p2</code>. This is useful when you want to strip out a phase you no longer need:</p>
-<pre class="t"><code><span class="co">-- Keep only the modelling steps; drop the ingestion phase</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Keep only the modelling steps; drop the ingestion phase</span>
 ingest_only <span class="sc">=</span> <span class="cf">pipeline</span> {
   raw       <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ read.csv(<span class="st">"data/sales.csv"</span>) }<span class="sc">&gt;</span>)
   validated <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ <span class="fu">validate_schema</span>(raw) }<span class="sc">&gt;</span>)
 }
 trimmed <span class="sc">=</span> <span class="fu">difference</span>(etl, ingest_only)
-<span class="fu">print</span>(<span class="fu">pipeline_nodes</span>(trimmed))</code></pre>
+<span class="fu">print</span>(<span class="fu">pipeline_nodes</span>(trimmed))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
 </code></pre>
@@ -831,25 +831,25 @@ Note
 <section id="intersect" class="level3" data-number="9.4.3">
 <h3 data-number="9.4.3" class="anchored" data-anchor-id="intersect"><span class="header-section-number">9.4.3</span> <code>intersect</code></h3>
 <p><code>intersect(p1, p2)</code> keeps only the nodes that appear in <em>both</em> pipelines, using the definitions from <code>p1</code>. This is handy when you want to extract the shared core of two related pipelines:</p>
-<pre class="t"><code>shared_core <span class="sc">=</span> <span class="fu">intersect</span>(full_pipeline_v1, full_pipeline_v2)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>shared_core <span class="sc">=</span> <span class="fu">intersect</span>(full_pipeline_v1, full_pipeline_v2)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="patch" class="level3" data-number="9.4.4">
 <h3 data-number="9.4.4" class="anchored" data-anchor-id="patch"><span class="header-section-number">9.4.4</span> <code>patch</code></h3>
 <p><code>patch(p, overrides)</code> updates existing nodes in <code>p</code> using definitions from <code>overrides</code>, but ignores any node in <code>overrides</code> that does not already exist in <code>p</code>. This is the safe way to apply configuration overrides: new nodes in the override pipeline cannot accidentally sneak into the production pipeline.</p>
-<pre class="t"><code><span class="co">-- Override the "cleaned" node without risk of adding unreviewed steps</span>
-prod <span class="sc">=</span> <span class="fu">patch</span>(prod_pipeline, dev_overrides)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Override the "cleaned" node without risk of adding unreviewed steps</span>
+prod <span class="sc">=</span> <span class="fu">patch</span>(prod_pipeline, dev_overrides)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="prune" class="level3" data-number="9.4.5">
 <h3 data-number="9.4.5" class="anchored" data-anchor-id="prune"><span class="header-section-number">9.4.5</span> <code>prune</code></h3>
 <p><code>prune(p)</code> removes all leaf nodes, i.e.&nbsp;nodes that nothing else depends on. It is typically used after <code>difference</code> to clean up dangling tails:</p>
-<pre class="t"><code><span class="co">-- Remove the report node, then prune anything that became orphaned</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Remove the report node, then prune anything that became orphaned</span>
 no_report <span class="sc">=</span> <span class="fu">difference</span>(full_pipeline, [<span class="st">"report"</span>])
-             <span class="sc">|&gt;</span> <span class="fu">prune</span>()</code></pre>
+             <span class="sc">|&gt;</span> <span class="fu">prune</span>()</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="a-realistic-use-case-shared-etl-swapped-model" class="level3" data-number="9.4.6">
 <h3 data-number="9.4.6" class="anchored" data-anchor-id="a-realistic-use-case-shared-etl-swapped-model"><span class="header-section-number">9.4.6</span> A realistic use-case: shared ETL, swapped model</h3>
 <p>Here is the pattern you will reach for most often in a production setting: a shared ETL pipeline assembled once, then forked into two model pipelines that differ only in their model node.</p>
-<pre class="t"><code><span class="co">-- Shared ETL (defined once, potentially sourced from its own file)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Shared ETL (defined once, potentially sourced from its own file)</span>
 etl <span class="sc">=</span> <span class="cf">pipeline</span> {
   raw      <span class="sc">=</span> r { read.csv(<span class="st">"data/sales.csv"</span>) }
   cleaned  <span class="sc">=</span> r { <span class="fu">clean_missing</span>(raw) }
@@ -869,7 +869,7 @@ rf      <span class="sc">=</span> <span class="fu">swap</span>(linear, <span cla
 
 <span class="co">-- Assemble both into one build</span>
 full <span class="sc">=</span> <span class="fu">union</span>(etl, <span class="fu">union</span>(linear, rf))
-res  <span class="sc">=</span> <span class="fu">build_pipeline</span>(full)</code></pre>
+res  <span class="sc">=</span> <span class="fu">build_pipeline</span>(full)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We build one ETL phase and two model branches in a single call. Nix caches the ETL outputs and reuses them for both branches.</p>
 </section>
 </section>
@@ -879,23 +879,23 @@ res  <span class="sc">=</span> <span class="fu">build_pipeline</span>(full)</cod
 <section id="upstream_of" class="level3" data-number="9.5.1">
 <h3 data-number="9.5.1" class="anchored" data-anchor-id="upstream_of"><span class="header-section-number">9.5.1</span> <code>upstream_of</code></h3>
 <p><code>upstream_of(p, name)</code> returns a new pipeline containing the named node and all of its transitive ancestors:</p>
-<pre class="t"><code><span class="co">-- Everything needed to produce "features", and nothing more</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Everything needed to produce "features", and nothing more</span>
 etl_only <span class="sc">=</span> <span class="fu">upstream_of</span>(full, <span class="st">"features"</span>)
-<span class="fu">build_pipeline</span>(etl_only)</code></pre>
+<span class="fu">build_pipeline</span>(etl_only)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="downstream_of" class="level3" data-number="9.5.2">
 <h3 data-number="9.5.2" class="anchored" data-anchor-id="downstream_of"><span class="header-section-number">9.5.2</span> <code>downstream_of</code></h3>
 <p><code>downstream_of(p, name)</code> returns the named node and everything that directly or transitively depends on it:</p>
-<pre class="t"><code><span class="co">-- Re-run the model and every downstream step after changing a hyperparameter</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Re-run the model and every downstream step after changing a hyperparameter</span>
 model_onwards <span class="sc">=</span> <span class="fu">downstream_of</span>(full, <span class="st">"linear_model"</span>)
-<span class="fu">build_pipeline</span>(model_onwards)</code></pre>
+<span class="fu">build_pipeline</span>(model_onwards)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is the most common use of DAG-aware transformations: you change a parameter, extract everything that is sensitive to that parameter, and rebuild only that subgraph.</p>
 </section>
 <section id="subgraph" class="level3" data-number="9.5.3">
 <h3 data-number="9.5.3" class="anchored" data-anchor-id="subgraph"><span class="header-section-number">9.5.3</span> <code>subgraph</code></h3>
 <p><code>subgraph(p, names)</code> returns the full connected component reachable from any of the named nodes, traversing both upstream and downstream edges. Use it when you want to isolate a middle section of a complex pipeline for testing:</p>
-<pre class="t"><code><span class="co">-- Isolate the cleaning and feature-engineering stages</span>
-mid <span class="sc">=</span> <span class="fu">subgraph</span>(full, [<span class="st">"cleaned"</span>, <span class="st">"features"</span>])</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Isolate the cleaning and feature-engineering stages</span>
+mid <span class="sc">=</span> <span class="fu">subgraph</span>(full, [<span class="st">"cleaned"</span>, <span class="st">"features"</span>])</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -917,15 +917,15 @@ Tip
 <section id="chain" class="level3" data-number="9.6.1">
 <h3 data-number="9.6.1" class="anchored" data-anchor-id="chain"><span class="header-section-number">9.6.1</span> <code>chain</code></h3>
 <p><code>chain(p1, p2)</code> wires two pipelines together explicitly: it requires that <code>p2</code> references at least one node from <code>p1</code> by name. This is stricter than <code>union</code> (which silently accepts unconnected pipelines) and is the right choice when you want T to enforce that the wiring is intentional.</p>
-<pre class="t"><code>chained <span class="sc">=</span> <span class="fu">chain</span>(etl, model_pipeline)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>chained <span class="sc">=</span> <span class="fu">chain</span>(etl, model_pipeline)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If <code>p2</code> contains no reference to any node in <code>p1</code>, <code>chain</code> raises an error at construction time.</p>
-<pre class="t"><code>chained <span class="sc">=</span> <span class="fu">chain</span>(etl, model_pipeline)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>chained <span class="sc">=</span> <span class="fu">chain</span>(etl, model_pipeline)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The stub node costs nothing at build time, since T sees it as a no-op alias, but it satisfies the dependency declaration that <code>chain</code> requires.</p>
 </section>
 <section id="parallel" class="level3" data-number="9.6.2">
 <h3 data-number="9.6.2" class="anchored" data-anchor-id="parallel"><span class="header-section-number">9.6.2</span> <code>parallel</code></h3>
 <p><code>parallel(p1, p2)</code> combines two independent pipelines that share no nodes and need no wiring. T checks for name collisions and raises an error if it finds any:</p>
-<pre class="t"><code>report_en  <span class="sc">=</span> <span class="cf">pipeline</span> { report <span class="sc">=</span> <span class="fu">qn</span>(<span class="st">"reports/report_en.qmd"</span>) }
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>report_en  <span class="sc">=</span> <span class="cf">pipeline</span> { report <span class="sc">=</span> <span class="fu">qn</span>(<span class="st">"reports/report_en.qmd"</span>) }
 report_fr  <span class="sc">=</span> <span class="cf">pipeline</span> { report <span class="sc">=</span> <span class="fu">qn</span>(<span class="st">"reports/report_fr.qmd"</span>) }
 
 <span class="co">-- Name collision! Both have a node called "report"</span>
@@ -933,16 +933,16 @@ report_fr  <span class="sc">=</span> <span class="cf">pipeline</span> { report <
 
 report_fr2 <span class="sc">=</span> <span class="fu">rename_node</span>(report_fr, <span class="st">"report"</span>, <span class="st">"report_fr"</span>)
 both       <span class="sc">=</span> <span class="fu">parallel</span>(report_en, report_fr2)
-<span class="fu">print</span>(<span class="fu">pipeline_nodes</span>(both))</code></pre>
+<span class="fu">print</span>(<span class="fu">pipeline_nodes</span>(both))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-82a8f427d9e80b6c/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-326702960a707a61/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="pipeline_of-meta-pipelines" class="level3" data-number="9.6.3">
 <h3 data-number="9.6.3" class="anchored" data-anchor-id="pipeline_of-meta-pipelines"><span class="header-section-number">9.6.3</span> <code>pipeline_of</code> meta-pipelines</h3>
 <p><code>pipeline_of</code> lets you compose multiple named pipelines into a higher-order DAG, where each sub-pipeline becomes a namespace. Nodes are auto-namespaced with the sub-pipeline name as a prefix: a node <code>summary</code> inside a sub-pipeline called <code>stats</code> becomes <code>stats.summary</code>. You can build, read, and inspect the meta-pipeline exactly as you would a flat pipeline:</p>
-<pre class="t"><code>meta <span class="sc">=</span> pipeline_of {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>meta <span class="sc">=</span> pipeline_of {
   etl   <span class="sc">=</span> etl_pipeline
   stats <span class="sc">=</span> stats_pipeline
   plots <span class="sc">=</span> plots_pipeline
@@ -952,7 +952,7 @@ Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-82a8f427d9e80b6c/chunk
 res <span class="sc">=</span> <span class="fu">build_pipeline</span>(meta)
 
 <span class="co">-- Read a namespaced node</span>
-<span class="fu">read_node</span>(<span class="st">"stats.summary"</span>)</code></pre>
+<span class="fu">read_node</span>(<span class="st">"stats.summary"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -970,7 +970,7 @@ Note
 <section id="pipeline-templates-via-lambdas" class="level3" data-number="9.6.4">
 <h3 data-number="9.6.4" class="anchored" data-anchor-id="pipeline-templates-via-lambdas"><span class="header-section-number">9.6.4</span> Pipeline templates via lambdas</h3>
 <p>Because pipelines are values, you can wrap them in functions to produce parameterised templates. This is the T idiom for the factory pattern:</p>
-<pre class="t"><code>make_model_pipeline <span class="sc">=</span> \(multiplier<span class="sc">:</span> Float <span class="sc">-&gt;</span> Pipeline) <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>make_model_pipeline <span class="sc">=</span> \(multiplier<span class="sc">:</span> Float <span class="sc">-&gt;</span> Pipeline) <span class="cf">pipeline</span> {
   scaled_features <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ features <span class="sc">*</span> multiplier }<span class="sc">&gt;</span>)
   model           <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ <span class="fu">lm</span>(target <span class="sc">~</span> <span class="sc">.</span>, data <span class="sc">=</span> scaled_features) }<span class="sc">&gt;</span>)
   report          <span class="sc">=</span> <span class="fu">qn</span>(<span class="st">"reports/model.qmd"</span>)
@@ -981,11 +981,11 @@ p2   <span class="sc">=</span> <span class="fu">make_model_pipeline</span>(<span
 
 both <span class="sc">=</span> <span class="fu">parallel</span>(p1 <span class="sc">|&gt;</span> <span class="fu">rename_node</span>(<span class="st">"report"</span>, <span class="st">"report_1x"</span>),
                 p2 <span class="sc">|&gt;</span> <span class="fu">rename_node</span>(<span class="st">"report"</span>, <span class="st">"report_half"</span>))
-<span class="fu">print</span>(<span class="fu">pipeline_nodes</span>(both))</code></pre>
+<span class="fu">print</span>(<span class="fu">pipeline_nodes</span>(both))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-e7897e8d78c93e32/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-e7897e8d78c93e32/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-15e88a0faa63c8ae/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-15e88a0faa63c8ae/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 </section>
@@ -995,45 +995,45 @@ Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-e7897e8d78c93e32/chunk
 <section id="map_pattern" class="level3" data-number="9.7.1">
 <h3 data-number="9.7.1" class="anchored" data-anchor-id="map_pattern"><span class="header-section-number">9.7.1</span> <code>map_pattern</code></h3>
 <p><code>map_pattern(dep)</code> generates one branch per element of an upstream dependency. You pass it as the <code>pattern</code> argument to <code>node()</code>, and the node’s <code>command</code> references the dependency by name. T substitutes each element in turn:</p>
-<pre class="t"><code>p_map <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p_map <span class="sc">=</span> <span class="cf">pipeline</span> {
   params <span class="sc">=</span> [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>]
   results <span class="sc">=</span> <span class="fu">node</span>(
     command <span class="sc">=</span> <span class="sc">&lt;</span>{ <span class="fu">compute</span>(params) }<span class="sc">&gt;</span>,
     pattern <span class="sc">=</span> <span class="fu">map_pattern</span>(params)
   )
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-f5e434d7436a507a/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-f5e434d7436a507a/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-cde7b0263b23f3e1/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-cde7b0263b23f3e1/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>This expands into three nodes, <code>results_branch_1</code>, <code>results_branch_2</code>, and <code>results_branch_3</code>, where branch <code>i</code> runs the command with element <code>i</code> of <code>params</code>. Multiple dependencies can be mapped at once; they must all have the same length, and branch <code>i</code> receives element <code>i</code> from each:</p>
-<pre class="t"><code>p_map2 <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p_map2 <span class="sc">=</span> <span class="cf">pipeline</span> {
   xs <span class="sc">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]
   ys <span class="sc">=</span> [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>]
   z <span class="sc">=</span> <span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">&lt;</span>{ xs <span class="sc">+</span> ys }<span class="sc">&gt;</span>, pattern <span class="sc">=</span> <span class="fu">map_pattern</span>(xs, ys))
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-1d337740cb3b9ab4/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-1d337740cb3b9ab4/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-914b7b9a663d51ca/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-914b7b9a663d51ca/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 </section>
 <section id="cross_pattern" class="level3" data-number="9.7.2">
 <h3 data-number="9.7.2" class="anchored" data-anchor-id="cross_pattern"><span class="header-section-number">9.7.2</span> <code>cross_pattern</code></h3>
 <p><code>cross_pattern(sub1, sub2, ...)</code> generates a Cartesian product of <code>map_pattern</code> sub-patterns: one branch per combination of values:</p>
-<pre class="t"><code>p_cross <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p_cross <span class="sc">=</span> <span class="cf">pipeline</span> {
   radii  <span class="sc">=</span> [<span class="dv">1</span>, <span class="dv">2</span>]
   cycles <span class="sc">=</span> [<span class="dv">3</span>, <span class="dv">4</span>]
   spiro <span class="sc">=</span> <span class="fu">node</span>(
     command <span class="sc">=</span> <span class="sc">&lt;</span>{ <span class="fu">spirograph</span>(radii, cycles) }<span class="sc">&gt;</span>,
     pattern <span class="sc">=</span> <span class="fu">cross_pattern</span>(<span class="fu">map_pattern</span>(radii), <span class="fu">map_pattern</span>(cycles))
   )
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-8eda119b9ff702cd/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-8eda119b9ff702cd/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-ff208221e9348b29/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-ff208221e9348b29/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>This produces four branches, <code>spiro_branch_1</code> through <code>spiro_branch_4</code>, covering <code>(1,3)</code>, <code>(1,4)</code>, <code>(2,3)</code>, and <code>(2,4)</code>. The spirograph example in the T demos does exactly this: three values of angular frequency crossed with three values of petal count produce nine data-generation branches and nine R-based plot branches, each built in parallel.</p>
 </section>
@@ -1046,24 +1046,24 @@ Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-8eda119b9ff702cd/chunk
 <li><code>tail_pattern(dep, n)</code>: branch on the last <code>n</code> elements.</li>
 <li><code>sample_pattern(dep, n)</code>: branch on <code>n</code> randomly chosen elements.</li>
 </ul>
-<pre class="t"><code>p_select <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p_select <span class="sc">=</span> <span class="cf">pipeline</span> {
   x <span class="sc">=</span> [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>]
   first_two <span class="sc">=</span> <span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">&lt;</span>{ x }<span class="sc">&gt;</span>, pattern <span class="sc">=</span> <span class="fu">head_pattern</span>(x, <span class="dv">2</span>))
   last_two  <span class="sc">=</span> <span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">&lt;</span>{ x }<span class="sc">&gt;</span>, pattern <span class="sc">=</span> <span class="fu">tail_pattern</span>(x, <span class="dv">2</span>))
   odd       <span class="sc">=</span> <span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">&lt;</span>{ x }<span class="sc">&gt;</span>, pattern <span class="sc">=</span> <span class="fu">slice_pattern</span>(x, [<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>]))
   random    <span class="sc">=</span> <span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">&lt;</span>{ x }<span class="sc">&gt;</span>, pattern <span class="sc">=</span> <span class="fu">sample_pattern</span>(x, <span class="dv">2</span>))
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-a2a444783a32bfb0/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-a2a444783a32bfb0/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-bda1f809b0650d9e/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-bda1f809b0650d9e/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><code>head_pattern</code> and <code>tail_pattern</code> cap at the dependency length, so <code>head_pattern(x, 10)</code> on a five-element list still yields five branches. <code>sample_pattern</code> is deterministic: it seeds a partial Fisher–Yates shuffle from the node name, so re-expanding the same pipeline always makes the same draw, while different node names make different draws.</p>
 </section>
 <section id="expanding-and-inspecting" class="level3" data-number="9.7.4">
 <h3 data-number="9.7.4" class="anchored" data-anchor-id="expanding-and-inspecting"><span class="header-section-number">9.7.4</span> Expanding and inspecting</h3>
 <p>Patterns expand automatically when you call <code>build_pipeline()</code> or <code>populate_pipeline()</code>, so you can build a patterned pipeline directly. To inspect the expanded structure first, or to write it out as an explicit script, call <code>expand_pipeline()</code>:</p>
-<pre class="t"><code>demo <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>demo <span class="sc">=</span> <span class="cf">pipeline</span> {
   x <span class="sc">=</span> [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>]
   first_two <span class="sc">=</span> <span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">&lt;</span>{ x }<span class="sc">&gt;</span>, pattern <span class="sc">=</span> <span class="fu">head_pattern</span>(x, <span class="dv">2</span>))
 }
@@ -1071,11 +1071,11 @@ expanded <span class="sc">=</span> <span class="fu">expand_pipeline</span>(demo)
 <span class="fu">pipeline_nodes</span>(expanded)
 <span class="co">-- ["x", "first_two_branch_1", "first_two_branch_2"]</span>
 
-expanded.first_two_branch_1  <span class="co">-- the first branch's node</span></code></pre>
+expanded.first_two_branch_1  <span class="co">-- the first branch's node</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-02d597541c049d89/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-02d597541c049d89/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-7ceabd5c0cfddf05/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-7ceabd5c0cfddf05/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 node&lt;T&gt;(...)
 </code></pre>
 <p>Each branch is a regular node named <code>&lt;node&gt;_branch_&lt;i&gt;</code> with a 1-based index, so you can read it with the usual <code>read_node()</code> or dot access.</p>
@@ -1098,17 +1098,17 @@ Tip
 <h2 data-number="9.8" class="anchored" data-anchor-id="cross-node-artifact-retrieval"><span class="header-section-number">9.8</span> Cross-Node Artifact Retrieval</h2>
 <p>Patterns fan a node out into branches, but sometimes a node needs the <em>deserialized</em> output of another node in the same pipeline, not just its declared dependencies passed through as raw store paths. T exposes every node’s materialized artifact to the Nix sandbox through an environment variable, and a small <code>get()</code> helper makes it easy to pull one in.</p>
 <p>In a Nix sandbox, each dependency <code>dep</code> is available as the environment variable <code>T_NODE_&lt;dep&gt;</code>, which holds the path to that node’s store directory. To read a sibling node’s deserialized value from inside a node’s command, use <code>get()</code> with a <code>node_lens</code> locator:</p>
-<pre class="t"><code>p_lens <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p_lens <span class="sc">=</span> <span class="cf">pipeline</span> {
   node_a <span class="sc">=</span> <span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">&lt;</span>{ <span class="fu">make_a</span>() }<span class="sc">&gt;</span>)
   node_b <span class="sc">=</span> <span class="fu">node</span>(
     command <span class="sc">=</span> <span class="sc">&lt;</span>{ <span class="fu">combine</span>(<span class="fu">get</span>(<span class="fu">node_lens</span>(<span class="st">"node_a"</span>)), <span class="fu">make_b</span>()) }<span class="sc">&gt;</span>,
     deps <span class="sc">=</span> [node_a]
   )
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-8f655b1dea133e91/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-8f655b1dea133e91/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-bd9432fa2e0838fb/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-bd9432fa2e0838fb/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><code>get(node_lens("node_a"))</code> deserializes <code>node_a</code>’s artifact and returns it as a T value, so <code>node_b</code> can use it directly even though the value is produced elsewhere in the pipeline. This is the canonical way to reach across the dependency graph when a plain <code>deps</code> list is not enough.</p>
 </section>
@@ -1119,7 +1119,7 @@ Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-8f655b1dea133e91/chunk
 <h3 data-number="9.9.1" class="anchored" data-anchor-id="node_when"><span class="header-section-number">9.9.1</span> <code>node_when</code></h3>
 <p><code>node_when(condition, node)</code> includes <code>node</code> in the pipeline only if <code>condition</code> is truthy. If the condition is falsy, the node is simply absent: it does not appear in the DAG at all, and any downstream node that references it will report a missing-dependency error (which is the correct behaviour: you should not silently skip a node that something else needs).</p>
 <p>The idiomatic pattern reads environment variables via <code>env()</code>:</p>
-<pre class="t"><code>p_when <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p_when <span class="sc">=</span> <span class="cf">pipeline</span> {
   raw      <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ read.csv(<span class="st">"data/sales.csv"</span>) }<span class="sc">&gt;</span>)
   cleaned  <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ <span class="fu">clean_missing</span>(raw) }<span class="sc">&gt;</span>)
   features <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{ <span class="fu">engineer_features</span>(cleaned) }<span class="sc">&gt;</span>)
@@ -1127,13 +1127,13 @@ Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-8f655b1dea133e91/chunk
   <span class="co">-- Only run the expensive validation step outside CI</span>
   deep_validation <span class="sc">=</span> <span class="fu">node_when</span>(<span class="fu">env</span>(<span class="st">"CI"</span>) <span class="sc">==</span> <span class="st">""</span>,
     <span class="fu">rn</span>(<span class="sc">&lt;</span>{ <span class="fu">run_expensive_validation</span>(cleaned) }<span class="sc">&gt;</span>))
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In a CI environment where <code>CI</code> is set (GitHub Actions sets it to <code>"true"</code>), <code>deep_validation</code> is simply absent. In a local development shell where <code>CI</code> is unset (empty string), it is included.</p>
 </section>
 <section id="node_fork" class="level3" data-number="9.9.2">
 <h3 data-number="9.9.2" class="anchored" data-anchor-id="node_fork"><span class="header-section-number">9.9.2</span> <code>node_fork</code></h3>
 <p><code>node_fork</code> is a multi-way branch: it evaluates a list of <code>(condition, node)</code> pairs and includes the <em>first</em> node whose condition is truthy. An optional <code>.default</code> provides a fallback:</p>
-<pre class="t"><code>model_type <span class="sc">=</span> <span class="fu">env</span>(<span class="st">"MODEL"</span>)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>model_type <span class="sc">=</span> <span class="fu">env</span>(<span class="st">"MODEL"</span>)
 
 p <span class="sc">=</span> <span class="cf">pipeline</span> {
   features <span class="sc">=</span> r { <span class="fu">engineer_features</span>(cleaned) }
@@ -1154,7 +1154,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> {
   )
 
   report <span class="sc">=</span> qmd { <span class="st">"reports/model.qmd"</span> }
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Setting <code>MODEL=forest</code> in the shell and running the pipeline will include only the random-forest node. The report node references <code>model</code> and will build against whichever implementation was selected. Adding a new model type requires one extra clause in <code>node_fork</code>, nothing else.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1180,7 +1180,7 @@ Note
 <li><strong>Use a specialist R distribution for one node</strong>: for example, <code>github:jbedo/rshells</code> for a node that needs R with specific compile-time options.</li>
 <li><strong>Point a node at a local flake</strong>: for a private package not yet in <code>nixpkgs</code>.</li>
 </ul>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   cleaned  <span class="sc">=</span> r { <span class="fu">clean_missing</span>(raw) }
   features <span class="sc">=</span> r { <span class="fu">engineer_features</span>(cleaned) }
 
@@ -1195,7 +1195,7 @@ Note
     { <span class="fu">render_internal_report</span>(legacy_model) },
     flake <span class="sc">=</span> <span class="st">"path:../internal_flake"</span>
   )
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1217,12 +1217,12 @@ Note
 <section id="pipeline_validate" class="level3" data-number="9.11.1">
 <h3 data-number="9.11.1" class="anchored" data-anchor-id="pipeline_validate"><span class="header-section-number">9.11.1</span> <code>pipeline_validate</code></h3>
 <p><code>pipeline_validate(p)</code> returns a list of error messages. It <em>never</em> throws; if the pipeline is valid, it returns an empty list. This makes it suitable for CI checks where you want to collect all errors at once:</p>
-<pre class="t"><code>errs <span class="sc">=</span> <span class="fu">pipeline_validate</span>(full_pipeline)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>errs <span class="sc">=</span> <span class="fu">pipeline_validate</span>(full_pipeline)
 
 <span class="cf">if</span> <span class="fu">length</span>(errs) <span class="sc">&gt;</span> <span class="dv">0</span> {
   for e <span class="cf">in</span> errs { <span class="fu">print</span>(e) }
   <span class="fu">exit</span>(<span class="dv">1</span>)
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The validator checks:</p>
 <ul>
 <li><strong>Cycles</strong>: any circular dependency in the DAG.</li>
@@ -1235,9 +1235,9 @@ Note
 <section id="pipeline_assert" class="level3" data-number="9.11.2">
 <h3 data-number="9.11.2" class="anchored" data-anchor-id="pipeline_assert"><span class="header-section-number">9.11.2</span> <code>pipeline_assert</code></h3>
 <p><code>pipeline_assert(p)</code> throws on the <em>first</em> error it finds. Use it as a guard at the top of a pipeline construction chain when you want to fail fast:</p>
-<pre class="t"><code>full_pipeline <span class="sc">=</span> <span class="fu">chain</span>(etl, model_pipeline)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>full_pipeline <span class="sc">=</span> <span class="fu">chain</span>(etl, model_pipeline)
                 <span class="sc">|&gt;</span> <span class="fu">pipeline_assert</span>()
-                <span class="sc">|&gt;</span> <span class="fu">build_pipeline</span>()</code></pre>
+                <span class="sc">|&gt;</span> <span class="fu">build_pipeline</span>()</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If <code>chain</code> produces an invalid graph, <code>pipeline_assert</code> surfaces the error immediately rather than waiting for Nix to fail deep inside a derivation build.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1259,15 +1259,15 @@ Tip
 <h2 data-number="9.12" class="anchored" data-anchor-id="handling-ambiguous-dependencies"><span class="header-section-number">9.12</span> Handling Ambiguous Dependencies</h2>
 <p>T infers which nodes depend on which by scanning the lexical content of each node’s command for names that match other nodes in the pipeline. This heuristic works in the vast majority of cases and requires no boilerplate. Two situations trip it up.</p>
 <p><strong>First</strong>, comments. T strips comments before scanning, so a node name that appears only in a comment is invisible to the analyser:</p>
-<pre class="t"><code><span class="co">-- This will NOT create a dependency on "features":</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- This will NOT create a dependency on "features":</span>
 model <span class="sc">=</span> <span class="fu">rn</span>(<span class="sc">&lt;</span>{
   # features is the input (see the data<span class="sc">-</span>prep <span class="cf">pipeline</span>)
   <span class="fu">lm</span>(target <span class="sc">~</span> <span class="sc">.</span>, data <span class="sc">=</span> cleaned_features)
-}<span class="sc">&gt;</span>)</code></pre>
+}<span class="sc">&gt;</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-669be64c20c5c11b/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-669be64c20c5c11b/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-84271fb7c718d70e/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-84271fb7c718d70e/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p><strong>Second</strong>, shell nodes that read files created by other nodes. The file name is a runtime string and the node name never appears in the command text:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">summarise_outputs</span> = shell {</span>
@@ -1275,7 +1275,7 @@ Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-669be64c20c5c11b/chunk
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If <code>summarise.R</code> reads a file written by another node, T cannot infer that dependency from the shell command text alone.</p>
 <p>For both cases, the <code>deps</code> argument force-declares dependencies that cannot be inferred:</p>
-<pre class="t"><code>model2 <span class="sc">=</span> <span class="fu">rn</span>(
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>model2 <span class="sc">=</span> <span class="fu">rn</span>(
   <span class="sc">&lt;</span>{ <span class="fu">lm</span>(target <span class="sc">~</span> <span class="sc">.</span>, data <span class="sc">=</span> cleaned_features) }<span class="sc">&gt;</span>,
   deps <span class="sc">=</span> [<span class="st">"features"</span>]
 )
@@ -1283,11 +1283,11 @@ Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-669be64c20c5c11b/chunk
 summarise_outputs <span class="sc">=</span> <span class="fu">shn</span>(
   <span class="sc">&lt;</span>{ Rscript summarise.R <span class="sc">&gt;</span> summary.txt }<span class="sc">&gt;</span>,
   deps <span class="sc">=</span> [<span class="st">"model_output"</span>, <span class="st">"validation_report"</span>]
-)</code></pre>
+)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>DataFrame(4 rows x 8 cols: [name, runtime, serializer, deserializer, noop, deps, depth, command_type]) 
 ["cleaned", "features"] 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-f65cfbbd63bd109a/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
-Error(TypeError: "[/tmp/nix-shell-127086-2140337368/tlang-f65cfbbd63bd109a/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-5b80a5443f38d60b/chunk.t:L55:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
+Error(TypeError: "[/tmp/nix-shell-128191-3867243063/tlang-5b80a5443f38d60b/chunk.t:L68:C7] Function `pipeline_nodes` expects a Pipeline, but got Error.") 
 </code></pre>
 <p>Declared dependencies are merged with inferred ones. You do not need to re-declare dependencies that T already finds; <code>deps</code> only adds what would otherwise be missing.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1307,7 +1307,7 @@ Note
 <section id="summary" class="level2" data-number="9.13">
 <h2 data-number="9.13" class="anchored" data-anchor-id="summary"><span class="header-section-number">9.13</span> Summary</h2>
 <p>The patterns in this chapter compose. A real production pipeline might look like this:</p>
-<pre class="t"><code><span class="co">-- 1. Assemble the ETL and model sub-pipelines</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- 1. Assemble the ETL and model sub-pipelines</span>
 etl   <span class="sc">=</span> <span class="fu">chain</span>(ingest_pipeline, clean_pipeline)
         <span class="sc">|&gt;</span> <span class="fu">pipeline_assert</span>()
 
@@ -1324,7 +1324,7 @@ nightly <span class="sc">=</span> <span class="fu">union</span>(etl, <span class
 <span class="co">-- 4. Build whichever is appropriate for this invocation</span>
 target <span class="sc">=</span> <span class="cf">if</span> <span class="fu">env</span>(<span class="st">"CI"</span>) <span class="sc">!=</span> <span class="st">""</span> then ci_check <span class="cf">else</span> nightly
 res    <span class="sc">=</span> <span class="fu">build_pipeline</span>(target)
-log    <span class="sc">=</span> <span class="fu">build_log_to_frame</span>(res)</code></pre>
+log    <span class="sc">=</span> <span class="fu">build_log_to_frame</span>(res)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is twelve lines of T that orchestrate conditional skipping, structural extraction, alternative implementations, and CI/nightly branching, without a single configuration file or wrapper script.</p>
 <p>The patterns also stack:</p>
 <ul>

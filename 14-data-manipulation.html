@@ -510,18 +510,18 @@ ul.task-list li input[type="checkbox"] {
 <section id="select-choose-columns" class="level3" data-number="14.1.1">
 <h3 data-number="14.1.1" class="anchored" data-anchor-id="select-choose-columns"><span class="header-section-number">14.1.1</span> select(): choose columns</h3>
 <p><code>select()</code> keeps only the columns you name, using the <code>$column</code> syntax:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name, <span class="sc">$</span>age)
-df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name, <span class="sc">$</span>age)
+df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you name a column that does not exist, you get a <code>KeyError</code> that names the missing column, so a typo fails fast rather than silently dropping data.</p>
 </section>
 <section id="filter-choose-rows" class="level3" data-number="14.1.2">
 <h3 data-number="14.1.2" class="anchored" data-anchor-id="filter-choose-rows"><span class="header-section-number">14.1.2</span> filter(): choose rows</h3>
 <p><code>filter()</code> keeps the rows where a predicate is true. You write the predicate against the <code>$column</code> syntax, and T turns it into a row-wise function for you:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">30</span>)
-df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"eng"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">30</span>)
+df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"eng"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>To combine conditions, use the logical operators <code>&amp;&amp;</code> (and) and <code>||</code> (or):</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"eng"</span> <span class="sc">&amp;&amp;</span> <span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">25</span>)
-df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"sales"</span> <span class="sc">||</span> <span class="sc">$</span>score <span class="sc">&gt;</span> <span class="dv">90</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"eng"</span> <span class="sc">&amp;&amp;</span> <span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">25</span>)
+df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"sales"</span> <span class="sc">||</span> <span class="sc">$</span>score <span class="sc">&gt;</span> <span class="dv">90</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <blockquote class="blockquote">
 <p><strong>No silent magic.</strong> The bitwise operators <code>&amp;</code> and <code>|</code> are for scalar, element-wise work. If you accidentally use them to combine filter conditions, T raises a <code>TypeError</code> that points you at <code>&amp;&amp;</code> and <code>||</code>.</p>
 </blockquote>
@@ -529,29 +529,29 @@ df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc"
 <section id="mutate-add-or-transform-columns" class="level3" data-number="14.1.3">
 <h3 data-number="14.1.3" class="anchored" data-anchor-id="mutate-add-or-transform-columns"><span class="header-section-number">14.1.3</span> mutate(): add or transform columns</h3>
 <p><code>mutate()</code> adds a new column or replaces an existing one. The new column is named with <code>$</code> and defined by an expression over the existing columns:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>age_plus_10 <span class="sc">=</span> <span class="sc">$</span>age <span class="sc">+</span> <span class="dv">10</span>)
-df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>bonus <span class="sc">=</span> <span class="sc">$</span>salary <span class="sc">*</span> <span class="fl">0.1</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>age_plus_10 <span class="sc">=</span> <span class="sc">$</span>age <span class="sc">+</span> <span class="dv">10</span>)
+df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>bonus <span class="sc">=</span> <span class="sc">$</span>salary <span class="sc">*</span> <span class="fl">0.1</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="arrange-sort-rows" class="level3" data-number="14.1.4">
 <h3 data-number="14.1.4" class="anchored" data-anchor-id="arrange-sort-rows"><span class="header-section-number">14.1.4</span> arrange(): sort rows</h3>
 <p><code>arrange()</code> sorts by one or more columns, in ascending order by default or <code>"desc"</code> for descending:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>age)
-df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>score, <span class="st">"desc"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>age)
+df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>score, <span class="st">"desc"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="group_by-and-summarize" class="level3" data-number="14.1.5">
 <h3 data-number="14.1.5" class="anchored" data-anchor-id="group_by-and-summarize"><span class="header-section-number">14.1.5</span> group_by() and summarize()</h3>
 <p><code>group_by()</code> marks the columns that define groups. It does not change the data; it tells the next verb how to split the work. <code>summarize()</code> then collapses each group into a single row:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>dept)
-   <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="sc">$</span>count <span class="sc">=</span> <span class="fu">nrow</span>(<span class="sc">$</span>dept), <span class="sc">$</span>avg_score <span class="sc">=</span> <span class="fu">mean</span>(<span class="sc">$</span>score))</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>dept)
+   <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="sc">$</span>count <span class="sc">=</span> <span class="fu">nrow</span>(<span class="sc">$</span>dept), <span class="sc">$</span>avg_score <span class="sc">=</span> <span class="fu">mean</span>(<span class="sc">$</span>score))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The result has one row per group, with the grouping column and the aggregates you asked for.</p>
 </section>
 <section id="composing-verbs" class="level3" data-number="14.1.6">
 <h3 data-number="14.1.6" class="anchored" data-anchor-id="composing-verbs"><span class="header-section-number">14.1.6</span> Composing verbs</h3>
 <p>The power is in the chaining. A filter, a select, a sort, and a count become a single readable expression:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">25</span>)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">25</span>)
    <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name, <span class="sc">$</span>score)
    <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>score, <span class="st">"desc"</span>)
-   <span class="sc">|&gt;</span> nrow</code></pre>
+   <span class="sc">|&gt;</span> nrow</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Read it top to bottom and it describes the analysis in plain language. That is the same readability you get from <code>{dplyr}</code>, with no runtime switch.</p>
 </section>
 </section>
@@ -561,39 +561,39 @@ df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc
 <section id="joining-tables" class="level3" data-number="14.2.1">
 <h3 data-number="14.2.1" class="anchored" data-anchor-id="joining-tables"><span class="header-section-number">14.2.1</span> Joining tables</h3>
 <p>The join verbs take the other table first and the key columns second; if you name no key, T joins on the columns the two tables share:</p>
-<pre class="t"><code>employees <span class="sc">|&gt;</span> <span class="fu">inner_join</span>(projects, <span class="sc">$</span>emp_id)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>employees <span class="sc">|&gt;</span> <span class="fu">inner_join</span>(projects, <span class="sc">$</span>emp_id)
 employees <span class="sc">|&gt;</span> <span class="fu">left_join</span>(projects, <span class="sc">$</span>emp_id)
 employees <span class="sc">|&gt;</span> <span class="fu">anti_join</span>(projects, <span class="sc">$</span>emp_id)
-employees <span class="sc">|&gt;</span> <span class="fu">full_join</span>(projects, <span class="sc">$</span>emp_id)</code></pre>
+employees <span class="sc">|&gt;</span> <span class="fu">full_join</span>(projects, <span class="sc">$</span>emp_id)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>inner_join</code> keeps rows whose key appears in both tables; <code>left_join</code> keeps every row of the left table and fills in what it can from the right; <code>anti_join</code> keeps the left rows with <em>no</em> match, the workhorse for “who has no record yet?”; <code>full_join</code> keeps everything from both sides.</p>
 </section>
 <section id="duplicates-and-counts" class="level3" data-number="14.2.2">
 <h3 data-number="14.2.2" class="anchored" data-anchor-id="duplicates-and-counts"><span class="header-section-number">14.2.2</span> Duplicates and counts</h3>
 <p><code>distinct()</code> drops duplicate rows, optionally restricted to the columns you name as the uniqueness key. <code>count()</code> collapses a table into one row per group with a count column:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">distinct</span>()
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">distinct</span>()
 df <span class="sc">|&gt;</span> <span class="fu">distinct</span>(<span class="sc">$</span>name)
 df <span class="sc">|&gt;</span> <span class="fu">count</span>(<span class="sc">$</span>species)
-df <span class="sc">|&gt;</span> <span class="fu">count</span>(<span class="sc">$</span>species, <span class="sc">$</span>year, name <span class="sc">=</span> <span class="st">"freq"</span>)</code></pre>
+df <span class="sc">|&gt;</span> <span class="fu">count</span>(<span class="sc">$</span>species, <span class="sc">$</span>year, name <span class="sc">=</span> <span class="st">"freq"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="conditional-values" class="level3" data-number="14.2.3">
 <h3 data-number="14.2.3" class="anchored" data-anchor-id="conditional-values"><span class="header-section-number">14.2.3</span> Conditional values</h3>
 <p><code>ifelse()</code> is the vectorised ternary: a condition, two outcomes, and an optional value for rows where the condition itself is missing. <code>case_when()</code> generalises it to many branches, written as <code>condition ~ value</code> formulas with a <code>.default</code>:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>status <span class="sc">=</span> <span class="fu">ifelse</span>(<span class="sc">$</span>score <span class="sc">&gt;=</span> <span class="dv">50</span>, <span class="st">"pass"</span>, <span class="st">"fail"</span>))
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>status <span class="sc">=</span> <span class="fu">ifelse</span>(<span class="sc">$</span>score <span class="sc">&gt;=</span> <span class="dv">50</span>, <span class="st">"pass"</span>, <span class="st">"fail"</span>))
 df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>grade <span class="sc">=</span> <span class="fu">case_when</span>(
     <span class="sc">$</span>score <span class="sc">&gt;=</span> <span class="dv">90</span> <span class="sc">~</span> <span class="st">"A"</span>,
     <span class="sc">$</span>score <span class="sc">&gt;=</span> <span class="dv">80</span> <span class="sc">~</span> <span class="st">"B"</span>,
-    .default <span class="sc">=</span> <span class="st">"C"</span>))</code></pre>
+    .default <span class="sc">=</span> <span class="st">"C"</span>))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>case_when</code> reuses the <code>~</code> from model formulas: one syntax for “this predicts that” and “this yields that”.</p>
 </section>
 <section id="operators-in-data-work" class="level3" data-number="14.2.4">
 <h3 data-number="14.2.4" class="anchored" data-anchor-id="operators-in-data-work"><span class="header-section-number">14.2.4</span> Operators in data work</h3>
 <p>A few operators from the Chapter 4 reference earn their place in data work.</p>
 <p><code>in</code> tests membership against a list, which makes it the natural filter for “any of these”:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="cf">in</span> [<span class="st">"eng"</span>, <span class="st">"sales"</span>])</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="cf">in</span> [<span class="st">"eng"</span>, <span class="st">"sales"</span>])</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Inside <code>filter</code>, the predicate is evaluated row by row, so each <code>$column</code> is a scalar and the plain operators (<code>&amp;&amp;</code>, <code>||</code>, <code>==</code>, <code>in</code>) are the right tools. The broadcasting operators come in when you hold a whole Vector or List at once, for example a column pulled out with a lens (Chapter 15):</p>
-<pre class="t"><code>scores <span class="sc">=</span> [<span class="dv">72</span>, <span class="dv">85</span>, <span class="dv">91</span>]
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>scores <span class="sc">=</span> [<span class="dv">72</span>, <span class="dv">85</span>, <span class="dv">91</span>]
 scores <span class="sc">.+</span> <span class="dv">10</span>        <span class="co">-- [82, 95, 101]</span>
-<span class="dv">1</span> <span class="sc">.==</span> [<span class="dv">1</span>, <span class="dv">2</span>]        <span class="co">-- [true, false]</span></code></pre>
+<span class="dv">1</span> <span class="sc">.==</span> [<span class="dv">1</span>, <span class="dv">2</span>]        <span class="co">-- [true, false]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>And <code>%name%</code> is the escape hatch for custom infix operators: packages define them, and you consume them wherever a named call would be clunkier: the chrono package ships <code>%within%</code> for testing whether a date falls inside an interval.</p>
 </section>
 </section>
@@ -603,145 +603,145 @@ scores <span class="sc">.+</span> <span class="dv">10</span>        <span class=
 <section id="pivot_longer-and-pivot_wider" class="level3" data-number="14.3.1">
 <h3 data-number="14.3.1" class="anchored" data-anchor-id="pivot_longer-and-pivot_wider"><span class="header-section-number">14.3.1</span> pivot_longer() and pivot_wider()</h3>
 <p><code>pivot_longer()</code> turns wide data (several columns holding measurements) into long data (a name column and a value column). <code>pivot_wider()</code> does the reverse:</p>
-<pre class="t"><code><span class="co">-- wide to long</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- wide to long</span>
 df <span class="sc">|&gt;</span> <span class="fu">pivot_longer</span>(<span class="sc">$</span>age, <span class="sc">$</span>score, names_to <span class="sc">=</span> <span class="st">"measure"</span>, values_to <span class="sc">=</span> <span class="st">"val"</span>)
 
 <span class="co">-- long to wide</span>
 df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name, <span class="sc">$</span>dept, <span class="sc">$</span>salary)
-   <span class="sc">|&gt;</span> <span class="fu">pivot_wider</span>(names_from <span class="sc">=</span> <span class="sc">$</span>dept, values_from <span class="sc">=</span> <span class="sc">$</span>salary)</code></pre>
+   <span class="sc">|&gt;</span> <span class="fu">pivot_wider</span>(names_from <span class="sc">=</span> <span class="sc">$</span>dept, values_from <span class="sc">=</span> <span class="sc">$</span>salary)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="separate-and-unite" class="level3" data-number="14.3.2">
 <h3 data-number="14.3.2" class="anchored" data-anchor-id="separate-and-unite"><span class="header-section-number">14.3.2</span> separate() and unite()</h3>
 <p><code>separate()</code> splits one column into several on a delimiter; <code>unite()</code> joins several columns back into one:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">separate</span>(<span class="sc">$</span>date, into <span class="sc">=</span> [<span class="st">"year"</span>, <span class="st">"month"</span>, <span class="st">"day"</span>], sep <span class="sc">=</span> <span class="st">"-"</span>)
-df <span class="sc">|&gt;</span> <span class="fu">unite</span>(<span class="st">"full_date"</span>, <span class="sc">$</span>year, <span class="sc">$</span>month, <span class="sc">$</span>day, sep <span class="sc">=</span> <span class="st">"-"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">separate</span>(<span class="sc">$</span>date, into <span class="sc">=</span> [<span class="st">"year"</span>, <span class="st">"month"</span>, <span class="st">"day"</span>], sep <span class="sc">=</span> <span class="st">"-"</span>)
+df <span class="sc">|&gt;</span> <span class="fu">unite</span>(<span class="st">"full_date"</span>, <span class="sc">$</span>year, <span class="sc">$</span>month, <span class="sc">$</span>day, sep <span class="sc">=</span> <span class="st">"-"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="nest-and-unnest" class="level3" data-number="14.3.3">
 <h3 data-number="14.3.3" class="anchored" data-anchor-id="nest-and-unnest"><span class="header-section-number">14.3.3</span> nest() and unnest()</h3>
 <p><code>nest()</code> packs selected columns into a single column of nested DataFrames, grouping by the columns you leave out. <code>unnest()</code> expands them back out. This is how you build, and later dissolve, the hierarchical structures that lenses (covered at the end of this chapter) are designed to reach:</p>
-<pre class="t"><code>nested <span class="sc">=</span> df <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>cyl) <span class="sc">|&gt;</span> <span class="fu">nest</span>()
-flat <span class="sc">=</span> nested <span class="sc">|&gt;</span> <span class="fu">unnest</span>(<span class="sc">$</span>data)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>nested <span class="sc">=</span> df <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>cyl) <span class="sc">|&gt;</span> <span class="fu">nest</span>()
+flat <span class="sc">=</span> nested <span class="sc">|&gt;</span> <span class="fu">unnest</span>(<span class="sc">$</span>data)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="missing-values" class="level3" data-number="14.3.4">
 <h3 data-number="14.3.4" class="anchored" data-anchor-id="missing-values"><span class="header-section-number">14.3.4</span> Missing values</h3>
 <p>Three verbs handle the gaps. <code>drop_na()</code> removes rows with missing values in the named columns, <code>replace_na()</code> fills them with a constant, and <code>fill()</code> propagates the last non-missing value forward:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(<span class="sc">$</span>score)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(<span class="sc">$</span>score)
 df <span class="sc">|&gt;</span> <span class="fu">replace_na</span>([score<span class="sc">:</span> <span class="dv">0</span>])
-df <span class="sc">|&gt;</span> <span class="fu">fill</span>(<span class="sc">$</span>category, .direction <span class="sc">=</span> <span class="st">"down"</span>)</code></pre>
+df <span class="sc">|&gt;</span> <span class="fu">fill</span>(<span class="sc">$</span>category, .direction <span class="sc">=</span> <span class="st">"down"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="working-with-strings" class="level2" data-number="14.4">
 <h2 data-number="14.4" class="anchored" data-anchor-id="working-with-strings"><span class="header-section-number">14.4</span> Working with strings</h2>
 <p>Text columns are everywhere, and T names its string helpers with a <code>str_</code> prefix so they are easy to spot:</p>
-<pre class="t"><code><span class="fu">str_nchar</span>(<span class="st">"hello"</span>)              <span class="co">-- 5</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">str_nchar</span>(<span class="st">"hello"</span>)              <span class="co">-- 5</span>
 <span class="fu">str_substring</span>(<span class="st">"hello"</span>, <span class="dv">1</span>, <span class="dv">4</span>)    <span class="co">-- "ell"</span>
 <span class="fu">str_replace</span>(<span class="st">"banana"</span>, <span class="st">"a"</span>, <span class="st">"o"</span>) <span class="co">-- "bonono"</span>
 <span class="fu">str_trim</span>(<span class="st">"  hello  "</span>)           <span class="co">-- "hello"</span>
 <span class="fu">str_join</span>([<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>], <span class="st">"-"</span>)  <span class="co">-- "a-b-c"</span>
-<span class="fu">str_split</span>(<span class="st">"a,b,c"</span>, <span class="st">","</span>)         <span class="co">-- ["a", "b", "c"]</span></code></pre>
+<span class="fu">str_split</span>(<span class="st">"a,b,c"</span>, <span class="st">","</span>)         <span class="co">-- ["a", "b", "c"]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A few helpers intentionally keep their plain names, because they double as column-selection helpers in <code>colcraft</code>:</p>
-<pre class="t"><code><span class="fu">contains</span>(<span class="st">"petal_width"</span>, <span class="st">"width"</span>)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">contains</span>(<span class="st">"petal_width"</span>, <span class="st">"width"</span>)
 <span class="fu">starts_with</span>(<span class="st">"petal_width"</span>, <span class="st">"petal"</span>)
 
 <span class="co">-- the same names select columns in a DataFrame</span>
-df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"petal"</span>))</code></pre>
+df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"petal"</span>))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That overlap is deliberate: <code>contains</code>, <code>starts_with</code>, and <code>ends_with</code> work as string predicates and as selection helpers, so the data-manipulation API stays consistent.</p>
 </section>
 <section id="dates-and-times" class="level2" data-number="14.5">
 <h2 data-number="14.5" class="anchored" data-anchor-id="dates-and-times"><span class="header-section-number">14.5</span> Dates and times</h2>
 <p>The <code>chrono</code> package brings date and time handling to T, modelled on R’s <code>{lubridate}</code>. You can parse strings into dates with shorthand helpers:</p>
-<pre class="t"><code>d <span class="sc">=</span> <span class="fu">ymd</span>(<span class="st">"2024-01-15"</span>)
-dt <span class="sc">=</span> <span class="fu">ymd_hms</span>(<span class="st">"2024-01-15 09:30:00"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>d <span class="sc">=</span> <span class="fu">ymd</span>(<span class="st">"2024-01-15"</span>)
+dt <span class="sc">=</span> <span class="fu">ymd_hms</span>(<span class="st">"2024-01-15 09:30:00"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Extract components, and do calendar-aware arithmetic with periods:</p>
-<pre class="t"><code><span class="fu">year</span>(d)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">year</span>(d)
 <span class="fu">month</span>(d, label <span class="sc">=</span> <span class="cn">true</span>)   <span class="co">-- "Jan"</span>
 
 <span class="co">-- adding a month to Jan 31 lands on the last day of February</span>
-<span class="fu">ymd</span>(<span class="st">"2024-01-31"</span>) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">3</span>)   <span class="co">-- 2024-04-30</span></code></pre>
+<span class="fu">ymd</span>(<span class="st">"2024-01-31"</span>) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">3</span>)   <span class="co">-- 2024-04-30</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The arithmetic is calendar-aware, not just “add a number of days”, which is exactly what you want when a rule is “the same day next month”. A typical workflow parses a date column, derives a month, and summarises by month:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(date <span class="sc">=</span> <span class="fu">ymd</span>(<span class="sc">$</span>order_date),
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(date <span class="sc">=</span> <span class="fu">ymd</span>(<span class="sc">$</span>order_date),
              month <span class="sc">=</span> <span class="fu">month</span>(<span class="sc">$</span>date, label <span class="sc">=</span> <span class="cn">true</span>))
    <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="fu">year</span>(<span class="sc">$</span>date) <span class="sc">==</span> <span class="dv">2024</span>)
    <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>month)
-   <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="sc">$</span>total <span class="sc">=</span> <span class="fu">sum</span>(<span class="sc">$</span>sales))</code></pre>
+   <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="sc">$</span>total <span class="sc">=</span> <span class="fu">sum</span>(<span class="sc">$</span>sales))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="factors-and-categorical-data" class="level2" data-number="14.6">
 <h2 data-number="14.6" class="anchored" data-anchor-id="factors-and-categorical-data"><span class="header-section-number">14.6</span> Factors and categorical data</h2>
 <p>A factor is categorical data with an explicit list of levels. The level order matters: <code>arrange()</code> sorts a factor by its levels, not alphabetically. That makes factors the right tool for ordered categories such as shirt sizes, survey responses, or reporting buckets.</p>
-<pre class="t"><code>sizes <span class="sc">=</span> <span class="fu">to_factor</span>([<span class="st">"medium"</span>, <span class="st">"small"</span>, <span class="st">"large"</span>],
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>sizes <span class="sc">=</span> <span class="fu">to_factor</span>([<span class="st">"medium"</span>, <span class="st">"small"</span>, <span class="st">"large"</span>],
                   levels <span class="sc">=</span> [<span class="st">"small"</span>, <span class="st">"medium"</span>, <span class="st">"large"</span>])
-<span class="fu">levels</span>(sizes)   <span class="co">-- ["small", "medium", "large"]</span></code></pre>
+<span class="fu">levels</span>(sizes)   <span class="co">-- ["small", "medium", "large"]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you omit <code>levels</code>, T derives them from the data and sorts them alphabetically. Use <code>ordered()</code> when the ordering is meaningful and should be preserved.</p>
 <p>The <code>fct_*</code> helpers (a nod to R’s <code>{forcats}</code>) let you reorder, relabel, and collapse levels after creation:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>segment <span class="sc">=</span> <span class="fu">fct_infreq</span>(<span class="sc">$</span>segment))
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>segment <span class="sc">=</span> <span class="fu">fct_infreq</span>(<span class="sc">$</span>segment))
 df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>segment <span class="sc">=</span> <span class="fu">fct_relevel</span>(<span class="sc">$</span>segment, <span class="st">"enterprise"</span>))
-df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>segment <span class="sc">=</span> <span class="fu">fct_lump_n</span>(<span class="sc">$</span>segment, n <span class="sc">=</span> <span class="dv">3</span>))</code></pre>
+df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>segment <span class="sc">=</span> <span class="fu">fct_lump_n</span>(<span class="sc">$</span>segment, n <span class="sc">=</span> <span class="dv">3</span>))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="arrays" class="level2" data-number="14.7">
 <h2 data-number="14.7" class="anchored" data-anchor-id="arrays"><span class="header-section-number">14.7</span> Arrays</h2>
 <p>For heavy numerical work, T has first-class NDArrays. Unlike lists, an NDArray has a fixed shape and optimised storage, and it supports element-wise arithmetic with broadcasting:</p>
-<pre class="t"><code>v <span class="sc">=</span> <span class="fu">ndarray</span>([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>])
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>v <span class="sc">=</span> <span class="fu">ndarray</span>([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>])
 m <span class="sc">=</span> <span class="fu">ndarray</span>([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]])
 
 <span class="fu">shape</span>(m)     <span class="co">-- [2, 3]</span>
-m <span class="sc">+</span> <span class="dv">10</span>       <span class="co">-- broadcasts the scalar across the array</span></code></pre>
+m <span class="sc">+</span> <span class="dv">10</span>       <span class="co">-- broadcasts the scalar across the array</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A small set of linear-algebra functions is available for matrix work:</p>
-<pre class="t"><code>a <span class="sc">=</span> <span class="fu">ndarray</span>([[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>]])
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>a <span class="sc">=</span> <span class="fu">ndarray</span>([[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>]])
 <span class="fu">matmul</span>(a, a)
 <span class="fu">inv</span>(a)
-<span class="fu">diag</span>(a)</code></pre>
+<span class="fu">diag</span>(a)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Keep one constraint in mind: NDArrays cannot hold <code>NA</code> values, so handle missing data before you convert.</p>
 </section>
 <section id="formulas-and-models" class="level2" data-number="14.8">
 <h2 data-number="14.8" class="anchored" data-anchor-id="formulas-and-models"><span class="header-section-number">14.8</span> Formulas and models</h2>
 <p>T borrows R’s formula syntax for specifying models. The <code>~</code> operator builds a formula you can pass to a modelling function:</p>
-<pre class="t"><code>model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> salary <span class="sc">~</span> age)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> salary <span class="sc">~</span> age)
 model.r_squared
-model.coefficients.age</code></pre>
+model.coefficients.age</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Multiple predictors and interactions follow the familiar rules:</p>
-<pre class="t"><code>model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)
-model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1 <span class="sc">*</span> x2)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)
+model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1 <span class="sc">*</span> x2)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>lm()</code> returns a dictionary with the coefficients, standard errors, R², and a tidy DataFrame of the results. It is not a replacement for a full statistical toolkit, but it covers the quick “does this variable matter” check without leaving T.</p>
 </section>
 <section id="quick-stats-in-t" class="level2" data-number="14.9">
 <h2 data-number="14.9" class="anchored" data-anchor-id="quick-stats-in-t"><span class="header-section-number">14.9</span> Quick stats in T</h2>
 <p>Around <code>lm()</code> sits a small stats package for the fast checks you do while exploring: the “does this variable matter, and what is its shape?” questions.</p>
 <p>Correlation, covariance, and the five-number summary are the usual first moves:</p>
-<pre class="t"><code><span class="fu">cor</span>(df[<span class="st">"mpg"</span>], df[<span class="st">"wt"</span>])
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">cor</span>(df[<span class="st">"mpg"</span>], df[<span class="st">"wt"</span>])
 <span class="fu">cov</span>(df[<span class="st">"mpg"</span>], df[<span class="st">"wt"</span>])
-<span class="fu">fivenum</span>(df[<span class="st">"mpg"</span>])</code></pre>
+<span class="fu">fivenum</span>(df[<span class="st">"mpg"</span>])</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>cut()</code> discretises a numeric vector into intervals, which is how you turn a continuous variable into a categorical one for a table or a plot:</p>
-<pre class="t"><code><span class="fu">cut</span>(df[<span class="st">"mpg"</span>], <span class="dv">4</span>)
-<span class="fu">cut</span>(df[<span class="st">"mpg"</span>], [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>])</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">cut</span>(df[<span class="st">"mpg"</span>], <span class="dv">4</span>)
+<span class="fu">cut</span>(df[<span class="st">"mpg"</span>], [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>])</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Cumulative functions and ranking are available as window functions inside <code>mutate</code>, so they respect the current grouping:</p>
-<pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>cum <span class="sc">=</span> <span class="fu">cumsum</span>(<span class="sc">$</span>amount))
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>cum <span class="sc">=</span> <span class="fu">cumsum</span>(<span class="sc">$</span>amount))
 df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>cum_avg <span class="sc">=</span> <span class="fu">cummean</span>(<span class="sc">$</span>amount))
-df <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>dept) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>rank <span class="sc">=</span> <span class="fu">dense_rank</span>(<span class="sc">$</span>score))</code></pre>
+df <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="sc">$</span>dept) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>rank <span class="sc">=</span> <span class="fu">dense_rank</span>(<span class="sc">$</span>score))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>When you do fit a model, <code>conf_int()</code> gives you confidence intervals for its coefficients:</p>
-<pre class="t"><code>model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> salary <span class="sc">~</span> age)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> salary <span class="sc">~</span> age)
 <span class="fu">conf_int</span>(model)
-<span class="fu">conf_int</span>(model, <span class="fl">0.99</span>)</code></pre>
+<span class="fu">conf_int</span>(model, <span class="fl">0.99</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>And when you have two models and want to know whether the bigger one actually fits better, <code>anova()</code> compares them with an F-test:</p>
-<pre class="t"><code>m1 <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>m1 <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1)
 m2 <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1 <span class="sc">+</span> x2)
-<span class="fu">anova</span>(m1, m2)</code></pre>
+<span class="fu">anova</span>(m1, m2)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>None of this replaces a statistics course, but it keeps the exploratory loop (look, check, reshape, look again) inside one language.</p>
 </section>
 <section id="lenses-reaching-the-nested" class="level2" data-number="14.10">
 <h2 data-number="14.10" class="anchored" data-anchor-id="lenses-reaching-the-nested"><span class="header-section-number">14.10</span> Lenses: reaching the nested</h2>
 <p>The verbs above are built for flat DataFrames. Once your data becomes nested, after a <code>nest()</code> or from a hierarchical API, the standard verbs turn into a pyramid of nested lambdas. Lenses solve that.</p>
 <p>A lens names a <em>path</em> into a structure. You build it once with <code>compose()</code>, then use it to read or transform the value at that path in a single step:</p>
-<pre class="t"><code><span class="co">-- path: clients -&gt; projects -&gt; milestones -&gt; pct_int</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- path: clients -&gt; projects -&gt; milestones -&gt; pct_int</span>
 pct_l <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu">col_lens</span>(<span class="st">"projects"</span>),
                 <span class="fu">col_lens</span>(<span class="st">"milestones"</span>),
                 <span class="fu">col_lens</span>(<span class="st">"pct_int"</span>))
 
 <span class="co">-- apply a 10-point uplift to every milestone, everywhere</span>
-updated <span class="sc">=</span> clients <span class="sc">|&gt;</span> <span class="fu">over</span>(pct_l, \(x) <span class="fu">min</span>(x <span class="sc">.+</span> <span class="dv">10</span>, <span class="dv">100</span>))</code></pre>
+updated <span class="sc">=</span> clients <span class="sc">|&gt;</span> <span class="fu">over</span>(pct_l, \(x) <span class="fu">min</span>(x <span class="sc">.+</span> <span class="dv">10</span>, <span class="dv">100</span>))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The three core operations are <code>get()</code> (read), <code>set()</code> (replace), and <code>over()</code> (transform). <code>col_lens()</code> targets a column or key, <code>row_lens()</code> and <code>idx_lens()</code> target a row or index, and <code>filter_lens()</code> is a traversal that focuses on every element matching a condition:</p>
-<pre class="t"><code><span class="co">-- add 10 to every even score</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- add 10 to every even score</span>
 even_l <span class="sc">=</span> <span class="fu">filter_lens</span>(\(x) x <span class="sc">%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span>)
-scores <span class="sc">|&gt;</span> <span class="fu">over</span>(even_l, \(x) x <span class="sc">+</span> <span class="dv">10</span>)</code></pre>
+scores <span class="sc">|&gt;</span> <span class="fu">over</span>(even_l, \(x) x <span class="sc">+</span> <span class="dv">10</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>One detail matters when you transform a whole column: <code>over()</code> hands your function a Vector, so use the broadcasting operators (<code>.+</code>, <code>.*</code>) for element-wise math rather than the scalar ones.</p>
 <p>For flat DataFrames, stick with the ordinary verbs: they are simpler and more idiomatic. Lenses earn their keep in nested and polymorphic data, where the alternative is a tower of <code>map</code> calls.</p>
 </section>

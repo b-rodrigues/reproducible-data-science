@@ -553,7 +553,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Render a Quarto report that loads the model and produces a summary table.</li>
 </ol>
 <p>Here is the complete <code>src/pipeline.t</code> for that workflow:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
   <span class="co">-- Stage 1: load raw CSV in T.</span>
   <span class="co">-- T's built-in read_csv keeps paths out of foreign code blocks.</span>
@@ -602,7 +602,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 }
 
-<span class="fu">build_pipeline</span>(p)</code></pre>
+<span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Let us walk through the data flow step by step.</p>
 <p><strong><code>raw</code></strong> is a native T node, with no foreign runtime involved. <code>read_csv</code> is a T built-in that returns a <code>DataFrame</code>. Because it is a native node, it inherits T’s default <code>^ipc</code> serializer: the data is written to the Nix store as an Arrow IPC file.</p>
 <p><strong><code>clean</code></strong> is a Python node. The <code>deserializer = ^ipc</code> instruction tells the generated sandbox wrapper to load the upstream <code>raw</code> artifact from the store as a <code>pandas.DataFrame</code> and bind it to the name <code>raw</code> before executing the <code>&lt;{ ... }&gt;</code> block. The body of the block is plain Python, with no argument parsing and no file I/O. It assigns back to <code>df</code> and T reads the last expression as the node’s result. The <code>serializer = ^parquet</code> writes it out as a Parquet file, which is the right choice here: Parquet is compressed, column-oriented, and readable by every runtime T supports.</p>
@@ -637,7 +637,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>To build, simply run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>or, from inside the REPL:</p>
-<pre class="t"><code><span class="fu">build_pipeline</span>(p)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>T resolves the DAG, emits four Nix derivations, and builds them in dependency order. If you rebuild without changing anything, all four nodes are served from the Nix store cache, with zero recomputation.</p>
 </section>
 <section id="sec-runtimes" class="level2" data-number="8.3">
@@ -648,7 +648,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Shell nodes run a shell command inside the derivation’s sandbox. They are useful for wrapping command-line tools (data converters, compilers, external binaries) without writing glue code in a scripting language.</p>
 <p><code>shn()</code> operates in two modes:</p>
 <p><strong>Exec mode</strong> (default): the <code>command</code> argument is a shell string run with <code>bash -c</code>. The node’s serializer is <code>^text</code> by default, and the output is whatever is written to stdout:</p>
-<pre class="t"><code>p_shn_exec <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p_shn_exec <span class="sc">=</span> <span class="cf">pipeline</span> {
 
   <span class="co">-- Call an external converter and capture stdout</span>
   schema <span class="sc">=</span> <span class="fu">shn</span>(
@@ -656,16 +656,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     serializer <span class="sc">=</span> ^text
   )
 
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Script mode</strong>: set <code>script</code> to a path and <code>shn()</code> copies that script into the sandbox and executes it. Use this when the shell logic is more than a one-liner:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
   compressed <span class="sc">=</span> <span class="fu">shn</span>(
     script     <span class="sc">=</span> <span class="st">"scripts/compress.sh"</span>,
     serializer <span class="sc">=</span> ^text
   )
 
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Inside <code>compress.sh</code> you have access to any executables declared in <code>tproject.toml</code>’s <code>[shell-dependencies]</code> section. The sandbox has no network access, so all inputs must arrive as upstream node artifacts or via <code>include</code> (see <a href="#sec-code-sharing" class="quarto-xref"><span>Section 8.5</span></a>).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -689,7 +689,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"DataFrames"</span><span class="op">,</span> <span class="st">"GLM"</span><span class="op">,</span> <span class="st">"CSV"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then declare the environment in the usual way with <code>t update &amp;&amp; exit &amp;&amp; nix develop</code>.</p>
 <p>A Julia node that fits a linear model:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
   raw <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/fuel.csv"</span>)
 
@@ -704,7 +704,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     serializer   <span class="sc">=</span> ^json
   )
 
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Julia’s native serialization format is <code>.jls</code> (Julia serialization). This is the default serializer for <code>jln()</code> nodes. Use it when the artifact will only ever be consumed by another Julia node in the same pipeline. For cross-runtime data exchange, i.e.&nbsp;passing a Julia <code>DataFrame</code> to R or Python, use <code>^csv</code>, <code>^ipc</code>, or <code>^json</code> instead, which are understood by all runtimes.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -730,10 +730,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>read_node("name")</code> calls inside the <code>.qmd</code> are statically scanned by T and register as dependencies automatically.</li>
 </ul>
 <p>A Quarto node that produces a PDF report:</p>
-<pre class="t"><code>report <span class="sc">=</span> <span class="fu">qn</span>(
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>report <span class="sc">=</span> <span class="fu">qn</span>(
   script     <span class="sc">=</span> <span class="st">"src/report.qmd"</span>,
   serializer <span class="sc">=</span> ^pdf
-)</code></pre>
+)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>.qmd</code> file itself:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -780,15 +780,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="step-1-prefetch-the-hash" class="level3" data-number="8.4.1">
 <h3 data-number="8.4.1" class="anchored" data-anchor-id="step-1-prefetch-the-hash"><span class="header-section-number">8.4.1</span> Step 1: Prefetch the hash</h3>
 <p>From your project REPL (which <em>does</em> have network access), call:</p>
-<pre class="t"><code>hash <span class="sc">=</span> <span class="fu">prefetch</span>(<span class="st">"https://zenodo.org/record/9999/penguins.csv"</span>)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>hash <span class="sc">=</span> <span class="fu">prefetch</span>(<span class="st">"https://zenodo.org/record/9999/penguins.csv"</span>)
 hash
-<span class="st">"sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="</span></code></pre>
+<span class="st">"sha256-xK7Qp1zYGJ3k8w4TlN9Vm2rEcH6sBfXpDnMoAqWjY0="</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>prefetch</code> downloads the file, computes its SHA-256 hash in Nix’s standard base64 encoding, and returns the hash string. <strong>Copy this string.</strong> It is your permanent, tamper-evident reference to that exact file.</p>
 </section>
 <section id="step-2-use-fetchurl-in-the-pipeline" class="level3" data-number="8.4.2">
 <h3 data-number="8.4.2" class="anchored" data-anchor-id="step-2-use-fetchurl-in-the-pipeline"><span class="header-section-number">8.4.2</span> Step 2: Use <code>fetchurl</code> in the pipeline</h3>
 <p>Now declare a node that fetches the same URL, passing the hash you recorded:</p>
-<pre class="t"><code>p_fetchurl <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p_fetchurl <span class="sc">=</span> <span class="cf">pipeline</span> {
 
   raw <span class="sc">=</span> <span class="fu">fetchurl</span>(
     url   <span class="sc">=</span> <span class="st">"https://zenodo.org/record/9999/penguins.csv"</span>,
@@ -801,7 +801,7 @@ hash
     serializer   <span class="sc">=</span> ^parquet
   )
 
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>At build time Nix checks whether the file is already in the store. If not, it downloads it from the URL and verifies the hash before proceeding. If the remote file ever changes, the hash will not match and the build will fail loudly, with no silent data drift.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -844,7 +844,7 @@ hash
 <li><strong>Julia</strong>: T prepends <code>include("utils.jl")</code> before the command.</li>
 </ul>
 <p>A concrete example with Python cleaning and R modelling sharing utility functions:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
   raw <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/penguins.csv"</span>)
 
@@ -862,7 +862,7 @@ hash
     functions    <span class="sc">=</span> <span class="st">"src/r_utils.R"</span>     <span class="co">-- defines fit_model()</span>
   )
 
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>src/py_utils.py</code> is a plain Python file:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># src/py_utils.py</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -885,15 +885,15 @@ hash
 <section id="the-include-parameter" class="level3" data-number="8.5.2">
 <h3 data-number="8.5.2" class="anchored" data-anchor-id="the-include-parameter"><span class="header-section-number">8.5.2</span> The <code>include</code> Parameter</h3>
 <p><code>functions</code> is designed for executable source files. If your node needs additional <em>non-executable</em> resources, such as a configuration YAML, a lookup table, or a template file, use the <code>include</code> parameter instead. T copies the listed paths into the sandbox without attempting to source or execute them:</p>
-<pre class="t"><code>report <span class="sc">=</span> <span class="fu">qn</span>(
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>report <span class="sc">=</span> <span class="fu">qn</span>(
   script  <span class="sc">=</span> <span class="st">"src/report.qmd"</span>,
   include <span class="sc">=</span> [<span class="st">"src/custom.scss"</span>, <span class="st">"src/logo.png"</span>, <span class="st">"data/lookups.csv"</span>]
-)</code></pre>
+)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="global-pipeline-options" class="level3" data-number="8.5.3">
 <h3 data-number="8.5.3" class="anchored" data-anchor-id="global-pipeline-options"><span class="header-section-number">8.5.3</span> Global Pipeline Options</h3>
 <p>Repeating <code>functions = "src/utils.R"</code> on every R node is tedious and error-prone. The <code>set_pipeline_global_options</code> function lets you declare defaults once for all nodes of a given runtime:</p>
-<pre class="t"><code><span class="fu">set_pipeline_global_options</span>(
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">set_pipeline_global_options</span>(
   r      <span class="sc">=</span> [functions <span class="sc">=</span> <span class="st">"src/r_utils.R"</span>],
   python <span class="sc">=</span> [functions <span class="sc">=</span> <span class="st">"src/py_utils.py"</span>],
   julia  <span class="sc">=</span> [functions <span class="sc">=</span> <span class="st">"src/jl_utils.jl"</span>]
@@ -918,14 +918,14 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
 }
 
-<span class="fu">build_pipeline</span>(p)</code></pre>
+<span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can also set global <code>include</code> and <code>env_vars</code> here. Node-level settings take precedence over globals: if a node declares its own <code>functions</code>, it overrides the global default for that node (rather than appending to it), so you retain full per-node control.</p>
 </section>
 </section>
 <section id="sec-env-vars" class="level2" data-number="8.6">
 <h2 data-number="8.6" class="anchored" data-anchor-id="sec-env-vars"><span class="header-section-number">8.6</span> Environment Variables in Nodes</h2>
 <p>The <code>env_vars</code> argument passes named environment variables into a node’s sandbox. This is the correct way to inject secrets, feature flags, and run-mode switches without hardcoding them in the pipeline source.</p>
-<pre class="t"><code>p_env_vars <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p_env_vars <span class="sc">=</span> <span class="cf">pipeline</span> {
 
   model <span class="sc">=</span> <span class="fu">rn</span>(
     command  <span class="sc">=</span> <span class="sc">&lt;</span>{
@@ -943,7 +943,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> {
     env_vars     <span class="sc">=</span> [MODEL_MODE<span class="sc">:</span> <span class="st">"debug"</span>, SEED<span class="sc">:</span> <span class="st">"42"</span>]
   )
 
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In Python nodes, read variables with <code>os.environ</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mode <span class="op">=</span> os.environ.get(<span class="st">"MODEL_MODE"</span>, <span class="st">"production"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1000,7 +1000,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> {
 </tr>
 </tbody>
 </table>
-<pre class="t"><code>log   <span class="sc">=</span> <span class="fu">build_log</span>(p)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>log   <span class="sc">=</span> <span class="fu">build_log</span>(p)
 frame <span class="sc">=</span> <span class="fu">build_log_to_frame</span>(log)
 frame
 
@@ -1008,31 +1008,31 @@ name        status    duration_s  path
 raw         cached    <span class="fl">0.00</span>        <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>abc…<span class="sc">-</span>raw
 clean       built     <span class="fl">3.21</span>        <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>def…<span class="sc">-</span>clean
 model       built     <span class="fl">8.74</span>        <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>ghi…<span class="sc">-</span>model
-report      built     <span class="fl">12.05</span>       <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>jkl…<span class="sc">-</span>report</code></pre>
+report      built     <span class="fl">12.05</span>       <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>jkl…<span class="sc">-</span>report</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A <code>status</code> of <code>"cached"</code> means Nix found an existing derivation with the same input hash and served it from the store without rerunning anything. <code>"built"</code> means the node was (re)computed in this run.</p>
 </section>
 <section id="copying-artifacts-out-of-the-store" class="level3" data-number="8.7.2">
 <h3 data-number="8.7.2" class="anchored" data-anchor-id="copying-artifacts-out-of-the-store"><span class="header-section-number">8.7.2</span> Copying Artifacts Out of the Store</h3>
 <p>Nix store paths are read-only and content-addressed, so they are not meant to be worked with directly. Use <code>pipeline_copy()</code> to copy artifacts to a local directory:</p>
-<pre class="t"><code><span class="co">-- Copy a single node's artifact</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Copy a single node's artifact</span>
 <span class="fu">pipeline_copy</span>(p.report, dest <span class="sc">=</span> <span class="st">"outputs/"</span>)
 
 <span class="co">-- Copy every artifact in the pipeline</span>
-<span class="fu">pipeline_copy</span>(p, dest <span class="sc">=</span> <span class="st">"outputs/"</span>)</code></pre>
+<span class="fu">pipeline_copy</span>(p, dest <span class="sc">=</span> <span class="st">"outputs/"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>After copying, <code>outputs/report.html</code> (or whatever format the Quarto node produced) is a regular file you can open, commit to Git, or publish.</p>
 </section>
 <section id="garbage-collection" class="level3" data-number="8.7.3">
 <h3 data-number="8.7.3" class="anchored" data-anchor-id="garbage-collection"><span class="header-section-number">8.7.3</span> Garbage Collection</h3>
 <p>Over time the Nix store accumulates artifacts from old builds. Two functions help manage this:</p>
 <p><code>pipeline_gc(p)</code> removes store paths that belong to <em>this pipeline’s</em> previous builds but are no longer referenced by the current build graph. Pass <code>dry_run = true</code> first to see what would be deleted:</p>
-<pre class="t"><code><span class="fu">pipeline_gc</span>(p, dry_run <span class="sc">=</span> <span class="cn">true</span>)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">pipeline_gc</span>(p, dry_run <span class="sc">=</span> <span class="cn">true</span>)
 
 Would remove<span class="sc">:</span>
   <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>xyz…<span class="sc">-</span>clean  (superseded by def…<span class="sc">-</span>clean)
 
-<span class="fu">pipeline_gc</span>(p)</code></pre>
+<span class="fu">pipeline_gc</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>t_gc()</code> runs a full Nix garbage collection: it removes every store path that is not referenced by any active GC root on the system. Use this periodically on development machines or CI runners to reclaim disk space:</p>
-<pre class="t"><code><span class="fu">t_gc</span>()</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">t_gc</span>()</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1062,10 +1062,10 @@ Would remove<span class="sc">:</span>
 <section id="previewing-cache-hits" class="level3" data-number="8.8.1">
 <h3 data-number="8.8.1" class="anchored" data-anchor-id="previewing-cache-hits"><span class="header-section-number">8.8.1</span> Previewing Cache Hits</h3>
 <p>Before committing to a full build, you can ask T to report which nodes would be rebuilt versus served from cache by passing <code>dry_run = true</code> to <code>build_pipeline</code>:</p>
-<pre class="t"><code><span class="fu">build_pipeline</span>(p, dry_run <span class="sc">=</span> <span class="cn">true</span>)
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">build_pipeline</span>(p, dry_run <span class="sc">=</span> <span class="cn">true</span>)
 
 Would build<span class="sc">:</span>  [model, report]
-Would cache<span class="sc">:</span>  [raw, clean]</code></pre>
+Would cache<span class="sc">:</span>  [raw, clean]</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This is useful when iterating on a slow node (a model fit, a long render) and you want to confirm that only the nodes downstream of your change will run.</p>
 <p>The equivalent from the shell:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t <span class="at">--dry-run</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1074,7 +1074,7 @@ Would cache<span class="sc">:</span>  [raw, clean]</code></pre>
 <section id="sec-cicd" class="level2" data-number="8.9">
 <h2 data-number="8.9" class="anchored" data-anchor-id="sec-cicd"><span class="header-section-number">8.9</span> CI/CD with <code>pipeline_to_ga()</code></h2>
 <p>A reproducible pipeline is most valuable when it runs automatically: on every push, on a schedule, or when upstream data changes. T ships with a function that generates a complete GitHub Actions workflow YAML from your pipeline definition:</p>
-<pre class="t"><code><span class="fu">pipeline_to_ga</span>(p, file <span class="sc">=</span> <span class="st">".github/workflows/pipeline.yml"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">pipeline_to_ga</span>(p, file <span class="sc">=</span> <span class="st">".github/workflows/pipeline.yml"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That single call writes a workflow file that:</p>
 <ol type="1">
 <li>Installs Nix on the runner using the Determinate Systems installer.</li>
@@ -1085,13 +1085,13 @@ Would cache<span class="sc">:</span>  [raw, clean]</code></pre>
 </ol>
 <p>The <code>t-runs</code> branch caching approach avoids the GitHub Actions cache size limit by persisting the Nix store as a Git repository. On a typical pipeline, the first CI run downloads and builds everything; subsequent runs restore from cache and only rebuild what changed, the same incremental behaviour you get locally.</p>
 <p>A minimal end-to-end CI setup for our penguin pipeline:</p>
-<pre class="t"><code><span class="co">-- In src/pipeline.t, add at the bottom:</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- In src/pipeline.t, add at the bottom:</span>
 <span class="fu">pipeline_to_ga</span>(
   p,
   file     <span class="sc">=</span> <span class="st">".github/workflows/pipeline.yml"</span>,
   on_push  <span class="sc">=</span> [<span class="st">"main"</span>],
   schedule <span class="sc">=</span> <span class="st">"0 6 * * 1"</span>   <span class="co">-- Monday mornings at 06:00 UTC</span>
-)</code></pre>
+)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The generated YAML looks roughly like this:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> T Pipeline</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>

@@ -617,7 +617,7 @@ window.Quarto = {
 <li>Given the same inputs, it produces the same output, always. This is guaranteed by Nix’s hermetic sandbox. The node has no access to the outside world beyond what is explicitly declared.</li>
 </ul>
 <p>Look at a concrete example:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   <span class="co">-- Node 1: produce data. Inputs: none. Output: a DataFrame (serialized as ^ipc).</span>
   data_node <span class="sc">=</span> <span class="fu">node</span>(
     command <span class="sc">=</span> <span class="sc">&lt;</span>{
@@ -642,7 +642,7 @@ window.Quarto = {
   )
 }
 
-<span class="fu">build_pipeline</span>(p)</code></pre>
+<span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>data_node</code> takes no inputs and returns one DataFrame. <code>model_node</code> takes one DataFrame (<code>data_node</code>, via <code>^ipc</code>) and returns one model (<code>^pmml</code>). Neither can reach outside its sandbox. Neither modifies anything shared. Each is a pure function. And because they are pure, T can cache them: if <code>data_node</code>’s inputs have not changed, T does not rebuild it. Content-addressed outputs make this exact.</p>
 <p>This also explains something that often surprises new T users: the order of node declarations inside a <code>pipeline { }</code> block does not matter. T infers the execution order from the <em>data dependencies</em> between nodes, not from the order you wrote them. This is only possible because nodes are pure: if a node had side effects, order would matter. Because it does not, T is free to determine the correct order itself, in the same way a compiler can reorder pure expressions.</p>
 </section>
@@ -655,7 +655,7 @@ window.Quarto = {
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mpg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Each step takes the output of the previous step as its only input. The whole expression is a composition of three pure-ish functions (ignoring that they implicitly read column names). T makes this structure <em>explicit</em>, <em>named</em>, and <em>cached at the node level</em>.</p>
 <p>Here is another example which does exactly this:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   <span class="co">-- Load: no inputs, output is a DataFrame</span>
   mtcars <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"data/mtcars.csv"</span>, separator <span class="sc">=</span> <span class="st">"|"</span>)
 
@@ -666,13 +666,13 @@ window.Quarto = {
   mtcars_mpg <span class="sc">=</span> filtered_mtcars <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>mpg)
 }
 
-<span class="fu">build_pipeline</span>(p)</code></pre>
+<span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Three nodes (because this is using pure T code, there is no need to use the <code>node()</code> constructor), three pure functions, composed in sequence. T resolves the dependency graph (<code>mtcars_mpg</code> depends on <code>filtered_mtcars</code>, which depends on <code>mtcars</code>), builds them in the correct order, and caches each result. If you change only the <code>filter</code> predicate, only <code>filtered_mtcars</code> and <code>mtcars_mpg</code> are rebuilt; <code>mtcars</code> is unchanged, so T does not touch it.</p>
 </section>
 <section id="polyglot-composition-passing-values-across-languages" class="level2" data-number="6.6">
 <h2 data-number="6.6" class="anchored" data-anchor-id="polyglot-composition-passing-values-across-languages"><span class="header-section-number">6.6</span> Polyglot Composition: Passing Values Across Languages</h2>
 <p>One of the most important consequences of treating nodes as pure functions with explicit inputs and outputs is that the <em>runtime inside the node becomes an implementation detail</em>. The serializer/deserializer pair is the function’s type signature: it says what the node accepts and what it returns. T uses this to move data between R, Python, Julia, and T nodes without any manual glue code:</p>
-<pre class="t"><code><span class="co">-- Node 1: R produces a DataFrame, serialized as Arrow IPC</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="co">-- Node 1: R produces a DataFrame, serialized as Arrow IPC</span>
 df_r <span class="sc">=</span> <span class="fu">node</span>(
   command <span class="sc">=</span> <span class="sc">&lt;</span>{
     data.frame(
@@ -698,7 +698,7 @@ df_py <span class="sc">=</span> <span class="fu">node</span>(
 )
 
 p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class="sc">=</span> df_r; df_py <span class="sc">=</span> df_py }
-<span class="fu">build_pipeline</span>(p)</code></pre>
+<span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>df_r</code> is a pure function: it takes nothing, returns a DataFrame. <code>df_py</code> is a pure function: it takes one DataFrame (<code>^ipc</code>), returns a modified DataFrame (<code>^ipc</code>). The fact that one runs in R and the other in Python is invisible to the composition. Purity is what makes this safe: because neither node has side effects, T can route the output of one into the input of the other through the Nix store without any risk of interference.</p>
 </section>
 <section id="errors-as-values-not-exceptions" class="level2" data-number="6.7">
@@ -706,7 +706,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
 <p>One more consequence of the pure function model is worth understanding before we move to testing.</p>
 <p>In a stateful script, errors are typically thrown as exceptions that interrupt the normal flow of execution, which is a side effect in itself. A pure function cannot throw an exception and still be pure: throwing is a side effect that transfers control to some unknown handler elsewhere.</p>
 <p>T handles this by making <strong>errors first-class values</strong>. If a node produces an error, because a file is missing, a computation fails, or you explicitly call <code>error()</code>, the error is <em>the node’s output</em>, not an interruption of the pipeline. Downstream nodes can inspect it, recover from it, or propagate it, using the maybe-pipe <code>?|&gt;</code>:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   <span class="co">-- This node intentionally fails</span>
   risky_node <span class="sc">=</span> <span class="fu">node</span>(
     command <span class="sc">=</span> <span class="fu">error</span>(<span class="st">"DATA_MISSING"</span>, <span class="st">"Expected file was not found."</span>),
@@ -725,7 +725,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
   )
 }
 
-<span class="fu">build_pipeline</span>(p)</code></pre>
+<span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>risky_node</code> returns an error value. <code>handled_node</code> receives it, checks <code>is_error()</code>, and returns a fallback. The pipeline completes successfully. No try/catch scattered through the code, no implicit exception handling; the error path is as explicit as the success path.</p>
 <p>This matters for reproducibility: if part of a pipeline fails, you know exactly which node failed, what it returned, and which downstream nodes were affected. The error is in the content-addressed store alongside every other output.</p>
 </section>
@@ -738,7 +738,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
 <section id="nodes-can-point-to-external-scripts" class="level2" data-number="6.9">
 <h2 data-number="6.9" class="anchored" data-anchor-id="nodes-can-point-to-external-scripts"><span class="header-section-number">6.9</span> Nodes Can Point to External Scripts</h2>
 <p>So far, we have written the R and Python code for nodes inline, inside <code>&lt;{ ... }&gt;</code> blocks. T also lets a node point to an <strong>external script file</strong> using the <code>script</code> argument:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   <span class="co">-- runtime auto-detected from .R extension</span>
   model    <span class="sc">=</span> <span class="fu">rn</span>(script <span class="sc">=</span> <span class="st">"src/train_model.R"</span>, serializer <span class="sc">=</span> ^pmml)
 
@@ -747,7 +747,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
 
   <span class="co">-- node() auto-detects from any supported extension</span>
   summary  <span class="sc">=</span> <span class="fu">node</span>(script <span class="sc">=</span> <span class="st">"src/summarise.R"</span>, serializer <span class="sc">=</span> ^json)
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>script</code> and <code>command</code> are mutually exclusive: you either inline your code or point to a file. T reads the file to extract identifier references, so the dependency graph is still built correctly. The runtime is inferred from the extension (<code>.R</code> → R, <code>.py</code> → Python, <code>.jl</code> → Julia, <code>.sh</code> → Shell, <code>.qmd</code> → Quarto) unless you set it explicitly.</p>
 <p>This has an important consequence. When your analysis logic lives in a plain <code>.R</code> or <code>.py</code> file, that file carries <strong>no T-specific syntax</strong>. It is a normal script. It can be:</p>
 <ul>
@@ -758,7 +758,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
 </ul>
 <p>T becomes the orchestration layer on top of code that is already self-contained and portable. This is the right separation of concerns: your domain logic lives in plain language files; T handles scheduling, sandboxing, caching, and cross-language data routing.</p>
 <p>You can push this further with the <code>functions</code> parameter, which sources utility files into the node sandbox <em>before</em> the main script runs:</p>
-<pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   cleaned <span class="sc">=</span> <span class="fu">rn</span>(
     script    <span class="sc">=</span> <span class="st">"src/clean.R"</span>,
     functions <span class="sc">=</span> [<span class="st">"src/utils.R"</span>],    <span class="co">-- sourced before clean.R runs</span>
@@ -771,7 +771,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
     deserializer <span class="sc">=</span> ^ipc,
     serializer   <span class="sc">=</span> ^pmml
   )
-}</code></pre>
+}</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>utils.R</code> might define <code>clean_colnames()</code>, <code>log_transform()</code>, or whatever helpers your analysis needs. Those functions are written once, tested once, and shared across any node that needs them, inside T or outside it.</p>
 <p>The principle is the same one that runs through this whole chapter: <strong>write your analysis code as if T did not exist.</strong> Pure functions in plain files, with explicit inputs and explicit outputs. T wires them together. If T were replaced tomorrow by a different orchestrator, your functions would survive unchanged.</p>
 </section>

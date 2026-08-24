@@ -649,15 +649,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="13.4.1" class="anchored" data-anchor-id="caching-t-pipeline-outputs-between-runs"><span class="header-section-number">13.4.1</span> Caching T pipeline outputs between runs</h3>
 <p>Nix already caches builds in its store, but a fresh CI runner starts with an empty store, so every node is rebuilt from scratch on the first run. T has native functions for shipping a pipeline’s cached artifacts between runs, so a second run can skip the work a first run already did.</p>
 <p><code>export_artifacts(p, archive_path)</code> bundles the cached Nix artifacts of every node in <code>p</code> into a single portable archive file. All nodes must already exist in the local store, so you call it right after a successful build:</p>
-<pre class="t"><code><span class="fu">build_pipeline</span>(p)
-<span class="fu">export_artifacts</span>(p, <span class="st">"artifacts.tar"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">build_pipeline</span>(p)
+<span class="fu">export_artifacts</span>(p, <span class="st">"artifacts.tar"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>On the next run, <code>import_artifacts()</code> restores those artifacts into the local Nix store before you build, so unchanged nodes are pulled from the archive instead of rebuilt:</p>
-<pre class="t"><code><span class="fu">import_artifacts</span>(<span class="st">"artifacts.tar"</span>)
-<span class="fu">build_pipeline</span>(p)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">import_artifacts</span>(<span class="st">"artifacts.tar"</span>)
+<span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The two-argument form, <code>import_artifacts(p, "artifacts.tar")</code>, additionally verifies that the imported store paths match the pipeline’s expected signatures, catching a stale or mismatched archive.</p>
 <p>To see what an archive contains without touching the local store, use <code>inspect_artifacts()</code>. It loads the archive into a temporary store and returns a data frame with one row per node:</p>
-<pre class="t"><code><span class="fu">inspect_artifacts</span>(<span class="st">"artifacts.tar"</span>)
-<span class="co">-- columns: node, store_path, hash, size_bytes, references</span></code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">inspect_artifacts</span>(<span class="st">"artifacts.tar"</span>)
+<span class="co">-- columns: node, store_path, hash, size_bytes, references</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>On GitHub Actions the pattern is to export the archive after a successful build and upload it as a workflow artifact, then download and import it at the start of the next run. Combined with the <code>rstats-on-nix</code> binary cache above, this keeps even a cold runner from recompiling anything that has not changed.</p>
 </section>
 </section>
@@ -773,7 +773,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="the-easy-way-pipeline_to_ga" class="level3" data-number="13.7.2">
 <h3 data-number="13.7.2" class="anchored" data-anchor-id="the-easy-way-pipeline_to_ga"><span class="header-section-number">13.7.2</span> The Easy Way: <code>pipeline_to_ga()</code></h3>
 <p>If the above seems like a lot of boilerplate, T provides a helper function that generates a complete GitHub Actions workflow for you:</p>
-<pre class="t"><code><span class="fu">pipeline_to_ga</span>(p, file <span class="sc">=</span> <span class="st">".github/workflows/pipeline.yml"</span>)</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">pipeline_to_ga</span>(p, file <span class="sc">=</span> <span class="st">".github/workflows/pipeline.yml"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This creates a <code>.github/workflows/pipeline.yml</code> file that handles everything: installing Nix, setting up Cachix, building the pipeline, and importing and exporting artifacts. It stores the cached Nix store in a dedicated <code>t-runs</code> branch, keeping your main branch clean while persisting the cached outputs between runs.</p>
 <p>For most projects, running <code>pipeline_to_ga()</code> once and committing the generated workflow file is all you need to get your pipeline running on CI.</p>
 </section>
