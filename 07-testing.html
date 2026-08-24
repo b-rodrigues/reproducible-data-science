@@ -709,8 +709,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>When using an LLM to generate tests, context is everything. If you are writing tests for functions that heavily use specific packages (like <code>{dplyr}</code> or <code>pandas</code>), providing the <code>pkgctx</code> output for those packages ensures the LLM writes idiomatic and correct tests.</p>
-<p>For example, if you are testing a function that uses <code>{rix}</code>, feed the <code>rix.pkgctx.yaml</code> to the LLM so it knows exactly how to mock or assert the outputs of <code>rix()</code> functions. This is particularly useful for packages that are not very well-known (or internal packages to your company that aren’t even public) or packages that have been updated very recently, as the LLM’s training data cutoff might not include the latest versions of the package.</p>
+<p>When using an LLM to generate tests, context is everything. If you are writing tests for functions that heavily use specific packages (like <code>{dplyr}</code> or <code>pandas</code>), providing the LLM with that package’s API reference ensures it writes idiomatic and correct tests.</p>
+<p>For example, when testing T pipeline code, point the LLM at the project’s <code>AGENTS.md</code> and <code>T-LANGUAGE-REFERENCE.md</code> so it knows the exact syntax and runtime behaviour of the nodes it is testing. This is particularly useful for packages that are not very well-known (or internal packages to your company that aren’t even public) or packages that have been updated very recently, as the LLM’s training data cutoff might not include the latest versions of the package.</p>
 </div>
 </div>
 <p>This is a massive productivity boost. However, this introduces a new, critical role for the data scientist: you are the reviewer.</p>
