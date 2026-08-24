@@ -150,10 +150,9 @@ this small pipeline fail is if the `mtcars.csv` file is not provided to it.
 clarity, I will refer to code like the example above as a *derivation* rather
 than an expression, to avoid confusion with the concept of an *expression* in R.
 
-The goal of the tools we will use in this book, `{rix}` and `{rixpress}` (or
-`ryxpress` if you prefer using Python), is to help you create pipelines from
-such derivations without needing to learn the Nix language itself, while still
-benefiting from its powerful reproducibility features.
+The goal of the tool we will use in this book, T, is to help you create
+pipelines from such derivations without needing to learn the Nix language
+itself, while still benefiting from its powerful reproducibility features.
 
 ### Dependencies of derivations
 

@@ -1,7 +1,7 @@
 # Debugging and Error Handling
 
 In the previous chapters, you learned functional programming fundamentals and
-how to build reproducible pipelines with `{rixpress}`. Now we'll add another
+how to build reproducible pipelines with T. Now we'll add another
 layer of robustness: **error handling** and **debugging**.
 
 When a pipeline runs, things inevitably go wrong. A dataset might have

@@ -273,15 +273,16 @@ we wrote above.
 
 When using an LLM to generate tests, context is everything. If you are writing
 tests for functions that heavily use specific packages (like `{dplyr}` or
-`pandas`), providing the `pkgctx` output for those packages ensures the LLM
+`pandas`), providing the LLM with that package's API reference ensures it
 writes idiomatic and correct tests.
 
-For example, if you are testing a function that uses `{rix}`, feed the
-`rix.pkgctx.yaml` to the LLM so it knows exactly how to mock or assert the
-outputs of `rix()` functions. This is particularly useful for packages that
-are not very well-known (or internal packages to your company that aren't even
-public) or packages that have been updated very recently, as the LLM's training
-data cutoff might not include the latest versions of the package.
+For example, when testing T pipeline code, point the LLM at the project's
+`AGENTS.md` and `T-LANGUAGE-REFERENCE.md` so it knows the exact syntax and
+runtime behaviour of the nodes it is testing. This is particularly useful for
+packages that are not very well-known (or internal packages to your company
+that aren't even public) or packages that have been updated very recently, as
+the LLM's training data cutoff might not include the latest versions of the
+package.
 :::
 
 This is a massive productivity boost. However, this introduces a new, critical

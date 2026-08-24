@@ -590,7 +590,7 @@ Build and load it:
 
 ```bash
 # Build the image (outputs a .tar.gz file)
-nix-build docker-image.nix
+nix build docker-image.nix
 
 # Load into Docker
 docker load < result
@@ -836,7 +836,7 @@ in pkgs.dockerTools.buildImage {
 Build and run:
 
 ```bash
-nix-build docker-pipeline.nix
+nix build docker-pipeline.nix
 docker load < result
 docker run --rm -v "$(pwd)/output":/output my-t-pipeline:latest
 ```
