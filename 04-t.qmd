@@ -855,6 +855,22 @@ Instead, add packages to `tproject.toml` and run `t update`. Calling
 `install.packages()` (or equivalent commands for Python and Julia) will raise an
 error.
 
+### Working with R, Python, and Julia
+
+Declaring dependencies in `tproject.toml` is not just bookkeeping: it gives
+you working R, Python, and Julia environments. Once you are inside the
+development shell, typing `R`, `python`, or `julia` starts the corresponding
+interpreter, with every package you declared already installed.
+
+This makes the shell a natural place to do interactive work. You can develop
+small functions in R, Python, or Julia, test them, and then have your LLM agent
+wire them into the T pipeline. A setup that works well: start an editor such as
+Positron from inside the shell (for example, by typing `positron`), and work on
+your functions there while a terminal sits next to it, where your LLM agent
+builds the pipeline incrementally, node by node. Because the editor inherits
+the shell's environment, its R, Python, and Julia sessions use exactly the
+same versions and packages as your pipeline.
+
 ### Alternative installation methods
 
 T provides several other ways to install packages, using `uv` for Python or

@@ -44,12 +44,18 @@ standardise column names. Create a folder called `cleanR` and `cd` into it.
 
 ### Step 1: Project Setup
 
-First, make sure you have the necessary tools installed. Create a Nix
-environment that contains the following R packages: `{devtools}`, `{usethis}`
-and `{roxygen2}`.
+A T project is not only for pipelines: you can also use one purely as a
+reproducible development environment. Initialise a T project in this folder and
+declare the R packages you need for package development in `tproject.toml`:
 
-Drop into this Nix shell, and let `{usethis}` create the package structure for
-you. From your R console, run:
+```toml
+[r-dependencies]
+packages = ["devtools", "usethis", "roxygen2"]
+```
+
+Run `t update` to generate the Nix files, then enter the development shell
+with `nix develop`. Let `{usethis}` create the package structure for you.
+From your R console, run:
 
 ```R
 usethis::create_package("~/Documents/projects/cleanR")
@@ -205,9 +211,9 @@ your code, and install the package in your projects without needing to publish i
     remotes::install_github("yourusername/cleanR")
     ```
 
-If you want to create an environment using Nix that includes this package, use
-the `git_pkgs` argument of `rix::rix()` to generate the right `default.nix`
-file.
+If you want to create an environment using Nix that includes this package,
+declare it in your `tproject.toml` as a Git reference, exactly as shown in
+Part 3, run `t update`, and re-enter the shell with `nix develop`.
 
 Congratulations, you have created and shared a fully functional R package!
 
@@ -220,9 +226,10 @@ locally using:
 devtools::build()
 ```
 
-which will create a `.tar.gz` package. You can then install it using either
-`devtools::install_local()` if you don’t use Nix or the `local_r_pkgs` argument
-of `rix::rix()`.
+which will create a `.tar.gz` package. You can then install it with
+`devtools::install_local()` if you don't use Nix. If you do, the simplest
+approach is to push the package to a (possibly private) Git repository and
+declare it in your `tproject.toml` as in Part 3.
 
 ## Part 2: Creating a Minimal Python Package with uv
 
@@ -239,24 +246,20 @@ Let's build a Python package called `pyclean`, the equivalent of our R package.
 
 ### Step 1: Project Setup with uv
 
-First, ensure `uv` is installed in your Nix environment:
+First, set up a T project that provides a Python environment. In
+`tproject.toml`, declare the Python packages you need and `uv` as an
+additional tool:
 
-```py
-library(rix)
+```toml
+[py-dependencies]
+version = "python313"
+packages = ["pytest", "pandas"]
 
-rix(
-  date = "2025-10-07",
-  py_conf = list(
-    py_version = "3.13",
-    py_pkgs = c("pytest", "pandas")
-  ),
-  system_pkgs = "uv",
-  ide = "none",
-  project_path = ".",
-  overwrite = TRUE
-)
-
+[additional-tools]
+packages = ["uv"]
 ```
+
+Run `t update` and enter the development shell with `nix develop`.
 
 Then, create a directory for your new package and initialise it:
 
@@ -405,9 +408,10 @@ you make are immediately reflected without needing to reinstall.
 pip install -e .[test]
 ```
 
-But we are working from a Nix shell. Instead, we will simply edit our
-`default.nix` to update the `PYTHONPATH` environment variable, so our package
-can easily be found:
+But we are working from a Nix shell. Instead, we will edit the project's
+`flake.nix` to update the `PYTHONPATH` environment variable, so our package
+can easily be found. Open `flake.nix`, find the definition of the development
+shell, and add a `shellHook` attribute:
 
 ```nix
 shellHook = ''
@@ -415,28 +419,13 @@ shellHook = ''
 '';
 ```
 
-To generate this with `{rix}`, use the `shell_hook` argument:
+The `shellHook` runs every time the shell starts. Note that `t update`
+regenerates `flake.nix`, so if you re-run it you will need to re-apply the
+hook.
 
-```r
-library(rix)
-
-rix(
-  date = "2025-10-07",
-  py_conf = list(
-    py_version = "3.13",
-    py_pkgs = c("pytest", "pandas")
-  ),
-  system_pkgs = "uv",
-  shell_hook = "export PYTHONPATH=$PWD/src:$PYTHONPATH",
-  ide = "none",
-  project_path = ".",
-  overwrite = TRUE
-)
-```
-
-With this, dropping into the Nix shell, starting the Python interpreter and then
-typing `import pyclean` will work without any issues. You may need to adapt the
-path depending on where you're developing the package.
+With this, dropping into the shell with `nix develop`, starting the Python
+interpreter and then typing `import pyclean` will work without any issues. You
+may need to adapt the path depending on where you're developing the package.
 
 ### Step 5: Install from GitHub
 
@@ -451,37 +440,11 @@ is smart enough to find and process your `pyproject.toml` file:
     pip install git+https://github.com/yourusername/pyclean.git
     ```
 
-For Nix environments, add this to your `default.nix`:
-
-```
-pyclean = pkgs.python313Packages.buildPythonPackage rec {
-  pname = "pyclean";
-  version = "0.1.0";
-  src = pkgs.fetchgit {
-    url = "https://github.com/b-rodrigues/pyclean";
-    rev = "174d4d482d400536bb0d987a3e25ae80cd81ef3c";
-    sha256 = "sha256-xTYydkuduPpZsCXE2fv5qZCnYYCRoNFpV7lQBM3LMSg=";
-  };
-  pyproject = true;
-  propagatedBuildInputs = [ pkgs.python313Packages.pandas pkgs.python313Packages.setuptools ];
-  # Add more dependencies to propagatedBuildInputs as needed
-};
-```
-
-You need to add the `rev`, which corresponds to the commit that you want, and the
-`sha256`. To find the right `sha256`, start with an empty one (`sha256 = "";`)
-and try to build the package. The error message will give you the right
-`sha256`. Also note that this isn’t the most idiomatic way to build a Python
-package for Nix, but it’s good enough for our purposes.
-
-Finally, add `pyclean` to the `buildInputs` of the shell:
-
-```nix
-  buildInputs = [ rpkgs pyconf pyclean tex system_packages github_pkgs ];
-```
-
-This process is naturally more involved than simply calling `pip install`, but
-it has the advantage of being entirely reproducible.
+For Nix environments, the cleanest approach is the one described in Part 3:
+declare `pyclean` as a direct Git reference in your project's Python workspace,
+lock it with `uv`, and run `t update`. This process is naturally more involved
+than simply calling `pip install`, but it has the advantage of being entirely
+reproducible.
 
 ## Part 3: Integrating Your Packages into a T Pipeline
 
