@@ -445,10 +445,10 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#the-core-verbs" id="toc-the-core-verbs" class="nav-link active" data-scroll-target="#the-core-verbs"><span class="header-section-number">14.1</span> The core verbs</a>
   <ul class="collapse">
-  <li><a href="#select-choose-columns" id="toc-select-choose-columns" class="nav-link" data-scroll-target="#select-choose-columns"><span class="header-section-number">14.1.1</span> select() — choose columns</a></li>
-  <li><a href="#filter-choose-rows" id="toc-filter-choose-rows" class="nav-link" data-scroll-target="#filter-choose-rows"><span class="header-section-number">14.1.2</span> filter() — choose rows</a></li>
-  <li><a href="#mutate-add-or-transform-columns" id="toc-mutate-add-or-transform-columns" class="nav-link" data-scroll-target="#mutate-add-or-transform-columns"><span class="header-section-number">14.1.3</span> mutate() — add or transform columns</a></li>
-  <li><a href="#arrange-sort-rows" id="toc-arrange-sort-rows" class="nav-link" data-scroll-target="#arrange-sort-rows"><span class="header-section-number">14.1.4</span> arrange() — sort rows</a></li>
+  <li><a href="#select-choose-columns" id="toc-select-choose-columns" class="nav-link" data-scroll-target="#select-choose-columns"><span class="header-section-number">14.1.1</span> select(): choose columns</a></li>
+  <li><a href="#filter-choose-rows" id="toc-filter-choose-rows" class="nav-link" data-scroll-target="#filter-choose-rows"><span class="header-section-number">14.1.2</span> filter(): choose rows</a></li>
+  <li><a href="#mutate-add-or-transform-columns" id="toc-mutate-add-or-transform-columns" class="nav-link" data-scroll-target="#mutate-add-or-transform-columns"><span class="header-section-number">14.1.3</span> mutate(): add or transform columns</a></li>
+  <li><a href="#arrange-sort-rows" id="toc-arrange-sort-rows" class="nav-link" data-scroll-target="#arrange-sort-rows"><span class="header-section-number">14.1.4</span> arrange(): sort rows</a></li>
   <li><a href="#group_by-and-summarize" id="toc-group_by-and-summarize" class="nav-link" data-scroll-target="#group_by-and-summarize"><span class="header-section-number">14.1.5</span> group_by() and summarize()</a></li>
   <li><a href="#composing-verbs" id="toc-composing-verbs" class="nav-link" data-scroll-target="#composing-verbs"><span class="header-section-number">14.1.6</span> Composing verbs</a></li>
   </ul></li>
@@ -508,14 +508,14 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="14.1" class="anchored" data-anchor-id="the-core-verbs"><span class="header-section-number">14.1</span> The core verbs</h2>
 <p>The <code>colcraft</code> verbs follow the shape you already know from <code>{dplyr}</code>: a verb takes a DataFrame, does one thing, and hands back a DataFrame. You chain them with the pipe.</p>
 <section id="select-choose-columns" class="level3" data-number="14.1.1">
-<h3 data-number="14.1.1" class="anchored" data-anchor-id="select-choose-columns"><span class="header-section-number">14.1.1</span> select() — choose columns</h3>
+<h3 data-number="14.1.1" class="anchored" data-anchor-id="select-choose-columns"><span class="header-section-number">14.1.1</span> select(): choose columns</h3>
 <p><code>select()</code> keeps only the columns you name, using the <code>$column</code> syntax:</p>
 <pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name, <span class="sc">$</span>age)
 df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">$</span>name)</code></pre>
 <p>If you name a column that does not exist, you get a <code>KeyError</code> that names the missing column, so a typo fails fast rather than silently dropping data.</p>
 </section>
 <section id="filter-choose-rows" class="level3" data-number="14.1.2">
-<h3 data-number="14.1.2" class="anchored" data-anchor-id="filter-choose-rows"><span class="header-section-number">14.1.2</span> filter() — choose rows</h3>
+<h3 data-number="14.1.2" class="anchored" data-anchor-id="filter-choose-rows"><span class="header-section-number">14.1.2</span> filter(): choose rows</h3>
 <p><code>filter()</code> keeps the rows where a predicate is true. You write the predicate against the <code>$column</code> syntax, and T turns it into a row-wise function for you:</p>
 <pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">30</span>)
 df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="sc">==</span> <span class="st">"eng"</span>)</code></pre>
@@ -527,13 +527,13 @@ df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc"
 </blockquote>
 </section>
 <section id="mutate-add-or-transform-columns" class="level3" data-number="14.1.3">
-<h3 data-number="14.1.3" class="anchored" data-anchor-id="mutate-add-or-transform-columns"><span class="header-section-number">14.1.3</span> mutate() — add or transform columns</h3>
+<h3 data-number="14.1.3" class="anchored" data-anchor-id="mutate-add-or-transform-columns"><span class="header-section-number">14.1.3</span> mutate(): add or transform columns</h3>
 <p><code>mutate()</code> adds a new column or replaces an existing one. The new column is named with <code>$</code> and defined by an expression over the existing columns:</p>
 <pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>age_plus_10 <span class="sc">=</span> <span class="sc">$</span>age <span class="sc">+</span> <span class="dv">10</span>)
 df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>bonus <span class="sc">=</span> <span class="sc">$</span>salary <span class="sc">*</span> <span class="fl">0.1</span>)</code></pre>
 </section>
 <section id="arrange-sort-rows" class="level3" data-number="14.1.4">
-<h3 data-number="14.1.4" class="anchored" data-anchor-id="arrange-sort-rows"><span class="header-section-number">14.1.4</span> arrange() — sort rows</h3>
+<h3 data-number="14.1.4" class="anchored" data-anchor-id="arrange-sort-rows"><span class="header-section-number">14.1.4</span> arrange(): sort rows</h3>
 <p><code>arrange()</code> sorts by one or more columns, in ascending order by default or <code>"desc"</code> for descending:</p>
 <pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>age)
 df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">$</span>score, <span class="st">"desc"</span>)</code></pre>
@@ -565,7 +565,7 @@ df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc
 employees <span class="sc">|&gt;</span> <span class="fu">left_join</span>(projects, <span class="sc">$</span>emp_id)
 employees <span class="sc">|&gt;</span> <span class="fu">anti_join</span>(projects, <span class="sc">$</span>emp_id)
 employees <span class="sc">|&gt;</span> <span class="fu">full_join</span>(projects, <span class="sc">$</span>emp_id)</code></pre>
-<p><code>inner_join</code> keeps rows whose key appears in both tables; <code>left_join</code> keeps every row of the left table and fills in what it can from the right; <code>anti_join</code> keeps the left rows with <em>no</em> match — the workhorse for “who has no record yet?”; <code>full_join</code> keeps everything from both sides.</p>
+<p><code>inner_join</code> keeps rows whose key appears in both tables; <code>left_join</code> keeps every row of the left table and fills in what it can from the right; <code>anti_join</code> keeps the left rows with <em>no</em> match, the workhorse for “who has no record yet?”; <code>full_join</code> keeps everything from both sides.</p>
 </section>
 <section id="duplicates-and-counts" class="level3" data-number="14.2.2">
 <h3 data-number="14.2.2" class="anchored" data-anchor-id="duplicates-and-counts"><span class="header-section-number">14.2.2</span> Duplicates and counts</h3>
@@ -583,18 +583,18 @@ df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc"
     <span class="sc">$</span>score <span class="sc">&gt;=</span> <span class="dv">90</span> <span class="sc">~</span> <span class="st">"A"</span>,
     <span class="sc">$</span>score <span class="sc">&gt;=</span> <span class="dv">80</span> <span class="sc">~</span> <span class="st">"B"</span>,
     .default <span class="sc">=</span> <span class="st">"C"</span>))</code></pre>
-<p><code>case_when</code> reuses the <code>~</code> from model formulas — one syntax for “this predicts that” and “this yields that”.</p>
+<p><code>case_when</code> reuses the <code>~</code> from model formulas: one syntax for “this predicts that” and “this yields that”.</p>
 </section>
 <section id="operators-in-data-work" class="level3" data-number="14.2.4">
 <h3 data-number="14.2.4" class="anchored" data-anchor-id="operators-in-data-work"><span class="header-section-number">14.2.4</span> Operators in data work</h3>
 <p>A few operators from the Chapter 4 reference earn their place in data work.</p>
 <p><code>in</code> tests membership against a list, which makes it the natural filter for “any of these”:</p>
 <pre class="t"><code>df <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">$</span>dept <span class="cf">in</span> [<span class="st">"eng"</span>, <span class="st">"sales"</span>])</code></pre>
-<p>Inside <code>filter</code>, the predicate is evaluated row by row, so each <code>$column</code> is a scalar and the plain operators (<code>&amp;&amp;</code>, <code>||</code>, <code>==</code>, <code>in</code>) are the right tools. The broadcasting operators come in when you hold a whole Vector or List at once — for example, a column pulled out with a lens (Chapter 15):</p>
+<p>Inside <code>filter</code>, the predicate is evaluated row by row, so each <code>$column</code> is a scalar and the plain operators (<code>&amp;&amp;</code>, <code>||</code>, <code>==</code>, <code>in</code>) are the right tools. The broadcasting operators come in when you hold a whole Vector or List at once, for example a column pulled out with a lens (Chapter 15):</p>
 <pre class="t"><code>scores <span class="sc">=</span> [<span class="dv">72</span>, <span class="dv">85</span>, <span class="dv">91</span>]
 scores <span class="sc">.+</span> <span class="dv">10</span>        <span class="co">-- [82, 95, 101]</span>
 <span class="dv">1</span> <span class="sc">.==</span> [<span class="dv">1</span>, <span class="dv">2</span>]        <span class="co">-- [true, false]</span></code></pre>
-<p>And <code>%name%</code> is the escape hatch for custom infix operators: packages define them, and you consume them wherever a named call would be clunkier — the chrono package ships <code>%within%</code> for testing whether a date falls inside an interval.</p>
+<p>And <code>%name%</code> is the escape hatch for custom infix operators: packages define them, and you consume them wherever a named call would be clunkier: the chrono package ships <code>%within%</code> for testing whether a date falls inside an interval.</p>
 </section>
 </section>
 <section id="reshaping-and-missing-values" class="level2" data-number="14.3">
@@ -705,7 +705,7 @@ model <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc"
 </section>
 <section id="quick-stats-in-t" class="level2" data-number="14.9">
 <h2 data-number="14.9" class="anchored" data-anchor-id="quick-stats-in-t"><span class="header-section-number">14.9</span> Quick stats in T</h2>
-<p>Around <code>lm()</code> sits a small stats package for the fast checks you do while exploring — the “does this variable matter, and what is its shape?” questions.</p>
+<p>Around <code>lm()</code> sits a small stats package for the fast checks you do while exploring: the “does this variable matter, and what is its shape?” questions.</p>
 <p>Correlation, covariance, and the five-number summary are the usual first moves:</p>
 <pre class="t"><code><span class="fu">cor</span>(df[<span class="st">"mpg"</span>], df[<span class="st">"wt"</span>])
 <span class="fu">cov</span>(df[<span class="st">"mpg"</span>], df[<span class="st">"wt"</span>])
@@ -725,11 +725,11 @@ df <span class="sc">|&gt;</span> <span class="fu">group_by</span>(<span class="s
 <pre class="t"><code>m1 <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1)
 m2 <span class="sc">=</span> <span class="fu">lm</span>(data <span class="sc">=</span> df, formula <span class="sc">=</span> y <span class="sc">~</span> x1 <span class="sc">+</span> x2)
 <span class="fu">anova</span>(m1, m2)</code></pre>
-<p>None of this replaces a statistics course, but it keeps the exploratory loop — look, check, reshape, look again — inside one language.</p>
+<p>None of this replaces a statistics course, but it keeps the exploratory loop (look, check, reshape, look again) inside one language.</p>
 </section>
 <section id="lenses-reaching-the-nested" class="level2" data-number="14.10">
 <h2 data-number="14.10" class="anchored" data-anchor-id="lenses-reaching-the-nested"><span class="header-section-number">14.10</span> Lenses: reaching the nested</h2>
-<p>The verbs above are built for flat DataFrames. Once your data becomes nested — after a <code>nest()</code>, or from a hierarchical API — the standard verbs turn into a pyramid of nested lambdas. Lenses solve that.</p>
+<p>The verbs above are built for flat DataFrames. Once your data becomes nested, after a <code>nest()</code> or from a hierarchical API, the standard verbs turn into a pyramid of nested lambdas. Lenses solve that.</p>
 <p>A lens names a <em>path</em> into a structure. You build it once with <code>compose()</code>, then use it to read or transform the value at that path in a single step:</p>
 <pre class="t"><code><span class="co">-- path: clients -&gt; projects -&gt; milestones -&gt; pct_int</span>
 pct_l <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu">col_lens</span>(<span class="st">"projects"</span>),
@@ -743,7 +743,7 @@ updated <span class="sc">=</span> clients <span class="sc">|&gt;</span> <span cl
 even_l <span class="sc">=</span> <span class="fu">filter_lens</span>(\(x) x <span class="sc">%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span>)
 scores <span class="sc">|&gt;</span> <span class="fu">over</span>(even_l, \(x) x <span class="sc">+</span> <span class="dv">10</span>)</code></pre>
 <p>One detail matters when you transform a whole column: <code>over()</code> hands your function a Vector, so use the broadcasting operators (<code>.+</code>, <code>.*</code>) for element-wise math rather than the scalar ones.</p>
-<p>For flat DataFrames, stick with the ordinary verbs — they are simpler and more idiomatic. Lenses earn their keep in nested and polymorphic data, where the alternative is a tower of <code>map</code> calls.</p>
+<p>For flat DataFrames, stick with the ordinary verbs: they are simpler and more idiomatic. Lenses earn their keep in nested and polymorphic data, where the alternative is a tower of <code>map</code> calls.</p>
 </section>
 <section id="where-to-go-from-here" class="level2" data-number="14.11">
 <h2 data-number="14.11" class="anchored" data-anchor-id="where-to-go-from-here"><span class="header-section-number">14.11</span> Where to go from here</h2>

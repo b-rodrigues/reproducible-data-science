@@ -566,7 +566,7 @@ window.Quarto = {
 <section id="introduction" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">6.1</span> Introduction</h2>
 <p>In the previous chapter, we set up a T project and wrote our first pipeline. You have seen the syntax: a <code>pipeline { }</code> block, nodes defined with <code>node()</code>, <code>rn()</code>, <code>pyn()</code>, and so on, a call to <code>build_pipeline()</code>, and then <code>read_node()</code> to inspect results. Now we take a step back and ask: <em>why</em> is T designed this way? Why mandatory pipelines? Why the restriction that each node produces exactly one artifact? Why does the order of node declarations not matter?</p>
-<p>The answer lies in a body of ideas called <strong>functional programming</strong>. You do not need to become a functional programming theorist to use T effectively. But understanding the core concepts—purity, composition, immutability—will make you a more effective user of T, a better author of the R and Python code that lives inside your nodes, and a better collaborator with AI agents. This chapter is short by design: it makes one argument, carefully.</p>
+<p>The answer lies in a body of ideas called <strong>functional programming</strong>. You do not need to become a functional programming theorist to use T effectively. But understanding the core concepts, purity, composition, immutability, will make you a more effective user of T, a better author of the R and Python code that lives inside your nodes, and a better collaborator with AI agents. This chapter is short by design: it makes one argument, carefully.</p>
 </section>
 <section id="the-problem-with-state" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="the-problem-with-state"><span class="header-section-number">6.2</span> The Problem with State</h2>
@@ -582,7 +582,7 @@ window.Quarto = {
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(margin <span class="sc">~</span> region, <span class="at">data =</span> data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This script works. But it has a hidden, dangerous property: <strong>state</strong>. Each step depends on the variable <code>data</code> existing in the global environment at exactly the right moment, with exactly the right content. The script can only be understood by reading it from top to bottom, in order, in its entirety. Rename a variable, reorder two steps, or run a subset of the code, and things break—often silently, producing wrong numbers rather than errors.</p>
+<p>This script works. But it has a hidden, dangerous property: <strong>state</strong>. Each step depends on the variable <code>data</code> existing in the global environment at exactly the right moment, with exactly the right content. The script can only be understood by reading it from top to bottom, in order, in its entirety. Rename a variable, reorder two steps, or run a subset of the code, and things break, often silently, producing wrong numbers rather than errors.</p>
 <p>Now imagine this at scale: dozens of scripts, each hundreds of lines long, maintained by multiple people over months. Variables are overwritten, reused, and passed around in an unspoken contract of “run these files in <em>this</em> order.” Debugging becomes archaeology. Testing is nearly impossible because there is no clear boundary between inputs and outputs. And the entire thing is irreproducible by construction: you cannot re-execute step 4 without re-running steps 1 through 3 first, and you cannot re-run step 3 without step 2 having already modified <code>data</code>.</p>
 <p>This is the root problem that functional programming addresses.</p>
 </section>
@@ -614,7 +614,7 @@ window.Quarto = {
 <ul>
 <li>It takes its inputs explicitly: upstream node outputs are passed into the node’s sandbox as named values. There is no global environment to accidentally read from.</li>
 <li>It returns exactly one thing: the artifact written to the Nix store by its <code>serializer</code>. There is no way for a node to modify another node’s output as a side effect.</li>
-<li>Given the same inputs, it produces the same output—always. This is guaranteed by Nix’s hermetic sandbox. The node has no access to the outside world beyond what is explicitly declared.</li>
+<li>Given the same inputs, it produces the same output, always. This is guaranteed by Nix’s hermetic sandbox. The node has no access to the outside world beyond what is explicitly declared.</li>
 </ul>
 <p>Look at a concrete example:</p>
 <pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
@@ -667,7 +667,7 @@ window.Quarto = {
 }
 
 <span class="fu">build_pipeline</span>(p)</code></pre>
-<p>Three nodes (because this is using pure T code, there is no need to use the <code>node()</code> constructor), three pure functions, composed in sequence. T resolves the dependency graph (<code>mtcars_mpg</code> depends on <code>filtered_mtcars</code>, which depends on <code>mtcars</code>), builds them in the correct order, and caches each result. If you change only the <code>filter</code> predicate, only <code>filtered_mtcars</code> and <code>mtcars_mpg</code> are rebuilt—<code>mtcars</code> is unchanged, so T does not touch it.</p>
+<p>Three nodes (because this is using pure T code, there is no need to use the <code>node()</code> constructor), three pure functions, composed in sequence. T resolves the dependency graph (<code>mtcars_mpg</code> depends on <code>filtered_mtcars</code>, which depends on <code>mtcars</code>), builds them in the correct order, and caches each result. If you change only the <code>filter</code> predicate, only <code>filtered_mtcars</code> and <code>mtcars_mpg</code> are rebuilt; <code>mtcars</code> is unchanged, so T does not touch it.</p>
 </section>
 <section id="polyglot-composition-passing-values-across-languages" class="level2" data-number="6.6">
 <h2 data-number="6.6" class="anchored" data-anchor-id="polyglot-composition-passing-values-across-languages"><span class="header-section-number">6.6</span> Polyglot Composition: Passing Values Across Languages</h2>
@@ -705,7 +705,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
 <h2 data-number="6.7" class="anchored" data-anchor-id="errors-as-values-not-exceptions"><span class="header-section-number">6.7</span> Errors as Values, Not Exceptions</h2>
 <p>One more consequence of the pure function model is worth understanding before we move to testing.</p>
 <p>In a stateful script, errors are typically thrown as exceptions that interrupt the normal flow of execution, which is a side effect in itself. A pure function cannot throw an exception and still be pure: throwing is a side effect that transfers control to some unknown handler elsewhere.</p>
-<p>T handles this by making <strong>errors first-class values</strong>. If a node produces an error—because a file is missing, a computation fails, or you explicitly call <code>error()</code>—the error is <em>the node’s output</em>, not an interruption of the pipeline. Downstream nodes can inspect it, recover from it, or propagate it, using the maybe-pipe <code>?|&gt;</code>:</p>
+<p>T handles this by making <strong>errors first-class values</strong>. If a node produces an error, because a file is missing, a computation fails, or you explicitly call <code>error()</code>, the error is <em>the node’s output</em>, not an interruption of the pipeline. Downstream nodes can inspect it, recover from it, or propagate it, using the maybe-pipe <code>?|&gt;</code>:</p>
 <pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
   <span class="co">-- This node intentionally fails</span>
   risky_node <span class="sc">=</span> <span class="fu">node</span>(
@@ -726,14 +726,14 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
 }
 
 <span class="fu">build_pipeline</span>(p)</code></pre>
-<p><code>risky_node</code> returns an error value. <code>handled_node</code> receives it, checks <code>is_error()</code>, and returns a fallback. The pipeline completes successfully. No try/catch scattered through the code, no implicit exception handling—the error path is as explicit as the success path.</p>
+<p><code>risky_node</code> returns an error value. <code>handled_node</code> receives it, checks <code>is_error()</code>, and returns a fallback. The pipeline completes successfully. No try/catch scattered through the code, no implicit exception handling; the error path is as explicit as the success path.</p>
 <p>This matters for reproducibility: if part of a pipeline fails, you know exactly which node failed, what it returned, and which downstream nodes were affected. The error is in the content-addressed store alongside every other output.</p>
 </section>
 <section id="what-this-means-for-your-r-and-python-code" class="level2" data-number="6.8">
 <h2 data-number="6.8" class="anchored" data-anchor-id="what-this-means-for-your-r-and-python-code"><span class="header-section-number">6.8</span> What This Means for Your R and Python Code</h2>
 <p>The pure function model applies not just to T nodes as a whole, but to the R and Python code you write <em>inside</em> those nodes.</p>
-<p>A node is only as pure as the code it contains. If your R code inside <code>&lt;{ ... }&gt;</code> reads from a file path that is hardcoded and only exists on your laptop, or depends on a global R environment variable that is not declared as a node input, you have introduced a hidden dependency—and the node is no longer reproducible in practice, and most likely it would error, as the code the node executes, runs inside of an hermetic sandbox. So anything outside of that sandbox would not be accessible anyways.</p>
-<p>The practical rule is simple: <strong>inside a node, treat everything from outside the node’s declared inputs as if it does not exist.</strong> Do not read files unless they are passed as explicit inputs (via <code>fetchurl</code>, <code>read_csv</code>, or another node’s output). Do not use global R options or environment variables unless they are declared in the node’s <code>env</code> block. Do not install packages at runtime—declare them in <code>tproject.toml</code>. If you follow these rules, your nodes will be genuinely pure, and T’s reproducibility guarantees will hold end-to-end.</p>
+<p>A node is only as pure as the code it contains. If your R code inside <code>&lt;{ ... }&gt;</code> reads from a file path that is hardcoded and only exists on your laptop, or depends on a global R environment variable that is not declared as a node input, you have introduced a hidden dependency, and the node is no longer reproducible in practice, and most likely it would error, as the code the node executes, runs inside a hermetic sandbox. So anything outside of that sandbox would not be accessible anyway.</p>
+<p>The practical rule is simple: <strong>inside a node, treat everything from outside the node’s declared inputs as if it does not exist.</strong> Do not read files unless they are passed as explicit inputs (via <code>fetchurl</code>, <code>read_csv</code>, or another node’s output). Do not use global R options or environment variables unless they are declared in the node’s <code>env</code> block. Do not install packages at runtime; declare them in <code>tproject.toml</code>. If you follow these rules, your nodes will be genuinely pure, and T’s reproducibility guarantees will hold end-to-end.</p>
 </section>
 <section id="nodes-can-point-to-external-scripts" class="level2" data-number="6.9">
 <h2 data-number="6.9" class="anchored" data-anchor-id="nodes-can-point-to-external-scripts"><span class="header-section-number">6.9</span> Nodes Can Point to External Scripts</h2>
@@ -772,7 +772,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
     serializer   <span class="sc">=</span> ^pmml
   )
 }</code></pre>
-<p><code>utils.R</code> might define <code>clean_colnames()</code>, <code>log_transform()</code>, or whatever helpers your analysis needs. Those functions are written once, tested once, and shared across any node that needs them—inside T or outside it.</p>
+<p><code>utils.R</code> might define <code>clean_colnames()</code>, <code>log_transform()</code>, or whatever helpers your analysis needs. Those functions are written once, tested once, and shared across any node that needs them, inside T or outside it.</p>
 <p>The principle is the same one that runs through this whole chapter: <strong>write your analysis code as if T did not exist.</strong> Pure functions in plain files, with explicit inputs and explicit outputs. T wires them together. If T were replaced tomorrow by a different orchestrator, your functions would survive unchanged.</p>
 </section>
 <section id="summary" class="level2" data-number="6.10">
@@ -780,14 +780,14 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> { df_r <span class=
 <p>The key ideas in this chapter:</p>
 <ul>
 <li><strong>Stateful scripts</strong> make reproducibility hard because dependencies are implicit and execution order is load-bearing</li>
-<li><strong>Pure functions</strong> — same inputs, same outputs, no side effects — are the antidote: they can be tested, composed, cached, and reasoned about in isolation</li>
+<li><strong>Pure functions</strong> (same inputs, same outputs, no side effects) are the antidote: they can be tested, composed, cached, and reasoned about in isolation</li>
 <li><strong>Every T node is a pure function</strong>: explicit inputs via deserializers, exactly one output via the serializer, hermetically sandboxed by Nix</li>
 <li><strong>A T pipeline is function composition</strong>: the DAG expresses which functions compose into which, and T infers the correct execution order from the data dependencies, not from the declaration order</li>
 <li><strong>Errors are values</strong>: T propagates errors through the composition graph without breaking the pipeline, making failure as explicit and inspectable as success</li>
 <li><strong>Nodes can point to external scripts</strong>: use <code>script = "file.R"</code> instead of inlining code; plain R/Python files are orchestrator-agnostic and can be sourced, tested, or reused outside T entirely</li>
 <li><strong><code>functions</code> shares utility code</strong>: source helper files into any node sandbox without coupling them to T’s syntax</li>
 </ul>
-<p>With this model in mind, the next chapter on <strong>testing</strong> becomes natural. Testing a pure function is easy: call it with known inputs, assert on the output, done. Testing a T pipeline node is the same idea—and T provides the tooling to do it systematically.</p>
+<p>With this model in mind, the next chapter on <strong>testing</strong> becomes natural. Testing a pure function is easy: call it with known inputs, assert on the output, done. Testing a T pipeline node is the same idea, and T provides the tooling to do it systematically.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">

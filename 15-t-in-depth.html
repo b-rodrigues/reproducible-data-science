@@ -628,7 +628,7 @@ Execution time<span class="sc">:</span> <span class="fl">0.1540</span> seconds</
 </section>
 <section id="functions-in-depth" class="level2" data-number="15.2">
 <h2 data-number="15.2" class="anchored" data-anchor-id="functions-in-depth"><span class="header-section-number">15.2</span> Functions in Depth</h2>
-<p>You have already written functions in T: Chapter 6’s functional core gave you pure functions and composition, which is enough to build a pipeline. But T’s functions go further — they are first-class values you can build, transform, and pass around. This section covers the parts you will reach for as your pipelines grow.</p>
+<p>You have already written functions in T: Chapter 6’s functional core gave you pure functions and composition, which is enough to build a pipeline. But T’s functions go further: they are first-class values you can build, transform, and pass around. This section covers the parts you will reach for as your pipelines grow.</p>
 <section id="lambda-syntax" class="level3" data-number="15.2.1">
 <h3 data-number="15.2.1" class="anchored" data-anchor-id="lambda-syntax"><span class="header-section-number">15.2.1</span> Lambda syntax</h3>
 <p>T defines functions with a lambda. The preferred style is the R-like <code>\(...)</code> form, though a <code>function</code> keyword is also accepted:</p>
@@ -654,14 +654,14 @@ add5 <span class="sc">=</span> <span class="fu">make_adder</span>(<span class="d
 </section>
 <section id="auto-quotation-param" class="level3" data-number="15.2.4">
 <h3 data-number="15.2.4" class="anchored" data-anchor-id="auto-quotation-param"><span class="header-section-number">15.2.4</span> Auto-quotation (<code>$param</code>)</h3>
-<p>A particularly useful feature when wrapping data verbs: prefix a parameter with <code>$</code> and the caller can pass a bare name — a column name, say — which is captured as a <strong>Symbol</strong> rather than evaluated. This is the same mechanism the data verbs themselves use (see the next section):</p>
+<p>A particularly useful feature when wrapping data verbs: prefix a parameter with <code>$</code> and the caller can pass a bare name, a column name say, which is captured as a <strong>Symbol</strong> rather than evaluated. This is the same mechanism the data verbs themselves use (see the next section):</p>
 <pre class="t"><code>my_select <span class="sc">=</span> \(df, <span class="sc">$</span>col) <span class="fu">select</span>(df, col)
 <span class="fu">my_select</span>(df, salary)    <span class="co">-- 'salary' is captured as a symbol</span></code></pre>
 </section>
 </section>
 <section id="the-type-system" class="level2" data-number="15.3">
 <h2 data-number="15.3" class="anchored" data-anchor-id="the-type-system"><span class="header-section-number">15.3</span> The Type System</h2>
-<p>Chapter 4 introduced annotations in passing — read them as a promise about what a function accepts and returns. Here is what is actually going on.</p>
+<p>Chapter 4 introduced annotations in passing: read them as a promise about what a function accepts and returns. Here is what is actually going on.</p>
 <section id="lambda-signatures" class="level3" data-number="15.3.1">
 <h3 data-number="15.3.1" class="anchored" data-anchor-id="lambda-signatures"><span class="header-section-number">15.3.1</span> Lambda signatures</h3>
 <p>A lambda is either untyped or typed. The typed form annotates every parameter and the return type. The return type is written <em>inside</em> the parameter parentheses, which keeps the whole signature on one line:</p>
@@ -691,12 +691,12 @@ must annotate all parameter types.</code></pre>
 <section id="semantic-type-names" class="level3" data-number="15.3.4">
 <h3 data-number="15.3.4" class="anchored" data-anchor-id="semantic-type-names"><span class="header-section-number">15.3.4</span> Semantic type names</h3>
 <p>Annotations accept several spellings for the same type, so signatures can read naturally: <code>int</code>/<code>integer</code>, <code>string</code>/<code>text</code>, <code>bool</code>/<code>boolean</code>/<code>logical</code>, <code>float</code>/<code>double</code>/<code>number</code>/<code>numeric</code>, and <code>to_dataframe</code>/<code>table</code>. The name <code>any</code> (synonyms <code>value</code>, <code>all</code>, <code>mixed</code>) is a wildcard meaning “no constraint.”</p>
-<p>The most concrete payoff today is schema checking. <code>t check --schema</code> propagates column names and types across nodes and flags a reference that cannot be resolved, in milliseconds — before the pipeline ever runs. Chapter 5 covers the full tiered <code>t check</code> story; this is the tier that turns a <code>DataFrame</code> schema annotation into an actual guarantee.</p>
+<p>The most concrete payoff today is schema checking. <code>t check --schema</code> propagates column names and types across nodes and flags a reference that cannot be resolved, in milliseconds, before the pipeline ever runs. Chapter 5 covers the full tiered <code>t check</code> story; this is the tier that turns a <code>DataFrame</code> schema annotation into an actual guarantee.</p>
 </section>
 </section>
 <section id="metaprogramming-quotation-and-quasiquotation" class="level2" data-number="15.4">
 <h2 data-number="15.4" class="anchored" data-anchor-id="metaprogramming-quotation-and-quasiquotation"><span class="header-section-number">15.4</span> Metaprogramming: Quotation and Quasiquotation</h2>
-<p>Chapter 6 introduced T’s functional core — pure functions and function composition. Most of the time you can stay in that world and never think about how expressions are evaluated. But sometimes you need to treat code itself as data: to build expressions programmatically, to forward a column name that is only known at runtime, or to write a function that behaves like the data verbs such as <code>mutate</code> and <code>filter</code>. That is what metaprogramming is for.</p>
+<p>Chapter 6 introduced T’s functional core: pure functions and function composition. Most of the time you can stay in that world and never think about how expressions are evaluated. But sometimes you need to treat code itself as data: to build expressions programmatically, to forward a column name that is only known at runtime, or to write a function that behaves like the data verbs such as <code>mutate</code> and <code>filter</code>. That is what metaprogramming is for.</p>
 <p>T’s metaprogramming is modelled on Lisp and on R’s <code>rlang</code>, and it rests on a small set of ideas:</p>
 <ul>
 <li><strong>Quotation</strong> captures an expression without evaluating it.</li>
@@ -706,7 +706,7 @@ must annotate all parameter types.</code></pre>
 </ul>
 <section id="capturing-code-to_expr-and-quo" class="level3" data-number="15.4.1">
 <h3 data-number="15.4.1" class="anchored" data-anchor-id="capturing-code-to_expr-and-quo"><span class="header-section-number">15.4.1</span> Capturing code: <code>to_expr</code> and <code>quo</code></h3>
-<p>The two ways to capture code differ in whether they remember the surrounding environment. <code>to_expr()</code> captures a bare expression; <code>quo()</code> captures a quosure — the expression plus the environment at the call site.</p>
+<p>The two ways to capture code differ in whether they remember the surrounding environment. <code>to_expr()</code> captures a bare expression; <code>quo()</code> captures a quosure: the expression plus the environment at the call site.</p>
 <pre class="t"><code>x <span class="sc">=</span> <span class="dv">10</span>
 q <span class="sc">=</span> <span class="fu">quo</span>(<span class="dv">1</span> <span class="sc">+</span> x)   <span class="co">-- captures x = 10</span>
 x <span class="sc">=</span> <span class="dv">99</span>
@@ -718,7 +718,7 @@ x <span class="sc">=</span> <span class="dv">99</span>
 </section>
 <section id="unquoting-and" class="level3" data-number="15.4.2">
 <h3 data-number="15.4.2" class="anchored" data-anchor-id="unquoting-and"><span class="header-section-number">15.4.2</span> Unquoting: <code>!!</code> and <code>!!!</code></h3>
-<p>Quasiquotation is how you fill in the blanks of a captured expression. The <code>!!</code> operator evaluates its operand and injects the result into the surrounding quoted expression. If the operand is a quosure, only the expression part is injected — the environment is stripped.</p>
+<p>Quasiquotation is how you fill in the blanks of a captured expression. The <code>!!</code> operator evaluates its operand and injects the result into the surrounding quoted expression. If the operand is a quosure, only the expression part is injected; the environment is stripped.</p>
 <pre class="t"><code>x <span class="sc">=</span> <span class="dv">10</span>
 e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="sc">!!</span>x)
 <span class="fu">print</span>(e)         <span class="co">-- to_expr(1 + 10)</span></code></pre>
@@ -742,7 +742,7 @@ to_expr(1 + 10)
 </section>
 <section id="dynamic-names-and-symbols" class="level3" data-number="15.4.3">
 <h3 data-number="15.4.3" class="anchored" data-anchor-id="dynamic-names-and-symbols"><span class="header-section-number">15.4.3</span> Dynamic names and symbols</h3>
-<p>A frequent need is to use a name that is only known at runtime — a column name stored in a string, say. <code>to_symbol()</code> turns a string into a symbol that <code>!!</code> can inject, and the <code>!!name := value</code> form lets a computed name become an argument or column name.</p>
+<p>A frequent need is to use a name that is only known at runtime, a column name stored in a string, say. <code>to_symbol()</code> turns a string into a symbol that <code>!!</code> can inject, and the <code>!!name := value</code> form lets a computed name become an argument or column name.</p>
 <pre class="t"><code>col <span class="sc">=</span> <span class="st">"age"</span>
 e <span class="sc">=</span> <span class="fu">to_expr</span>(<span class="fu">mutate</span>(df, <span class="sc">!!</span>col <span class="sc">:=</span> <span class="dv">42</span>))
 <span class="fu">print</span>(e)         <span class="co">-- to_expr(mutate(df, age = 42))</span></code></pre>
@@ -855,7 +855,7 @@ l_deep <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu
 </section>
 <section id="introspection-explain-and-intent" class="level2" data-number="15.6">
 <h2 data-number="15.6" class="anchored" data-anchor-id="introspection-explain-and-intent"><span class="header-section-number">15.6</span> Introspection: <code>explain()</code> and <code>intent</code></h2>
-<p>A language that can describe its own values is easier to debug, easier to test, and — increasingly — easier to work on alongside an agent. T has both halves of that story: <code>explain()</code>, which turns any value into a structured description, and <code>intent</code>, a block that records <em>why</em> a piece of code exists.</p>
+<p>A language that can describe its own values is easier to debug, easier to test, and, increasingly, easier to work on alongside an agent. T has both halves of that story: <code>explain()</code>, which turns any value into a structured description, and <code>intent</code>, a block that records <em>why</em> a piece of code exists.</p>
 <section id="explain-a-values-self-description" class="level3" data-number="15.6.1">
 <h3 data-number="15.6.1" class="anchored" data-anchor-id="explain-a-values-self-description"><span class="header-section-number">15.6.1</span> <code>explain()</code>: a value’s self-description</h3>
 <p><code>explain(x)</code> works on any value and returns a <code>Dict</code> describing it. The first field is always <code>kind</code>, and the rest depend on what you handed it:</p>
@@ -864,7 +864,7 @@ l_deep <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu
 
 <span class="fu">explain</span>([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])
 <span class="co">-- { `kind`: "value", `type`: "List", `length`: 3, `na_count`: 0, `examples`: [1, 2, 3] }</span></code></pre>
-<p>For a DataFrame, the description is a compact summary — row and column counts, the storage backend, the schema, and per-column missingness — and you can drill into individual fields with dot access:</p>
+<p>For a DataFrame, the description is a compact summary (row and column counts, the storage backend, the schema, and per-column missingness), and you can drill into individual fields with dot access:</p>
 <pre class="t"><code>df <span class="sc">=</span> <span class="fu">to_dataframe</span>([x<span class="sc">:</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], y<span class="sc">:</span> [<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>]])
 <span class="fu">explain</span>(df).nrow
 <span class="co">-- 3</span>
@@ -876,28 +876,28 @@ l_deep <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu
 <pre class="t"><code><span class="fu">explain</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span>)
 <span class="co">-- { `kind`: "value", `type`: "Error", `error_code`: "DivisionByZero",</span>
 <span class="co">--   `error_message`: "Division by zero.", ... }</span></code></pre>
-<p>The same function reaches the rest of the language. <code>explain(y ~ x)</code> reports a formula’s response and predictors; <code>explain(add_int)</code> reports a function’s argument names and types; <code>explain(p)</code> reports a pipeline’s node count and a per-node summary, while <code>explain(p.b)</code> inspects a single node — its name, runtime, dependencies, and configuration. And <code>explain_json(x)</code> returns the same description as a single string, which is handy when you want to log a value’s shape or hand it to another tool.</p>
+<p>The same function reaches the rest of the language. <code>explain(y ~ x)</code> reports a formula’s response and predictors; <code>explain(add_int)</code> reports a function’s argument names and types; <code>explain(p)</code> reports a pipeline’s node count and a per-node summary, while <code>explain(p.b)</code> inspects a single node: its name, runtime, dependencies, and configuration. And <code>explain_json(x)</code> returns the same description as a single string, which is handy when you want to log a value’s shape or hand it to another tool.</p>
 <p>The point is that introspection is <em>first-class</em>: the same call that describes a scalar also describes a DataFrame, an error, a formula, and a whole pipeline. You do not need a separate debugging API per type.</p>
 </section>
 <section id="intent-code-says-what-intent-says-why" class="level3" data-number="15.6.2">
 <h3 data-number="15.6.2" class="anchored" data-anchor-id="intent-code-says-what-intent-says-why"><span class="header-section-number">15.6.2</span> <code>intent</code>: code says what, intent says why</h3>
-<p>T has a small, dedicated syntax for recording <em>why</em> a piece of code exists — a block of key-value pairs that travels with the code:</p>
+<p>T has a small, dedicated syntax for recording <em>why</em> a piece of code exists: a block of key-value pairs that travels with the code:</p>
 <pre class="t"><code><span class="cf">intent</span> {
   description<span class="sc">:</span> <span class="st">"Analyze customer churn"</span>
   goal<span class="sc">:</span> <span class="st">"Identify segments at risk of leaving"</span>
 }</code></pre>
-<p>An intent block is inert at runtime — it does not change what the code does — but you can read it back programmatically:</p>
+<p>An intent block is inert at runtime (it does not change what the code does), but you can read it back programmatically:</p>
 <pre class="t"><code>i <span class="sc">=</span> <span class="cf">intent</span> { description<span class="sc">:</span> <span class="st">"Analyze customer churn"</span>, goal<span class="sc">:</span> <span class="st">"Find at-risk segments"</span> }
 <span class="fu">intent_get</span>(i, <span class="st">"description"</span>)
 <span class="co">-- "Analyze customer churn"</span>
 <span class="fu">intent_fields</span>(i)
 <span class="co">-- { `description`: "Analyze customer churn", `goal`: "Find at-risk segments" }</span></code></pre>
-<p>The payoff is provenance. When a pipeline is a collaboration between a human and an agent — or between you today and you in six months — the <em>why</em> is the first thing to be lost. <code>intent</code> keeps it in the source, versioned in git and queryable by the tools that read it. It is the line-level companion to the <code>AGENTS.md</code> convention from Chapter 4: that file states the project’s intent, and an <code>intent</code> block states the intent of the code right next to it.</p>
+<p>The payoff is provenance. When a pipeline is a collaboration between a human and an agent, or between you today and you in six months, the <em>why</em> is the first thing to be lost. <code>intent</code> keeps it in the source, versioned in git and queryable by the tools that read it. It is the line-level companion to the <code>AGENTS.md</code> convention from Chapter 4: that file states the project’s intent, and an <code>intent</code> block states the intent of the code right next to it.</p>
 </section>
 </section>
 <section id="escaping-to-the-shell" class="level2" data-number="15.7">
 <h2 data-number="15.7" class="anchored" data-anchor-id="escaping-to-the-shell"><span class="header-section-number">15.7</span> Escaping to the Shell: <code>?&lt;{ }&gt;</code></h2>
-<p>Chapter 8 introduced <code>shn()</code>, the node constructor that runs a shell command inside a pipeline’s sandbox. That is the right tool when the shell work is a first-class step in your pipeline. But there is a lighter way to reach the shell from T itself: the shell escape. The <code>?&lt;{ }&gt;</code> syntax runs an arbitrary shell command directly from within T — at the REPL, in a script, or in a node’s T code — and is the quickest way to touch the filesystem, drive <code>git</code>, or call a CLI tool without standing up a whole shell node.</p>
+<p>Chapter 8 introduced <code>shn()</code>, the node constructor that runs a shell command inside a pipeline’s sandbox. That is the right tool when the shell work is a first-class step in your pipeline. But there is a lighter way to reach the shell from T itself: the shell escape. The <code>?&lt;{ }&gt;</code> syntax runs an arbitrary shell command directly from within T, at the REPL, in a script, or in a node’s T code, and is the quickest way to touch the filesystem, drive <code>git</code>, or call a CLI tool without standing up a whole shell node.</p>
 <section id="running-a-command" class="level3" data-number="15.7.1">
 <h3 data-number="15.7.1" class="anchored" data-anchor-id="running-a-command"><span class="header-section-number">15.7.1</span> Running a command</h3>
 <p>As a standalone statement, the command is executed and its output is printed straight to <code>stdout</code>. The statement’s value is <code>NA</code>:</p>
@@ -906,13 +906,13 @@ l_deep <span class="sc">=</span> <span class="fu">compose</span>(<span class="fu
 </section>
 <section id="capturing-the-output" class="level3" data-number="15.7.2">
 <h3 data-number="15.7.2" class="anchored" data-anchor-id="capturing-the-output"><span class="header-section-number">15.7.2</span> Capturing the output</h3>
-<p>When the escape is part of an expression — most often an assignment — T captures the command’s <code>stdout</code> and hands it back as a <code>String</code>, ready to be split, parsed, or passed on:</p>
+<p>When the escape is part of an expression, most often an assignment, T captures the command’s <code>stdout</code> and hands it back as a <code>String</code>, ready to be split, parsed, or passed on:</p>
 <pre class="t"><code>files <span class="sc">=</span> ?<span class="sc">&lt;</span>{ls}<span class="sc">&gt;</span>
 current_user <span class="sc">=</span> ?<span class="sc">&lt;</span>{whoami}<span class="sc">&gt;</span></code></pre>
 </section>
 <section id="changing-directory" class="level3" data-number="15.7.3">
 <h3 data-number="15.7.3" class="anchored" data-anchor-id="changing-directory"><span class="header-section-number">15.7.3</span> Changing directory</h3>
-<p><code>cd</code> is special-cased. Rather than changing the directory of a throwaway sub-shell, it changes the working directory of the T interpreter itself, so subsequent commands — and <code>?&lt;{pwd}&gt;</code> — see the new location. <code>~</code> is expanded correctly:</p>
+<p><code>cd</code> is special-cased. Rather than changing the directory of a throwaway sub-shell, it changes the working directory of the T interpreter itself, so subsequent commands, and <code>?&lt;{pwd}&gt;</code>, see the new location. <code>~</code> is expanded correctly:</p>
 <pre class="t"><code>?<span class="sc">&lt;</span>{cd <span class="sc">/</span>tmp}<span class="sc">&gt;</span>
 ?<span class="sc">&lt;</span>{pwd}<span class="sc">&gt;</span>       <span class="co">-- /tmp</span>
 ?<span class="sc">&lt;</span>{cd <span class="sc">~</span>}<span class="sc">&gt;</span></code></pre>
@@ -1006,7 +1006,7 @@ to_expr(1 + 10)
 node&lt;T&gt;(...)
 </code></pre>
 <p>And here is the trap: in a node constructor (<code>node</code>, <code>rn</code>, <code>pyn</code>, <code>jln</code>, <code>shn</code>, <code>qn</code>), a <strong>string literal is not allowed</strong>. Writing <code>serializer = "ipc"</code> raises a <code>TypeError</code>. You must use a <code>^</code> symbol for built-ins or a variable for custom serializers. (The <code>mutate_node()</code> and <code>set_pipeline_global_options()</code> functions are more permissive and accept both strings and symbols.)</p>
-<p>If you do not specify a serializer at all, T uses the <code>default</code>, which is each runtime’s native binary format — <code>saveRDS</code> for R, <code>pickle</code> for Python, and so on. Shell nodes default to <code>^text</code>.</p>
+<p>If you do not specify a serializer at all, T uses the <code>default</code>, which is each runtime’s native binary format: <code>saveRDS</code> for R, <code>pickle</code> for Python, and so on. Shell nodes default to <code>^text</code>.</p>
 </section>
 <section id="custom-serializers" class="level3" data-number="15.8.3">
 <h3 data-number="15.8.3" class="anchored" data-anchor-id="custom-serializers"><span class="header-section-number">15.8.3</span> Custom serializers</h3>
@@ -1030,7 +1030,7 @@ node&lt;T&gt;(...)
 }
 
 <span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>, serializer <span class="sc">=</span> my_log_serializer)</code></pre>
-<p>For a serializer to work across <em>other</em> runtimes, you can add optional <code>r_writer</code>, <code>r_reader</code>, <code>py_writer</code>, and <code>py_reader</code> fields. These are code snippets — plain strings, or foreign code blocks for readability — that T injects into the generated build script for that runtime.</p>
+<p>For a serializer to work across <em>other</em> runtimes, you can add optional <code>r_writer</code>, <code>r_reader</code>, <code>py_writer</code>, and <code>py_reader</code> fields. These are code snippets, plain strings or foreign code blocks for readability, that T injects into the generated build script for that runtime.</p>
 <pre class="t"><code>my_custom_ser <span class="sc">=</span> [
   format<span class="sc">:</span> ^custom,
   writer<span class="sc">:</span> \(path, val) { <span class="fu">Ok</span>(<span class="cn">NA</span>) },
@@ -1098,9 +1098,9 @@ to_expr(1 + 10)
     └── geom_point<span class="sc">:</span> <span class="st">"Point"</span></code></pre>
 <p>and to actually see the plot in your browser, use <code>show_plot()</code>:</p>
 <pre class="t"><code>T<span class="sc">&gt;</span> <span class="fu">show_plot</span>(p.iris_plot)</code></pre>
-<p>This should open the plot in your browser, if not, the path is emitted and you can simply open the generated PNG file using whichever tool your prefer:</p>
+<p>This should open the plot in your browser, if not, the path is emitted and you can simply open the generated PNG file using whichever tool you prefer:</p>
 <pre class="t"><code>_pipeline<span class="sc">/</span>show_plot_render_20260821_132239_6808.png</code></pre>
-<p>This plot is generated in the actual R environment defined in your pipeline, but should something look off, try <code>debug_node(p.iris_plot)</code> and built it from the actual R session!</p>
+<p>This plot is generated in the actual R environment defined in your pipeline, but should something look off, try <code>debug_node(p.iris_plot)</code> and build it from the actual R session!</p>
 </section>
 <section id="plots-in-literate-documents" class="level3" data-number="15.9.3">
 <h3 data-number="15.9.3" class="anchored" data-anchor-id="plots-in-literate-documents"><span class="header-section-number">15.9.3</span> Plots in literate documents</h3>
@@ -1113,7 +1113,7 @@ to_expr(1 + 10)
 <p>Chapter 2 introduced Nix as the foundation that makes T reproducible. Chapter 5 showed you <code>build_pipeline()</code> and <code>t run</code> at the command line. This section covers the knobs in between: the <code>nix_options</code> dictionary that controls how a pipeline is actually built, and the ways to orchestrate that build.</p>
 <section id="the-nix_options-dictionary" class="level3" data-number="15.10.1">
 <h3 data-number="15.10.1" class="anchored" data-anchor-id="the-nix_options-dictionary"><span class="header-section-number">15.10.1</span> The <code>nix_options</code> dictionary</h3>
-<p>The build functions — <code>populate_pipeline()</code>, <code>build_pipeline()</code>, <code>pipeline_run()</code>, and the <code>t_make()</code> helper — all accept a <code>nix_options</code> argument. It is a dictionary of build-time settings that override the defaults. The most useful keys are:</p>
+<p>The build functions, <code>populate_pipeline()</code>, <code>build_pipeline()</code>, <code>pipeline_run()</code>, and the <code>t_make()</code> helper, all accept a <code>nix_options</code> argument. It is a dictionary of build-time settings that override the defaults. The most useful keys are:</p>
 <ul>
 <li><code>max_jobs</code> and <code>max_cores</code>: how much of the machine a build may use.</li>
 <li><code>dry_run</code>: evaluate the build plan without running any node.</li>
@@ -1133,11 +1133,11 @@ to_expr(1 + 10)
 </section>
 <section id="where-environment-comes-from" class="level3" data-number="15.10.3">
 <h3 data-number="15.10.3" class="anchored" data-anchor-id="where-environment-comes-from"><span class="header-section-number">15.10.3</span> Where environment comes from</h3>
-<p>It is worth separating two related ideas. <code>keep_env</code> controls whether a node sees the host’s full environment or a clean one — this is a build-time isolation choice. <code>env_vars</code>, by contrast, is how you declare specific variables a node needs, and it is set when the node is defined, not at build time. The first is about isolation; the second is about configuration.</p>
+<p>It is worth separating two related ideas. <code>keep_env</code> controls whether a node sees the host’s full environment or a clean one; this is a build-time isolation choice. <code>env_vars</code>, by contrast, is how you declare specific variables a node needs, and it is set when the node is defined, not at build time. The first is about isolation; the second is about configuration.</p>
 </section>
 <section id="building-on-other-machines" class="level3" data-number="15.10.4">
 <h3 data-number="15.10.4" class="anchored" data-anchor-id="building-on-other-machines"><span class="header-section-number">15.10.4</span> Building on other machines</h3>
-<p>The <code>builders</code> option is what turns a local build into a distributed one. You can point a build at a remote Nix builder — a faster machine, or a machine with the right architecture — and Nix will ship the build steps there. This is particularly useful when your pipeline has heavy nodes that would take minutes locally but seconds on a larger box. The <code>pipeline_to_drv(p)</code> function returns the underlying Nix derivation, which is the escape hatch for when you need to hand the build to a tool that understands derivations directly.</p>
+<p>The <code>builders</code> option is what turns a local build into a distributed one. You can point a build at a remote Nix builder, a faster machine or a machine with the right architecture, and Nix will ship the build steps there. This is particularly useful when your pipeline has heavy nodes that would take minutes locally but seconds on a larger box. The <code>pipeline_to_drv(p)</code> function returns the underlying Nix derivation, which is the escape hatch for when you need to hand the build to a tool that understands derivations directly.</p>
 <p>The <code>cache</code> option is the companion to <code>builders</code>. Where <code>builders</code> decides <em>where</em> a build runs, <code>cache</code> decides <em>where pre-built artifacts come from</em>. Like <code>builders</code>, it is a key in the <code>nix_options</code> dictionary. Passing a Cachix cache name registers it as an extra Nix binary substituter:</p>
 <pre class="t"><code><span class="fu">build_pipeline</span>(p, nix_options <span class="sc">=</span> { cache <span class="sc">=</span> <span class="st">"my-team"</span> })</code></pre>
 <p>Nix then pulls any matching store paths from <code>my-team.cachix.org</code> before falling back to building them, and can push freshly built artifacts back to the cache. This is how a team shares build results across machines and CI runners without each one recompiling the same R and Python packages from source.</p>
@@ -1166,7 +1166,7 @@ to_expr(1 + 10)
 </section>
 <section id="testing-a-package" class="level3" data-number="15.11.3">
 <h3 data-number="15.11.3" class="anchored" data-anchor-id="testing-a-package"><span class="header-section-number">15.11.3</span> Testing a package</h3>
-<p><code>t test</code> runs the package’s tests, and it honours the same flags as the pipeline tests from Chapter 7: you can select a subset, run in verbose mode, and so on. A test marked <code>noop</code> is skipped — useful for a test that depends on an optional dependency that may not be present.</p>
+<p><code>t test</code> runs the package’s tests, and it honours the same flags as the pipeline tests from Chapter 7: you can select a subset, run in verbose mode, and so on. A test marked <code>noop</code> is skipped, useful for a test that depends on an optional dependency that may not be present.</p>
 </section>
 <section id="t-doc-documentation" class="level3" data-number="15.11.4">
 <h3 data-number="15.11.4" class="anchored" data-anchor-id="t-doc-documentation"><span class="header-section-number">15.11.4</span> T-Doc documentation</h3>
@@ -1182,7 +1182,7 @@ myfunc <span class="sc">=</span> \(x) { x <span class="sc">*</span> <span class=
 </section>
 <section id="publishing" class="level3" data-number="15.11.5">
 <h3 data-number="15.11.5" class="anchored" data-anchor-id="publishing"><span class="header-section-number">15.11.5</span> Publishing</h3>
-<p><code>t publish</code> publishes the package by tagging the git repository. There is no central T package registry — distribution is by git, which is deliberate: it means a package version is pinned to an exact commit, and consumers depend on it the same way they depend on any other Nix input.</p>
+<p><code>t publish</code> publishes the package by tagging the git repository. There is no central T package registry; distribution is by git, which is deliberate: it means a package version is pinned to an exact commit, and consumers depend on it the same way they depend on any other Nix input.</p>
 </section>
 <section id="importing" class="level3" data-number="15.11.6">
 <h3 data-number="15.11.6" class="anchored" data-anchor-id="importing"><span class="header-section-number">15.11.6</span> Importing</h3>
@@ -1217,12 +1217,12 @@ myfunc <span class="sc">=</span> \(x) { x <span class="sc">*</span> <span class=
 <li><code>prop_gen_date_range(lo, hi)</code></li>
 <li><code>prop_gen_df(...)</code> and <code>prop_gen_df_from(template, na_prob = 0.1)</code></li>
 </ul>
-<p>The DataFrame generators are the ones you will use most. <code>prop_gen_df</code> builds a random DataFrame with the column types you specify, and <code>na_prob</code> controls how many missing values to sprinkle in — which is exactly the kind of input that exposes bugs in real pipelines.</p>
+<p>The DataFrame generators are the ones you will use most. <code>prop_gen_df</code> builds a random DataFrame with the column types you specify, and <code>na_prob</code> controls how many missing values to sprinkle in, which is exactly the kind of input that exposes bugs in real pipelines.</p>
 <p>You can also build generators out of other generators with combinators: <code>prop_map_gen</code> transforms a generator’s output, <code>prop_such_that</code> filters it to values satisfying a predicate, and <code>prop_resize</code> scales the size of a collection-valued generator.</p>
 </section>
 <section id="the-property-contract" class="level3" data-number="15.12.3">
 <h3 data-number="15.12.3" class="anchored" data-anchor-id="the-property-contract"><span class="header-section-number">15.12.3</span> The property contract</h3>
-<p>There is one rule that catches people out: <strong>a property that returns <code>NA</code> fails</strong>. A property must return a boolean, and <code>NA</code> is not a <code>true</code>. This is deliberate — a property that cannot decide is not a valid property. The <code>Expect</code> type is understood by Propcraft, so you can write properties in terms of the same assertions you use elsewhere. A property that raises an <code>Error</code> also fails.</p>
+<p>There is one rule that catches people out: <strong>a property that returns <code>NA</code> fails</strong>. A property must return a boolean, and <code>NA</code> is not a <code>true</code>. This is deliberate: a property that cannot decide is not a valid property. The <code>Expect</code> type is understood by Propcraft, so you can write properties in terms of the same assertions you use elsewhere. A property that raises an <code>Error</code> also fails.</p>
 </section>
 <section id="a-concrete-example" class="level3" data-number="15.12.4">
 <h3 data-number="15.12.4" class="anchored" data-anchor-id="a-concrete-example"><span class="header-section-number">15.12.4</span> A concrete example</h3>
@@ -1231,7 +1231,7 @@ myfunc <span class="sc">=</span> \(x) { x <span class="sc">*</span> <span class=
   <span class="fu">prop_gen_df</span>(na_prob <span class="sc">=</span> <span class="fl">0.3</span>),
   \(df) { <span class="fu">nrow</span>(<span class="fu">drop_na</span>(df, <span class="sc">$</span>x)) <span class="sc">&lt;=</span> <span class="fu">nrow</span>(df) }
 )</code></pre>
-<p>The property — the result has no more rows than the input — is obviously true, yet it fails. Propcraft shrinks the failing input to a tiny DataFrame and shows you the exact rows that broke it, instead of leaving you to guess.</p>
+<p>The property, that the result has no more rows than the input, is obviously true, yet it fails. Propcraft shrinks the failing input to a tiny DataFrame and shows you the exact rows that broke it, instead of leaving you to guess.</p>
 </section>
 <section id="seeding-and-sample-size" class="level3" data-number="15.12.5">
 <h3 data-number="15.12.5" class="anchored" data-anchor-id="seeding-and-sample-size"><span class="header-section-number">15.12.5</span> Seeding and sample size</h3>

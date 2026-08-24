@@ -539,12 +539,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">8.1</span> Introduction</h2>
 <p>Chapter 5 gave you the core development loop: declare nodes, build the pipeline, inspect results. You know how <code>rn()</code>, <code>pyn()</code>, and <code>node()</code> work, and you have seen serializers like <code>^ipc</code> and <code>^parquet</code> in passing. This chapter is where we put all those pieces together and push further.</p>
-<p>We will build a realistic, end-to-end polyglot pipeline — CSV ingestion in T, cleaning in Python, modelling in R, and a rendered Quarto report — and use that worked example as a scaffold to explore every runtime T supports, including shell nodes, Julia nodes, and Quarto nodes. We then cover the practical concerns that come up on real projects: fetching remote data inside a sandboxed build, sharing utility code across nodes, passing environment variables, reading build logs, understanding caching, and wiring up continuous integration with a single function call.</p>
+<p>We will build a realistic, end-to-end polyglot pipeline: CSV ingestion in T, cleaning in Python, modelling in R, and a rendered Quarto report. We will use that worked example as a scaffold to explore every runtime T supports, including shell nodes, Julia nodes, and Quarto nodes. We then cover the practical concerns that come up on real projects: fetching remote data inside a sandboxed build, sharing utility code across nodes, passing environment variables, reading build logs, understanding caching, and wiring up continuous integration with a single function call.</p>
 <p>By the end of this chapter you will have a complete mental model of what a production T pipeline looks like and why every design decision was made the way it was.</p>
 </section>
 <section id="sec-worked-example" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="sec-worked-example"><span class="header-section-number">8.2</span> A Realistic Worked Example</h2>
-<p>Most toy examples in data science tooling documentation use <code>mtcars</code>. We will use the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> dataset instead — still small enough to reason about quickly, but with a real modelling task: predict penguin species from morphological measurements.</p>
+<p>Most toy examples in data science tooling documentation use <code>mtcars</code>. We will use the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> dataset instead, which is still small enough to reason about quickly but has a real modelling task: predict penguin species from morphological measurements.</p>
 <p>The pipeline has four stages:</p>
 <ol type="1">
 <li>Read the raw CSV in T.</li>
@@ -604,8 +604,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <span class="fu">build_pipeline</span>(p)</code></pre>
 <p>Let us walk through the data flow step by step.</p>
-<p><strong><code>raw</code></strong> is a native T node — no foreign runtime involved. <code>read_csv</code> is a T built-in that returns a <code>DataFrame</code>. Because it is a native node, it inherits T’s default <code>^ipc</code> serializer: the data is written to the Nix store as an Arrow IPC file.</p>
-<p><strong><code>clean</code></strong> is a Python node. The <code>deserializer = ^ipc</code> instruction tells the generated sandbox wrapper to load the upstream <code>raw</code> artifact from the store as a <code>pandas.DataFrame</code> and bind it to the name <code>raw</code> before executing the <code>&lt;{ ... }&gt;</code> block. The body of the block is plain Python — no argument parsing, no file I/O. It assigns back to <code>df</code> and T reads the last expression as the node’s result. The <code>serializer = ^parquet</code> writes it out as a Parquet file, which is the right choice here: Parquet is compressed, column-oriented, and readable by every runtime T supports.</p>
+<p><strong><code>raw</code></strong> is a native T node, with no foreign runtime involved. <code>read_csv</code> is a T built-in that returns a <code>DataFrame</code>. Because it is a native node, it inherits T’s default <code>^ipc</code> serializer: the data is written to the Nix store as an Arrow IPC file.</p>
+<p><strong><code>clean</code></strong> is a Python node. The <code>deserializer = ^ipc</code> instruction tells the generated sandbox wrapper to load the upstream <code>raw</code> artifact from the store as a <code>pandas.DataFrame</code> and bind it to the name <code>raw</code> before executing the <code>&lt;{ ... }&gt;</code> block. The body of the block is plain Python, with no argument parsing and no file I/O. It assigns back to <code>df</code> and T reads the last expression as the node’s result. The <code>serializer = ^parquet</code> writes it out as a Parquet file, which is the right choice here: Parquet is compressed, column-oriented, and readable by every runtime T supports.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -619,7 +619,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>^ipc</code> is fastest for passing data <em>between adjacent nodes in the same build</em>. <code>^parquet</code> is the right serializer when the artifact will be read by a subsequent node in a <em>different runtime</em> (here, R) or when you want the artifact to be directly usable by external tools like DuckDB or Polars after you copy it out of the Nix store. Both work symmetrically across T, R, Python, and Julia.</p>
 </div>
 </div>
-<p><strong><code>model</code></strong> is an R node. The <code>deserializer = ^parquet</code> loads <code>clean</code> as an R <code>data.frame</code>. The R code fits a multinomial logistic regression with <code>nnet</code> and returns the fitted model object. The <code>serializer = ^pmml</code> exports the model to <a href="https://dmg.org/pmml/v4-4-1/GeneralStructure.html">PMML</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, a portable XML format that T can load natively for scoring — no R session required downstream.</p>
+<p><strong><code>model</code></strong> is an R node. The <code>deserializer = ^parquet</code> loads <code>clean</code> as an R <code>data.frame</code>. The R code fits a multinomial logistic regression with <code>nnet</code> and returns the fitted model object. The <code>serializer = ^pmml</code> exports the model to <a href="https://dmg.org/pmml/v4-4-1/GeneralStructure.html">PMML</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, a portable XML format that T can load natively for scoring, with no R session required downstream.</p>
 <p><strong><code>report</code></strong> is a Quarto node. The <code>script</code> argument points to a <code>.qmd</code> file that T copies into the sandbox. Inside <code>src/report.qmd</code>, any call to <code>read_node("model")</code> or <code>read_node("clean")</code> is statically analysed by T at pipeline-analysis time and registered as a dependency of <code>report</code>. The rendered HTML is stored in the Nix store; we will copy it out in <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.7</span></a>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -638,16 +638,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> run src/pipeline.t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>or, from inside the REPL:</p>
 <pre class="t"><code><span class="fu">build_pipeline</span>(p)</code></pre>
-<p>T resolves the DAG, emits four Nix derivations, and builds them in dependency order. If you rebuild without changing anything, all four nodes are served from the Nix store cache — zero recomputation.</p>
+<p>T resolves the DAG, emits four Nix derivations, and builds them in dependency order. If you rebuild without changing anything, all four nodes are served from the Nix store cache, with zero recomputation.</p>
 </section>
 <section id="sec-runtimes" class="level2" data-number="8.3">
 <h2 data-number="8.3" class="anchored" data-anchor-id="sec-runtimes"><span class="header-section-number">8.3</span> All Node Runtimes at a Glance</h2>
-<p>Chapter 5 introduced <code>node()</code>, <code>rn()</code>, and <code>pyn()</code>. T supports two more runtimes that come up frequently in real projects. Rather than reproducing the full API here — which you can find in the T documentation — we will focus on the practical patterns for each.</p>
+<p>Chapter 5 introduced <code>node()</code>, <code>rn()</code>, and <code>pyn()</code>. T supports two more runtimes that come up frequently in real projects. Rather than reproducing the full API here, which you can find in the T documentation, we will focus on the practical patterns for each.</p>
 <section id="shell-nodes-shn" class="level3" data-number="8.3.1">
 <h3 data-number="8.3.1" class="anchored" data-anchor-id="shell-nodes-shn"><span class="header-section-number">8.3.1</span> Shell Nodes: <code>shn()</code></h3>
 <p>Shell nodes run a shell command inside the derivation’s sandbox. They are useful for wrapping command-line tools (data converters, compilers, external binaries) without writing glue code in a scripting language.</p>
 <p><code>shn()</code> operates in two modes:</p>
-<p><strong>Exec mode</strong> (default) — the <code>command</code> argument is a shell string run with <code>bash -c</code>. The node’s serializer is <code>^text</code> by default, and the output is whatever is written to stdout:</p>
+<p><strong>Exec mode</strong> (default): the <code>command</code> argument is a shell string run with <code>bash -c</code>. The node’s serializer is <code>^text</code> by default, and the output is whatever is written to stdout:</p>
 <pre class="t"><code>p_shn_exec <span class="sc">=</span> <span class="cf">pipeline</span> {
 
   <span class="co">-- Call an external converter and capture stdout</span>
@@ -657,7 +657,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   )
 
 }</code></pre>
-<p><strong>Script mode</strong> — set <code>script</code> to a path and <code>shn()</code> copies that script into the sandbox and executes it. Use this when the shell logic is more than a one-liner:</p>
+<p><strong>Script mode</strong>: set <code>script</code> to a path and <code>shn()</code> copies that script into the sandbox and executes it. Use this when the shell logic is more than a one-liner:</p>
 <pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
   compressed <span class="sc">=</span> <span class="fu">shn</span>(
@@ -677,7 +677,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The default serializer for <code>shn()</code> is <code>^text</code>. If your shell script produces a CSV or JSON file rather than stdout text, point the serializer at the right format — e.g., <code>serializer = ^csv</code> — and write the file to the path that T exposes as <code>$out</code> inside the sandbox.</p>
+<p>The default serializer for <code>shn()</code> is <code>^text</code>. If your shell script produces a CSV or JSON file rather than stdout text, point the serializer at the right format, e.g.&nbsp;<code>serializer = ^csv</code>, and write the file to the path that T exposes as <code>$out</code> inside the sandbox.</p>
 </div>
 </div>
 </section>
@@ -687,7 +687,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Declare Julia packages in the <code>[jl-dependencies]</code> section of <code>tproject.toml</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[jl-dependencies]</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">packages</span> <span class="op">=</span> <span class="op">[</span><span class="st">"DataFrames"</span><span class="op">,</span> <span class="st">"GLM"</span><span class="op">,</span> <span class="st">"CSV"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Then declare environment in the usual way with <code>t update &amp;&amp; exit &amp;&amp; nix develop</code>.</p>
+<p>Then declare the environment in the usual way with <code>t update &amp;&amp; exit &amp;&amp; nix develop</code>.</p>
 <p>A Julia node that fits a linear model:</p>
 <pre class="t"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
 
@@ -705,7 +705,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   )
 
 }</code></pre>
-<p>Julia’s native serialization format is <code>.jls</code> (Julia serialization). This is the default serializer for <code>jln()</code> nodes. Use it when the artifact will only ever be consumed by another Julia node in the same pipeline. For cross-runtime data exchange — passing a Julia <code>DataFrame</code> to R or Python — use <code>^csv</code>, <code>^ipc</code>, or <code>^json</code> instead, which are understood by all runtimes.</p>
+<p>Julia’s native serialization format is <code>.jls</code> (Julia serialization). This is the default serializer for <code>jln()</code> nodes. Use it when the artifact will only ever be consumed by another Julia node in the same pipeline. For cross-runtime data exchange, i.e.&nbsp;passing a Julia <code>DataFrame</code> to R or Python, use <code>^csv</code>, <code>^ipc</code>, or <code>^json</code> instead, which are understood by all runtimes.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -726,7 +726,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>The <code>.qmd</code> file path goes in the <code>script</code> argument, not <code>command</code>.</li>
 <li>The rendered output (HTML, PDF, or docx depending on the document’s YAML header) is stored in the Nix store like any other artifact.</li>
-<li>Use <code>pipeline_copy()</code> (see <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.7</span></a>) to retrieve the rendered file to a local directory — the Nix store path is opaque and not meant for direct use.</li>
+<li>Use <code>pipeline_copy()</code> (see <a href="#sec-logs-artifacts" class="quarto-xref"><span>Section 8.7</span></a>) to retrieve the rendered file to a local directory, since the Nix store path is opaque and not meant for direct use.</li>
 <li><code>read_node("name")</code> calls inside the <code>.qmd</code> are statically scanned by T and register as dependencies automatically.</li>
 </ul>
 <p>A Quarto node that produces a PDF report:</p>
@@ -768,9 +768,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="sec-remote-data" class="level2" data-number="8.4">
 <h2 data-number="8.4" class="anchored" data-anchor-id="sec-remote-data"><span class="header-section-number">8.4</span> Fetching Remote Data</h2>
-<p>Every T node executes in a Nix <strong>sandbox</strong> — a restricted build environment that has no network access. This is intentional: if network calls were permitted inside a build, the same pipeline could produce different results on different days depending on what a remote server returns. Reproducibility would be broken by design.</p>
+<p>Every T node executes in a Nix <strong>sandbox</strong>, a restricted build environment that has no network access. This is intentional: if network calls were permitted inside a build, the same pipeline could produce different results on different days depending on what a remote server returns. Reproducibility would be broken by design.</p>
 <p>The practical consequence is that you cannot do this inside a node:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will fail — no network in the sandbox</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will fail: no network in the sandbox</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(requests.get(<span class="st">"https://example.com/data.csv"</span>).content)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Nor this in R:</p>
@@ -802,7 +802,7 @@ hash
   )
 
 }</code></pre>
-<p>At build time Nix checks whether the file is already in the store. If not, it downloads it from the URL and verifies the hash before proceeding. If the remote file ever changes, the hash will not match and the build will fail loudly — no silent data drift.</p>
+<p>At build time Nix checks whether the file is already in the store. If not, it downloads it from the URL and verifies the hash before proceeding. If the remote file ever changes, the hash will not match and the build will fail loudly, with no silent data drift.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -813,7 +813,7 @@ hash
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In REPL mode — when you call <code>fetchurl(...)</code> directly at the <code>t&gt;</code> prompt without a surrounding <code>pipeline { }</code> — T downloads the file immediately using <code>curl</code> and returns the path, just like <code>read_csv</code>. This makes interactive exploration easy: start with REPL mode to prototype, then promote the <code>fetchurl</code> into a pipeline node once you have the hash.</p>
+<p>In REPL mode, when you call <code>fetchurl(...)</code> directly at the <code>t&gt;</code> prompt without a surrounding <code>pipeline { }</code>, T downloads the file immediately using <code>curl</code> and returns the path, just like <code>read_csv</code>. This makes interactive exploration easy: start with REPL mode to prototype, then promote the <code>fetchurl</code> into a pipeline node once you have the hash.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -884,7 +884,7 @@ hash
 </section>
 <section id="the-include-parameter" class="level3" data-number="8.5.2">
 <h3 data-number="8.5.2" class="anchored" data-anchor-id="the-include-parameter"><span class="header-section-number">8.5.2</span> The <code>include</code> Parameter</h3>
-<p><code>functions</code> is designed for executable source files. If your node needs additional <em>non-executable</em> resources — a configuration YAML, a lookup table, a template file — use the <code>include</code> parameter instead. T copies the listed paths into the sandbox without attempting to source or execute them:</p>
+<p><code>functions</code> is designed for executable source files. If your node needs additional <em>non-executable</em> resources, such as a configuration YAML, a lookup table, or a template file, use the <code>include</code> parameter instead. T copies the listed paths into the sandbox without attempting to source or execute them:</p>
 <pre class="t"><code>report <span class="sc">=</span> <span class="fu">qn</span>(
   script  <span class="sc">=</span> <span class="st">"src/report.qmd"</span>,
   include <span class="sc">=</span> [<span class="st">"src/custom.scss"</span>, <span class="st">"src/logo.png"</span>, <span class="st">"data/lookups.csv"</span>]
@@ -931,7 +931,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> {
     command  <span class="sc">=</span> <span class="sc">&lt;</span>{
       mode <span class="sc">&lt;</span><span class="sc">-</span> Sys.getenv(<span class="st">"MODEL_MODE"</span>, unset <span class="sc">=</span> <span class="st">"production"</span>)
       <span class="cf">if</span> (mode <span class="sc">==</span> <span class="st">"debug"</span>) {
-        <span class="fu">message</span>(<span class="st">"Debug mode — using 100 trees"</span>)
+        <span class="fu">message</span>(<span class="st">"Debug mode: using 100 trees"</span>)
         ntree <span class="sc">&lt;</span><span class="sc">-</span> <span class="dv">100</span>L
       } <span class="cf">else</span> {
         ntree <span class="sc">&lt;</span><span class="sc">-</span> <span class="dv">500</span>L
@@ -959,7 +959,7 @@ p <span class="sc">=</span> <span class="cf">pipeline</span> {
 </div>
 <div class="callout-body-container callout-body">
 <p>Environment variables passed via <code>env_vars</code> are baked into the derivation’s input hash. Two builds with different <code>env_vars</code> values will produce different Nix derivations and will not share cached results. This is the correct behaviour: a model trained with <code>MODEL_MODE=debug</code> and one trained with <code>MODEL_MODE=production</code> are genuinely different artifacts.</p>
-<p>For <em>secrets</em> that should not appear in the pipeline source (API keys, database passwords), do not hardcode them in <code>env_vars</code>. Instead, set them in your shell before running <code>t run</code>, and reference them with the <code>env_from_shell</code> argument — see the T documentation for details.</p>
+<p>For <em>secrets</em> that should not appear in the pipeline source (API keys, database passwords), do not hardcode them in <code>env_vars</code>. Instead, set them in your shell before running <code>t run</code>, and reference them with the <code>env_from_shell</code> argument; see the T documentation for details.</p>
 </div>
 </div>
 </section>
@@ -1013,7 +1013,7 @@ report      built     <span class="fl">12.05</span>       <span class="sc">/</sp
 </section>
 <section id="copying-artifacts-out-of-the-store" class="level3" data-number="8.7.2">
 <h3 data-number="8.7.2" class="anchored" data-anchor-id="copying-artifacts-out-of-the-store"><span class="header-section-number">8.7.2</span> Copying Artifacts Out of the Store</h3>
-<p>Nix store paths are read-only and content-addressed — they are not meant to be worked with directly. Use <code>pipeline_copy()</code> to copy artifacts to a local directory:</p>
+<p>Nix store paths are read-only and content-addressed, so they are not meant to be worked with directly. Use <code>pipeline_copy()</code> to copy artifacts to a local directory:</p>
 <pre class="t"><code><span class="co">-- Copy a single node's artifact</span>
 <span class="fu">pipeline_copy</span>(p.report, dest <span class="sc">=</span> <span class="st">"outputs/"</span>)
 
@@ -1031,7 +1031,7 @@ Would remove<span class="sc">:</span>
   <span class="sc">/</span>nix<span class="sc">/</span>store<span class="sc">/</span>xyz…<span class="sc">-</span>clean  (superseded by def…<span class="sc">-</span>clean)
 
 <span class="fu">pipeline_gc</span>(p)</code></pre>
-<p><code>t_gc()</code> runs a full Nix garbage collection — it removes every store path that is not referenced by any active GC root on the system. Use this periodically on development machines or CI runners to reclaim disk space:</p>
+<p><code>t_gc()</code> runs a full Nix garbage collection: it removes every store path that is not referenced by any active GC root on the system. Use this periodically on development machines or CI runners to reclaim disk space:</p>
 <pre class="t"><code><span class="fu">t_gc</span>()</code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1052,7 +1052,7 @@ Would remove<span class="sc">:</span>
 <h2 data-number="8.8" class="anchored" data-anchor-id="sec-caching"><span class="header-section-number">8.8</span> Incremental Builds and Caching</h2>
 <p>You have already seen that T caches nodes by input hash: if nothing changes, nothing is rebuilt. There is an important subtlety worth understanding clearly.</p>
 <p><strong>The pipeline is a child of the environment.</strong></p>
-<p>When Nix builds a node, the derivation’s input hash includes not just the node’s code and upstream data, but also the entire closure of packages and tools that the node’s sandbox contains. Those packages come from the date pin and package list in <code>tproject.toml</code>. If you update the date pin — say, from <code>2026-03-01</code> to <code>2026-06-01</code> — the environment closure changes, which changes the hash of every derivation in the pipeline, which means the entire pipeline rebuilds from scratch.</p>
+<p>When Nix builds a node, the derivation’s input hash includes not just the node’s code and upstream data, but also the entire closure of packages and tools that the node’s sandbox contains. Those packages come from the date pin and package list in <code>tproject.toml</code>. If you update the date pin, say from <code>2026-03-01</code> to <code>2026-06-01</code>, the environment closure changes, which changes the hash of every derivation in the pipeline, which means the entire pipeline rebuilds from scratch.</p>
 <p>This is not a bug. It is the only way to guarantee that the pipeline’s results are reproducible against the <em>current</em> environment. If cached results from an old environment were reused after a package update, you could never be certain that a non-backwards-compatible change in a dependency had not silently altered your results. By rebuilding everything when the environment changes, T ensures that what you see is what the <em>declared</em> environment actually produces.</p>
 <p>In practice, this means:</p>
 <ul>
@@ -1073,7 +1073,7 @@ Would cache<span class="sc">:</span>  [raw, clean]</code></pre>
 </section>
 <section id="sec-cicd" class="level2" data-number="8.9">
 <h2 data-number="8.9" class="anchored" data-anchor-id="sec-cicd"><span class="header-section-number">8.9</span> CI/CD with <code>pipeline_to_ga()</code></h2>
-<p>A reproducible pipeline is most valuable when it runs automatically — on every push, on a schedule, or when upstream data changes. T ships with a function that generates a complete GitHub Actions workflow YAML from your pipeline definition:</p>
+<p>A reproducible pipeline is most valuable when it runs automatically: on every push, on a schedule, or when upstream data changes. T ships with a function that generates a complete GitHub Actions workflow YAML from your pipeline definition:</p>
 <pre class="t"><code><span class="fu">pipeline_to_ga</span>(p, file <span class="sc">=</span> <span class="st">".github/workflows/pipeline.yml"</span>)</code></pre>
 <p>That single call writes a workflow file that:</p>
 <ol type="1">
@@ -1083,7 +1083,7 @@ Would cache<span class="sc">:</span>  [raw, clean]</code></pre>
 <li>Uploads any artifacts you have declared as outputs.</li>
 <li>Saves the updated Nix store cache back to <code>t-runs</code>.</li>
 </ol>
-<p>The <code>t-runs</code> branch caching approach avoids the GitHub Actions cache size limit by persisting the Nix store as a Git repository. On a typical pipeline, the first CI run downloads and builds everything; subsequent runs restore from cache and only rebuild what changed — the same incremental behaviour you get locally.</p>
+<p>The <code>t-runs</code> branch caching approach avoids the GitHub Actions cache size limit by persisting the Nix store as a Git repository. On a typical pipeline, the first CI run downloads and builds everything; subsequent runs restore from cache and only rebuild what changed, the same incremental behaviour you get locally.</p>
 <p>A minimal end-to-end CI setup for our penguin pipeline:</p>
 <pre class="t"><code><span class="co">-- In src/pipeline.t, add at the bottom:</span>
 <span class="fu">pipeline_to_ga</span>(
@@ -1166,7 +1166,7 @@ Would cache<span class="sc">:</span>  [raw, clean]</code></pre>
 <li>Why the pipeline rebuilds when <code>tproject.toml</code> changes, and why that is the correct behaviour (<a href="#sec-caching" class="quarto-xref"><span>Section 8.8</span></a>).</li>
 <li><code>pipeline_to_ga()</code> for generating a GitHub Actions workflow in three lines (<a href="#sec-cicd" class="quarto-xref"><span>Section 8.9</span></a>).</li>
 </ul>
-<p>Between Chapter 5 and this chapter you now have a complete picture of the T pipeline model for single-machine analytical workflows. The next chapter takes the pipeline abstraction further: we will look at <em>pipeline manipulation</em> — composing pipelines, branching on parameter grids, mapping nodes over collections, and building reusable pipeline templates that can be shared across projects.</p>
+<p>Between Chapter 5 and this chapter you now have a complete picture of the T pipeline model for single-machine analytical workflows. The next chapter takes the pipeline abstraction further: we will look at <em>pipeline manipulation</em>: composing pipelines, branching on parameter grids, mapping nodes over collections, and building reusable pipeline templates that can be shared across projects.</p>
 
 
 </section>

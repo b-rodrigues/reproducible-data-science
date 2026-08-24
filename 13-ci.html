@@ -479,7 +479,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">13.1</span> Introduction</a></li>
-  <li><a href="#getting-your-repo-ready-for-github-actions" id="toc-getting-your-repo-ready-for-github-actions" class="nav-link" data-scroll-target="#getting-your-repo-ready-for-github-actions"><span class="header-section-number">13.2</span> Getting your repo ready for Github Actions</a></li>
+  <li><a href="#getting-your-repo-ready-for-github-actions" id="toc-getting-your-repo-ready-for-github-actions" class="nav-link" data-scroll-target="#getting-your-repo-ready-for-github-actions"><span class="header-section-number">13.2</span> Getting your repo ready for GitHub Actions</a></li>
   <li><a href="#nix-and-github-actions" id="toc-nix-and-github-actions" class="nav-link" data-scroll-target="#nix-and-github-actions"><span class="header-section-number">13.3</span> Nix and GitHub Actions</a></li>
   <li><a href="#running-a-t-pipeline-on-github-actions" id="toc-running-a-t-pipeline-on-github-actions" class="nav-link" data-scroll-target="#running-a-t-pipeline-on-github-actions"><span class="header-section-number">13.4</span> Running a T Pipeline on GitHub Actions</a>
   <ul class="collapse">
@@ -534,7 +534,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You may have heard the term “CI/CD,” where CD stands for Continuous Deployment or Continuous Delivery. We will focus on CI in this chapter. Continuous Deployment (automatically pushing results to a database, dashboard, or API) is highly specific to your organisation and infrastructure. What we cover here, however, gives you the foundation: once your pipeline runs reliably on CI, the “deployment” step is just one more workflow job pointing to wherever your results need to go.</p>
 </section>
 <section id="getting-your-repo-ready-for-github-actions" class="level2" data-number="13.2">
-<h2 data-number="13.2" class="anchored" data-anchor-id="getting-your-repo-ready-for-github-actions"><span class="header-section-number">13.2</span> Getting your repo ready for Github Actions</h2>
+<h2 data-number="13.2" class="anchored" data-anchor-id="getting-your-repo-ready-for-github-actions"><span class="header-section-number">13.2</span> Getting your repo ready for GitHub Actions</h2>
 <p>Obviously, you should use a project that is versioned on GitHub. Use the package we’ve developed previously. If you go on its GitHub page, you should see an “Actions” tab on top:</p>
 <div style="text-align:center;">
 <div class="cell">
@@ -555,7 +555,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">say-hello</span><span class="kw">:</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> echo "Hello from Github Actions!"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> echo "Hello from GitHub Actions!"</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> echo "This command is running from an Ubuntu VM each time you push."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Let’s study this workflow definition line by line:</p>
 <pre><code>name: Hello world</code></pre>
@@ -567,11 +567,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>  say-hello:</code></pre>
 <p>This defines the <code>say-hello</code> job.</p>
 <pre><code>    runs-on: ubuntu-latest</code></pre>
-<p>This job should run on an Ubuntu VM. You can also run jobs on Windows or macOS VMs, but this uses more compute minutes than a Linux VM (which doesn’t matter for public projects. For private projects, the amount of compute minutes is limited).</p>
+<p>This job should run on an Ubuntu VM. You can also run jobs on Windows or macOS VMs, but this uses more compute minutes than a Linux VM (which doesn’t matter for public projects; for private projects, the amount of compute minutes is limited).</p>
 <pre><code>    steps:</code></pre>
 <p>What are the different steps of the job?</p>
-<pre><code>      - run: echo "Hello from Github Actions!"</code></pre>
-<p>First, run the command <code>echo "Hello from Github Actions!"</code>. This commands runs inside the VM. Then, run this next command:</p>
+<pre><code>      - run: echo "Hello from GitHub Actions!"</code></pre>
+<p>First, run the command <code>echo "Hello from GitHub Actions!"</code>. This command runs inside the VM. Then, run this next command:</p>
 <pre><code>      - run: echo "This command is running from an Ubuntu VM each time you push."</code></pre>
 <p>If we take a look at the commit we just pushed, on GitHub, we see this yellow dot next to the commit name. This means that an action is running. We can then take a look at the output of the job, and see that our commands, defined with the <code>run</code> statements in the workflow file, succeeded and echoed what we asked them.</p>
 </section>
@@ -587,7 +587,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> cachix/cachix-action@v15</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> rstats-on-nix</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If your repository contains a <code>flake.nix</code> and <code>flake.lock</code> (as a T project does), the same environment you’ve been using locally can be used on GitHub Actions just as easily. The committed flake pins the exact T version and every dependency, so there is nothing to generate — <code>nix develop</code> reads it directly:</p>
+<p>If your repository contains a <code>flake.nix</code> and <code>flake.lock</code> (as a T project does), the same environment you’ve been using locally can be used on GitHub Actions just as easily. The committed flake pins the exact T version and every dependency, so there is nothing to generate: <code>nix develop</code> reads it directly:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Run in the project environment</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> nix develop --command t --version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can then use the shell to run whatever you need. For example, if you’re developing a package, you could run unit tests on each push:</p>
@@ -663,7 +663,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="running-a-dockerized-workflow" class="level2" data-number="13.5">
 <h2 data-number="13.5" class="anchored" data-anchor-id="running-a-dockerized-workflow"><span class="header-section-number">13.5</span> Running a dockerized workflow</h2>
-<p>This next example can be found in <a href="https://github.com/b-rodrigues/dockerized_pipeline_demo">this repository</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. This example doesn’t use Nix or T, but the point here is to show how a Docker container can be executed on GitHub Actions, and artifacts can be recovered. The process is always the same, regardless is inside the Docker image. If you want to follow along, fork this repository.</p>
+<p>This next example can be found in <a href="https://github.com/b-rodrigues/dockerized_pipeline_demo">this repository</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. This example doesn’t use Nix or T, but the point here is to show how a Docker container can be executed on GitHub Actions, and artifacts can be recovered. The process is always the same, regardless of what is inside the Docker image. If you want to follow along, fork this repository.</p>
 <p>This is what our workflow file looks like:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Reproducible pipeline</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -695,13 +695,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>run: docker run --rm --name my_pipeline_container -v /github/workspace/fig/:/home/graphs/:rw my-image-name</code></pre>
 <p>The only new thing here, is that the path has been changed to <code>/github/workspace/</code>. This is the home directory of your repository, so to speak. Now there’s the <code>uses</code> keyword that’s new:</p>
 <pre><code>uses: actions/checkout@v5</code></pre>
-<p>This action checkouts your repository inside the VM, so the files in the repo are available inside the VM. Then, there’s this action here:</p>
+<p>This action checks out your repository inside the VM, so the files in the repo are available inside the VM. Then, there’s this action here:</p>
 <pre><code>- uses: actions/upload-artifact@v4
   with:
     name: my-figures
     path: /github/workspace/fig/</code></pre>
 <p>This action takes what’s inside <code>/github/workspace/fig/</code> (which will be the output of our pipeline) and makes the contents available as so-called “artifacts”. Artifacts are the outputs of your workflow. In our case, as stated, the output of the pipeline. So let’s run this by pushing a change, and let’s take a look at these artifacts!</p>
-<p>After the action done running, you will be able to download a zip file containing the plots. It is thus possible to rerun our workflow in the cloud. This has the advantage that we can now focus on simply changing the code, and not have to bother with boring manual steps. For example, let’s change this target in the <code>_targets.R</code> file:</p>
+<p>After the action is done running, you will be able to download a zip file containing the plots. It is thus possible to rerun our workflow in the cloud. This has the advantage that we can now focus on simply changing the code, and not have to bother with boring manual steps. For example, let’s change this target in the <code>_targets.R</code> file:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_target</span>(</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  commune_data,</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_unemp</span>(</span>
@@ -713,11 +713,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_of_interest =</span> active_population)</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>I’ve added “Dudelange” to the list of communes to plot. Pushing this change to GitHub triggers the action we’ve defined before. The plots (artifacts) get refreshed, and we can download them. Take a look and see that Dudelange was added in the <code>communes.png</code> plot!</p>
-<p>It is also possible to “deploy” the plots directly to another branch, and do much, much more. I just wanted to give you a little taste of Github Actions (and more generally GitOps). The possibilities are virtually limitless, and I still can’t get over the fact that Github Actions is free for public repositories.</p>
+<p>It is also possible to “deploy” the plots directly to another branch, and do much, much more. I just wanted to give you a little taste of GitHub Actions (and more generally GitOps). The possibilities are virtually limitless, and I still can’t get over the fact that GitHub Actions is free for public repositories.</p>
 </section>
 <section id="building-a-docker-image-and-pushing-it-to-a-registry" class="level2" data-number="13.6">
 <h2 data-number="13.6" class="anchored" data-anchor-id="building-a-docker-image-and-pushing-it-to-a-registry"><span class="header-section-number">13.6</span> Building a Docker image and pushing it to a registry</h2>
-<p>It is also possible to build a Docker image and have it made available on an image registry. You can see how this works on this <a href="https://github.com/b-rodrigues/ga_demo">repository</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. This images can then be used as a base for other reproducible pipelines, as in this <a href="https://github.com/b-rodrigues/ga_demo_rap/tree/main">repository</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Why do this? Well because of “separation of concerns”. You could have a repository which builds in image containing your development environment: this could be an image with a specific version of R and R packages built with Nix. And then have as many repositories as projects that run pipelines using that development environment image as a basis. Simply add the project-specific packages that you need for each project.</p>
+<p>It is also possible to build a Docker image and have it made available on an image registry. You can see how this works on this <a href="https://github.com/b-rodrigues/ga_demo">repository</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. These images can then be used as a base for other reproducible pipelines, as in this <a href="https://github.com/b-rodrigues/ga_demo_rap/tree/main">repository</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Why do this? Well because of “separation of concerns”. You could have a repository which builds an image containing your development environment: this could be an image with a specific version of R and R packages built with Nix. And then have as many repositories as projects that run pipelines using that development environment image as a basis. Simply add the project-specific packages that you need for each project.</p>
 </section>
 <section id="a-complete-t-pipeline-workflow-on-github-actions" class="level2" data-number="13.7">
 <h2 data-number="13.7" class="anchored" data-anchor-id="a-complete-t-pipeline-workflow-on-github-actions"><span class="header-section-number">13.7</span> A Complete T Pipeline Workflow on GitHub Actions</h2>
