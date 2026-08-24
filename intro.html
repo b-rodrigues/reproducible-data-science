@@ -538,7 +538,38 @@ div.csl-indent {
 <p>The goal is to teach you a set of tools, practices, and project management techniques that should make your projects easier to reproduce, replicate, and retrace, with a focus on polyglot (multilingual) projects. I believe that with LLMs, polyglot projects will become increasingly common.</p>
 <p>Before LLMs, if you were a Python user, you would avoid R like the plague, and vice versa. This is understandable: even though both are high-level scripting languages, and an R user could likely read and understand Python code (and vice versa), it is still a pain in the ass to set up another language just to run a few lines of code. Now, with LLMs, you can have a model generate the code, and depending on what you’re doing, it’s very likely to be correct. However, setting up another language is still quite annoying. This is where Nix comes in. Nix makes adding another language to a project extremely simple.</p>
 <p>You can now use several languages for a project: if you’re a Python user, you can now use R’s <code>{ggplot2}</code> quite easily by simply adding R and <code>{ggplot2}</code> to your project using Nix. However, in a way, this is just moving the goalposts: as annoying as it was to set up R and <code>{ggplot2}</code>, and no matter how effortlessly Nix solves this, now you need to set up Nix and get familiar with it!</p>
-<p>But thankfully we live in the AI age, and LLMs can be quite helpful here. To make this even easier, we can combine Nix with T, a domain-specific language (DSL) designed specifically for building reproducible pipelines. My goal is for you not to have to worry (too much) about project setup, letting LLMs handle the heavy lifting.</p>
+<p>But thankfully we live in the AI age, and LLMs can be quite helpful here. To make this even easier, we can combine Nix with T, a domain-specific language (DSL) designed specifically for building reproducible pipelines. My goal is for you not to have to worry (too much) about project setup, letting LLMs handle the heavy lifting. The way T is designed, is for LLMs to write T code, and you, together with an LLM if you wish to, are responsible for the R, Python or Julia code of your analysis.</p>
+<p>Let me also show you alread what a reproducible analytical pipeline written in T looks like:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
+  <span class="co">-- 1. Load the data</span>
+  data <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"datasets/country_level_data.csv"</span>)
+
+  <span class="co">-- 2. Add a derived column in Python</span>
+  derived <span class="sc">=</span> <span class="fu">pyn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
+      derived <span class="sc">=</span> data.assign(
+pct_change <span class="sc">=</span> data[<span class="st">"average_price_m2_nominal_euros"</span>].pct_change() <span class="sc">*</span> <span class="dv">100</span>
+      )
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^ipc,
+    serializer <span class="sc">=</span> ^ipc
+  )
+
+  <span class="co">-- 3. Plot the result in R</span>
+  plot <span class="sc">=</span> <span class="fu">rn</span>(
+    command <span class="sc">=</span> <span class="sc">&lt;</span>{
+      <span class="fu">library</span>(ggplot2)
+      plot <span class="sc">&lt;</span><span class="sc">-</span> <span class="fu">ggplot</span>(derived,
+        <span class="fu">aes</span>(x <span class="sc">=</span> year, y <span class="sc">=</span> average_price_m2_nominal_euros)) <span class="sc">+</span>
+        <span class="fu">geom_line</span>() <span class="sc">+</span>
+        <span class="fu">geom_point</span>()
+    }<span class="sc">&gt;</span>,
+    deserializer <span class="sc">=</span> ^ipc
+  )
+}
+
+<span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You don’t need to understand every line yet, just three things. First, <code>p = pipeline { ... }</code> declares a set of named steps (<code>data</code>, <code>derived</code>, <code>plot</code>), and nothing runs yet. Second, each step can run in a different language: here Python adds a column and R draws the plot, and T wires each step’s output into the next step’s input automatically, so you never write glue code. Third, <code>build_pipeline(p)</code> runs every step in dependency order and caches each step’s output, so rerunning the pipeline only rebuilds what changed. T comes with many features that make it easy for LLMs that have never seen T code to generate it flawlessly. It is also possible to load Python or R scripts instead of embedding the code directly in the T pipeline, which makes collaboration easier.</p>
 <section id="who-is-this-book-for" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="who-is-this-book-for"><span class="header-section-number">1.1</span> Who is this book for?</h2>
 <p>This book is for anyone who uses raw data to build any type of output. This could be a simple quarterly report, in which data is used for tables and graphs, a scientific article for a peer-reviewed journal, or even an interactive web application. The specific output doesn’t matter, because the process is, at its core, always very similar:</p>
@@ -651,36 +682,6 @@ The reproducibility spectrum from Peng’s 2011 paper.
 <div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="st">"Hello from T!"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text t-output"><code>Hello from T!</code></pre>
 </div>
-<p>But first, let me show you what we’re building. The snippet below is a complete <strong>Reproducible Analytical Pipeline</strong> (RAP) written in T:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p <span class="sc">=</span> <span class="cf">pipeline</span> {
-  <span class="co">-- 1. Load the data</span>
-  data <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"datasets/country_level_data.csv"</span>)
-
-  <span class="co">-- 2. Add a derived column in Python</span>
-  derived <span class="sc">=</span> <span class="fu">pyn</span>(
-    command <span class="sc">=</span> <span class="sc">&lt;</span>{
-      derived <span class="sc">=</span> data.assign(
-        pct_change <span class="sc">=</span> data[<span class="st">"average_price_m2_nominal_euros"</span>].pct_change() <span class="sc">*</span> <span class="dv">100</span>
-      )
-    }<span class="sc">&gt;</span>,
-    deserializer <span class="sc">=</span> ^ipc,
-    serializer <span class="sc">=</span> ^ipc
-  )
-
-  <span class="co">-- 3. Plot the result in R</span>
-  plot <span class="sc">=</span> <span class="fu">rn</span>(
-    command <span class="sc">=</span> <span class="sc">&lt;</span>{
-      plot <span class="sc">&lt;</span><span class="sc">-</span> ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(derived,
-        <span class="fu">aes</span>(x <span class="sc">=</span> year, y <span class="sc">=</span> average_price_m2_nominal_euros)) <span class="sc">+</span>
-        ggplot2<span class="sc">::</span><span class="fu">geom_line</span>() <span class="sc">+</span>
-        ggplot2<span class="sc">::</span><span class="fu">geom_point</span>()
-    }<span class="sc">&gt;</span>,
-    deserializer <span class="sc">=</span> ^ipc
-  )
-}
-
-<span class="fu">build_pipeline</span>(p)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You don’t need to understand every line yet, just three things. First, <code>p = pipeline { ... }</code> declares a set of named steps (<code>data</code>, <code>derived</code>, <code>plot</code>), and nothing runs yet. Second, each step can run in a different language: here Python adds a column and R draws the plot, and T wires each step’s output into the next step’s input automatically, so you never write glue code. Third, <code>build_pipeline(p)</code> runs every step in dependency order and caches each step’s output, so rerunning the pipeline only rebuilds what changed.</p>
 <p>Over the next two chapters, we’ll unpack all of this and write our first pipeline from scratch.</p>
 
 
