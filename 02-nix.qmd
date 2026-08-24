@@ -14,8 +14,8 @@ repository](https://repology.org/repositories/graphs)^[https://repology.org/repo
 In this chapter, we will explore the critical need for environment
 reproducibility in modern workflows. We will see why ad-hoc tools often fail,
 and how Nix's declarative approach and "component closures" provide a robust
-solution. We will also cover the core concepts of Nix—derivations, the store,
-and hermetic builds—that make this possible.
+solution. We will also cover the core concepts of Nix (derivations, the store,
+and hermetic builds) that make this possible.
 
 ## Why Reproducibility? Why Nix?
 
@@ -31,7 +31,7 @@ things:
     working Java installation for the `{rJava}` R package on Linux).
 -   Ensure you can install all of this on the hardware you have on hand.
 
-But in practice, one or most of these bullet points are missing from projects.
+But in practice, one or more of these bullet points are missing from projects.
 Our goal is to learn how to fulfil all the requirements to build reproducible
 projects.
 
@@ -256,10 +256,10 @@ It’s more like a framework for reproducible environments that can scale from a
 single project to an entire operating system (called
 [NixOS](https://nixos.org/)^[https://nixos.org/]).
 
-As a little sidenote: I want also to highlight that Nix can even be used to
+As a little sidenote: I also want to highlight that Nix can even be used to
 declaratively and reproducibly configure your operating system (be it NixOS,
 macOS or other Linux distributions) using a tool that integrates with it called
-`homemanager`.^[https://github.com/nix-community/home-manager] This is outside
+`home-manager`.^[https://github.com/nix-community/home-manager] This is outside
 the scope of this book, but I wanted to highlight it, as it's extremely
 powerful. What this means in practice is that you could write a whole Nix
 expression that not only downloads and configures software, but even sets up
@@ -310,7 +310,7 @@ aware of if you plan to use it for actual work:
   store can accumulate large amounts of data. Cache misses sometimes force local
   builds, which can be slow and resource-intensive. However, it is of course
   possible to empty the Nix store to recover disk space, and it is also possible
-  to set up your own project cache if you wish so. Setting up your own cache
+  to set up your own project cache if you so wish. Setting up your own cache
   will also be something that we will explore in this book.
 
 These caveats don’t diminish Nix’s strengths but highlight that its guarantees

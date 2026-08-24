@@ -187,7 +187,7 @@ docker run --rm -e PASSWORD=yourpassword -p 8787:8787 rocker/rstudio
 ```
 
 Once this stops running, go to `http://localhost:8787/` and enter `rstudio` as 
-the username and `yourpassword` as the password. You should login to a RStudio 
+the username and `yourpassword` as the password. You should log in to a RStudio 
 instance: this is the web interface of RStudio that allows you to work with R 
 from a server. In this case, the *server* is the Docker container running the 
 image. Yes, you've just pulled a Docker image containing Ubuntu with a fully 

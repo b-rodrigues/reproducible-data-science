@@ -175,7 +175,7 @@ of the WARNINGs at the very least.
 
 As a next step, you could edit the DESCRIPTION file. This is where you will list
 yourself as the package author, list the dependencies of the package and so on.
-I won’t got into detail here, but learning how to edit the DESCRIPTION file is important
+I won’t get into detail here, but learning how to edit the DESCRIPTION file is important
 for actual package development (especially listing dependencies is key).
 
 To use your package within a project, the simplest way is to host it on GitHub or build
@@ -468,10 +468,10 @@ pyclean = pkgs.python313Packages.buildPythonPackage rec {
 };
 ```
 
-You need to add the `rev`, which corresponds to the commit that want, and the
+You need to add the `rev`, which corresponds to the commit that you want, and the
 `sha256`. To find the right `sha256`, start with an empty one (`sha256 = "";`)
 and try to build the package. The error message will give you the right
-`sha256`. Also not that this isn’t the the most idiomatic way to build a Python
+`sha256`. Also note that this isn’t the most idiomatic way to build a Python
 package for Nix, but it’s good enough for our purposes.
 
 Finally, add `pyclean` to the `buildInputs` of the shell:
@@ -486,8 +486,8 @@ it has the advantage of being entirely reproducible.
 ## Part 3: Integrating Your Packages into a T Pipeline
 
 Throughout this book, your T pipelines have declared their runtime dependencies
-in `tproject.toml` — R packages under `[r-dependencies]` and Python packages
-under `[py-dependencies]` (Chapter 4) — and you have built pipelines from those
+in `tproject.toml` (R packages under `[r-dependencies]` and Python packages
+under `[py-dependencies]`, Chapter 4) and you have built pipelines from those
 dependencies (Chapter 8). Here is the payoff of the packaging work you just did:
 you can now drop *your own* packages into that same mechanism and call them from
 any node.
@@ -502,7 +502,7 @@ as in Chapter 4:
 packages = ["dplyr", "ggplot2"]
 ```
 
-For a package you host on GitHub — such as the `cleanR` package from Part 1 —
+For a package you host on GitHub, such as the `cleanR` package from Part 1,
 declare it as a named entry with a `git` URL and a full commit `rev` (see the
 T project development guide, section 3.3.3):
 
@@ -527,7 +527,7 @@ For a package on PyPI, the default Nix resolver is the simplest option:
 packages = ["pandas", "scikit-learn"]
 ```
 
-If your package is only on GitHub — like `pyclean` from Part 2 — and is not on
+If your package is only on GitHub, like `pyclean` from Part 2, and is not on
 PyPI, switch to the `uv` resolver (Chapter 4). This makes a `pyproject.toml`
 and a `uv.lock` file the source of truth for your Python dependencies:
 

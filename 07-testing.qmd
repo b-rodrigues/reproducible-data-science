@@ -2,13 +2,9 @@
 
 ## Introduction
 
-In the previous chapter, we learned that pure functions—those with no side
-effects and deterministic outputs—are the building blocks of reliable code.
+In the previous chapter, we learned that pure functions, those with no side
+effects and deterministic outputs, are the building blocks of reliable code.
 Small, testable functions are the foundation of reproducible pipelines.
-
-But how do we *prove* that our functions actually do what we claim they do? And
-how do we manage the complexity of collaborating with others (and with AI)
-without breaking everything?
 
 This brings us to two final, crucial questions: how do we prove that our
 functions actually do what we claim they do? And how do we manage the complexity
@@ -282,9 +278,9 @@ writes idiomatic and correct tests.
 
 For example, if you are testing a function that uses `{rix}`, feed the
 `rix.pkgctx.yaml` to the LLM so it knows exactly how to mock or assert the
-outputs of `rix()` functions. This is very useful particularly for packages that
+outputs of `rix()` functions. This is particularly useful for packages that
 are not very well-known (or internal packages to your company that aren't even
-public) or packages that have been updated very recently, as the LLMs training
+public) or packages that have been updated very recently, as the LLM's training
 data cutoff might not include the latest versions of the package.
 :::
 
@@ -299,7 +295,7 @@ responsibility to:
 3.  Confirm that the tests cover the cases you care about.
 4.  Commit that code under your name, taking full ownership of it.
 
-"A COMPUTER CAN NEVER BE HELD ACCOUNTABLE THEREFORE A COMPUTER MUST NEVER MAKE A
+"A COMPUTER CAN NEVER BE HELD ACCOUNTABLE, THEREFORE A COMPUTER MUST NEVER MAKE A
 MANAGEMENT DECISION" - IBM Training Manual, 1979.
 
 This principle is, in my opinion, even more important for tests than for
@@ -510,7 +506,7 @@ t test --json tests/
 ```
 
 The agent loop is then straightforward: run `t test --json`, read the top-level
-`status`, and — only if it is `"failed"` — read the `error` field of each failing
+`status`, and only if it is `"failed"`, read the `error` field of each failing
 result to decide the fix. For CI, `--format junit` emits JUnit XML that runners
 and dashboards understand:
 
@@ -551,8 +547,8 @@ nrow(failed)   -- 0 if everything passed
 
 ### The `expect_*` Primitives
 
-Testcraft's `expect_*` functions return a typed `Expect` value—`Expect_pass`,
-`Expect_stop`, or `Expect_hold`—rather than a bare boolean. This matters
+Testcraft's `expect_*` functions return a typed `Expect` value, `Expect_pass`,
+`Expect_stop`, or `Expect_hold`, rather than a bare boolean. This matters
 because when you wrap one in `assert()`, a failure gives you a rich diagnostic
 message instead of a generic `AssertionError: false`:
 

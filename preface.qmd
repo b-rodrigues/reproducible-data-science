@@ -44,10 +44,10 @@ that operated at a more fundamental level. That tool, I am now convinced, is
 
 Nix is not just another package manager; it is a powerful, declarative system
 for building and managing software environments. It allows us to define the
-*entire* computational environment—from the operating system libraries up to the
-specific versions of our R and Python packages—in a single, simple text file.
+*entire* computational environment (from the operating system libraries up to the
+specific versions of our R and Python packages) in a single, simple text file.
 When you use Nix, the phrase "it works on my machine" becomes obsolete. It is
-replaced by the guarantee: "it builds identically, everywhere, every time"—with
+replaced by the guarantee: "it builds identically, everywhere, every time," with
 a few caveats that we will explore, of course.
 
 Since discovering Nix, I've built several packages around it: `{rix}`, `{rixpress}`, 
@@ -67,13 +67,13 @@ something of a niche. Most people still write long, sequential "spaghetti" scrip
 and changing that habit takes more than good tooling.
 
 But there is now a new opportunity which I think will truly change this: large
-language models (LLM). I believe that LLMs will be a game changer and help
+language models (LLMs). I believe that LLMs will be a game changer and help
 democratize the adoption of tools like `{rix}`, `{rixpress}` and more broadly Nix. 
 You, as the data scientist, can now 100% focus on the actual data science and leave
 setting up the reproducible environment and writing of the pipeline code plumbing
 to LLMs. These tasks are purely mechanical, low-value added (from a scientific or
 business perspective) and can also be easily verified: if the pipeline doesn’t run and
-it’s not because you made a mistake in the scienctific or business logic code, then 
+it’s not because you made a mistake in the scientific or business logic code, then 
 the issue comes from the pipeline code!
 
 The idea, then, is that you shouldn't have to write that code anymore. 
@@ -96,8 +96,8 @@ and by LLMs acting on their behalf.
 
 Everything you can do with T, like running and inspecting pipelines visually
 in its command prompt, can also be executed by an LLM which will get the output
-in structured json, so it’s easily actionable by the LLM. When starting a new project with T,
-it comes with an AGENTS.md and a language reference is markdown to help get LLM
+in structured JSON, so it’s easily actionable by the LLM. When starting a new project with T,
+it comes with an AGENTS.md and a language reference in markdown to help get LLMs
 started quickly.
 
 T also makes it easy to coordinate R, Python and Julia, so you can use the best
@@ -107,7 +107,7 @@ with Python or Julia (or vice-versa), as T handles that for you.
 Finally, the last thing that makes T quite unique, is that it is built on top of Nix:
 this means that any T project is actually a Nix project, and that Nix is used
 for both setting up the reproducible environment but also for running the pipeline. This
-will be explained in the detail in the next chapters.
+will be explained in detail in the next chapters.
 
 This book is the result of several years of work. I first started as a user with a simple
 need: I should be able to re-install the packages I used for an analysis easily. So I started
@@ -128,4 +128,4 @@ You can read this book for free online at
 [https://b-rodrigues.github.io/reproducible-data-science/](https://b-rodrigues.github.io/reproducible-data-science/).
 
 You can submit issues, suggest improvements, and ask questions on the book’s
-[Github repository](https://github.com/b-rodrigues/reproducible-data-science)^[https://github.com/b-rodrigues/reproducible-data-science].
+[GitHub repository](https://github.com/b-rodrigues/reproducible-data-science)^[https://github.com/b-rodrigues/reproducible-data-science].

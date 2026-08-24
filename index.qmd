@@ -56,7 +56,7 @@ naturally.
 
 The book can be read for free on
 [https://b-rodrigues.github.io/reproducible-data-science/](https://b-rodrigues.github.io/reproducible-data-science/)
-and you'll be able buy a DRM-free Epub or PDF on
+and you'll be able to buy a DRM-free Epub or PDF on
 [Leanpub](https://leanpub.com/)^[https://leanpub.com/] once there's more
 content.
 
@@ -73,7 +73,7 @@ workflow where R, Python, and Julia are not competitors, but collaborators in a
 single, cohesive, and perfectly reproducible environment. We will cover:
 
 -   The Nix Philosophy: Why Nix is the ultimate tool for solving the "it
-    works on my machine" problem, once and for all—derivations, component
+    works on my machine" problem, once and for all: derivations, component
     closures, and hermetic builds.
 -   Declarative Environments with T: How to define exact, bit-for-bit
     reproducible software environments that include specific versions of R,
@@ -87,7 +87,7 @@ single, cohesive, and perfectly reproducible environment. We will cover:
     the language.
 -   Professional Workflows: Unit testing, Git, and debugging techniques that
     keep your analyses reliable as they grow.
--   Advanced Pipeline Patterns: Treating pipelines as data—querying,
+-   Advanced Pipeline Patterns: Treating pipelines as data: querying,
     transforming, and composing them.
 -   Distribution and Automation: How to package your entire reproducible
     pipeline into a Docker container for easy sharing and automate your
@@ -104,7 +104,7 @@ day-to-day, ideas which hopefully should improve the reliability, traceability
 and reproducibility of your code.
 
 If you find this book useful, don’t hesitate to let me know! You can submit
-issues, suggest improvements, and ask questions on the book’s [Github
+issues, suggest improvements, and ask questions on the book’s [GitHub
 repository](https://github.com/b-rodrigues/reproducible-data-science)^[https://github.com/b-rodrigues/reproducible-data-science].
 
 ::: {.content-hidden when-format="pdf"}

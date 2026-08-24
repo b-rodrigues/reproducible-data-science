@@ -97,7 +97,7 @@ the REPL offers a fuzzy match: `%objcts` suggests `Did you mean: %objects?`.
 
 You have already written functions in T: Chapter 6's functional core gave you
 pure functions and composition, which is enough to build a pipeline. But T's
-functions go further — they are first-class values you can build, transform, and
+functions go further: they are first-class values you can build, transform, and
 pass around. This section covers the parts you will reach for as your pipelines
 grow.
 
@@ -147,7 +147,7 @@ filter(numbers, \(x) x > 3)  -- [4, 5]
 ### Auto-quotation (`$param`)
 
 A particularly useful feature when wrapping data verbs: prefix a parameter with
-`$` and the caller can pass a bare name — a column name, say — which is captured
+`$` and the caller can pass a bare name, a column name say, which is captured
 as a **Symbol** rather than evaluated. This is the same mechanism the data verbs
 themselves use (see the next section):
 
@@ -159,7 +159,7 @@ my_select(df, salary)    -- 'salary' is captured as a symbol
 
 ## The Type System
 
-Chapter 4 introduced annotations in passing — read them as a promise about what a
+Chapter 4 introduced annotations in passing: read them as a promise about what a
 function accepts and returns. Here is what is actually going on.
 
 ### Lambda signatures
@@ -231,13 +231,13 @@ naturally: `int`/`integer`, `string`/`text`, `bool`/`boolean`/`logical`,
 
 The most concrete payoff today is schema checking. `t check --schema`
 propagates column names and types across nodes and flags a reference that cannot
-be resolved, in milliseconds — before the pipeline ever runs. Chapter 5 covers
+be resolved, in milliseconds, before the pipeline ever runs. Chapter 5 covers
 the full tiered `t check` story; this is the tier that turns a `DataFrame`
 schema annotation into an actual guarantee.
 
 ## Metaprogramming: Quotation and Quasiquotation
 
-Chapter 6 introduced T's functional core — pure functions and function
+Chapter 6 introduced T's functional core: pure functions and function
 composition. Most of the time you can stay in that world and never think about
 how expressions are evaluated. But sometimes you need to treat code itself as
 data: to build expressions programmatically, to forward a column name that is
@@ -258,7 +258,7 @@ small set of ideas:
 
 The two ways to capture code differ in whether they remember the surrounding
 environment. `to_expr()` captures a bare expression; `quo()` captures a
-quosure — the expression plus the environment at the call site.
+quosure: the expression plus the environment at the call site.
 
 ```t
 x = 10
@@ -281,7 +281,7 @@ respectively.
 Quasiquotation is how you fill in the blanks of a captured expression. The `!!`
 operator evaluates its operand and injects the result into the surrounding
 quoted expression. If the operand is a quosure, only the expression part is
-injected — the environment is stripped.
+injected; the environment is stripped.
 
 ```t
 x = 10
@@ -309,7 +309,7 @@ print(e)         -- to_expr(f(x = 10, y = 20, z = 30))
 
 ### Dynamic names and symbols
 
-A frequent need is to use a name that is only known at runtime — a column name
+A frequent need is to use a name that is only known at runtime, a column name
 stored in a string, say. `to_symbol()` turns a string into a symbol that `!!`
 can inject, and the `!!name := value` form lets a computed name become an
 argument or column name.
@@ -437,7 +437,7 @@ cross-node data operations part of the reproducible build.
 ## Introspection: `explain()` and `intent`
 
 A language that can describe its own values is easier to debug, easier to test,
-and — increasingly — easier to work on alongside an agent. T has both halves of
+and, increasingly, easier to work on alongside an agent. T has both halves of
 that story: `explain()`, which turns any value into a structured description,
 and `intent`, a block that records *why* a piece of code exists.
 
@@ -455,8 +455,8 @@ explain([1, 2, 3])
 -- { `kind`: "value", `type`: "List", `length`: 3, `na_count`: 0, `examples`: [1, 2, 3] }
 ```
 
-For a DataFrame, the description is a compact summary — row and column counts,
-the storage backend, the schema, and per-column missingness — and you can drill
+For a DataFrame, the description is a compact summary (row and column counts,
+the storage backend, the schema, and per-column missingness), and you can drill
 into individual fields with dot access:
 
 ```t
@@ -483,7 +483,7 @@ explain(1 / 0)
 The same function reaches the rest of the language. `explain(y ~ x)` reports a
 formula's response and predictors; `explain(add_int)` reports a function's
 argument names and types; `explain(p)` reports a pipeline's node count and a
-per-node summary, while `explain(p.b)` inspects a single node — its name,
+per-node summary, while `explain(p.b)` inspects a single node: its name,
 runtime, dependencies, and configuration. And `explain_json(x)` returns the same
 description as a single string, which is handy when you want to log a value's
 shape or hand it to another tool.
@@ -494,7 +494,7 @@ You do not need a separate debugging API per type.
 
 ### `intent`: code says what, intent says why
 
-T has a small, dedicated syntax for recording *why* a piece of code exists — a
+T has a small, dedicated syntax for recording *why* a piece of code exists: a
 block of key-value pairs that travels with the code:
 
 ```t
@@ -505,7 +505,7 @@ intent {
 }
 ```
 
-An intent block is inert at runtime — it does not change what the code does —
+An intent block is inert at runtime (it does not change what the code does),
 but you can read it back programmatically:
 
 ```t
@@ -518,7 +518,7 @@ intent_fields(i)
 ```
 
 The payoff is provenance. When a pipeline is a collaboration between a human and
-an agent — or between you today and you in six months — the *why* is the first
+an agent, or between you today and you in six months, the *why* is the first
 thing to be lost. `intent` keeps it in the source, versioned in git and
 queryable by the tools that read it. It is the line-level companion to the
 `AGENTS.md` convention from Chapter 4: that file states the project's intent,
@@ -530,8 +530,8 @@ Chapter 8 introduced `shn()`, the node constructor that runs a shell command
 inside a pipeline's sandbox. That is the right tool when the shell work is a
 first-class step in your pipeline. But there is a lighter way to reach the shell
 from T itself: the shell escape. The `?<{ }>` syntax runs an arbitrary shell
-command directly from within T — at the REPL, in a script, or in a node's T
-code — and is the quickest way to touch the filesystem, drive `git`, or call a
+command directly from within T, at the REPL, in a script, or in a node's T
+code, and is the quickest way to touch the filesystem, drive `git`, or call a
 CLI tool without standing up a whole shell node.
 
 ### Running a command
@@ -547,7 +547,7 @@ straight to `stdout`. The statement's value is `NA`:
 
 ### Capturing the output
 
-When the escape is part of an expression — most often an assignment — T captures
+When the escape is part of an expression, most often an assignment, T captures
 the command's `stdout` and hands it back as a `String`, ready to be split,
 parsed, or passed on:
 
@@ -561,7 +561,7 @@ current_user = ?<{whoami}>
 
 `cd` is special-cased. Rather than changing the directory of a throwaway
 sub-shell, it changes the working directory of the T interpreter itself, so
-subsequent commands — and `?<{pwd}>` — see the new location. `~` is expanded
+subsequent commands, and `?<{pwd}>`, see the new location. `~` is expanded
 correctly:
 
 ```t
@@ -657,7 +657,7 @@ built-ins or a variable for custom serializers. (The `mutate_node()` and
 strings and symbols.)
 
 If you do not specify a serializer at all, T uses the `default`, which is each
-runtime's native binary format — `saveRDS` for R, `pickle` for Python, and so
+runtime's native binary format: `saveRDS` for R, `pickle` for Python, and so
 on. Shell nodes default to `^text`.
 
 ### Custom serializers
@@ -697,7 +697,7 @@ node(command = ..., serializer = my_log_serializer)
 
 For a serializer to work across *other* runtimes, you can add optional
 `r_writer`, `r_reader`, `py_writer`, and `py_reader` fields. These are code
-snippets — plain strings, or foreign code blocks for readability — that T
+snippets, plain strings or foreign code blocks for readability, that T
 injects into the generated build script for that runtime.
 
 ```t
@@ -800,7 +800,7 @@ T> show_plot(p.iris_plot)
 ```
 
 This should open the plot in your browser, if not, the path is emitted and you can simply open 
-the generated PNG file using whichever tool your prefer:
+the generated PNG file using whichever tool you prefer:
 
 ```t
 #| eval: false
@@ -808,7 +808,7 @@ _pipeline/show_plot_render_20260821_132239_6808.png
 ```
 
 This plot is generated in the actual R environment defined in your pipeline, but should something look off,
-try `debug_node(p.iris_plot)` and built it from the actual R session!
+try `debug_node(p.iris_plot)` and build it from the actual R session!
 
 ### Plots in literate documents
 
@@ -835,8 +835,8 @@ pipeline is actually built, and the ways to orchestrate that build.
 
 ### The `nix_options` dictionary
 
-The build functions — `populate_pipeline()`, `build_pipeline()`,
-`pipeline_run()`, and the `t_make()` helper — all accept a `nix_options`
+The build functions, `populate_pipeline()`, `build_pipeline()`,
+`pipeline_run()`, and the `t_make()` helper, all accept a `nix_options`
 argument. It is a dictionary of build-time settings that override the defaults.
 The most useful keys are:
 
@@ -868,7 +868,7 @@ check that your pipeline is wired the way you think it is.
 ### Where environment comes from
 
 It is worth separating two related ideas. `keep_env` controls whether a node
-sees the host's full environment or a clean one — this is a build-time
+sees the host's full environment or a clean one; this is a build-time
 isolation choice. `env_vars`, by contrast, is how you declare specific
 variables a node needs, and it is set when the node is defined, not at build
 time. The first is about isolation; the second is about configuration.
@@ -876,8 +876,8 @@ time. The first is about isolation; the second is about configuration.
 ### Building on other machines
 
 The `builders` option is what turns a local build into a distributed one. You
-can point a build at a remote Nix builder — a faster machine, or a machine with
-the right architecture — and Nix will ship the build steps there. This is
+can point a build at a remote Nix builder, a faster machine or a machine with
+the right architecture, and Nix will ship the build steps there. This is
 particularly useful when your pipeline has heavy nodes that would take minutes
 locally but seconds on a larger box. The `pipeline_to_drv(p)` function returns
 the underlying Nix derivation, which is the escape hatch for when you need to
@@ -938,7 +938,7 @@ generated documentation advertises.
 
 `t test` runs the package's tests, and it honours the same flags as the
 pipeline tests from Chapter 7: you can select a subset, run in verbose mode,
-and so on. A test marked `noop` is skipped — useful for a test that depends on
+and so on. A test marked `noop` is skipped, useful for a test that depends on
 an optional dependency that may not be present.
 
 ### T-Doc documentation
@@ -965,7 +965,7 @@ resolve.
 ### Publishing
 
 `t publish` publishes the package by tagging the git repository. There is no
-central T package registry — distribution is by git, which is deliberate: it
+central T package registry; distribution is by git, which is deliberate: it
 means a package version is pinned to an exact commit, and consumers depend on
 it the same way they depend on any other Nix input.
 
@@ -1023,7 +1023,7 @@ common types:
 
 The DataFrame generators are the ones you will use most. `prop_gen_df` builds a
 random DataFrame with the column types you specify, and `na_prob` controls how
-many missing values to sprinkle in — which is exactly the kind of input that
+many missing values to sprinkle in, which is exactly the kind of input that
 exposes bugs in real pipelines.
 
 You can also build generators out of other generators with combinators:
@@ -1035,7 +1035,7 @@ collection-valued generator.
 
 There is one rule that catches people out: **a property that returns `NA`
 fails**. A property must return a boolean, and `NA` is not a `true`. This is
-deliberate — a property that cannot decide is not a valid property. The
+deliberate: a property that cannot decide is not a valid property. The
 `Expect` type is understood by Propcraft, so you can write properties in terms
 of the same assertions you use elsewhere. A property that raises an `Error`
 also fails.
@@ -1053,7 +1053,7 @@ prop_for_all(
 )
 ```
 
-The property — the result has no more rows than the input — is obviously true,
+The property, that the result has no more rows than the input, is obviously true,
 yet it fails. Propcraft shrinks the failing input to a tiny DataFrame and shows
 you the exact rows that broke it, instead of leaving you to guess.
 

@@ -7,9 +7,9 @@ inspect results. You know how `rn()`, `pyn()`, and `node()` work, and you have
 seen serializers like `^ipc` and `^parquet` in passing. This chapter is where we
 put all those pieces together and push further.
 
-We will build a realistic, end-to-end polyglot pipeline — CSV ingestion in T,
-cleaning in Python, modelling in R, and a rendered Quarto report — and use that
-worked example as a scaffold to explore every runtime T supports, including shell
+We will build a realistic, end-to-end polyglot pipeline: CSV ingestion in T,
+cleaning in Python, modelling in R, and a rendered Quarto report. We will use
+that worked example as a scaffold to explore every runtime T supports, including shell
 nodes, Julia nodes, and Quarto nodes. We then cover the practical concerns that
 come up on real projects: fetching remote data inside a sandboxed build, sharing
 utility code across nodes, passing environment variables, reading build logs,
@@ -24,8 +24,8 @@ it was.
 
 Most toy examples in data science tooling documentation use `mtcars`. We will
 use the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/)^[https://allisonhorst.github.io/palmerpenguins/]
-dataset instead — still small enough to reason about quickly, but with a real
-modelling task: predict penguin species from morphological measurements.
+dataset instead, which is still small enough to reason about quickly but has a
+real modelling task: predict penguin species from morphological measurements.
 
 The pipeline has four stages:
 
@@ -92,7 +92,7 @@ build_pipeline(p)
 
 Let us walk through the data flow step by step.
 
-**`raw`** is a native T node — no foreign runtime involved. `read_csv` is a T
+**`raw`** is a native T node, with no foreign runtime involved. `read_csv` is a T
 built-in that returns a `DataFrame`. Because it is a native node, it inherits
 T's default `^ipc` serializer: the data is written to the Nix store as an Arrow
 IPC file.
@@ -100,8 +100,8 @@ IPC file.
 **`clean`** is a Python node. The `deserializer = ^ipc` instruction tells the
 generated sandbox wrapper to load the upstream `raw` artifact from the store as
 a `pandas.DataFrame` and bind it to the name `raw` before executing the
-`<{ ... }>` block. The body of the block is plain Python — no argument parsing,
-no file I/O. It assigns back to `df` and T reads the last expression as the
+`<{ ... }>` block. The body of the block is plain Python, with no argument
+parsing and no file I/O. It assigns back to `df` and T reads the last expression as the
 node's result. The `serializer = ^parquet` writes it out as a Parquet file,
 which is the right choice here: Parquet is compressed, column-oriented, and
 readable by every runtime T supports.
@@ -120,7 +120,7 @@ out of the Nix store. Both work symmetrically across T, R, Python, and Julia.
 `data.frame`. The R code fits a multinomial logistic regression with `nnet` and
 returns the fitted model object. The `serializer = ^pmml` exports the model to
 [PMML](https://dmg.org/pmml/v4-4-1/GeneralStructure.html)^[https://dmg.org/pmml/v4-4-1/GeneralStructure.html], a portable XML
-format that T can load natively for scoring — no R session required downstream.
+format that T can load natively for scoring, with no R session required downstream.
 
 **`report`** is a Quarto node. The `script` argument points to a `.qmd` file
 that T copies into the sandbox. Inside `src/report.qmd`, any call to
@@ -153,13 +153,13 @@ build_pipeline(p)
 
 T resolves the DAG, emits four Nix derivations, and builds them in dependency
 order. If you rebuild without changing anything, all four nodes are served from
-the Nix store cache — zero recomputation.
+the Nix store cache, with zero recomputation.
 
 ## All Node Runtimes at a Glance {#sec-runtimes}
 
 Chapter 5 introduced `node()`, `rn()`, and `pyn()`. T supports two more runtimes
 that come up frequently in real projects. Rather than reproducing the full API
-here — which you can find in the T documentation — we will focus on the
+here, which you can find in the T documentation, we will focus on the
 practical patterns for each.
 
 ### Shell Nodes: `shn()`
@@ -170,7 +170,7 @@ without writing glue code in a scripting language.
 
 `shn()` operates in two modes:
 
-**Exec mode** (default) — the `command` argument is a shell string run with
+**Exec mode** (default): the `command` argument is a shell string run with
 `bash -c`. The node's serializer is `^text` by default, and the output is
 whatever is written to stdout:
 
@@ -186,7 +186,7 @@ p_shn_exec = pipeline {
 }
 ```
 
-**Script mode** — set `script` to a path and `shn()` copies that script into
+**Script mode**: set `script` to a path and `shn()` copies that script into
 the sandbox and executes it. Use this when the shell logic is more than a
 one-liner:
 
@@ -212,7 +212,7 @@ access, so all inputs must arrive as upstream node artifacts or via `include`
 
 The default serializer for `shn()` is `^text`. If your shell script produces a
 CSV or JSON file rather than stdout text, point the serializer at the right
-format — e.g., `serializer = ^csv` — and write the file to the path that T
+format, e.g. `serializer = ^csv`, and write the file to the path that T
 exposes as `$out` inside the sandbox.
 :::
 
@@ -229,7 +229,7 @@ Declare Julia packages in the `[jl-dependencies]` section of `tproject.toml`:
 packages = ["DataFrames", "GLM", "CSV"]
 ```
 
-Then declare environment in the usual way with `t update && exit && nix develop`.
+Then declare the environment in the usual way with `t update && exit && nix develop`.
 
 A Julia node that fits a linear model:
 
@@ -256,7 +256,7 @@ p = pipeline {
 Julia's native serialization format is `.jls` (Julia serialization). This is the
 default serializer for `jln()` nodes. Use it when the artifact will only ever be
 consumed by another Julia node in the same pipeline. For cross-runtime data
-exchange — passing a Julia `DataFrame` to R or Python — use `^csv`, `^ipc`, or
+exchange, i.e. passing a Julia `DataFrame` to R or Python, use `^csv`, `^ipc`, or
 `^json` instead, which are understood by all runtimes.
 
 ::: {.callout-tip}
@@ -277,7 +277,7 @@ We saw `qn()` briefly in @sec-worked-example. A few points worth emphasising:
 - The rendered output (HTML, PDF, or docx depending on the document's YAML
   header) is stored in the Nix store like any other artifact.
 - Use `pipeline_copy()` (see @sec-logs-artifacts) to retrieve the rendered file
-  to a local directory — the Nix store path is opaque and not meant for direct
+  to a local directory, since the Nix store path is opaque and not meant for direct
   use.
 - `read_node("name")` calls inside the `.qmd` are statically scanned by T and
   register as dependencies automatically.
@@ -320,7 +320,7 @@ packages under `[py-dependencies]`.
 
 ## Fetching Remote Data {#sec-remote-data}
 
-Every T node executes in a Nix **sandbox** — a restricted build environment that
+Every T node executes in a Nix **sandbox**, a restricted build environment that
 has no network access. This is intentional: if network calls were permitted
 inside a build, the same pipeline could produce different results on different
 days depending on what a remote server returns. Reproducibility would be broken
@@ -329,7 +329,7 @@ by design.
 The practical consequence is that you cannot do this inside a node:
 
 ```python
-# This will fail — no network in the sandbox
+# This will fail: no network in the sandbox
 import requests
 df = pd.read_csv(requests.get("https://example.com/data.csv").content)
 ```
@@ -383,14 +383,14 @@ p_fetchurl = pipeline {
 
 At build time Nix checks whether the file is already in the store. If not, it
 downloads it from the URL and verifies the hash before proceeding. If the remote
-file ever changes, the hash will not match and the build will fail loudly — no
-silent data drift.
+file ever changes, the hash will not match and the build will fail loudly, with
+no silent data drift.
 
 ::: {.callout-tip}
 ## REPL mode bypasses the sandbox restriction
 
-In REPL mode — when you call `fetchurl(...)` directly at the `t>` prompt without
-a surrounding `pipeline { }` — T downloads the file immediately using `curl` and
+In REPL mode, when you call `fetchurl(...)` directly at the `t>` prompt without
+a surrounding `pipeline { }`, T downloads the file immediately using `curl` and
 returns the path, just like `read_csv`. This makes interactive exploration easy:
 start with REPL mode to prototype, then promote the `fetchurl` into a pipeline
 node once you have the hash.
@@ -480,8 +480,8 @@ node that lists it under `functions` is automatically rebuilt by Nix.
 ### The `include` Parameter
 
 `functions` is designed for executable source files. If your node needs
-additional *non-executable* resources — a configuration YAML, a lookup table, a
-template file — use the `include` parameter instead. T copies the listed paths
+additional *non-executable* resources, such as a configuration YAML, a lookup
+table, or a template file, use the `include` parameter instead. T copies the listed paths
 into the sandbox without attempting to source or execute them:
 
 ```t
@@ -546,7 +546,7 @@ p_env_vars = pipeline {
     command  = <{
       mode <- Sys.getenv("MODEL_MODE", unset = "production")
       if (mode == "debug") {
-        message("Debug mode — using 100 trees")
+        message("Debug mode: using 100 trees")
         ntree <- 100L
       } else {
         ntree <- 500L
@@ -582,7 +582,7 @@ behaviour: a model trained with `MODEL_MODE=debug` and one trained with
 For *secrets* that should not appear in the pipeline source (API keys, database
 passwords), do not hardcode them in `env_vars`. Instead, set them in your shell
 before running `t run`, and reference them with the `env_from_shell`
-argument — see the T documentation for details.
+argument; see the T documentation for details.
 :::
 
 ## Build Logs and Artifacts {#sec-logs-artifacts}
@@ -622,7 +622,7 @@ means the node was (re)computed in this run.
 
 ### Copying Artifacts Out of the Store
 
-Nix store paths are read-only and content-addressed — they are not meant to be
+Nix store paths are read-only and content-addressed, so they are not meant to be
 worked with directly. Use `pipeline_copy()` to copy artifacts to a local
 directory:
 
@@ -657,7 +657,7 @@ Would remove:
 pipeline_gc(p)
 ```
 
-`t_gc()` runs a full Nix garbage collection — it removes every store path that
+`t_gc()` runs a full Nix garbage collection: it removes every store path that
 is not referenced by any active GC root on the system. Use this periodically on
 development machines or CI runners to reclaim disk space:
 
@@ -687,8 +687,8 @@ nothing is rebuilt. There is an important subtlety worth understanding clearly.
 When Nix builds a node, the derivation's input hash includes not just the node's
 code and upstream data, but also the entire closure of packages and tools that
 the node's sandbox contains. Those packages come from the date pin and package
-list in `tproject.toml`. If you update the date pin — say, from `2026-03-01` to
-`2026-06-01` — the environment closure changes, which changes the hash of every
+list in `tproject.toml`. If you update the date pin, say from `2026-03-01` to
+`2026-06-01`, the environment closure changes, which changes the hash of every
 derivation in the pipeline, which means the entire pipeline rebuilds from
 scratch.
 
@@ -731,7 +731,7 @@ t run src/pipeline.t --dry-run
 
 ## CI/CD with `pipeline_to_ga()` {#sec-cicd}
 
-A reproducible pipeline is most valuable when it runs automatically — on every
+A reproducible pipeline is most valuable when it runs automatically: on every
 push, on a schedule, or when upstream data changes. T ships with a function that
 generates a complete GitHub Actions workflow YAML from your pipeline definition:
 
@@ -752,7 +752,7 @@ That single call writes a workflow file that:
 The `t-runs` branch caching approach avoids the GitHub Actions cache size limit
 by persisting the Nix store as a Git repository. On a typical pipeline, the
 first CI run downloads and builds everything; subsequent runs restore from cache
-and only rebuild what changed — the same incremental behaviour you get locally.
+and only rebuild what changed, the same incremental behaviour you get locally.
 
 A minimal end-to-end CI setup for our penguin pipeline:
 
@@ -848,7 +848,7 @@ We have covered a lot of ground in this chapter. Here is what we built:
 
 Between Chapter 5 and this chapter you now have a complete picture of the T
 pipeline model for single-machine analytical workflows. The next chapter takes
-the pipeline abstraction further: we will look at *pipeline manipulation* —
+the pipeline abstraction further: we will look at *pipeline manipulation*:
 composing pipelines, branching on parameter grids, mapping nodes over
 collections, and building reusable pipeline templates that can be shared across
 projects.

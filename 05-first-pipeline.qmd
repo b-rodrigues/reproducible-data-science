@@ -26,7 +26,7 @@ through from declaration to result:
    `tproject.toml`, and the serializer/deserializer glue code.
 4. **Build.** Nix executes each derivation in a hermetic sandbox. Upstream
    artifacts are already materialized in the Nix store, so the deserializer
-   reads them in and the serializer writes the node's output—no shared memory,
+   reads them in and the serializer writes the node's output, no shared memory,
    no runtime coupling.
 5. **Read back.** After `build_pipeline(p)` completes, use `read_node(p.name)`
    to load any node's artifact back into T for inspection.
@@ -52,7 +52,7 @@ build_pipeline(p)
 ```
 
 This pipeline doesn’t use any R, Python or Julia code yet, but is written in
-pure T. As shown in the previosu chapter, T comes with many builtin functions,
+pure T. As shown in the previous chapter, T comes with many builtin functions,
 and even data manipulation verbs inspired by `{dplyr}`! We return to them in
 Chapter 14.
 
@@ -66,7 +66,7 @@ t run src/pipeline.t
 
 or inside an interactive T session, using `t_make()`.
 
-T resolves the dependency graph (` total` depends on `x` and `y`), builds each
+T resolves the dependency graph (`total` depends on `x` and `y`), builds each
 node, and caches the results. Access any node's value with dot notation in the
 REPL:
 
@@ -314,7 +314,7 @@ The `path` field is the escape hatch: the absolute path to the node's output in
 the Nix store. You can pass this to any external tool, or use the companion
 helper packages for R or Python to read T artifacts outside of T.
 
-`explain()` reaches further than nodes — it describes any value, including
+`explain()` reaches further than nodes: it describes any value, including
 DataFrames, errors, formulas, and whole pipelines. Chapter 15 takes it apart,
 alongside the `intent` blocks that record *why* a piece of code exists.
 
@@ -336,7 +336,7 @@ model         Changed   T        T
 ```
 
 The `Status` column tells you the blast radius of your last edit. `Changed` means
-the node's content-addressed hash is different — the artifact actually changed,
+the node's content-addressed hash is different: the artifact actually changed,
 not just the code. `Added` means a new node. `Removed` means a node was deleted
 from the pipeline definition.
 
@@ -406,7 +406,7 @@ scriptable:
 
 | Exit code | Meaning |
 |:----------|:--------|
-| `0` | Clean — no errors |
+| `0` | Clean, no errors |
 | `1` | Structural / DAG problem |
 | `2` | Column / type mismatch |
 | `3` | Nix environment problem |
@@ -500,7 +500,7 @@ object, using `debug_node()`. Keep reading.
 
 ### Stepping into Guest Runtimes: `debug_node()` (A Debugging Appetizer)
 
-Sometimes inspecting an output from the T REPL isn't enough—especially when a
+Sometimes inspecting an output from the T REPL isn't enough, especially when a
 foreign script throws an unexpected runtime error or requires step-by-step code
 execution.
 
@@ -516,7 +516,7 @@ Calling `debug_node()` automatically:
 
 1. Resolves all upstream dependency artifacts for `p.stats` from the Nix store.
 2. Sets up environment variables and imports context.
-3. Spawns an interactive REPL for the target language—a Python subshell with
+3. Spawns an interactive REPL for the target language: a Python subshell with
   prompt `py> `, an R subshell with prompt `r> `, or a Julia subshell with prompt
   `jl> `.
 
@@ -591,7 +591,7 @@ The recommended loop:
 Let's watch the loop in action on a small project. You have a CSV of sales and
 you want to filter out non-positive amounts and summarise total sales per region.
 
-**Step 0 — set up the project.** Create the project and a sample data file:
+**Step 0: set up the project.** Create the project and a sample data file:
 
 ```bash
 t init --project sales-analysis
@@ -612,13 +612,13 @@ id,region,amount,date,product
 ```
 
 Add the packages you need to `tproject.toml` and run `t update` yourself before
-you start — telling the agent exactly what you need (and to add nothing else)
+you start, telling the agent exactly what you need (and to add nothing else)
 reduces friction. One thing worth checking up front: make sure the agent actually
 sees the project's `SKILL.md`. A quick *"What skills are available to you in this
 project?"* confirms it has the T context loaded before you ask it to write
 anything.
 
-**Step 1 — the agent generates the pipeline.** Ask for what you want:
+**Step 1: the agent generates the pipeline.** Ask for what you want:
 
 > "Create a T pipeline that reads `data/sales.csv` with a T node, then uses Python
 > nodes to filter out zero and negative amounts, convert the date column, group by
@@ -671,11 +671,11 @@ must be downloaded belongs in `fetchurl()`/`prefetch()`, not inside a node.
 ::: {.callout-note}
 **What the human reviews.** Skim the pipeline before anything runs. Does it do what
 you asked? Are the node names clear and the data flow obvious? If the agent
-misunderstood the goal, correct it now — regenerating two nodes is far cheaper
+misunderstood the goal, correct it now: regenerating two nodes is far cheaper
 than regenerating ten.
 :::
 
-**Step 2 — the agent validates with `t check --json`.** This is where the
+**Step 2: the agent validates with `t check --json`.** This is where the
 cheap/expensive split pays off. The first check catches a typo in the Python code:
 
 ```json
@@ -697,7 +697,7 @@ cheap/expensive split pays off. The first check catches a typo in the Python cod
 
 The agent reads `error_class: "name_error"`, locates node `clean`, and fixes
 `pd.to_datetme` to `pd.to_datetime`. Re-checking now surfaces a *different*,
-deeper error — one that only appears once the parse phase is clean:
+deeper error, one that only appears once the parse phase is clean:
 
 ```json
 {
@@ -730,11 +730,11 @@ Clean. The pipeline is structurally sound.
 
 ::: {.callout-note}
 **What the human reviews.** Ask the agent to show what it changed and *why*. A
-rename touches column references throughout the file — make sure the agent
+rename touches column references throughout the file: make sure the agent
 understands the root cause of the mismatch, not just how to silence it.
 :::
 
-**Step 3 — apply mechanical fixes.** In this case the agent edited the code
+**Step 3: apply mechanical fixes.** In this case the agent edited the code
 directly, so no `t fix` was needed. When a `suggested_fix` *is* applicable,
 preview before applying, as covered above:
 
@@ -743,8 +743,8 @@ t fix --dry-run pipeline.t   # preview
 t fix pipeline.t             # apply
 ```
 
-**Step 4 — the human approves, the agent builds.** Only now is `t run` triggered
-— the step that downloads dependencies and builds each node's Nix sandbox:
+**Step 4: the human approves, the agent builds.** Only now is `t run` triggered:
+the step that downloads dependencies and builds each node's Nix sandbox:
 
 ```
 $ t run pipeline.t
@@ -759,11 +759,11 @@ Pipeline complete. 3/3 nodes succeeded.
 
 ::: {.callout-note}
 **What the human reviews.** Confirm every node succeeded. If one failed, the
-message names the node and the reason — the agent should parse it and explain
+message names the node and the reason: the agent should parse it and explain
 what went wrong rather than retry blindly.
 :::
 
-**Step 5 — the agent diffs with `t diff`.** After a build, `t diff` shows the
+**Step 5: the agent diffs with `t diff`.** After a build, `t diff` shows the
 blast radius of the last edit:
 
 ```
@@ -814,15 +814,15 @@ nodes and their dependencies:
 {"seq":1,"event":"run_started","file":"pipeline.t","nodes":[{"id":"raw","lang":"t"},{"id":"clean","lang":"python","depends_on":["raw"]},{"id":"summary_node","lang":"python","depends_on":["clean"]}]}
 ```
 
-If a node fails, a `node_failed` event carries a `log_tail` — the last 200 lines
-of the build log — enough to see the real traceback without flooding the output:
+If a node fails, a `node_failed` event carries a `log_tail`, the last 200 lines
+of the build log, enough to see the real traceback without flooding the output:
 
 ```json
 {"seq":2,"event":"node_failed","node":{"id":"clean","lang":"python"},"error_class":"nix_error","message":"Nix build failed for node 'clean'","log_tail":"pandas.errors.ParserError: Error tokenizing data..."}
 ```
 
 When the run finishes, `run_finished` reports the overall status and, crucially,
-`root_causes` — the node(s) that actually caused the failure, i.e. the one the
+`root_causes`, the node(s) that actually caused the failure, i.e. the one the
 agent should fix first:
 
 ```json
@@ -839,7 +839,7 @@ immediately.
 
 **Ask for `--dry-run` before `t fix`.** When the agent proposes applying a
 `suggested_fix`, ask it to preview first: `t fix --dry-run src/pipeline.t`.
-A rename fix modifies column references throughout the file — mechanical and
+A rename fix modifies column references throughout the file: mechanical and
 correct, but you should confirm it matches your intent before applying.
 
 **Correct misunderstandings early.** If the agent generates a pipeline that
@@ -852,7 +852,7 @@ working as expected. If something you did not touch shows `Changed`, investigate
 before accepting the build.
 
 **Data that needs to be downloaded belongs in `fetchurl`, not in a node.** Build
-sandboxes are hermetic — a Python node cannot call `requests.get()` to pull data
+sandboxes are hermetic: a Python node cannot call `requests.get()` to pull data
 from the internet. Use `fetchurl(url, sha256 = prefetch(url))` in T to download
 assets before pipeline execution. The agent must understand this constraint;
 mention it when you set up the project.
@@ -862,10 +862,10 @@ catches each one, are worth memorising:
 
 | Mistake | Caught by |
 |:--------|:----------|
-| Typo in a Python/pandas function name | `t check` — `name_error` |
-| Wrong column name in a downstream node | `t check --schema` — `schema_mismatch` |
-| Missing serializer on a node | `t check` — `structural_error` |
-| Wrong deserializer format | `t check` — `structural_error` |
+| Typo in a Python/pandas function name | `t check`: `name_error` |
+| Wrong column name in a downstream node | `t check --schema`: `schema_mismatch` |
+| Missing serializer on a node | `t check`: `structural_error` |
+| Wrong deserializer format | `t check`: `structural_error` |
 
 ::: {.callout-tip}
 ## Quick reference: agent-facing CLI
@@ -890,12 +890,12 @@ catches each one, are worth memorising:
 
 The core workflow you will use throughout the rest of this book:
 
-1. **`t check --schema src/pipeline.t`** — validate cheaply, tier 1 + 2, in milliseconds
-2. **`t fix --dry-run` / `t fix`** — apply mechanical fixes suggested by `t check`
-3. **`t run src/pipeline.t`** — build when clean; Nix caches unchanged nodes
-4. **`t diff src/pipeline.t`** — confirm what actually changed after a build
-5. **`read_node(p.name)`** in the REPL — inspect any node's output
-6. **Extend one node at a time** — rebuild only what changed
+1. **`t check --schema src/pipeline.t`**: validate cheaply, tier 1 + 2, in milliseconds
+2. **`t fix --dry-run` / `t fix`**: apply mechanical fixes suggested by `t check`
+3. **`t run src/pipeline.t`**: build when clean; Nix caches unchanged nodes
+4. **`t diff src/pipeline.t`**: confirm what actually changed after a build
+5. **`read_node(p.name)`** in the REPL: inspect any node's output
+6. **Extend one node at a time**: rebuild only what changed
 
 Key things to remember:
 
@@ -907,9 +907,9 @@ Key things to remember:
 - Serializers (`^ipc`, `^parquet`, `^pmml`, …) control what the node produces
   and what downstream nodes receive
 - Use `^ipc` for fast in-pipeline hand-offs; use `^parquet` for durable storage
-- Never call `install.packages()` or `pip install` inside a node — declare
+- Never call `install.packages()` or `pip install` inside a node: declare
   everything in `tproject.toml`
-- Data downloads go in `fetchurl()`, not inside node commands — build sandboxes
+- Data downloads go in `fetchurl()`, not inside node commands: build sandboxes
   are hermetic and have no network access
 - When pairing with an AI agent: check first, run second, diff always
 

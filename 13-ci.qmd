@@ -33,7 +33,7 @@ however, gives you the foundation: once your pipeline runs reliably on CI, the
 "deployment" step is just one more workflow job pointing to wherever your
 results need to go.
 
-## Getting your repo ready for Github Actions
+## Getting your repo ready for GitHub Actions
 
 Obviously, you should use a project that is versioned on GitHub. Use the package
 we’ve developed previously. If you go on its GitHub page, you should see an
@@ -63,7 +63,7 @@ jobs:
   say-hello:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello from Github Actions!"
+      - run: echo "Hello from GitHub Actions!"
       - run: echo "This command is running from an Ubuntu VM each time you push."
 ```
 
@@ -99,7 +99,7 @@ This defines the `say-hello` job.
 
 This job should run on an Ubuntu VM. You can also run jobs on Windows or macOS
 VMs, but this uses more compute minutes than a Linux VM (which doesn’t matter
-for public projects. For private projects, the amount of compute minutes
+for public projects; for private projects, the amount of compute minutes
 is limited).
 
 ```
@@ -109,10 +109,10 @@ is limited).
 What are the different steps of the job?
 
 ```
-      - run: echo "Hello from Github Actions!"
+      - run: echo "Hello from GitHub Actions!"
 ```
 
-First, run the command `echo "Hello from Github Actions!"`. This commands runs
+First, run the command `echo "Hello from GitHub Actions!"`. This command runs
 inside the VM. Then, run this next command:
 
 ```
@@ -145,7 +145,7 @@ called `run-tests.yaml`):
 If your repository contains a `flake.nix` and `flake.lock` (as a T project
 does), the same environment you’ve been using locally can be used on GitHub
 Actions just as easily. The committed flake pins the exact T version and every
-dependency, so there is nothing to generate — `nix develop` reads it directly:
+dependency, so there is nothing to generate: `nix develop` reads it directly:
 
 ```yaml
 - name: Run in the project environment
@@ -303,7 +303,7 @@ This next example can be found in [this
 repository](https://github.com/b-rodrigues/dockerized_pipeline_demo)^[https://github.com/b-rodrigues/dockerized_pipeline_demo]. This
 example doesn't use Nix or T, but the point here is to show
 how a Docker container can be executed on GitHub Actions, and artifacts can be
-recovered. The process is always the same, regardless is inside the Docker
+recovered. The process is always the same, regardless of what is inside the Docker
 image. If you want to follow along, fork this repository.
 
 This is what our workflow file looks like:
@@ -356,7 +356,7 @@ speak. Now there's the `uses` keyword that's new:
 uses: actions/checkout@v5
 ```
 
-This action checkouts your repository inside the VM, so the files in the repo
+This action checks out your repository inside the VM, so the files in the repo
 are available inside the VM. Then, there's this action here:
 
 ```
@@ -372,7 +372,7 @@ output of our pipeline) and makes the contents available as so-called
 the output of the pipeline. So let's run this by pushing a change, and let's
 take a look at these artifacts!
 
-After the action done running, you will be able to download a zip file
+After the action is done running, you will be able to download a zip file
 containing the plots. It is thus possible to rerun our workflow in the cloud.
 This has the advantage that we can now focus on simply changing the code, and
 not have to bother with boring manual steps. For example, let's change this
@@ -398,19 +398,19 @@ refreshed, and we can download them. Take a look and see that Dudelange was
 added in the `communes.png` plot!
 
 It is also possible to "deploy" the plots directly to another branch, and do
-much, much more. I just wanted to give you a little taste of Github Actions (and
+much, much more. I just wanted to give you a little taste of GitHub Actions (and
 more generally GitOps). The possibilities are virtually limitless, and I still
-can't get over the fact that Github Actions is free for public repositories.
+can't get over the fact that GitHub Actions is free for public repositories.
 
 ## Building a Docker image and pushing it to a registry
 
 It is also possible to build a Docker image and have it made available on an
 image registry. You can see how this works on this
-[repository](https://github.com/b-rodrigues/ga_demo)^[https://github.com/b-rodrigues/ga_demo]. This images can then be
+[repository](https://github.com/b-rodrigues/ga_demo)^[https://github.com/b-rodrigues/ga_demo]. These images can then be
 used as a base for other reproducible pipelines, as in this
 [repository](https://github.com/b-rodrigues/ga_demo_rap/tree/main)^[https://github.com/b-rodrigues/ga_demo_rap/tree/main]. Why do this?
 Well because of "separation of concerns". You could have a repository which
-builds in image containing your development environment: this could be an image
+builds an image containing your development environment: this could be an image
 with a specific version of R and R packages built with Nix. And then have as
 many repositories as projects that run pipelines using that development
 environment image as a basis. Simply add the project-specific packages that you

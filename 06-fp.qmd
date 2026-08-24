@@ -12,7 +12,7 @@ matter?
 
 The answer lies in a body of ideas called **functional programming**. You do not
 need to become a functional programming theorist to use T effectively. But
-understanding the core concepts—purity, composition, immutability—will make you
+understanding the core concepts, purity, composition, immutability, will make you
 a more effective user of T, a better author of the R and Python code that lives
 inside your nodes, and a better collaborator with AI agents. This chapter is
 short by design: it makes one argument, carefully.
@@ -40,7 +40,7 @@ step depends on the variable `data` existing in the global environment at
 exactly the right moment, with exactly the right content. The script can only
 be understood by reading it from top to bottom, in order, in its entirety.
 Rename a variable, reorder two steps, or run a subset of the code, and things
-break—often silently, producing wrong numbers rather than errors.
+break, often silently, producing wrong numbers rather than errors.
 
 Now imagine this at scale: dozens of scripts, each hundreds of lines long,
 maintained by multiple people over months. Variables are overwritten, reused,
@@ -98,7 +98,7 @@ This is not a metaphor. A T pipeline node is, by design, a pure function.
 - It returns exactly one thing: the artifact written to the Nix store by its
   `serializer`. There is no way for a node to modify another node's output as a
   side effect.
-- Given the same inputs, it produces the same output—always. This is guaranteed
+- Given the same inputs, it produces the same output, always. This is guaranteed
   by Nix's hermetic sandbox. The node has no access to the outside world beyond
   what is explicitly declared.
 
@@ -191,7 +191,7 @@ Three nodes (because this is using pure T code, there is no need to use the
 the dependency graph (`mtcars_mpg` depends on `filtered_mtcars`, which depends
 on `mtcars`), builds them in the correct order, and caches each result. If you
 change only the `filter` predicate, only `filtered_mtcars` and `mtcars_mpg` are
-rebuilt—`mtcars` is unchanged, so T does not touch it.
+rebuilt; `mtcars` is unchanged, so T does not touch it.
 
 ## Polyglot Composition: Passing Values Across Languages
 
@@ -250,8 +250,8 @@ cannot throw an exception and still be pure: throwing is a side effect that
 transfers control to some unknown handler elsewhere.
 
 T handles this by making **errors first-class values**. If a node produces an
-error—because a file is missing, a computation fails, or you explicitly call
-`error()`—the error is *the node's output*, not an interruption of the pipeline.
+error, because a file is missing, a computation fails, or you explicitly call
+`error()`, the error is *the node's output*, not an interruption of the pipeline.
 Downstream nodes can inspect it, recover from it, or propagate it, using the
 maybe-pipe `?|>`:
 
@@ -281,7 +281,7 @@ build_pipeline(p)
 
 `risky_node` returns an error value. `handled_node` receives it, checks
 `is_error()`, and returns a fallback. The pipeline completes successfully.
-No try/catch scattered through the code, no implicit exception handling—the
+No try/catch scattered through the code, no implicit exception handling; the
 error path is as explicit as the success path.
 
 This matters for reproducibility: if part of a pipeline fails, you know exactly
@@ -296,16 +296,16 @@ and Python code you write *inside* those nodes.
 A node is only as pure as the code it contains. If your R code inside `<{ ... }>`
 reads from a file path that is hardcoded and only exists on your laptop, or
 depends on a global R environment variable that is not declared as a node input,
-you have introduced a hidden dependency—and the node is no longer reproducible
+you have introduced a hidden dependency, and the node is no longer reproducible
 in practice, and most likely it would error, as the code the node executes,
-runs inside of an hermetic sandbox. So anything outside of that sandbox would
-not be accessible anyways.
+runs inside a hermetic sandbox. So anything outside of that sandbox would
+not be accessible anyway.
 
 The practical rule is simple: **inside a node, treat everything from outside the
 node's declared inputs as if it does not exist.** Do not read files unless they
 are passed as explicit inputs (via `fetchurl`, `read_csv`, or another node's
 output). Do not use global R options or environment variables unless they are
-declared in the node's `env` block. Do not install packages at runtime—declare
+declared in the node's `env` block. Do not install packages at runtime; declare
 them in `tproject.toml`. If you follow these rules, your nodes will be genuinely
 pure, and T's reproducibility guarantees will hold end-to-end.
 
@@ -373,7 +373,7 @@ p = pipeline {
 
 `utils.R` might define `clean_colnames()`, `log_transform()`, or whatever
 helpers your analysis needs. Those functions are written once, tested once, and
-shared across any node that needs them—inside T or outside it.
+shared across any node that needs them, inside T or outside it.
 
 The principle is the same one that runs through this whole chapter: **write your
 analysis code as if T did not exist.** Pure functions in plain files, with
@@ -386,7 +386,7 @@ The key ideas in this chapter:
 
 - **Stateful scripts** make reproducibility hard because dependencies are
   implicit and execution order is load-bearing
-- **Pure functions** — same inputs, same outputs, no side effects — are the
+- **Pure functions** (same inputs, same outputs, no side effects) are the
   antidote: they can be tested, composed, cached, and reasoned about in
   isolation
 - **Every T node is a pure function**: explicit inputs via deserializers,
@@ -405,5 +405,5 @@ The key ideas in this chapter:
 
 With this model in mind, the next chapter on **testing** becomes natural.
 Testing a pure function is easy: call it with known inputs, assert on the output,
-done. Testing a T pipeline node is the same idea—and T provides the tooling to
+done. Testing a T pipeline node is the same idea, and T provides the tooling to
 do it systematically.

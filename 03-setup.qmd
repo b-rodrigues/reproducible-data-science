@@ -39,7 +39,7 @@ systemd=true
 ```
 
 Save the file with CTRL-O and then quit nano with CTRL-X. Then, type the
-following line in powershell:
+following line in PowerShell:
 
 ```sh
 wsl --shutdown
@@ -77,13 +77,13 @@ This single command installs Nix and configures everything T needs:
   answer any prompts.
 - **`--extra-conf`** injects configuration directly into your Nix config during
   installation. The three settings it applies are:
-- **`trusted-users = root $USER`** — Marks your user as a trusted Nix user.
+- **`trusted-users = root $USER`**: Marks your user as a trusted Nix user.
   This is required for binary caches and certain Nix operations to work
   without permission errors.
-- **`substituters = ...`** — Tells Nix to fetch pre-built packages from the
+- **`substituters = ...`**: Tells Nix to fetch pre-built packages from the
   NixOS cache and the `rstats-on-nix` Cachix cache (used by T for R and Python
   packages), avoiding long builds from source.
-- **`trusted-public-keys = ...`** — The cryptographic keys Nix uses to verify
+- **`trusted-public-keys = ...`**: The cryptographic keys Nix uses to verify
   the authenticity of packages from those caches.
 
 Because the installer handles all of this in one step, there are no manual
@@ -233,10 +233,10 @@ that mixes data, logic, and results in one file.
 Plain text is the opposite: the simplest, most enduring interface in computing.
 Git can diff it, and it is easy to review and collaborate on. It also matters
 for the AI agents we'll increasingly work with: notebooks carry hidden state,
-side effects, and non-linear execution — exactly what makes life hard for a
+side effects, and non-linear execution, exactly what makes life hard for a
 model (more on this in Chapter 4).
 
-### Pre-requisites
+### Prerequisites
 
 We now need to configure an IDE to use our Nix shells as development
 environments. You are free to use whatever IDE you want but the instructions
@@ -286,7 +286,7 @@ nix-env -f '<nixpkgs>' -iA direnv
 
 This will install `direnv` and make it available even outside of Nix shells!
 
-Then, I highly recommend to install the `nix-direnv` extension:
+Then, I highly recommend installing the `nix-direnv` extension:
 
 ```bash
 nix-env -f '<nixpkgs>' -iA nix-direnv
@@ -308,7 +308,7 @@ project's `flake.nix`):
 use flake
 ```
 
-in it. On Windows, *remotely connect to WSL* first, but on other operating
+On Windows, *remotely connect to WSL* first, but on other operating
 systems, simply open the project's folder using `File > Open Folder...` and you
 will see a pop-up stating `direnv: /PATH/TO/PROJECT/.envrc is blocked` and a
 button to allow it. Click `Allow` and then open an R script. You might get
@@ -324,4 +324,4 @@ should work every time.
 
 We now have everything we need to start using T to set up reproducible data
 science projects. T, thanks to Nix, will handle the installation of all the
-required tools R, Python, RStudio if you want it and any other tool.
+required tools: R, Python, RStudio if you want it, and any other tool.

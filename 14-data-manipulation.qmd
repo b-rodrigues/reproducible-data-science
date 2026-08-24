@@ -26,7 +26,7 @@ The `colcraft` verbs follow the shape you already know from `{dplyr}`: a verb
 takes a DataFrame, does one thing, and hands back a DataFrame. You chain them
 with the pipe.
 
-### select() — choose columns
+### select(): choose columns
 
 `select()` keeps only the columns you name, using the `$column` syntax:
 
@@ -39,7 +39,7 @@ df |> select($name)
 If you name a column that does not exist, you get a `KeyError` that names the
 missing column, so a typo fails fast rather than silently dropping data.
 
-### filter() — choose rows
+### filter(): choose rows
 
 `filter()` keeps the rows where a predicate is true. You write the predicate
 against the `$column` syntax, and T turns it into a row-wise function for you:
@@ -62,7 +62,7 @@ df |> filter($dept == "sales" || $score > 90)
 > element-wise work. If you accidentally use them to combine filter conditions,
 > T raises a `TypeError` that points you at `&&` and `||`.
 
-### mutate() — add or transform columns
+### mutate(): add or transform columns
 
 `mutate()` adds a new column or replaces an existing one. The new column is
 named with `$` and defined by an expression over the existing columns:
@@ -73,7 +73,7 @@ df |> mutate($age_plus_10 = $age + 10)
 df |> mutate($bonus = $salary * 0.1)
 ```
 
-### arrange() — sort rows
+### arrange(): sort rows
 
 `arrange()` sorts by one or more columns, in ascending order by default or
 `"desc"` for descending:
@@ -136,7 +136,7 @@ employees |> full_join(projects, $emp_id)
 
 `inner_join` keeps rows whose key appears in both tables; `left_join` keeps
 every row of the left table and fills in what it can from the right;
-`anti_join` keeps the left rows with *no* match — the workhorse for "who has
+`anti_join` keeps the left rows with *no* match, the workhorse for "who has
 no record yet?"; `full_join` keeps everything from both sides.
 
 ### Duplicates and counts
@@ -169,7 +169,7 @@ df |> mutate($grade = case_when(
     .default = "C"))
 ```
 
-`case_when` reuses the `~` from model formulas — one syntax for "this
+`case_when` reuses the `~` from model formulas: one syntax for "this
 predicts that" and "this yields that".
 
 ### Operators in data work
@@ -187,7 +187,7 @@ df |> filter($dept in ["eng", "sales"])
 Inside `filter`, the predicate is evaluated row by row, so each `$column` is
 a scalar and the plain operators (`&&`, `||`, `==`, `in`) are the right tools.
 The broadcasting operators come in when you hold a whole Vector or List at
-once — for example, a column pulled out with a lens (Chapter 15):
+once, for example a column pulled out with a lens (Chapter 15):
 
 ```t
 #| eval: false
@@ -197,7 +197,7 @@ scores .+ 10        -- [82, 95, 101]
 ```
 
 And `%name%` is the escape hatch for custom infix operators: packages define
-them, and you consume them wherever a named call would be clunkier — the
+them, and you consume them wherever a named call would be clunkier: the
 chrono package ships `%within%` for testing whether a date falls inside an
 interval.
 
@@ -408,7 +408,7 @@ leaving T.
 ## Quick stats in T
 
 Around `lm()` sits a small stats package for the fast checks you do while
-exploring — the "does this variable matter, and what is its shape?" questions.
+exploring: the "does this variable matter, and what is its shape?" questions.
 
 Correlation, covariance, and the five-number summary are the usual first
 moves:
@@ -460,12 +460,12 @@ anova(m1, m2)
 ```
 
 None of this replaces a statistics course, but it keeps the exploratory loop
-— look, check, reshape, look again — inside one language.
+(look, check, reshape, look again) inside one language.
 
 ## Lenses: reaching the nested
 
-The verbs above are built for flat DataFrames. Once your data becomes nested —
-after a `nest()`, or from a hierarchical API — the standard verbs turn into a
+The verbs above are built for flat DataFrames. Once your data becomes nested,
+after a `nest()` or from a hierarchical API, the standard verbs turn into a
 pyramid of nested lambdas. Lenses solve that.
 
 A lens names a *path* into a structure. You build it once with `compose()`,
@@ -498,7 +498,7 @@ One detail matters when you transform a whole column: `over()` hands your
 function a Vector, so use the broadcasting operators (`.+`, `.*`) for
 element-wise math rather than the scalar ones.
 
-For flat DataFrames, stick with the ordinary verbs — they are simpler and more
+For flat DataFrames, stick with the ordinary verbs: they are simpler and more
 idiomatic. Lenses earn their keep in nested and polymorphic data, where the
 alternative is a tower of `map` calls.
 

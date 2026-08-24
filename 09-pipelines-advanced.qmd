@@ -4,8 +4,8 @@ By this point you can declare a T pipeline, build it, inspect its outputs, and
 wire it into a CI job. That covers the majority of day-to-day work. This chapter
 goes further: it treats pipelines themselves as data.
 
-In most pipeline tools—`targets` [@landau2021], Snakemake [@koster2012],
-Airflow—the pipeline *definition*
+In most pipeline tools, `targets` [@landau2021], Snakemake [@koster2012], and
+Airflow, the pipeline *definition*
 is code that runs once, produces a build graph, and is then discarded. The graph
 is an internal implementation detail you cannot touch. T takes a different view.
 A pipeline value is a first-class object you can query, filter, transform, and
@@ -25,8 +25,8 @@ meta-pipelines. All examples build on the project layout introduced in
 The pipeline value you construct inside a `pipeline { ... }` block is an
 ordinary T record. It carries the DAG structure, the node metadata, and enough
 information for T's build engine to emit Nix derivations. Because it is a
-record, all the standard higher-order functions—`filter`, `map`, `fold`,
-`select`—work on it just as they do on any other collection.
+record, all the standard higher-order functions, `filter`, `map`, `fold`, and
+`select`, work on it just as they do on any other collection.
 
 This has a practical consequence: you write *pipeline transformations* in the
 same language as the pipeline itself, without shelling out to a separate tool or
@@ -86,8 +86,8 @@ node:
 py_nodes = filter(df, \(row) row.runtime == "python")
 ```
 
-To find every node at depth 2 or deeper—useful when you want to know which
-steps are non-trivial downstream work:
+To find every node at depth 2 or deeper, which is useful when you want to know
+which steps are non-trivial downstream work:
 
 ```t
 deep_nodes = filter(df, \(row) row.depth >= 2)
@@ -98,10 +98,10 @@ deep_nodes = filter(df, \(row) row.depth >= 2)
 Four functions give you structural information without materialising a full
 frame:
 
-- `pipeline_roots(p)` — nodes with no dependencies (the entry points)
-- `pipeline_leaves(p)` — nodes on which nothing else depends (the outputs)
-- `pipeline_edges(p)` — every `(from, to)` dependency pair as a frame
-- `pipeline_depth(p)` — a named record mapping each node name to its depth
+- `pipeline_roots(p)`: nodes with no dependencies (the entry points)
+- `pipeline_leaves(p)`: nodes on which nothing else depends (the outputs)
+- `pipeline_edges(p)`: every `(from, to)` dependency pair as a frame
+- `pipeline_depth(p)`: a named record mapping each node name to its depth
 
 ```t
 roots  = pipeline_roots(etl)   -- ["raw"]
@@ -133,7 +133,7 @@ modifications, see `mutate_node` below.
 ## Modifying Nodes Surgically
 
 Queries tell you what is in a pipeline. The mutating functions let you change
-it—always producing a *new* pipeline value, leaving the original intact, in
+it, always producing a *new* pipeline value and leaving the original intact, in
 keeping with T's pervasive immutability.
 
 ### `filter_node`
@@ -300,7 +300,7 @@ prod = patch(prod_pipeline, dev_overrides)
 
 ### `prune`
 
-`prune(p)` removes all leaf nodes—nodes that nothing else depends on. It is
+`prune(p)` removes all leaf nodes, i.e. nodes that nothing else depends on. It is
 typically used after `difference` to clean up dangling tails:
 
 ```t
@@ -347,7 +347,7 @@ the ETL outputs and reuses them for both branches.
 ## DAG-Aware Transformations
 
 The set operations above operate on names. The DAG-aware functions operate on
-*structure*—they follow dependency edges to extract connected subgraphs.
+*structure*: they follow dependency edges to extract connected subgraphs.
 
 ### `upstream_of`
 
@@ -420,8 +420,8 @@ construction time.
 chained = chain(etl, model_pipeline)
 ```
 
-The stub node costs nothing at build time—T sees it is a no-op alias—but it
-satisfies the dependency declaration that `chain` requires.
+The stub node costs nothing at build time, since T sees it as a no-op alias, but
+it satisfies the dependency declaration that `chain` requires.
 
 ### `parallel`
 
@@ -466,8 +466,8 @@ read_node("stats.summary")
 
 ::: {.callout-note}
 Dependencies between sub-pipelines still need to be declared. If `stats`
-references `etl.features`, that reference must appear in the node's command—or
-use a T-stub as described above.
+references `etl.features`, that reference must appear in the node's command, or
+you can use a T-stub as described above.
 :::
 
 ### Pipeline templates via lambdas
@@ -493,7 +493,7 @@ print(pipeline_nodes(both))
 ## Dynamic Branching
 
 Static pipelines describe a fixed graph. Dynamic branching generates nodes at
-build time—one node per element of a list, or one per combination of parameter
+build time: one node per element of a list, or one per combination of parameter
 values. The resulting graph can be large, but you declare it concisely.
 
 ### `map_pattern`
@@ -513,8 +513,8 @@ p_map = pipeline {
 }
 ```
 
-This expands into three nodes—`results_branch_1`, `results_branch_2`, and
-`results_branch_3`—where branch `i` runs the command with element `i` of
+This expands into three nodes, `results_branch_1`, `results_branch_2`, and
+`results_branch_3`, where branch `i` runs the command with element `i` of
 `params`. Multiple dependencies can be mapped at once; they must all have
 the same length, and branch `i` receives element `i` from each:
 
@@ -529,7 +529,7 @@ p_map2 = pipeline {
 ### `cross_pattern`
 
 `cross_pattern(sub1, sub2, ...)` generates a Cartesian product of
-`map_pattern` sub-patterns—one branch per combination of values:
+`map_pattern` sub-patterns: one branch per combination of values:
 
 ```t
 p_cross = pipeline {
@@ -554,11 +554,11 @@ When a map or cross generates more branches than you want, the selector
 patterns reduce the set. Each takes a dependency and an integer parameter
 and is passed as the `pattern` argument, just like the others:
 
-- `slice_pattern(dep, [i, j, ...])`—branch on the elements at the given
+- `slice_pattern(dep, [i, j, ...])`: branch on the elements at the given
   0-based indices.
-- `head_pattern(dep, n)`—branch on the first `n` elements.
-- `tail_pattern(dep, n)`—branch on the last `n` elements.
-- `sample_pattern(dep, n)`—branch on `n` randomly chosen elements.
+- `head_pattern(dep, n)`: branch on the first `n` elements.
+- `tail_pattern(dep, n)`: branch on the last `n` elements.
+- `sample_pattern(dep, n)`: branch on `n` randomly chosen elements.
 
 ```t
 p_select = pipeline {
@@ -580,8 +580,8 @@ draw, while different node names make different draws.
 
 Patterns expand automatically when you call `build_pipeline()` or
 `populate_pipeline()`, so you can build a patterned pipeline directly. To
-inspect the expanded structure first—or to write it out as an explicit
-script—call `expand_pipeline()`:
+inspect the expanded structure first, or to write it out as an explicit
+script, call `expand_pipeline()`:
 
 ```t
 demo = pipeline {
@@ -640,7 +640,7 @@ before any build starts. This is the right tool for environment-specific toggles
 ### `node_when`
 
 `node_when(condition, node)` includes `node` in the pipeline only if `condition`
-is truthy. If the condition is falsy, the node is simply absent—it does not
+is truthy. If the condition is falsy, the node is simply absent: it does not
 appear in the DAG at all, and any downstream node that references it will report
 a missing-dependency error (which is the correct behaviour: you should not
 silently skip a node that something else needs).
@@ -718,12 +718,12 @@ are drawn from.
 The `flake` argument on `node()`, `rn()`, and `pyn()` lets individual nodes use
 a *different* flake entirely:
 
-- **Pin one node to an older `nixpkgs` snapshot** — a legacy model that
+- **Pin one node to an older `nixpkgs` snapshot**: a legacy model that
   requires an older version of a C library.
-- **Use a specialist R distribution for one node** — for example,
+- **Use a specialist R distribution for one node**: for example,
   `github:jbedo/rshells` for a node that needs R with specific compile-time
   options.
-- **Point a node at a local flake** — for a private package not yet in `nixpkgs`.
+- **Point a node at a local flake**: for a private package not yet in `nixpkgs`.
 
 ```t
 #| eval: false
@@ -759,7 +759,7 @@ harder to reason about.
 
 ## Validation
 
-Pipeline construction in T is cheap—values are not built until `build_pipeline`
+Pipeline construction in T is cheap: values are not built until `build_pipeline`
 is called. But some errors (cycles, missing dependencies, unknown runtimes) are
 structural and can be caught before any Nix derivation is emitted.
 
@@ -781,12 +781,12 @@ if length(errs) > 0 {
 
 The validator checks:
 
-- **Cycles** — any circular dependency in the DAG.
-- **Missing dependencies** — a node references a name that is not defined.
-- **Unknown runtimes** — a node declares a runtime T does not recognise.
-- **Cross-runtime deserialiser gaps** — a Python node reads from an R node but
+- **Cycles**: any circular dependency in the DAG.
+- **Missing dependencies**: a node references a name that is not defined.
+- **Unknown runtimes**: a node declares a runtime T does not recognise.
+- **Cross-runtime deserialiser gaps**: a Python node reads from an R node but
   no compatible deserialiser is configured.
-- **File existence** — nodes that reference local files check that those files
+- **File existence**: nodes that reference local files check that those files
   are present at validation time.
 
 ### `pipeline_assert`
@@ -811,8 +811,8 @@ fast failure at the exact line where the broken pipeline was constructed.
 :::
 
 `pipeline_cycles(p)` is a narrower variant that returns only cycle-related
-errors—useful when you are debugging a `union` or `chain` that you suspect has
-introduced a circular dependency.
+errors, which is useful when you are debugging a `union` or `chain` that you
+suspect has introduced a circular dependency.
 
 ## Handling Ambiguous Dependencies
 
@@ -898,7 +898,7 @@ log    = build_log_to_frame(res)
 ```
 
 This is twelve lines of T that orchestrate conditional skipping, structural
-extraction, alternative implementations, and CI/nightly branching—without a
+extraction, alternative implementations, and CI/nightly branching, without a
 single configuration file or wrapper script.
 
 The patterns also stack:
@@ -909,7 +909,7 @@ The patterns also stack:
 - Use `node_fork` to select an implementation based on an environment variable.
 - Validate with `pipeline_validate` before any Nix work begins.
 
-The next chapter covers debugging and error handling—what to do when a node
+The next chapter covers debugging and error handling: what to do when a node
 can *fail in an expected way* and you want to propagate that failure gracefully
 rather than aborting the whole build. @sec-packaging then
 covers how to package a mature pipeline as a distributable artefact.
