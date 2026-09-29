@@ -3,9 +3,11 @@
 A plan for the T-language material the book does not yet cover, plus ways to
 enrich how the language itself is presented.
 
-**Method.** Cross-referenced the T source (`../tlang`, v0.55.0 — OCaml, Menhir
-grammar in `src/parser.mly`, evaluator in `src/eval.ml`, builtins in
-`src/packages/*`) against all 16 chapters to build a gap analysis.
+**Method.** Cross-referenced the T source (`../tlang`, v0.55.4, re-checked
+2026-09-29 — OCaml, Menhir grammar in `src/parser.mly`, evaluator in
+`src/eval.ml`, builtins in `src/packages/*`) against all 16 chapters to build
+a gap analysis. First pass targeted v0.55.0; items completed since are marked
+DONE below rather than deleted, so the history stays visible.
 
 **Scope decision.** Focus on the *defining ideas* of T plus core presentation
 enrichment — not the exhaustive feature inventory. All new material is **folded
@@ -35,27 +37,16 @@ into existing chapters**; no new chapters are added.
 
 ## Part A — New features to add (the gaps)
 
-### A1. `explain()` — from node-summary to "introspect anything"
-- **Where:** ch. 15 (new/expanded section); cross-reference from ch. 5:291.
-- **Current state:** ch. 5 shows `explain(p.model)` as a one-line node summary.
-- **Add:**
-  - `explain()` works on *any* value, not just nodes: DataFrames, dicts,
-    vectors, errors, formulas, lenses, pipelines.
-  - `explain_json()` for machine-readable introspection.
-  - The design idea: **introspection is first-class** — you can always ask T
-    "what is this?" and get a structured answer.
-  - Tie it to the LLM-pairing story: `explain`/`explain_json` + `AGENTS.md` are
-    what let an agent query build artifacts without reading Nix internals.
+### A1. `explain()` — from node-summary to "introspect anything" — DONE
+- **Where:** ch. 15 (`## Introspection: explain() and intent`).
+- **Current state:** covered in depth, including machine-readable output.
+- (Original notes kept for history: ch. 5 showed `explain(p.model)` as a
+  one-liner; the ch. 15 deep-dive plus `explain_json` and the LLM-pairing
+  angle have since been written.)
 
-### A2. `intent { }` blocks
-- **Where:** ch. 15 (new section, next to `explain`).
-- **Current state:** absent entirely.
-- **Add:**
-  - `intent { key: value }` attaches declarative metadata to a node — the
-    *why*, not just the *what*.
-  - `intent_get` / `intent_fields` to query it.
-  - How intent + explain together make a pipeline self-documenting and
-    agent-readable.
+### A2. `intent { }` blocks — DONE
+- **Where:** ch. 15 (`### intent: code says what, intent says why`).
+- **Current state:** taught as a section, referenced from other chapters.
 
 ### A3. The type system
 - **Where:** ch. 15 (new section); a one-paragraph pointer in ch. 4.
@@ -105,6 +96,20 @@ into existing chapters**; no new chapters are added.
   - (Deliberately deferred: `window_*`, `t_complete`/`t_crossing` — see
     "Out of scope".)
 
+### A8. Join and verb gaps from 0.55.1 (new 2026-09-29)
+- **Where:** ch. 14, extending A7/A4.
+- **Current state:** `full_join` and `case_when` are covered; these are not.
+- **Add:** `cross_join`, `right_join`, plus small 0.55.1 verbs where they
+  fit: `coalesce`, `n_distinct` with `na_rm`, `str_squish`.
+
+### A9. Tabular introspection companions (new 2026-09-29)
+- **Where:** ch. 9 or 10, next to `pipeline_validate`/`pipeline_assert`.
+- **Current state:** validation itself is covered; its queryable companions
+  are not. Kept small on purpose — the full introspection suite stays out
+  of scope (see below).
+- **Add:** `pipeline_status`, `diff_summary`, `pipeline_config_to_frame` —
+  one short section showing pipeline state as DataFrames you can filter.
+
 ---
 
 ## Part B — Enrich the presentation of the language
@@ -147,8 +152,9 @@ into existing chapters**; no new chapters are added.
 |:--------|:-----------------------|
 | **ch. 4** | Operator reference (B1), value-types table (B2), evaluation mental model (B3), one-paragraph type-annotation pointer (A3) |
 | **ch. 10** | Pattern matching elevated to a feature (A5) |
-| **ch. 14** | Operators in context (A6), missing `colcraft` verbs (A7), stats package (A4) |
-| **ch. 15** | `explain()` in depth (A1), `intent { }` blocks (A2), type system (A3) |
+| **ch. 14** | Operators in context (A6), missing `colcraft` verbs (A7, A8), stats package (A4) |
+| **ch. 15** | ~~`explain()` in depth (A1), `intent { }` blocks (A2)~~ DONE, type system (A3) |
+| **ch. 9/10** | Tabular introspection companions (A9) |
 
 ---
 
@@ -156,12 +162,25 @@ into existing chapters**; no new chapters are added.
 
 1. **ch. 4 enrichment** — operator reference, value-types table, evaluation
    model. Foundational and low-risk; everything else can cross-reference it.
-2. **ch. 14 additions** — operators in context, missing verbs, stats package.
-3. **ch. 15 additions** — `explain()`, `intent {}`, type system.
+2. **ch. 14 additions** — operators in context, missing verbs (A7 plus new
+   A8), stats package.
+3. **ch. 15 additions** — type system (A3; A1/A2 done).
 4. **ch. 10** — pattern matching.
-5. **Cross-reference + de-duplication pass** — point ch. 5's `explain` at the
+5. **ch. 9/10 additions** — tabular introspection companions (A9, small).
+6. **Cross-reference + de-duplication pass** — point ch. 5's `explain` at the
    ch. 15 deep-dive; ensure the ch. 4 reference doesn't restate ch. 14/15
    detail.
+
+---
+
+## Version note (new 2026-09-29)
+
+The book flake follows `tlang` main with no pin (`url =
+"github:b-rodrigues/tlang"`), and `nixpkgs` is pinned to 2026-08-02 while
+`tlang` is at 0.55.4. Text and behavior can drift silently between book
+edits. When writing version-sensitive claims (new builtins, defaults,
+CLI flags), verify against the pinned `tlang` checkout and note the
+version in the plan item.
 
 ---
 
