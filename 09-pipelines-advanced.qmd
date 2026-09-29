@@ -814,6 +814,24 @@ fast failure at the exact line where the broken pipeline was constructed.
 errors, which is useful when you are debugging a `union` or `chain` that you
 suspect has introduced a circular dependency.
 
+### Pipeline state as DataFrames
+
+Validation tells you what is wrong. Three companions tell you what *is*,
+each as a DataFrame you can filter and join like any other table:
+
+```t
+#| eval: false
+pipeline_status(p)        -- name, runtime, status, duration, path, error
+diff_summary(p)           -- per-node changed/unchanged between last builds
+pipeline_config_to_frame(p) -- one row per node: serializer, provenance
+```
+
+`pipeline_status(p)` lists failed nodes first, so the interesting rows are
+always at the top. `diff_summary(p)` compares the two most recent builds
+without loading artifacts. `pipeline_config_to_frame(p)` shows the resolved
+configuration, including which settings came from global options and which
+from the node itself.
+
 ## Handling Ambiguous Dependencies
 
 T infers which nodes depend on which by scanning the lexical content of each

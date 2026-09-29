@@ -132,12 +132,17 @@ employees |> inner_join(projects, $emp_id)
 employees |> left_join(projects, $emp_id)
 employees |> anti_join(projects, $emp_id)
 employees |> full_join(projects, $emp_id)
+employees |> right_join(projects, $emp_id)
+employees |> cross_join(projects)
 ```
 
 `inner_join` keeps rows whose key appears in both tables; `left_join` keeps
 every row of the left table and fills in what it can from the right;
 `anti_join` keeps the left rows with *no* match, the workhorse for "who has
-no record yet?"; `full_join` keeps everything from both sides.
+no record yet?"; `full_join` keeps everything from both sides. `right_join`
+mirrors `left_join`: it keeps every row of the *right* table. `cross_join`
+takes no key and returns every pairing of left and right rows, the cartesian
+product — overlapping right column names gain a `_y` suffix.
 
 ### Duplicates and counts
 
@@ -151,7 +156,12 @@ df |> distinct()
 df |> distinct($name)
 df |> count($species)
 df |> count($species, $year, name = "freq")
+n_distinct(df["species"])
+n_distinct(df["species"], na_rm = true)
 ```
+
+`n_distinct()` is the vector version of the same question: how many different
+values, with `na_rm = true` to leave missing values out of the count.
 
 ### Conditional values
 
@@ -256,7 +266,11 @@ propagates the last non-missing value forward:
 df |> drop_na($score)
 df |> replace_na([score: 0])
 df |> fill($category, .direction = "down")
+df |> mutate($score = coalesce($score, $backup_score))
 ```
+
+`coalesce()` picks the first non-missing value position by position across
+equal-length vectors, so fallback chains read left to right.
 
 ## Working with strings
 
@@ -271,6 +285,7 @@ str_replace("banana", "a", "o") -- "bonono"
 str_trim("  hello  ")           -- "hello"
 str_join(["a", "b", "c"], "-")  -- "a-b-c"
 str_split("a,b,c", ",")         -- ["a", "b", "c"]
+str_squish("  too   much   space  ") -- "too much space"
 ```
 
 A few helpers intentionally keep their plain names, because they double as
