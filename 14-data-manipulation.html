@@ -46,9 +46,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-edd5cbc395b8c6c892c08fe6f286ae1f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-3dac5e246fdd9bdc5e35d09ab9b42ca8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-8a0ecfc9849cba475cd369d60704c941.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-faef94c97a860273ddfce663706f3955.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-8a0ecfc9849cba475cd369d60704c941.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -564,8 +564,10 @@ df <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc
 <div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>employees <span class="sc">|&gt;</span> <span class="fu">inner_join</span>(projects, <span class="sc">$</span>emp_id)
 employees <span class="sc">|&gt;</span> <span class="fu">left_join</span>(projects, <span class="sc">$</span>emp_id)
 employees <span class="sc">|&gt;</span> <span class="fu">anti_join</span>(projects, <span class="sc">$</span>emp_id)
-employees <span class="sc">|&gt;</span> <span class="fu">full_join</span>(projects, <span class="sc">$</span>emp_id)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>inner_join</code> keeps rows whose key appears in both tables; <code>left_join</code> keeps every row of the left table and fills in what it can from the right; <code>anti_join</code> keeps the left rows with <em>no</em> match, the workhorse for “who has no record yet?”; <code>full_join</code> keeps everything from both sides.</p>
+employees <span class="sc">|&gt;</span> <span class="fu">full_join</span>(projects, <span class="sc">$</span>emp_id)
+employees <span class="sc">|&gt;</span> <span class="fu">right_join</span>(projects, <span class="sc">$</span>emp_id)
+employees <span class="sc">|&gt;</span> <span class="fu">cross_join</span>(projects)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>inner_join</code> keeps rows whose key appears in both tables; <code>left_join</code> keeps every row of the left table and fills in what it can from the right; <code>anti_join</code> keeps the left rows with <em>no</em> match, the workhorse for “who has no record yet?”; <code>full_join</code> keeps everything from both sides. <code>right_join</code> mirrors <code>left_join</code>: it keeps every row of the <em>right</em> table. <code>cross_join</code> takes no key and returns every pairing of left and right rows, the cartesian product — overlapping right column names gain a <code>_y</code> suffix.</p>
 </section>
 <section id="duplicates-and-counts" class="level3" data-number="14.2.2">
 <h3 data-number="14.2.2" class="anchored" data-anchor-id="duplicates-and-counts"><span class="header-section-number">14.2.2</span> Duplicates and counts</h3>
@@ -573,7 +575,10 @@ employees <span class="sc">|&gt;</span> <span class="fu">full_join</span>(projec
 <div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">distinct</span>()
 df <span class="sc">|&gt;</span> <span class="fu">distinct</span>(<span class="sc">$</span>name)
 df <span class="sc">|&gt;</span> <span class="fu">count</span>(<span class="sc">$</span>species)
-df <span class="sc">|&gt;</span> <span class="fu">count</span>(<span class="sc">$</span>species, <span class="sc">$</span>year, name <span class="sc">=</span> <span class="st">"freq"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+df <span class="sc">|&gt;</span> <span class="fu">count</span>(<span class="sc">$</span>species, <span class="sc">$</span>year, name <span class="sc">=</span> <span class="st">"freq"</span>)
+<span class="fu">n_distinct</span>(df[<span class="st">"species"</span>])
+<span class="fu">n_distinct</span>(df[<span class="st">"species"</span>], na_rm <span class="sc">=</span> <span class="cn">true</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>n_distinct()</code> is the vector version of the same question: how many different values, with <code>na_rm = true</code> to leave missing values out of the count.</p>
 </section>
 <section id="conditional-values" class="level3" data-number="14.2.3">
 <h3 data-number="14.2.3" class="anchored" data-anchor-id="conditional-values"><span class="header-section-number">14.2.3</span> Conditional values</h3>
@@ -627,7 +632,9 @@ flat <span class="sc">=</span> nested <span class="sc">|&gt;</span> <span class=
 <p>Three verbs handle the gaps. <code>drop_na()</code> removes rows with missing values in the named columns, <code>replace_na()</code> fills them with a constant, and <code>fill()</code> propagates the last non-missing value forward:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>df <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(<span class="sc">$</span>score)
 df <span class="sc">|&gt;</span> <span class="fu">replace_na</span>([score<span class="sc">:</span> <span class="dv">0</span>])
-df <span class="sc">|&gt;</span> <span class="fu">fill</span>(<span class="sc">$</span>category, .direction <span class="sc">=</span> <span class="st">"down"</span>)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+df <span class="sc">|&gt;</span> <span class="fu">fill</span>(<span class="sc">$</span>category, .direction <span class="sc">=</span> <span class="st">"down"</span>)
+df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="sc">$</span>score <span class="sc">=</span> <span class="fu">coalesce</span>(<span class="sc">$</span>score, <span class="sc">$</span>backup_score))</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>coalesce()</code> picks the first non-missing value position by position across equal-length vectors, so fallback chains read left to right.</p>
 </section>
 </section>
 <section id="working-with-strings" class="level2" data-number="14.4">
@@ -638,7 +645,8 @@ df <span class="sc">|&gt;</span> <span class="fu">fill</span>(<span class="sc">$
 <span class="fu">str_replace</span>(<span class="st">"banana"</span>, <span class="st">"a"</span>, <span class="st">"o"</span>) <span class="co">-- "bonono"</span>
 <span class="fu">str_trim</span>(<span class="st">"  hello  "</span>)           <span class="co">-- "hello"</span>
 <span class="fu">str_join</span>([<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>], <span class="st">"-"</span>)  <span class="co">-- "a-b-c"</span>
-<span class="fu">str_split</span>(<span class="st">"a,b,c"</span>, <span class="st">","</span>)         <span class="co">-- ["a", "b", "c"]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span class="fu">str_split</span>(<span class="st">"a,b,c"</span>, <span class="st">","</span>)         <span class="co">-- ["a", "b", "c"]</span>
+<span class="fu">str_squish</span>(<span class="st">"  too   much   space  "</span>) <span class="co">-- "too much space"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A few helpers intentionally keep their plain names, because they double as column-selection helpers in <code>colcraft</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">contains</span>(<span class="st">"petal_width"</span>, <span class="st">"width"</span>)
 <span class="fu">starts_with</span>(<span class="st">"petal_width"</span>, <span class="st">"petal"</span>)
