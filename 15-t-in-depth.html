@@ -999,11 +999,11 @@ current_user <span class="sc">=</span> ?<span class="sc">&lt;</span>{whoami}<spa
 <div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">node</span>(command <span class="sc">=</span> <span class="fu">read_csv</span>(<span class="st">"large.csv"</span>), serializer <span class="sc">=</span> ^ipc) <span class="co">-- built-in</span>
 <span class="cf">import</span> <span class="st">"src/my_ser.t"</span> [my_ser]
 <span class="fu">node</span>(command <span class="sc">=</span> <span class="sc">.</span><span class="sc">.</span><span class="sc">.</span>, serializer <span class="sc">=</span> my_ser)                 <span class="co">-- custom</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<pre class="text t-output"><code>to_expr(1 + 10) 
+<pre class="text t-error"><code>T execution failed:
+Error running t (error code 1): to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
 to_expr(1 + 10) 
-node&lt;T&gt;(...)
 </code></pre>
 <p>And here is the trap: in a node constructor (<code>node</code>, <code>rn</code>, <code>pyn</code>, <code>jln</code>, <code>shn</code>, <code>qn</code>), a <strong>string literal is not allowed</strong>. Writing <code>serializer = "ipc"</code> raises a <code>TypeError</code>. You must use a <code>^</code> symbol for built-ins or a variable for custom serializers. (The <code>mutate_node()</code> and <code>set_pipeline_global_options()</code> functions are more permissive and accept both strings and symbols.)</p>
 <p>If you do not specify a serializer at all, T uses the <code>default</code>, which is each runtime’s native binary format: <code>saveRDS</code> for R, <code>pickle</code> for Python, and so on. Shell nodes default to <code>^text</code>.</p>
