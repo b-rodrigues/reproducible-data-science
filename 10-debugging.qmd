@@ -348,6 +348,73 @@ The `class` field is the node's value type as T sees it: `Int` for a healthy
 node, `Error` for a soft failure. Combined with the build log, this is usually
 all you need to triage a failed build without ever opening a debugger.
 
+## Reading Artifacts from R and Python
+
+Everything above runs inside T. But built artifacts also live in plain files,
+and the `tlang` companion libraries let R and Python read them directly,
+without a running T session. Both companions pick the reader from each node's
+recorded `serializer`, so JSON, CSV, IPC, and Parquet nodes load with no extra
+arguments:
+
+```r
+library(tlang)
+
+model <- read_node("model")      # default serializer -> readRDS()
+table <- read_node("features")   # ^json -> jsonlite, ^csv -> read.csv()
+```
+
+```python
+import tlang
+
+model = tlang.read_node("model")      # default serializer -> pickle
+table = tlang.read_node("features")   # ^json -> json.load, ^csv -> pandas
+```
+
+Formats with no native reader (`^pmml`, `^onnx`, `^bin`) raise and point at
+`return_path = TRUE` plus a custom deserializer instead of failing silently.
+
+One node is rarely the whole story. `read_node_tree()` loads a node plus its
+transitive `children` (the default), `parents`, or `both`, all from the single
+build log selected up front, so a concurrent rebuild cannot mix two snapshots
+mid-read:
+
+```python
+tree = tlang.read_node_tree("clean_data")                 # node + children
+tree = tlang.read_node_tree("clean_data", include="both") # parents + children
+```
+
+A single unreadable node aborts the tree by default. Pass
+`on_unreadable="path"` to keep going: the bad node comes back as a small
+record holding the artifact `path` and the recorded `serializer`, so you can
+inspect or convert the file by hand. `on_unreadable="skip"` drops bad nodes
+instead. Both fallbacks warn naming the node, the serializer, the path, and
+the original error:
+
+```python
+tree = tlang.read_node_tree(
+    "clean_data",
+    include="both",
+    on_unreadable="path",
+)
+tree["model"]["path"]        # file to inspect by hand
+tree["model"]["serializer"]  # format recorded in the build log, e.g. "pmml"
+```
+
+The same triage views from earlier in this chapter exist on the companion
+side. `inspect_pipeline()` lists every node with its runtime, serializer,
+dependencies, status, class, and path (or `unbuilt` rows from `dag.json` when
+nothing is built yet), while `list_logs()`, `build_log_to_frame()`, and
+`collect_exceptions()` mirror their T namesakes:
+
+```r
+tbl <- inspect_pipeline()   # one row per node, newest build
+errs <- collect_exceptions() # error and warning rows, like T
+```
+
+Use the T functions when you are already in a pipeline session; reach for the
+companions when the consumer is an R or Python script, a Quarto document, or a
+debug shell that should not depend on T at all.
+
 ## Interactive Debugging
 
 Sometimes the build log is not enough. The classic case: a Python node fails
