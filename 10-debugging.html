@@ -488,17 +488,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#when-a-pipeline-node-fails" id="toc-when-a-pipeline-node-fails" class="nav-link" data-scroll-target="#when-a-pipeline-node-fails"><span class="header-section-number">10.5</span> When a Pipeline Node Fails</a></li>
   <li><a href="#inspecting-a-failed-build" id="toc-inspecting-a-failed-build" class="nav-link" data-scroll-target="#inspecting-a-failed-build"><span class="header-section-number">10.6</span> Inspecting a Failed Build</a></li>
-  <li><a href="#reading-artifacts-from-r-and-python" id="toc-reading-artifacts-from-r-and-python" class="nav-link" data-scroll-target="#reading-artifacts-from-r-and-python"><span class="header-section-number">10.7</span> Reading Artifacts from R and Python</a></li>
-  <li><a href="#interactive-debugging" id="toc-interactive-debugging" class="nav-link" data-scroll-target="#interactive-debugging"><span class="header-section-number">10.8</span> Interactive Debugging</a>
+  <li><a href="#interactive-debugging" id="toc-interactive-debugging" class="nav-link" data-scroll-target="#interactive-debugging"><span class="header-section-number">10.7</span> Interactive Debugging</a>
   <ul class="collapse">
-  <li><a href="#the-t-debug-command" id="toc-the-t-debug-command" class="nav-link" data-scroll-target="#the-t-debug-command"><span class="header-section-number">10.8.1</span> The <code>t debug</code> Command</a></li>
-  <li><a href="#debug_node-from-the-repl" id="toc-debug_node-from-the-repl" class="nav-link" data-scroll-target="#debug_node-from-the-repl"><span class="header-section-number">10.8.2</span> <code>debug_node()</code> from the REPL</a></li>
-  <li><a href="#keeping-the-debug-environment-reproducible" id="toc-keeping-the-debug-environment-reproducible" class="nav-link" data-scroll-target="#keeping-the-debug-environment-reproducible"><span class="header-section-number">10.8.3</span> Keeping the Debug Environment Reproducible</a></li>
+  <li><a href="#the-t-debug-command" id="toc-the-t-debug-command" class="nav-link" data-scroll-target="#the-t-debug-command"><span class="header-section-number">10.7.1</span> The <code>t debug</code> Command</a></li>
+  <li><a href="#debug_node-from-the-repl" id="toc-debug_node-from-the-repl" class="nav-link" data-scroll-target="#debug_node-from-the-repl"><span class="header-section-number">10.7.2</span> <code>debug_node()</code> from the REPL</a></li>
+  <li><a href="#keeping-the-debug-environment-reproducible" id="toc-keeping-the-debug-environment-reproducible" class="nav-link" data-scroll-target="#keeping-the-debug-environment-reproducible"><span class="header-section-number">10.7.3</span> Keeping the Debug Environment Reproducible</a></li>
   </ul></li>
-  <li><a href="#polyglot-error-handling" id="toc-polyglot-error-handling" class="nav-link" data-scroll-target="#polyglot-error-handling"><span class="header-section-number">10.9</span> Polyglot Error Handling</a></li>
-  <li><a href="#common-errors" id="toc-common-errors" class="nav-link" data-scroll-target="#common-errors"><span class="header-section-number">10.10</span> Common Errors</a></li>
-  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices"><span class="header-section-number">10.11</span> Best Practices</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">10.12</span> Summary</a></li>
+  <li><a href="#polyglot-error-handling" id="toc-polyglot-error-handling" class="nav-link" data-scroll-target="#polyglot-error-handling"><span class="header-section-number">10.8</span> Polyglot Error Handling</a></li>
+  <li><a href="#common-errors" id="toc-common-errors" class="nav-link" data-scroll-target="#common-errors"><span class="header-section-number">10.9</span> Common Errors</a></li>
+  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices"><span class="header-section-number">10.10</span> Best Practices</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">10.11</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/reproducible-data-science/edit/master/10-debugging.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/reproducible-data-science/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -754,43 +753,15 @@ DataFrame: 3 rows x 4 cols</code></pre>
 └── warnings: []</code></pre>
 <p>The <code>class</code> field is the node’s value type as T sees it: <code>Int</code> for a healthy node, <code>Error</code> for a soft failure. Combined with the build log, this is usually all you need to triage a failed build without ever opening a debugger.</p>
 </section>
-<section id="reading-artifacts-from-r-and-python" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="reading-artifacts-from-r-and-python"><span class="header-section-number">10.7</span> Reading Artifacts from R and Python</h2>
-<p>Everything above runs inside T. But built artifacts also live in plain files, and the <code>tlang</code> companion libraries let R and Python read them directly, without a running T session. Both companions pick the reader from each node’s recorded <code>serializer</code>, so JSON, CSV, IPC, and Parquet nodes load with no extra arguments:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tlang)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"model"</span>)      <span class="co"># default serializer -&gt; readRDS()</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>table <span class="ot">&lt;-</span> <span class="fu">read_node</span>(<span class="st">"features"</span>)   <span class="co"># ^json -&gt; jsonlite, ^csv -&gt; read.csv()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tlang</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> tlang.read_node(<span class="st">"model"</span>)      <span class="co"># default serializer -&gt; pickle</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> tlang.read_node(<span class="st">"features"</span>)   <span class="co"># ^json -&gt; json.load, ^csv -&gt; pandas</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Formats with no native reader (<code>^pmml</code>, <code>^onnx</code>, <code>^bin</code>) raise and point at <code>return_path = TRUE</code> plus a custom deserializer instead of failing silently.</p>
-<p>One node is rarely the whole story. <code>read_node_tree()</code> loads a node plus its transitive <code>children</code> (the default), <code>parents</code>, or <code>both</code>, all from the single build log selected up front, so a concurrent rebuild cannot mix two snapshots mid-read:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tree <span class="op">=</span> tlang.read_node_tree(<span class="st">"clean_data"</span>)                 <span class="co"># node + children</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>tree <span class="op">=</span> tlang.read_node_tree(<span class="st">"clean_data"</span>, include<span class="op">=</span><span class="st">"both"</span>) <span class="co"># parents + children</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>A single unreadable node aborts the tree by default. Pass <code>on_unreadable="path"</code> to keep going: the bad node comes back as a small record holding the artifact <code>path</code> and the recorded <code>serializer</code>, so you can inspect or convert the file by hand. <code>on_unreadable="skip"</code> drops bad nodes instead. Both fallbacks warn naming the node, the serializer, the path, and the original error:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tree <span class="op">=</span> tlang.read_node_tree(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"clean_data"</span>,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    include<span class="op">=</span><span class="st">"both"</span>,</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    on_unreadable<span class="op">=</span><span class="st">"path"</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>tree[<span class="st">"model"</span>][<span class="st">"path"</span>]        <span class="co"># file to inspect by hand</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>tree[<span class="st">"model"</span>][<span class="st">"serializer"</span>]  <span class="co"># format recorded in the build log, e.g. "pmml"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The same triage views from earlier in this chapter exist on the companion side. <code>inspect_pipeline()</code> lists every node with its runtime, serializer, dependencies, status, class, and path (or <code>unbuilt</code> rows from <code>dag.json</code> when nothing is built yet), while <code>list_logs()</code>, <code>build_log_to_frame()</code>, and <code>collect_exceptions()</code> mirror their T namesakes:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">inspect_pipeline</span>()   <span class="co"># one row per node, newest build</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>errs <span class="ot">&lt;-</span> <span class="fu">collect_exceptions</span>() <span class="co"># error and warning rows, like T</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Use the T functions when you are already in a pipeline session; reach for the companions when the consumer is an R or Python script, a Quarto document, or a debug shell that should not depend on T at all.</p>
-</section>
-<section id="interactive-debugging" class="level2" data-number="10.8">
-<h2 data-number="10.8" class="anchored" data-anchor-id="interactive-debugging"><span class="header-section-number">10.8</span> Interactive Debugging</h2>
+<section id="interactive-debugging" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="interactive-debugging"><span class="header-section-number">10.7</span> Interactive Debugging</h2>
 <p>Sometimes the build log is not enough. The classic case: a Python node fails with a cryptic traceback, the real inputs are locked in the Nix store, and writing mock inputs by hand is tedious and error-prone. For that, T has an interactive debugger that drops you <em>inside</em> the failing node’s runtime, with all of its upstream dependencies already materialized.</p>
-<section id="the-t-debug-command" class="level3" data-number="10.8.1">
-<h3 data-number="10.8.1" class="anchored" data-anchor-id="the-t-debug-command"><span class="header-section-number">10.8.1</span> The <code>t debug</code> Command</h3>
+<section id="the-t-debug-command" class="level3" data-number="10.7.1">
+<h3 data-number="10.7.1" class="anchored" data-anchor-id="the-t-debug-command"><span class="header-section-number">10.7.1</span> The <code>t debug</code> Command</h3>
 <p>From your shell, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug <span class="op">&lt;</span>node_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug <span class="op">&lt;</span>node_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>By default this looks for the pipeline in <code>src/pipeline.t</code>; if your pipeline lives elsewhere, pass the file first:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug src/my_custom_pipeline.t data_cleanup</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">t</span> debug src/my_custom_pipeline.t data_cleanup</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>T evaluates the script up to the requested node, resolves every upstream dependency, locates their latest materialized <code>/nix/store</code> paths, sets up the environment, and launches the runtime’s interactive REPL. Targeting a Python node, for example, produces something like:</p>
 <pre class="text"><code>================================================
 Debugging Node: Y (Runtime: Python)
@@ -805,19 +776,19 @@ Tip: Load upstream dependencies in Python using:
 Press Ctrl+D or exit to return to T REPL.
 ================================================</code></pre>
 </section>
-<section id="debug_node-from-the-repl" class="level3" data-number="10.8.2">
-<h3 data-number="10.8.2" class="anchored" data-anchor-id="debug_node-from-the-repl"><span class="header-section-number">10.8.2</span> <code>debug_node()</code> from the REPL</h3>
+<section id="debug_node-from-the-repl" class="level3" data-number="10.7.2">
+<h3 data-number="10.7.2" class="anchored" data-anchor-id="debug_node-from-the-repl"><span class="header-section-number">10.7.2</span> <code>debug_node()</code> from the REPL</h3>
 <p>If you are already inside a T REPL session with a built pipeline, the same debugger is one call away:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code><span class="fu">debug_node</span>(p.data_cleanup)</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This spawns the same subshell environment. Inside it, a <code>tlang</code> companion library lets you load upstream node data live:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df <span class="op">=</span> tlang.read_node(<span class="st">"raw_df"</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> <span class="im">import</span> tlang</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df <span class="op">=</span> tlang.read_node(<span class="st">"raw_df"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>py<span class="op">&gt;</span> df.dtypes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now you can inspect the exact data that crashed your node, dry-run the offending function line by line, and confirm the fix. Press <code>Ctrl+D</code> (or <code>exit()</code>, or <code>q()</code> in R) to leave the subshell; control returns cleanly to your T session.</p>
 <p>The subshells are customized so you always know where you are: Python starts with a <code>py&gt;</code> prompt, R starts quietly (no welcome banner) with <code>r&gt;</code>, and Julia shows <code>jl&gt;</code>. Interactive debugging is supported for the three REPL-capable runtimes: Python, R, and Julia; debugging a Quarto or Bash node raises a descriptive <code>ValueError</code> instead of dropping you into a raw shell.</p>
 </section>
-<section id="keeping-the-debug-environment-reproducible" class="level3" data-number="10.8.3">
-<h3 data-number="10.8.3" class="anchored" data-anchor-id="keeping-the-debug-environment-reproducible"><span class="header-section-number">10.8.3</span> Keeping the Debug Environment Reproducible</h3>
+<section id="keeping-the-debug-environment-reproducible" class="level3" data-number="10.7.3">
+<h3 data-number="10.7.3" class="anchored" data-anchor-id="keeping-the-debug-environment-reproducible"><span class="header-section-number">10.7.3</span> Keeping the Debug Environment Reproducible</h3>
 <p>The debugger runs inside the project environment declared in <code>tproject.toml</code>. If a runtime package needed to deserialize an upstream artifact is missing, the debugger will start without it. Use <code>t doctor</code> to spot missing packages and add them to the right section:</p>
 <ul>
 <li><code>[r-dependencies].packages</code> for R packages</li>
@@ -827,8 +798,8 @@ Press Ctrl+D or exit to return to T REPL.
 <p>For example, a Julia node that reads a CSV ancestor needs <code>CSV</code> and <code>DataFrames</code>; one that reads Arrow or Parquet needs <code>Arrow</code> (or <code>Parquet2</code>) and <code>DataFrames</code>; a Python node reading Arrow data needs <code>pandas</code> and <code>pyarrow</code>. After editing <code>tproject.toml</code>, run <code>t update</code> and re-enter <code>nix develop</code> so the debug environment is rebuilt. Do not install these packages ad hoc with <code>pip</code>, <code>install.packages()</code>, or <code>Pkg.add()</code>: those commands are intercepted inside the debugger precisely to keep your debugging reproducible.</p>
 </section>
 </section>
-<section id="polyglot-error-handling" class="level2" data-number="10.9">
-<h2 data-number="10.9" class="anchored" data-anchor-id="polyglot-error-handling"><span class="header-section-number">10.9</span> Polyglot Error Handling</h2>
+<section id="polyglot-error-handling" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="polyglot-error-handling"><span class="header-section-number">10.8</span> Polyglot Error Handling</h2>
 <p>The same rules apply to nodes written in R, Python, or Julia. When a foreign script raises a native exception, such as an R <code>stop()</code>, a Python <code>ValueError</code>, or a Julia <code>UndefVarError</code>, T captures it exactly as it captures a T error: the node is marked <code>Completed with error</code>, and <code>error_code</code>, <code>error_msg</code>, <code>collect_exceptions</code>, and the build log all work on it as before.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode t code-with-copy"><code>p2 <span class="sc">=</span> <span class="cf">pipeline</span> {
   data <span class="sc">=</span> <span class="fu">node</span>(
@@ -850,8 +821,8 @@ Press Ctrl+D or exit to return to T REPL.
 <p>Here the response variable has only one level, so the logistic regression fails inside the R sandbox. The build does not abort; <code>model</code> is a soft failure, and <code>error_msg(p2.model)</code> carries R’s original message. And because <code>model</code> is an R node, <code>debug_node(p2.model)</code> drops you into an <code>r&gt;</code> subshell with the exact <code>data</code> frame that caused the trouble.</p>
 <p>The one polyglot-specific habit worth forming: keep error messages in your foreign code informative. A bare <code>stop()</code> in R or a bare <code>raise</code> in Python gives you an <code>Error</code> with little to go on; a message like <code>stop("no rows left after filtering")</code> is what <code>error_msg</code> will hand you later, and what you will thank yourself for at 2 a.m.</p>
 </section>
-<section id="common-errors" class="level2" data-number="10.10">
-<h2 data-number="10.10" class="anchored" data-anchor-id="common-errors"><span class="header-section-number">10.10</span> Common Errors</h2>
+<section id="common-errors" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="common-errors"><span class="header-section-number">10.9</span> Common Errors</h2>
 <p>A few failures show up in nearly every pipeline. Knowing the idiomatic fix saves a lot of debugging:</p>
 <ul>
 <li><strong>Missing values</strong>: <code>mean([1, 2, NA, 4])</code> raises an <code>NAError</code>. Pass <code>na_rm = true</code> when NAs are expected, or filter them deliberately.</li>
@@ -861,8 +832,8 @@ Press Ctrl+D or exit to return to T REPL.
 <li><strong>Missing columns</strong>: <code>df.nonexistent</code> raises a <code>NameError</code>. Check <code>colnames(df)</code> before accessing, and raise a descriptive error of your own when a required column is absent.</li>
 </ul>
 </section>
-<section id="best-practices" class="level2" data-number="10.11">
-<h2 data-number="10.11" class="anchored" data-anchor-id="best-practices"><span class="header-section-number">10.11</span> Best Practices</h2>
+<section id="best-practices" class="level2" data-number="10.10">
+<h2 data-number="10.10" class="anchored" data-anchor-id="best-practices"><span class="header-section-number">10.10</span> Best Practices</h2>
 <ul>
 <li><strong>Fail fast, fail explicitly.</strong> Validate inputs early and raise descriptive errors (<code>error("ValidationError", "Empty dataset")</code>) at the boundary where you can say <em>why</em> it is invalid, rather than letting a cryptic failure surface ten nodes later.</li>
 <li><strong>Let soft failures stay soft.</strong> In a long pipeline, prefer the default resilient build so one bad node does not hide three others; use <code>collect_exceptions</code> to review everything at once.</li>
@@ -871,8 +842,8 @@ Press Ctrl+D or exit to return to T REPL.
 <li><strong>Debug with real data.</strong> When in doubt, <code>debug_node</code> beats a mock: the subshell gives you the exact upstream artifacts your node saw.</li>
 </ul>
 </section>
-<section id="summary" class="level2" data-number="10.12">
-<h2 data-number="10.12" class="anchored" data-anchor-id="summary"><span class="header-section-number">10.12</span> Summary</h2>
+<section id="summary" class="level2" data-number="10.11">
+<h2 data-number="10.11" class="anchored" data-anchor-id="summary"><span class="header-section-number">10.11</span> Summary</h2>
 <p>T treats errors as first-class values, and that single decision shapes everything in this chapter. <code>is_error</code>, <code>error_code</code>, <code>error_msg</code>, and <code>error_context</code> let you interrogate a failure; <code>|&gt;</code> propagates errors untouched while <code>?|&gt;</code> hands them to a recovery function; and <code>match</code> gives you declarative branching over error and success alike. At the pipeline level, resilient builds capture node failures as <code>Completed with error</code> without aborting, and <code>collect_exceptions</code>, <code>build_log</code>, and <code>inspect_node</code> turn any build, healthy or not, into data you can query. When the data is not enough, <code>t debug</code> and <code>debug_node</code> drop you into the failing node’s own runtime, with its real inputs, ready to step through the code that broke.</p>
 <p>Next, we turn to <strong>distribution</strong>: how to package all of this into containers so that others can run your pipelines without installing anything at all.</p>
 
